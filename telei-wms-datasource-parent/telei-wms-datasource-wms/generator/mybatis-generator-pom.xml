@@ -1,0 +1,121 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <parent>
+        <artifactId>telei-wms-datasource-parent</artifactId>
+        <groupId>com.telei</groupId>
+        <version>1.0-SNAPSHOT</version>
+    </parent>
+    <modelVersion>4.0.0</modelVersion>
+    <artifactId>telei-wms-datasource-wms</artifactId>
+
+    <properties>
+        <srcdir>${basedir}/../</srcdir>
+
+        <driver>com.mysql.jdbc.Driver</driver>
+        <url>jdbc:mysql://192.168.1.114:3306</url>
+        <user>root</user>
+        <password>admin1314</password>
+        <schema>wms</schema>
+
+        <companyName>telei</companyName>
+        <projectName>wms</projectName>
+        <dataSourceName>wms</dataSourceName>
+    </properties>
+
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>com.nuochen.framework</groupId>
+                <artifactId>nuochen-framework-autocoding-mavenplugin</artifactId>
+                <version>1.0-SNAPSHOT</version>
+
+                <!-- 依赖 -->
+                <dependencies>
+                    <dependency>
+                        <groupId>com.nuochen.framework</groupId>
+                        <artifactId>nuochen-framework-autocoding-generator</artifactId>
+                        <version>1.0-SNAPSHOT</version>
+                    </dependency>
+                </dependencies>
+
+                <!-- 配置 -->
+                <configuration>
+                    <!-- ################# 全局属性(可在模板中使用) ################# -->
+                    <properties>
+                        <name>leo</name>
+                    </properties>
+
+                    <!-- ################# 数据库 ################# -->
+                    <jdbc>
+                        <driver>${driver}</driver>
+                        <url>${url}</url>
+                        <user>${user}</user>
+                        <password>${password}</password>
+                    </jdbc>
+                    <!-- 数据库名称 -->
+                    <schema>${schema}</schema>
+                    <!-- ################# 生成代码 ################# -->
+                    <model>
+                        <outputDirectory>${srcdir}/src/main/java/com/${companyName}/${projectName}/datasource/${dataSourceName}/model</outputDirectory>
+                        <packageName>com.${companyName}.${projectName}.datasource.${dataSourceName}.model</packageName>
+                        <override>true</override>
+                    </model>
+
+                    <!-- 数据库层基础接口 -->
+                    <repository>
+                        <outputDirectory>${srcdir}/src/main/java/com/${companyName}/${projectName}/datasource/${projectName}/repository</outputDirectory>
+                        <packageName>com.${companyName}.${projectName}.datasource.${dataSourceName}.repository</packageName>
+                        <suffix>Repository</suffix>
+                        <override>false</override>
+                    </repository>
+
+                    <!-- 服务层基础接口 -->
+                    <service>
+                        <outputDirectory>${srcdir}/src/main/java/com/${companyName}/${projectName}/datasource/${dataSourceName}/service</outputDirectory>
+                        <packageName>com.${companyName}.${projectName}.datasource.${dataSourceName}.service</packageName>
+                        <suffix>Service</suffix>
+                        <override>false</override>
+                    </service>
+
+                    <!-- 数据层基础SQL -->
+                    <repositorySql>
+                        <outputDirectory>${srcdir}/src/main/resources/com/${companyName}/${projectName}/datasource/${dataSourceName}/repository/auto</outputDirectory>
+                        <prefix>_</prefix>
+                        <suffix>Repository</suffix>
+                        <override>true</override>
+                    </repositorySql>
+
+                    <!-- 数据层自定义SQL -->
+                    <repositoryCustomSql>
+                        <outputDirectory>${srcdir}/src/main/resources/com/${companyName}/${projectName}/datasource/${dataSourceName}/repository</outputDirectory>
+                        <suffix>Repository</suffix>
+                        <override>false</override>
+                    </repositoryCustomSql>
+
+                    <!-- ################# 表名映射 ################# -->
+                    <tables>
+<!--                        <table><tableName>goods</tableName></table>-->
+                        <table><tableName>wms_inventory</tableName></table>
+                        <table><tableName>wms_inventory_history</tableName></table>
+<!--                        <table><tableName>wms_iv_transaction</tableName></table>-->
+<!--                        <table><tableName>wms_iv_split</tableName></table>-->
+<!--                        <table><tableName>wms_pao_header</tableName></table>-->
+<!--                        <table><tableName>wms_pao_line</tableName></table>-->
+                    </tables>
+                </configuration>
+
+                <!-- 执行 -->
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>generate</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
+    </build>
+</project>

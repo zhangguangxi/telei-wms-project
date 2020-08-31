@@ -1,0 +1,87 @@
+package com.telei.wms.datasource.wms.model;
+
+import com.nuochen.framework.autocoding.domain.Entity;
+import java.math.BigDecimal;
+import java.util.Date;
+import lombok.Data;
+
+/**
+* wms_inventory_history 历史库存表
+*/
+@Data
+public class WmsInventoryHistory implements Entity<Long> {
+    /** id */
+    private Long ivId;
+    /** 公司id */
+    private Long companyId;
+    /** 仓库id */
+    private Long warehouseId;
+    /** 仓库code */
+    private String warehouseCode;
+    /** 库位编码 */
+    private String lcCode;
+    /** 商家编码 */
+    private String customerId;
+    /** 产品序列码 */
+    private Long productId;
+    /** 库存批次id */
+    private Long iabId;
+    /** 实物类别，GD合格 BK破损 MD霉变 WE淋湿 DF残次，数据字典COMMON_QS_CODE */
+    private String qsCode;
+    /** 先进先出时间 */
+    private Date ivFifoTime;
+    /** 库存数量 */
+    private BigDecimal ivQty;
+    /** 计量单位 */
+    private Long stockUnit;
+    /** 中包数量 */
+    private BigDecimal midBagQty;
+    /** 中包转换数 */
+    private BigDecimal midBagRate;
+    /** 中包剩余数量 */
+    private BigDecimal midBagExtraQty;
+    /** 大包数量 */
+    private BigDecimal bigBagQty;
+    /** 大包转换数 */
+    private BigDecimal bigBagRate;
+    /** 大包剩余数量 */
+    private BigDecimal bigBagExtraQty;
+    /** 库存锁，0可以出出货，1不可以出货 */
+    private Integer ivLocksign;
+    /** 冻结锁，0可以操作，1不可以移库、拆分、出货、更新 */
+    private Integer ivFreezesign;
+    /** 业务日期 */
+    private Date bizDate;
+    /** 创建时间 */
+    private Date ivCreatetime;
+    /** 最近库存更新时间 */
+    private Date ivTranstime;
+    /** 应用类型代码,引起本次库存变动的来源单据的应用类型  RECV 入库单收货 DOMT 出库订单 ADJT 库存调整单 等 */
+    private String apCodeDc;
+    /** 引起库存变动业务单据编号 */
+    private String ivDocumentCode;
+    /** 引起库存变动单据id */
+    private Long ivDocumentId;
+    /** 引起库存变动单据明细id */
+    private Long ivDocumentlineId;
+    /** 引起最近库存更新的用户 */
+    private Long lastupdateUser;
+    /** 生产日期 */
+    private Date productDate;
+    /** 有效日期 */
+    private Date ivEffectiveDate;
+    /** 客户指定批次号 */
+    private String batchNo;
+    /** 原库存id */
+    private Long ivIdFrom;
+    @Override
+    public Long getId() {
+        return ivId;
+    }
+    @Override
+    public void setId(Long id) {
+        this.ivId = id;
+    }
+    /* KEEP_MARK_START */
+    /* KEEP_MARK_END */
+}

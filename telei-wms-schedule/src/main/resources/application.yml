@@ -1,0 +1,86 @@
+########################################common options########################################
+debug: true
+server:
+  port: 8823
+# spring
+spring:
+  profiles:
+    active: dev
+  application:
+    name: telei-wms-schedule
+  # message
+  messages:
+    basename: i18n/messages,i18n/validation/messages
+    encoding: UTF-8
+  # servlet
+  servlet:
+    multipart:
+      max-file-size: 1024MB
+      max-request-size: 1024MB
+#log
+logging:
+  level:
+    root: debug
+    org.springframework.data: info
+    com.telei: info
+  file:
+    name: logs/${spring.application.name}.log
+
+
+
+##########################################profile options######################################
+---
+spring:
+  profiles: dev
+
+#datasource:
+datasource:
+  wms:
+    driverClassName: com.mysql.jdbc.Driver
+    filters: stat
+    initialSize: 1
+    maxActive: 40
+    maxOpenPreparedStatements: 20
+    maxPoolPreparedStatementPerConnectionSize: 20
+    maxWait: 10000
+    minEvictableIdleTimeMillis: 300000
+    minIdle: 1
+    poolPreparedStatements: true
+    testOnBorrow: true
+    testOnReturn: true
+    testWhileIdle: true
+    timeBetweenEvictionRunsMillis: 60000
+    type: com.alibaba.druid.pool.DruidDataSource
+    url: jdbc:mysql://192.168.1.114:3306/demo_wms_db?characterEncoding=utf8&allowMultiQueries=true
+    username: root
+    password: admin1314
+#    url: jdbc:mysql://127.0.0.1:3306/wms_db?characterEncoding=utf8&allowMultiQueries=true
+#    username: root
+#    password: admin
+    validationQuery:  'x'
+---
+spring:
+  profiles: test
+
+#datasource:
+datasource:
+  wms:
+    driverClassName: com.mysql.jdbc.Driver
+    filters: stat
+    initialSize: 1
+    maxActive: 40
+    maxOpenPreparedStatements: 20
+    maxPoolPreparedStatementPerConnectionSize: 20
+    maxWait: 10000
+    minEvictableIdleTimeMillis: 300000
+    minIdle: 1
+    poolPreparedStatements: true
+    testOnBorrow: true
+    testOnReturn: true
+    testWhileIdle: true
+    timeBetweenEvictionRunsMillis: 60000
+    type: com.alibaba.druid.pool.DruidDataSource
+    url: jdbc:mysql://192.168.1.114:3306/demo_wms_db?characterEncoding=utf8&allowMultiQueries=true
+    username: root
+    password: admin1314
+    validationQuery:  'x'

@@ -1,0 +1,326 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.telei.wms.datasource.wms.repository.WmsIdInstantdirectiveRepository">
+    <resultMap id="BaseResultMap" type="com.telei.wms.datasource.wms.model.WmsIdInstantdirective">
+        <id column="id_id" jdbcType="BIGINT" property="id"/>
+            <result column="idt_code" jdbcType="VARCHAR" property="idtCode"/>
+            <result column="id_ref_code" jdbcType="VARCHAR" property="idRefCode"/>
+            <result column="order_context" jdbcType="VARCHAR" property="orderContext"/>
+            <result column="is_code" jdbcType="VARCHAR" property="isCode"/>
+            <result column="create_time" jdbcType="TIMESTAMP" property="createTime"/>
+            <result column="finish_time" jdbcType="TIMESTAMP" property="finishTime"/>
+            <result column="id_note" jdbcType="VARCHAR" property="idNote"/>
+            <result column="id_result" jdbcType="VARCHAR" property="idResult"/>
+            <result column="process_count" jdbcType="INTEGER" property="processCount"/>
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        id_id,idt_code,id_ref_code,order_context,is_code,create_time,finish_time,id_note,id_result,process_count
+    </sql>
+
+        <insert id="insert">
+            insert into wms_id_instantdirective (id_id,idt_code,id_ref_code,order_context,is_code,create_time,finish_time,id_note,id_result,process_count)
+            values (#{id,jdbcType=BIGINT},#{idtCode,jdbcType=VARCHAR},#{idRefCode,jdbcType=VARCHAR},#{orderContext,jdbcType=VARCHAR},#{isCode,jdbcType=VARCHAR},#{createTime,jdbcType=TIMESTAMP},#{finishTime,jdbcType=TIMESTAMP},#{idNote,jdbcType=VARCHAR},#{idResult,jdbcType=VARCHAR},#{processCount,jdbcType=INTEGER})
+        </insert>
+
+        <insert id="insertSelective">
+            insert into wms_id_instantdirective
+            <trim prefix="(" suffix=")" suffixOverrides=",">
+                    <if test="id != null">
+                        id_id,
+                    </if>
+                    <if test="idtCode != null">
+                        idt_code,
+                    </if>
+                    <if test="idRefCode != null">
+                        id_ref_code,
+                    </if>
+                    <if test="orderContext != null">
+                        order_context,
+                    </if>
+                    <if test="isCode != null">
+                        is_code,
+                    </if>
+                    <if test="createTime != null">
+                        create_time,
+                    </if>
+                    <if test="finishTime != null">
+                        finish_time,
+                    </if>
+                    <if test="idNote != null">
+                        id_note,
+                    </if>
+                    <if test="idResult != null">
+                        id_result,
+                    </if>
+                    <if test="processCount != null">
+                        process_count
+                    </if>
+            </trim>
+            <trim prefix="values (" suffix=")" suffixOverrides=",">
+                    <if test="id != null">
+                        #{id,jdbcType=BIGINT},
+                    </if>
+                    <if test="idtCode != null">
+                        #{idtCode,jdbcType=VARCHAR},
+                    </if>
+                    <if test="idRefCode != null">
+                        #{idRefCode,jdbcType=VARCHAR},
+                    </if>
+                    <if test="orderContext != null">
+                        #{orderContext,jdbcType=VARCHAR},
+                    </if>
+                    <if test="isCode != null">
+                        #{isCode,jdbcType=VARCHAR},
+                    </if>
+                    <if test="createTime != null">
+                        #{createTime,jdbcType=TIMESTAMP},
+                    </if>
+                    <if test="finishTime != null">
+                        #{finishTime,jdbcType=TIMESTAMP},
+                    </if>
+                    <if test="idNote != null">
+                        #{idNote,jdbcType=VARCHAR},
+                    </if>
+                    <if test="idResult != null">
+                        #{idResult,jdbcType=VARCHAR},
+                    </if>
+                    <if test="processCount != null">
+                        #{processCount,jdbcType=INTEGER}
+                    </if>
+            </trim>
+        </insert>
+
+        <insert id="insertBatch">
+            insert into wms_id_instantdirective (id_id,idt_code,id_ref_code,order_context,is_code,create_time,finish_time,id_note,id_result,process_count) values
+            <foreach collection="list" item="item" separator=",">
+                (
+                    #{item.id,jdbcType=BIGINT},
+                    #{item.idtCode,jdbcType=VARCHAR},
+                    #{item.idRefCode,jdbcType=VARCHAR},
+                    #{item.orderContext,jdbcType=VARCHAR},
+                    #{item.isCode,jdbcType=VARCHAR},
+                    #{item.createTime,jdbcType=TIMESTAMP},
+                    #{item.finishTime,jdbcType=TIMESTAMP},
+                    #{item.idNote,jdbcType=VARCHAR},
+                    #{item.idResult,jdbcType=VARCHAR},
+                    #{item.processCount,jdbcType=INTEGER}
+                )
+            </foreach>
+        </insert>
+
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+        delete from wms_id_instantdirective
+        where id_id = #{id,jdbcType=BIGINT}
+    </delete>
+
+    <delete id="deleteByPrimaryKeys">
+        delete from wms_id_instantdirective where id_id in
+        <foreach close=")" collection="list" item="item" open="(" separator=",">
+            #{item}
+        </foreach>
+    </delete>
+
+    <update id="updateByPrimaryKey">
+        update wms_id_instantdirective
+        <set>
+                idt_code = #{idtCode,jdbcType=VARCHAR},
+                id_ref_code = #{idRefCode,jdbcType=VARCHAR},
+                order_context = #{orderContext,jdbcType=VARCHAR},
+                is_code = #{isCode,jdbcType=VARCHAR},
+                create_time = #{createTime,jdbcType=TIMESTAMP},
+                finish_time = #{finishTime,jdbcType=TIMESTAMP},
+                id_note = #{idNote,jdbcType=VARCHAR},
+                id_result = #{idResult,jdbcType=VARCHAR},
+                process_count = #{processCount,jdbcType=INTEGER}
+        </set>
+        where id_id = #{id,jdbcType=BIGINT}
+    </update>
+
+    <update id="updateByPrimaryKeySelective">
+        update wms_id_instantdirective
+        <set>
+                <if test="idtCode != null">
+                    idt_code = #{idtCode,jdbcType=VARCHAR},
+                </if>
+                <if test="idRefCode != null">
+                    id_ref_code = #{idRefCode,jdbcType=VARCHAR},
+                </if>
+                <if test="orderContext != null">
+                    order_context = #{orderContext,jdbcType=VARCHAR},
+                </if>
+                <if test="isCode != null">
+                    is_code = #{isCode,jdbcType=VARCHAR},
+                </if>
+                <if test="createTime != null">
+                    create_time = #{createTime,jdbcType=TIMESTAMP},
+                </if>
+                <if test="finishTime != null">
+                    finish_time = #{finishTime,jdbcType=TIMESTAMP},
+                </if>
+                <if test="idNote != null">
+                    id_note = #{idNote,jdbcType=VARCHAR},
+                </if>
+                <if test="idResult != null">
+                    id_result = #{idResult,jdbcType=VARCHAR},
+                </if>
+                <if test="processCount != null">
+                    process_count = #{processCount,jdbcType=INTEGER}
+                </if>
+        </set>
+        where id_id = #{id,jdbcType=BIGINT}
+    </update>
+
+    <update id="updateBatch">
+        <foreach close="" collection="list" item="item" open="" separator=";">
+            update wms_id_instantdirective
+            <set>
+                    <if test="item.idtCode != null">
+                        idt_code = #{item.idtCode,jdbcType=VARCHAR},
+                    </if>
+                    <if test="item.idRefCode != null">
+                        id_ref_code = #{item.idRefCode,jdbcType=VARCHAR},
+                    </if>
+                    <if test="item.orderContext != null">
+                        order_context = #{item.orderContext,jdbcType=VARCHAR},
+                    </if>
+                    <if test="item.isCode != null">
+                        is_code = #{item.isCode,jdbcType=VARCHAR},
+                    </if>
+                    <if test="item.createTime != null">
+                        create_time = #{item.createTime,jdbcType=TIMESTAMP},
+                    </if>
+                    <if test="item.finishTime != null">
+                        finish_time = #{item.finishTime,jdbcType=TIMESTAMP},
+                    </if>
+                    <if test="item.idNote != null">
+                        id_note = #{item.idNote,jdbcType=VARCHAR},
+                    </if>
+                    <if test="item.idResult != null">
+                        id_result = #{item.idResult,jdbcType=VARCHAR},
+                    </if>
+                    <if test="item.processCount != null">
+                        process_count = #{item.processCount,jdbcType=INTEGER}
+                    </if>
+            </set>
+            where id_id = #{item.id,jdbcType=BIGINT}
+        </foreach>
+    </update>
+
+    <select id="selectByPrimaryKey" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List" />
+        from wms_id_instantdirective
+        where id_id = #{id,jdbcType=BIGINT}
+    </select>
+
+    <select id="selectByPrimaryKeyWithLock" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List" />
+        from wms_id_instantdirective
+        where id_id = #{id,jdbcType=BIGINT} for update
+    </select>
+
+    <select id="selectByPrimaryKeys" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List" />
+        from wms_id_instantdirective where id_id in
+        <foreach close=")" collection="list" item="item" open="(" separator=",">
+            #{item}
+        </foreach>
+    </select>
+
+    <select id="selectByEntity" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from wms_id_instantdirective
+        <where>
+                <if test="id != null">
+                    and id_id=#{id,jdbcType=BIGINT}
+                </if>
+                <if test="idtCode != null">
+                    and idt_code=#{idtCode,jdbcType=VARCHAR}
+                </if>
+                <if test="idRefCode != null">
+                    and id_ref_code=#{idRefCode,jdbcType=VARCHAR}
+                </if>
+                <if test="orderContext != null">
+                    and order_context=#{orderContext,jdbcType=VARCHAR}
+                </if>
+                <if test="isCode != null">
+                    and is_code=#{isCode,jdbcType=VARCHAR}
+                </if>
+                <if test="createTime != null">
+                    and create_time=#{createTime,jdbcType=TIMESTAMP}
+                </if>
+                <if test="finishTime != null">
+                    and finish_time=#{finishTime,jdbcType=TIMESTAMP}
+                </if>
+                <if test="idNote != null">
+                    and id_note=#{idNote,jdbcType=VARCHAR}
+                </if>
+                <if test="idResult != null">
+                    and id_result=#{idResult,jdbcType=VARCHAR}
+                </if>
+                <if test="processCount != null">
+                    and process_count=#{processCount,jdbcType=INTEGER}
+                </if>
+        </where>
+    </select>
+
+    <select id="selectByConditions" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from wms_id_instantdirective
+        <where>
+                <if test="id != null">
+                    and id_id ${id}
+                </if>
+                <if test="idtCode != null">
+                    and idt_code ${idtCode}
+                </if>
+                <if test="idRefCode != null">
+                    and id_ref_code ${idRefCode}
+                </if>
+                <if test="orderContext != null">
+                    and order_context ${orderContext}
+                </if>
+                <if test="isCode != null">
+                    and is_code ${isCode}
+                </if>
+                <if test="createTime != null">
+                    and create_time ${createTime}
+                </if>
+                <if test="finishTime != null">
+                    and finish_time ${finishTime}
+                </if>
+                <if test="idNote != null">
+                    and id_note ${idNote}
+                </if>
+                <if test="idResult != null">
+                    and id_result ${idResult}
+                </if>
+                <if test="processCount != null">
+                    and process_count ${processCount}
+                </if>
+        </where>
+        <if test="orderBy != null">
+            order by ${orderBy}
+        </if>
+    </select>
+
+    <select id="selectAll" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from wms_id_instantdirective
+    </select>
+
+    <select id="count" resultType="java.lang.Long">
+        select count(*) from wms_id_instantdirective
+    </select>
+
+    <select id="selectByFunction">
+        select ${function}(${column}) from wms_id_instantdirective
+    </select>
+
+</mapper>

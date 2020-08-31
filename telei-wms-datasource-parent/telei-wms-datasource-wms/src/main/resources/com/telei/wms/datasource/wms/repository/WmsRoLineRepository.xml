@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.telei.wms.datasource.wms.repository.WmsRoLineRepository">
+
+    <resultMap id="PageQueryResultMap" extends="BaseResultMap" type="com.telei.wms.datasource.wms.vo.RoLinePageQueryResponseVo">
+        <result column="place_of_origin" jdbcType="VARCHAR" property="placeOfOrigin"/>
+        <result column="mid_bag_qty" jdbcType="VARCHAR" property="midBagQty"/>
+        <result column="big_bag_qty" jdbcType="VARCHAR" property="bigBagQty"/>
+    </resultMap>
+
+    <sql id="Page_Query_Column_List">
+        wrl.rol_id,
+        wrl.ro_id,
+        wrl.rp_id,
+        wrl.rpd_id,
+        wrl.po_id,
+        wrl.pod_id,
+        wrl.product_id,
+        wrl.media_id,
+        wrl.product_no,
+        wrl.product_name,
+        wrl.product_name_local,
+        wrl.product_barcode,
+        wrl.product_upc_code,
+        wrl.spec_type,
+        wrl.brand,
+        wrl.cost_reference,
+        wrl.cost_reference_currency_id,
+        wrl.unit_price,
+        wrl.paln_qty,
+        wrl.receipts_qty,
+        wrl.unit_id,
+        wrl.amount,
+        wrl.unit_price_currency_id,
+        wrl.memo,
+        cp.place_of_origin,
+        cp.mid_bag_qty,
+        cp.big_bag_qty
+    </sql>
+
+    <select id="findAll" resultMap="PageQueryResultMap">
+        SELECT
+        <include refid="Page_Query_Column_List"/>
+        FROM wms_ro_line wrl
+        INNER JOIN cdm.cdm_product cp ON cp.product_id = wrl.product_id
+        WHERE wrl.ro_id = #{roId,jdbcType=BIGINT}
+        ORDER BY wrl.rol_id DESC
+    </select>
+
+</mapper>
+

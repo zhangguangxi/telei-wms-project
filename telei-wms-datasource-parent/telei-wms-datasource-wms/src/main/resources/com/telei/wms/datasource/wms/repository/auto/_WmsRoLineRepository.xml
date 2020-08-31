@@ -1,0 +1,620 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.telei.wms.datasource.wms.repository.WmsRoLineRepository">
+    <resultMap id="BaseResultMap" type="com.telei.wms.datasource.wms.model.WmsRoLine">
+        <id column="rol_id" jdbcType="BIGINT" property="id"/>
+            <result column="ro_id" jdbcType="BIGINT" property="roId"/>
+            <result column="rp_id" jdbcType="BIGINT" property="rpId"/>
+            <result column="rpd_id" jdbcType="BIGINT" property="rpdId"/>
+            <result column="po_id" jdbcType="BIGINT" property="poId"/>
+            <result column="pod_id" jdbcType="BIGINT" property="podId"/>
+            <result column="product_id" jdbcType="BIGINT" property="productId"/>
+            <result column="media_id" jdbcType="VARCHAR" property="mediaId"/>
+            <result column="product_no" jdbcType="VARCHAR" property="productNo"/>
+            <result column="product_name" jdbcType="VARCHAR" property="productName"/>
+            <result column="product_name_local" jdbcType="VARCHAR" property="productNameLocal"/>
+            <result column="product_barcode" jdbcType="VARCHAR" property="productBarcode"/>
+            <result column="product_upc_code" jdbcType="VARCHAR" property="productUpcCode"/>
+            <result column="spec_type" jdbcType="VARCHAR" property="specType"/>
+            <result column="brand" jdbcType="VARCHAR" property="brand"/>
+            <result column="cost_reference" jdbcType="DECIMAL" property="costReference"/>
+            <result column="cost_reference_currency_id" jdbcType="INTEGER" property="costReferenceCurrencyId"/>
+            <result column="unit_price" jdbcType="DECIMAL" property="unitPrice"/>
+            <result column="paln_qty" jdbcType="DECIMAL" property="palnQty"/>
+            <result column="receipts_qty" jdbcType="DECIMAL" property="receiptsQty"/>
+            <result column="unit_id" jdbcType="BIGINT" property="unitId"/>
+            <result column="amount" jdbcType="DECIMAL" property="amount"/>
+            <result column="unit_price_currency_id" jdbcType="INTEGER" property="unitPriceCurrencyId"/>
+            <result column="memo" jdbcType="VARCHAR" property="memo"/>
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        rol_id,ro_id,rp_id,rpd_id,po_id,pod_id,product_id,media_id,product_no,product_name,product_name_local,product_barcode,product_upc_code,spec_type,brand,cost_reference,cost_reference_currency_id,unit_price,paln_qty,receipts_qty,unit_id,amount,unit_price_currency_id,memo
+    </sql>
+
+        <insert id="insert">
+            insert into wms_ro_line (rol_id,ro_id,rp_id,rpd_id,po_id,pod_id,product_id,media_id,product_no,product_name,product_name_local,product_barcode,product_upc_code,spec_type,brand,cost_reference,cost_reference_currency_id,unit_price,paln_qty,receipts_qty,unit_id,amount,unit_price_currency_id,memo)
+            values (#{id,jdbcType=BIGINT},#{roId,jdbcType=BIGINT},#{rpId,jdbcType=BIGINT},#{rpdId,jdbcType=BIGINT},#{poId,jdbcType=BIGINT},#{podId,jdbcType=BIGINT},#{productId,jdbcType=BIGINT},#{mediaId,jdbcType=VARCHAR},#{productNo,jdbcType=VARCHAR},#{productName,jdbcType=VARCHAR},#{productNameLocal,jdbcType=VARCHAR},#{productBarcode,jdbcType=VARCHAR},#{productUpcCode,jdbcType=VARCHAR},#{specType,jdbcType=VARCHAR},#{brand,jdbcType=VARCHAR},#{costReference,jdbcType=DECIMAL},#{costReferenceCurrencyId,jdbcType=INTEGER},#{unitPrice,jdbcType=DECIMAL},#{palnQty,jdbcType=DECIMAL},#{receiptsQty,jdbcType=DECIMAL},#{unitId,jdbcType=BIGINT},#{amount,jdbcType=DECIMAL},#{unitPriceCurrencyId,jdbcType=INTEGER},#{memo,jdbcType=VARCHAR})
+        </insert>
+
+        <insert id="insertSelective">
+            insert into wms_ro_line
+            <trim prefix="(" suffix=")" suffixOverrides=",">
+                    <if test="id != null">
+                        rol_id,
+                    </if>
+                    <if test="roId != null">
+                        ro_id,
+                    </if>
+                    <if test="rpId != null">
+                        rp_id,
+                    </if>
+                    <if test="rpdId != null">
+                        rpd_id,
+                    </if>
+                    <if test="poId != null">
+                        po_id,
+                    </if>
+                    <if test="podId != null">
+                        pod_id,
+                    </if>
+                    <if test="productId != null">
+                        product_id,
+                    </if>
+                    <if test="mediaId != null">
+                        media_id,
+                    </if>
+                    <if test="productNo != null">
+                        product_no,
+                    </if>
+                    <if test="productName != null">
+                        product_name,
+                    </if>
+                    <if test="productNameLocal != null">
+                        product_name_local,
+                    </if>
+                    <if test="productBarcode != null">
+                        product_barcode,
+                    </if>
+                    <if test="productUpcCode != null">
+                        product_upc_code,
+                    </if>
+                    <if test="specType != null">
+                        spec_type,
+                    </if>
+                    <if test="brand != null">
+                        brand,
+                    </if>
+                    <if test="costReference != null">
+                        cost_reference,
+                    </if>
+                    <if test="costReferenceCurrencyId != null">
+                        cost_reference_currency_id,
+                    </if>
+                    <if test="unitPrice != null">
+                        unit_price,
+                    </if>
+                    <if test="palnQty != null">
+                        paln_qty,
+                    </if>
+                    <if test="receiptsQty != null">
+                        receipts_qty,
+                    </if>
+                    <if test="unitId != null">
+                        unit_id,
+                    </if>
+                    <if test="amount != null">
+                        amount,
+                    </if>
+                    <if test="unitPriceCurrencyId != null">
+                        unit_price_currency_id,
+                    </if>
+                    <if test="memo != null">
+                        memo
+                    </if>
+            </trim>
+            <trim prefix="values (" suffix=")" suffixOverrides=",">
+                    <if test="id != null">
+                        #{id,jdbcType=BIGINT},
+                    </if>
+                    <if test="roId != null">
+                        #{roId,jdbcType=BIGINT},
+                    </if>
+                    <if test="rpId != null">
+                        #{rpId,jdbcType=BIGINT},
+                    </if>
+                    <if test="rpdId != null">
+                        #{rpdId,jdbcType=BIGINT},
+                    </if>
+                    <if test="poId != null">
+                        #{poId,jdbcType=BIGINT},
+                    </if>
+                    <if test="podId != null">
+                        #{podId,jdbcType=BIGINT},
+                    </if>
+                    <if test="productId != null">
+                        #{productId,jdbcType=BIGINT},
+                    </if>
+                    <if test="mediaId != null">
+                        #{mediaId,jdbcType=VARCHAR},
+                    </if>
+                    <if test="productNo != null">
+                        #{productNo,jdbcType=VARCHAR},
+                    </if>
+                    <if test="productName != null">
+                        #{productName,jdbcType=VARCHAR},
+                    </if>
+                    <if test="productNameLocal != null">
+                        #{productNameLocal,jdbcType=VARCHAR},
+                    </if>
+                    <if test="productBarcode != null">
+                        #{productBarcode,jdbcType=VARCHAR},
+                    </if>
+                    <if test="productUpcCode != null">
+                        #{productUpcCode,jdbcType=VARCHAR},
+                    </if>
+                    <if test="specType != null">
+                        #{specType,jdbcType=VARCHAR},
+                    </if>
+                    <if test="brand != null">
+                        #{brand,jdbcType=VARCHAR},
+                    </if>
+                    <if test="costReference != null">
+                        #{costReference,jdbcType=DECIMAL},
+                    </if>
+                    <if test="costReferenceCurrencyId != null">
+                        #{costReferenceCurrencyId,jdbcType=INTEGER},
+                    </if>
+                    <if test="unitPrice != null">
+                        #{unitPrice,jdbcType=DECIMAL},
+                    </if>
+                    <if test="palnQty != null">
+                        #{palnQty,jdbcType=DECIMAL},
+                    </if>
+                    <if test="receiptsQty != null">
+                        #{receiptsQty,jdbcType=DECIMAL},
+                    </if>
+                    <if test="unitId != null">
+                        #{unitId,jdbcType=BIGINT},
+                    </if>
+                    <if test="amount != null">
+                        #{amount,jdbcType=DECIMAL},
+                    </if>
+                    <if test="unitPriceCurrencyId != null">
+                        #{unitPriceCurrencyId,jdbcType=INTEGER},
+                    </if>
+                    <if test="memo != null">
+                        #{memo,jdbcType=VARCHAR}
+                    </if>
+            </trim>
+        </insert>
+
+        <insert id="insertBatch">
+            insert into wms_ro_line (rol_id,ro_id,rp_id,rpd_id,po_id,pod_id,product_id,media_id,product_no,product_name,product_name_local,product_barcode,product_upc_code,spec_type,brand,cost_reference,cost_reference_currency_id,unit_price,paln_qty,receipts_qty,unit_id,amount,unit_price_currency_id,memo) values
+            <foreach collection="list" item="item" separator=",">
+                (
+                    #{item.id,jdbcType=BIGINT},
+                    #{item.roId,jdbcType=BIGINT},
+                    #{item.rpId,jdbcType=BIGINT},
+                    #{item.rpdId,jdbcType=BIGINT},
+                    #{item.poId,jdbcType=BIGINT},
+                    #{item.podId,jdbcType=BIGINT},
+                    #{item.productId,jdbcType=BIGINT},
+                    #{item.mediaId,jdbcType=VARCHAR},
+                    #{item.productNo,jdbcType=VARCHAR},
+                    #{item.productName,jdbcType=VARCHAR},
+                    #{item.productNameLocal,jdbcType=VARCHAR},
+                    #{item.productBarcode,jdbcType=VARCHAR},
+                    #{item.productUpcCode,jdbcType=VARCHAR},
+                    #{item.specType,jdbcType=VARCHAR},
+                    #{item.brand,jdbcType=VARCHAR},
+                    #{item.costReference,jdbcType=DECIMAL},
+                    #{item.costReferenceCurrencyId,jdbcType=INTEGER},
+                    #{item.unitPrice,jdbcType=DECIMAL},
+                    #{item.palnQty,jdbcType=DECIMAL},
+                    #{item.receiptsQty,jdbcType=DECIMAL},
+                    #{item.unitId,jdbcType=BIGINT},
+                    #{item.amount,jdbcType=DECIMAL},
+                    #{item.unitPriceCurrencyId,jdbcType=INTEGER},
+                    #{item.memo,jdbcType=VARCHAR}
+                )
+            </foreach>
+        </insert>
+
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+        delete from wms_ro_line
+        where rol_id = #{id,jdbcType=BIGINT}
+    </delete>
+
+    <delete id="deleteByPrimaryKeys">
+        delete from wms_ro_line where rol_id in
+        <foreach close=")" collection="list" item="item" open="(" separator=",">
+            #{item}
+        </foreach>
+    </delete>
+
+    <update id="updateByPrimaryKey">
+        update wms_ro_line
+        <set>
+                ro_id = #{roId,jdbcType=BIGINT},
+                rp_id = #{rpId,jdbcType=BIGINT},
+                rpd_id = #{rpdId,jdbcType=BIGINT},
+                po_id = #{poId,jdbcType=BIGINT},
+                pod_id = #{podId,jdbcType=BIGINT},
+                product_id = #{productId,jdbcType=BIGINT},
+                media_id = #{mediaId,jdbcType=VARCHAR},
+                product_no = #{productNo,jdbcType=VARCHAR},
+                product_name = #{productName,jdbcType=VARCHAR},
+                product_name_local = #{productNameLocal,jdbcType=VARCHAR},
+                product_barcode = #{productBarcode,jdbcType=VARCHAR},
+                product_upc_code = #{productUpcCode,jdbcType=VARCHAR},
+                spec_type = #{specType,jdbcType=VARCHAR},
+                brand = #{brand,jdbcType=VARCHAR},
+                cost_reference = #{costReference,jdbcType=DECIMAL},
+                cost_reference_currency_id = #{costReferenceCurrencyId,jdbcType=INTEGER},
+                unit_price = #{unitPrice,jdbcType=DECIMAL},
+                paln_qty = #{palnQty,jdbcType=DECIMAL},
+                receipts_qty = #{receiptsQty,jdbcType=DECIMAL},
+                unit_id = #{unitId,jdbcType=BIGINT},
+                amount = #{amount,jdbcType=DECIMAL},
+                unit_price_currency_id = #{unitPriceCurrencyId,jdbcType=INTEGER},
+                memo = #{memo,jdbcType=VARCHAR}
+        </set>
+        where rol_id = #{id,jdbcType=BIGINT}
+    </update>
+
+    <update id="updateByPrimaryKeySelective">
+        update wms_ro_line
+        <set>
+                <if test="roId != null">
+                    ro_id = #{roId,jdbcType=BIGINT},
+                </if>
+                <if test="rpId != null">
+                    rp_id = #{rpId,jdbcType=BIGINT},
+                </if>
+                <if test="rpdId != null">
+                    rpd_id = #{rpdId,jdbcType=BIGINT},
+                </if>
+                <if test="poId != null">
+                    po_id = #{poId,jdbcType=BIGINT},
+                </if>
+                <if test="podId != null">
+                    pod_id = #{podId,jdbcType=BIGINT},
+                </if>
+                <if test="productId != null">
+                    product_id = #{productId,jdbcType=BIGINT},
+                </if>
+                <if test="mediaId != null">
+                    media_id = #{mediaId,jdbcType=VARCHAR},
+                </if>
+                <if test="productNo != null">
+                    product_no = #{productNo,jdbcType=VARCHAR},
+                </if>
+                <if test="productName != null">
+                    product_name = #{productName,jdbcType=VARCHAR},
+                </if>
+                <if test="productNameLocal != null">
+                    product_name_local = #{productNameLocal,jdbcType=VARCHAR},
+                </if>
+                <if test="productBarcode != null">
+                    product_barcode = #{productBarcode,jdbcType=VARCHAR},
+                </if>
+                <if test="productUpcCode != null">
+                    product_upc_code = #{productUpcCode,jdbcType=VARCHAR},
+                </if>
+                <if test="specType != null">
+                    spec_type = #{specType,jdbcType=VARCHAR},
+                </if>
+                <if test="brand != null">
+                    brand = #{brand,jdbcType=VARCHAR},
+                </if>
+                <if test="costReference != null">
+                    cost_reference = #{costReference,jdbcType=DECIMAL},
+                </if>
+                <if test="costReferenceCurrencyId != null">
+                    cost_reference_currency_id = #{costReferenceCurrencyId,jdbcType=INTEGER},
+                </if>
+                <if test="unitPrice != null">
+                    unit_price = #{unitPrice,jdbcType=DECIMAL},
+                </if>
+                <if test="palnQty != null">
+                    paln_qty = #{palnQty,jdbcType=DECIMAL},
+                </if>
+                <if test="receiptsQty != null">
+                    receipts_qty = #{receiptsQty,jdbcType=DECIMAL},
+                </if>
+                <if test="unitId != null">
+                    unit_id = #{unitId,jdbcType=BIGINT},
+                </if>
+                <if test="amount != null">
+                    amount = #{amount,jdbcType=DECIMAL},
+                </if>
+                <if test="unitPriceCurrencyId != null">
+                    unit_price_currency_id = #{unitPriceCurrencyId,jdbcType=INTEGER},
+                </if>
+                <if test="memo != null">
+                    memo = #{memo,jdbcType=VARCHAR}
+                </if>
+        </set>
+        where rol_id = #{id,jdbcType=BIGINT}
+    </update>
+
+    <update id="updateBatch">
+        <foreach close="" collection="list" item="item" open="" separator=";">
+            update wms_ro_line
+            <set>
+                    <if test="item.roId != null">
+                        ro_id = #{item.roId,jdbcType=BIGINT},
+                    </if>
+                    <if test="item.rpId != null">
+                        rp_id = #{item.rpId,jdbcType=BIGINT},
+                    </if>
+                    <if test="item.rpdId != null">
+                        rpd_id = #{item.rpdId,jdbcType=BIGINT},
+                    </if>
+                    <if test="item.poId != null">
+                        po_id = #{item.poId,jdbcType=BIGINT},
+                    </if>
+                    <if test="item.podId != null">
+                        pod_id = #{item.podId,jdbcType=BIGINT},
+                    </if>
+                    <if test="item.productId != null">
+                        product_id = #{item.productId,jdbcType=BIGINT},
+                    </if>
+                    <if test="item.mediaId != null">
+                        media_id = #{item.mediaId,jdbcType=VARCHAR},
+                    </if>
+                    <if test="item.productNo != null">
+                        product_no = #{item.productNo,jdbcType=VARCHAR},
+                    </if>
+                    <if test="item.productName != null">
+                        product_name = #{item.productName,jdbcType=VARCHAR},
+                    </if>
+                    <if test="item.productNameLocal != null">
+                        product_name_local = #{item.productNameLocal,jdbcType=VARCHAR},
+                    </if>
+                    <if test="item.productBarcode != null">
+                        product_barcode = #{item.productBarcode,jdbcType=VARCHAR},
+                    </if>
+                    <if test="item.productUpcCode != null">
+                        product_upc_code = #{item.productUpcCode,jdbcType=VARCHAR},
+                    </if>
+                    <if test="item.specType != null">
+                        spec_type = #{item.specType,jdbcType=VARCHAR},
+                    </if>
+                    <if test="item.brand != null">
+                        brand = #{item.brand,jdbcType=VARCHAR},
+                    </if>
+                    <if test="item.costReference != null">
+                        cost_reference = #{item.costReference,jdbcType=DECIMAL},
+                    </if>
+                    <if test="item.costReferenceCurrencyId != null">
+                        cost_reference_currency_id = #{item.costReferenceCurrencyId,jdbcType=INTEGER},
+                    </if>
+                    <if test="item.unitPrice != null">
+                        unit_price = #{item.unitPrice,jdbcType=DECIMAL},
+                    </if>
+                    <if test="item.palnQty != null">
+                        paln_qty = #{item.palnQty,jdbcType=DECIMAL},
+                    </if>
+                    <if test="item.receiptsQty != null">
+                        receipts_qty = #{item.receiptsQty,jdbcType=DECIMAL},
+                    </if>
+                    <if test="item.unitId != null">
+                        unit_id = #{item.unitId,jdbcType=BIGINT},
+                    </if>
+                    <if test="item.amount != null">
+                        amount = #{item.amount,jdbcType=DECIMAL},
+                    </if>
+                    <if test="item.unitPriceCurrencyId != null">
+                        unit_price_currency_id = #{item.unitPriceCurrencyId,jdbcType=INTEGER},
+                    </if>
+                    <if test="item.memo != null">
+                        memo = #{item.memo,jdbcType=VARCHAR}
+                    </if>
+            </set>
+            where rol_id = #{item.id,jdbcType=BIGINT}
+        </foreach>
+    </update>
+
+    <select id="selectByPrimaryKey" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List" />
+        from wms_ro_line
+        where rol_id = #{id,jdbcType=BIGINT}
+    </select>
+
+    <select id="selectByPrimaryKeyWithLock" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List" />
+        from wms_ro_line
+        where rol_id = #{id,jdbcType=BIGINT} for update
+    </select>
+
+    <select id="selectByPrimaryKeys" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List" />
+        from wms_ro_line where rol_id in
+        <foreach close=")" collection="list" item="item" open="(" separator=",">
+            #{item}
+        </foreach>
+    </select>
+
+    <select id="selectByEntity" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from wms_ro_line
+        <where>
+                <if test="id != null">
+                    and rol_id=#{id,jdbcType=BIGINT}
+                </if>
+                <if test="roId != null">
+                    and ro_id=#{roId,jdbcType=BIGINT}
+                </if>
+                <if test="rpId != null">
+                    and rp_id=#{rpId,jdbcType=BIGINT}
+                </if>
+                <if test="rpdId != null">
+                    and rpd_id=#{rpdId,jdbcType=BIGINT}
+                </if>
+                <if test="poId != null">
+                    and po_id=#{poId,jdbcType=BIGINT}
+                </if>
+                <if test="podId != null">
+                    and pod_id=#{podId,jdbcType=BIGINT}
+                </if>
+                <if test="productId != null">
+                    and product_id=#{productId,jdbcType=BIGINT}
+                </if>
+                <if test="mediaId != null">
+                    and media_id=#{mediaId,jdbcType=VARCHAR}
+                </if>
+                <if test="productNo != null">
+                    and product_no=#{productNo,jdbcType=VARCHAR}
+                </if>
+                <if test="productName != null">
+                    and product_name=#{productName,jdbcType=VARCHAR}
+                </if>
+                <if test="productNameLocal != null">
+                    and product_name_local=#{productNameLocal,jdbcType=VARCHAR}
+                </if>
+                <if test="productBarcode != null">
+                    and product_barcode=#{productBarcode,jdbcType=VARCHAR}
+                </if>
+                <if test="productUpcCode != null">
+                    and product_upc_code=#{productUpcCode,jdbcType=VARCHAR}
+                </if>
+                <if test="specType != null">
+                    and spec_type=#{specType,jdbcType=VARCHAR}
+                </if>
+                <if test="brand != null">
+                    and brand=#{brand,jdbcType=VARCHAR}
+                </if>
+                <if test="costReference != null">
+                    and cost_reference=#{costReference,jdbcType=DECIMAL}
+                </if>
+                <if test="costReferenceCurrencyId != null">
+                    and cost_reference_currency_id=#{costReferenceCurrencyId,jdbcType=INTEGER}
+                </if>
+                <if test="unitPrice != null">
+                    and unit_price=#{unitPrice,jdbcType=DECIMAL}
+                </if>
+                <if test="palnQty != null">
+                    and paln_qty=#{palnQty,jdbcType=DECIMAL}
+                </if>
+                <if test="receiptsQty != null">
+                    and receipts_qty=#{receiptsQty,jdbcType=DECIMAL}
+                </if>
+                <if test="unitId != null">
+                    and unit_id=#{unitId,jdbcType=BIGINT}
+                </if>
+                <if test="amount != null">
+                    and amount=#{amount,jdbcType=DECIMAL}
+                </if>
+                <if test="unitPriceCurrencyId != null">
+                    and unit_price_currency_id=#{unitPriceCurrencyId,jdbcType=INTEGER}
+                </if>
+                <if test="memo != null">
+                    and memo=#{memo,jdbcType=VARCHAR}
+                </if>
+        </where>
+    </select>
+
+    <select id="selectByConditions" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from wms_ro_line
+        <where>
+                <if test="id != null">
+                    and rol_id ${id}
+                </if>
+                <if test="roId != null">
+                    and ro_id ${roId}
+                </if>
+                <if test="rpId != null">
+                    and rp_id ${rpId}
+                </if>
+                <if test="rpdId != null">
+                    and rpd_id ${rpdId}
+                </if>
+                <if test="poId != null">
+                    and po_id ${poId}
+                </if>
+                <if test="podId != null">
+                    and pod_id ${podId}
+                </if>
+                <if test="productId != null">
+                    and product_id ${productId}
+                </if>
+                <if test="mediaId != null">
+                    and media_id ${mediaId}
+                </if>
+                <if test="productNo != null">
+                    and product_no ${productNo}
+                </if>
+                <if test="productName != null">
+                    and product_name ${productName}
+                </if>
+                <if test="productNameLocal != null">
+                    and product_name_local ${productNameLocal}
+                </if>
+                <if test="productBarcode != null">
+                    and product_barcode ${productBarcode}
+                </if>
+                <if test="productUpcCode != null">
+                    and product_upc_code ${productUpcCode}
+                </if>
+                <if test="specType != null">
+                    and spec_type ${specType}
+                </if>
+                <if test="brand != null">
+                    and brand ${brand}
+                </if>
+                <if test="costReference != null">
+                    and cost_reference ${costReference}
+                </if>
+                <if test="costReferenceCurrencyId != null">
+                    and cost_reference_currency_id ${costReferenceCurrencyId}
+                </if>
+                <if test="unitPrice != null">
+                    and unit_price ${unitPrice}
+                </if>
+                <if test="palnQty != null">
+                    and paln_qty ${palnQty}
+                </if>
+                <if test="receiptsQty != null">
+                    and receipts_qty ${receiptsQty}
+                </if>
+                <if test="unitId != null">
+                    and unit_id ${unitId}
+                </if>
+                <if test="amount != null">
+                    and amount ${amount}
+                </if>
+                <if test="unitPriceCurrencyId != null">
+                    and unit_price_currency_id ${unitPriceCurrencyId}
+                </if>
+                <if test="memo != null">
+                    and memo ${memo}
+                </if>
+        </where>
+        <if test="orderBy != null">
+            order by ${orderBy}
+        </if>
+    </select>
+
+    <select id="selectAll" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from wms_ro_line
+    </select>
+
+    <select id="count" resultType="java.lang.Long">
+        select count(*) from wms_ro_line
+    </select>
+
+    <select id="selectByFunction">
+        select ${function}(${column}) from wms_ro_line
+    </select>
+
+</mapper>

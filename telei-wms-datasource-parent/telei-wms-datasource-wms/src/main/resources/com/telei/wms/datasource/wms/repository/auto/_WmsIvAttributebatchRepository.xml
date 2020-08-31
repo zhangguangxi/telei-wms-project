@@ -1,0 +1,1082 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.telei.wms.datasource.wms.repository.WmsIvAttributebatchRepository">
+    <resultMap id="BaseResultMap" type="com.telei.wms.datasource.wms.model.WmsIvAttributebatch">
+        <id column="iab_id" jdbcType="BIGINT" property="id"/>
+            <result column="product_id" jdbcType="BIGINT" property="productId"/>
+            <result column="company_id" jdbcType="BIGINT" property="companyId"/>
+            <result column="warehouse_id" jdbcType="BIGINT" property="warehouseId"/>
+            <result column="warehouse_code" jdbcType="VARCHAR" property="warehouseCode"/>
+            <result column="product_name" jdbcType="VARCHAR" property="productName"/>
+            <result column="product_name_local" jdbcType="VARCHAR" property="productNameLocal"/>
+            <result column="product_barcode" jdbcType="VARCHAR" property="productBarcode"/>
+            <result column="product_upc_code" jdbcType="VARCHAR" property="productUpcCode"/>
+            <result column="batch_no" jdbcType="VARCHAR" property="batchNo"/>
+            <result column="product_category_id" jdbcType="BIGINT" property="productCategoryId"/>
+            <result column="spec_type" jdbcType="VARCHAR" property="specType"/>
+            <result column="weight" jdbcType="DECIMAL" property="weight"/>
+            <result column="product_length" jdbcType="DECIMAL" property="productLength"/>
+            <result column="product_width" jdbcType="DECIMAL" property="productWidth"/>
+            <result column="product_height" jdbcType="DECIMAL" property="productHeight"/>
+            <result column="vol" jdbcType="DECIMAL" property="vol"/>
+            <result column="stock_unit" jdbcType="BIGINT" property="stockUnit"/>
+            <result column="product_color" jdbcType="VARCHAR" property="productColor"/>
+            <result column="product_size" jdbcType="VARCHAR" property="productSize"/>
+            <result column="price" jdbcType="DECIMAL" property="price"/>
+            <result column="texture" jdbcType="VARCHAR" property="texture"/>
+            <result column="image_path" jdbcType="VARCHAR" property="imagePath"/>
+            <result column="mid_bag_qty" jdbcType="INTEGER" property="midBagQty"/>
+            <result column="mid_bag_weight" jdbcType="DECIMAL" property="midBagWeight"/>
+            <result column="mid_bag_length" jdbcType="DECIMAL" property="midBagLength"/>
+            <result column="mid_bag_width" jdbcType="DECIMAL" property="midBagWidth"/>
+            <result column="mid_bag_height" jdbcType="DECIMAL" property="midBagHeight"/>
+            <result column="mid_bag_vol" jdbcType="DECIMAL" property="midBagVol"/>
+            <result column="mid_bag_barcode" jdbcType="VARCHAR" property="midBagBarcode"/>
+            <result column="big_bag_qty" jdbcType="INTEGER" property="bigBagQty"/>
+            <result column="big_bag_weight" jdbcType="DECIMAL" property="bigBagWeight"/>
+            <result column="big_bag_length" jdbcType="DECIMAL" property="bigBagLength"/>
+            <result column="big_bag_width" jdbcType="DECIMAL" property="bigBagWidth"/>
+            <result column="big_bag_height" jdbcType="DECIMAL" property="bigBagHeight"/>
+            <result column="big_bag_vol" jdbcType="DECIMAL" property="bigBagVol"/>
+            <result column="big_bag_barcode" jdbcType="VARCHAR" property="bigBagBarcode"/>
+            <result column="product_date" jdbcType="TIMESTAMP" property="productDate"/>
+            <result column="effective_date" jdbcType="TIMESTAMP" property="effectiveDate"/>
+            <result column="qs_code" jdbcType="VARCHAR" property="qsCode"/>
+            <result column="ap_code" jdbcType="VARCHAR" property="apCode"/>
+            <result column="document_code" jdbcType="VARCHAR" property="documentCode"/>
+            <result column="iab_document_id" jdbcType="BIGINT" property="iabDocumentId"/>
+            <result column="iab_documentline_id" jdbcType="BIGINT" property="iabDocumentlineId"/>
+            <result column="create_user" jdbcType="BIGINT" property="createUser"/>
+            <result column="create_time" jdbcType="TIMESTAMP" property="createTime"/>
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        iab_id,product_id,company_id,warehouse_id,warehouse_code,product_name,product_name_local,product_barcode,product_upc_code,batch_no,product_category_id,spec_type,weight,product_length,product_width,product_height,vol,stock_unit,product_color,product_size,price,texture,image_path,mid_bag_qty,mid_bag_weight,mid_bag_length,mid_bag_width,mid_bag_height,mid_bag_vol,mid_bag_barcode,big_bag_qty,big_bag_weight,big_bag_length,big_bag_width,big_bag_height,big_bag_vol,big_bag_barcode,product_date,effective_date,qs_code,ap_code,document_code,iab_document_id,iab_documentline_id,create_user,create_time
+    </sql>
+
+        <insert id="insert">
+            insert into wms_iv_attributebatch (iab_id,product_id,company_id,warehouse_id,warehouse_code,product_name,product_name_local,product_barcode,product_upc_code,batch_no,product_category_id,spec_type,weight,product_length,product_width,product_height,vol,stock_unit,product_color,product_size,price,texture,image_path,mid_bag_qty,mid_bag_weight,mid_bag_length,mid_bag_width,mid_bag_height,mid_bag_vol,mid_bag_barcode,big_bag_qty,big_bag_weight,big_bag_length,big_bag_width,big_bag_height,big_bag_vol,big_bag_barcode,product_date,effective_date,qs_code,ap_code,document_code,iab_document_id,iab_documentline_id,create_user,create_time)
+            values (#{id,jdbcType=BIGINT},#{productId,jdbcType=BIGINT},#{companyId,jdbcType=BIGINT},#{warehouseId,jdbcType=BIGINT},#{warehouseCode,jdbcType=VARCHAR},#{productName,jdbcType=VARCHAR},#{productNameLocal,jdbcType=VARCHAR},#{productBarcode,jdbcType=VARCHAR},#{productUpcCode,jdbcType=VARCHAR},#{batchNo,jdbcType=VARCHAR},#{productCategoryId,jdbcType=BIGINT},#{specType,jdbcType=VARCHAR},#{weight,jdbcType=DECIMAL},#{productLength,jdbcType=DECIMAL},#{productWidth,jdbcType=DECIMAL},#{productHeight,jdbcType=DECIMAL},#{vol,jdbcType=DECIMAL},#{stockUnit,jdbcType=BIGINT},#{productColor,jdbcType=VARCHAR},#{productSize,jdbcType=VARCHAR},#{price,jdbcType=DECIMAL},#{texture,jdbcType=VARCHAR},#{imagePath,jdbcType=VARCHAR},#{midBagQty,jdbcType=INTEGER},#{midBagWeight,jdbcType=DECIMAL},#{midBagLength,jdbcType=DECIMAL},#{midBagWidth,jdbcType=DECIMAL},#{midBagHeight,jdbcType=DECIMAL},#{midBagVol,jdbcType=DECIMAL},#{midBagBarcode,jdbcType=VARCHAR},#{bigBagQty,jdbcType=INTEGER},#{bigBagWeight,jdbcType=DECIMAL},#{bigBagLength,jdbcType=DECIMAL},#{bigBagWidth,jdbcType=DECIMAL},#{bigBagHeight,jdbcType=DECIMAL},#{bigBagVol,jdbcType=DECIMAL},#{bigBagBarcode,jdbcType=VARCHAR},#{productDate,jdbcType=TIMESTAMP},#{effectiveDate,jdbcType=TIMESTAMP},#{qsCode,jdbcType=VARCHAR},#{apCode,jdbcType=VARCHAR},#{documentCode,jdbcType=VARCHAR},#{iabDocumentId,jdbcType=BIGINT},#{iabDocumentlineId,jdbcType=BIGINT},#{createUser,jdbcType=BIGINT},#{createTime,jdbcType=TIMESTAMP})
+        </insert>
+
+        <insert id="insertSelective">
+            insert into wms_iv_attributebatch
+            <trim prefix="(" suffix=")" suffixOverrides=",">
+                    <if test="id != null">
+                        iab_id,
+                    </if>
+                    <if test="productId != null">
+                        product_id,
+                    </if>
+                    <if test="companyId != null">
+                        company_id,
+                    </if>
+                    <if test="warehouseId != null">
+                        warehouse_id,
+                    </if>
+                    <if test="warehouseCode != null">
+                        warehouse_code,
+                    </if>
+                    <if test="productName != null">
+                        product_name,
+                    </if>
+                    <if test="productNameLocal != null">
+                        product_name_local,
+                    </if>
+                    <if test="productBarcode != null">
+                        product_barcode,
+                    </if>
+                    <if test="productUpcCode != null">
+                        product_upc_code,
+                    </if>
+                    <if test="batchNo != null">
+                        batch_no,
+                    </if>
+                    <if test="productCategoryId != null">
+                        product_category_id,
+                    </if>
+                    <if test="specType != null">
+                        spec_type,
+                    </if>
+                    <if test="weight != null">
+                        weight,
+                    </if>
+                    <if test="productLength != null">
+                        product_length,
+                    </if>
+                    <if test="productWidth != null">
+                        product_width,
+                    </if>
+                    <if test="productHeight != null">
+                        product_height,
+                    </if>
+                    <if test="vol != null">
+                        vol,
+                    </if>
+                    <if test="stockUnit != null">
+                        stock_unit,
+                    </if>
+                    <if test="productColor != null">
+                        product_color,
+                    </if>
+                    <if test="productSize != null">
+                        product_size,
+                    </if>
+                    <if test="price != null">
+                        price,
+                    </if>
+                    <if test="texture != null">
+                        texture,
+                    </if>
+                    <if test="imagePath != null">
+                        image_path,
+                    </if>
+                    <if test="midBagQty != null">
+                        mid_bag_qty,
+                    </if>
+                    <if test="midBagWeight != null">
+                        mid_bag_weight,
+                    </if>
+                    <if test="midBagLength != null">
+                        mid_bag_length,
+                    </if>
+                    <if test="midBagWidth != null">
+                        mid_bag_width,
+                    </if>
+                    <if test="midBagHeight != null">
+                        mid_bag_height,
+                    </if>
+                    <if test="midBagVol != null">
+                        mid_bag_vol,
+                    </if>
+                    <if test="midBagBarcode != null">
+                        mid_bag_barcode,
+                    </if>
+                    <if test="bigBagQty != null">
+                        big_bag_qty,
+                    </if>
+                    <if test="bigBagWeight != null">
+                        big_bag_weight,
+                    </if>
+                    <if test="bigBagLength != null">
+                        big_bag_length,
+                    </if>
+                    <if test="bigBagWidth != null">
+                        big_bag_width,
+                    </if>
+                    <if test="bigBagHeight != null">
+                        big_bag_height,
+                    </if>
+                    <if test="bigBagVol != null">
+                        big_bag_vol,
+                    </if>
+                    <if test="bigBagBarcode != null">
+                        big_bag_barcode,
+                    </if>
+                    <if test="productDate != null">
+                        product_date,
+                    </if>
+                    <if test="effectiveDate != null">
+                        effective_date,
+                    </if>
+                    <if test="qsCode != null">
+                        qs_code,
+                    </if>
+                    <if test="apCode != null">
+                        ap_code,
+                    </if>
+                    <if test="documentCode != null">
+                        document_code,
+                    </if>
+                    <if test="iabDocumentId != null">
+                        iab_document_id,
+                    </if>
+                    <if test="iabDocumentlineId != null">
+                        iab_documentline_id,
+                    </if>
+                    <if test="createUser != null">
+                        create_user,
+                    </if>
+                    <if test="createTime != null">
+                        create_time
+                    </if>
+            </trim>
+            <trim prefix="values (" suffix=")" suffixOverrides=",">
+                    <if test="id != null">
+                        #{id,jdbcType=BIGINT},
+                    </if>
+                    <if test="productId != null">
+                        #{productId,jdbcType=BIGINT},
+                    </if>
+                    <if test="companyId != null">
+                        #{companyId,jdbcType=BIGINT},
+                    </if>
+                    <if test="warehouseId != null">
+                        #{warehouseId,jdbcType=BIGINT},
+                    </if>
+                    <if test="warehouseCode != null">
+                        #{warehouseCode,jdbcType=VARCHAR},
+                    </if>
+                    <if test="productName != null">
+                        #{productName,jdbcType=VARCHAR},
+                    </if>
+                    <if test="productNameLocal != null">
+                        #{productNameLocal,jdbcType=VARCHAR},
+                    </if>
+                    <if test="productBarcode != null">
+                        #{productBarcode,jdbcType=VARCHAR},
+                    </if>
+                    <if test="productUpcCode != null">
+                        #{productUpcCode,jdbcType=VARCHAR},
+                    </if>
+                    <if test="batchNo != null">
+                        #{batchNo,jdbcType=VARCHAR},
+                    </if>
+                    <if test="productCategoryId != null">
+                        #{productCategoryId,jdbcType=BIGINT},
+                    </if>
+                    <if test="specType != null">
+                        #{specType,jdbcType=VARCHAR},
+                    </if>
+                    <if test="weight != null">
+                        #{weight,jdbcType=DECIMAL},
+                    </if>
+                    <if test="productLength != null">
+                        #{productLength,jdbcType=DECIMAL},
+                    </if>
+                    <if test="productWidth != null">
+                        #{productWidth,jdbcType=DECIMAL},
+                    </if>
+                    <if test="productHeight != null">
+                        #{productHeight,jdbcType=DECIMAL},
+                    </if>
+                    <if test="vol != null">
+                        #{vol,jdbcType=DECIMAL},
+                    </if>
+                    <if test="stockUnit != null">
+                        #{stockUnit,jdbcType=BIGINT},
+                    </if>
+                    <if test="productColor != null">
+                        #{productColor,jdbcType=VARCHAR},
+                    </if>
+                    <if test="productSize != null">
+                        #{productSize,jdbcType=VARCHAR},
+                    </if>
+                    <if test="price != null">
+                        #{price,jdbcType=DECIMAL},
+                    </if>
+                    <if test="texture != null">
+                        #{texture,jdbcType=VARCHAR},
+                    </if>
+                    <if test="imagePath != null">
+                        #{imagePath,jdbcType=VARCHAR},
+                    </if>
+                    <if test="midBagQty != null">
+                        #{midBagQty,jdbcType=INTEGER},
+                    </if>
+                    <if test="midBagWeight != null">
+                        #{midBagWeight,jdbcType=DECIMAL},
+                    </if>
+                    <if test="midBagLength != null">
+                        #{midBagLength,jdbcType=DECIMAL},
+                    </if>
+                    <if test="midBagWidth != null">
+                        #{midBagWidth,jdbcType=DECIMAL},
+                    </if>
+                    <if test="midBagHeight != null">
+                        #{midBagHeight,jdbcType=DECIMAL},
+                    </if>
+                    <if test="midBagVol != null">
+                        #{midBagVol,jdbcType=DECIMAL},
+                    </if>
+                    <if test="midBagBarcode != null">
+                        #{midBagBarcode,jdbcType=VARCHAR},
+                    </if>
+                    <if test="bigBagQty != null">
+                        #{bigBagQty,jdbcType=INTEGER},
+                    </if>
+                    <if test="bigBagWeight != null">
+                        #{bigBagWeight,jdbcType=DECIMAL},
+                    </if>
+                    <if test="bigBagLength != null">
+                        #{bigBagLength,jdbcType=DECIMAL},
+                    </if>
+                    <if test="bigBagWidth != null">
+                        #{bigBagWidth,jdbcType=DECIMAL},
+                    </if>
+                    <if test="bigBagHeight != null">
+                        #{bigBagHeight,jdbcType=DECIMAL},
+                    </if>
+                    <if test="bigBagVol != null">
+                        #{bigBagVol,jdbcType=DECIMAL},
+                    </if>
+                    <if test="bigBagBarcode != null">
+                        #{bigBagBarcode,jdbcType=VARCHAR},
+                    </if>
+                    <if test="productDate != null">
+                        #{productDate,jdbcType=TIMESTAMP},
+                    </if>
+                    <if test="effectiveDate != null">
+                        #{effectiveDate,jdbcType=TIMESTAMP},
+                    </if>
+                    <if test="qsCode != null">
+                        #{qsCode,jdbcType=VARCHAR},
+                    </if>
+                    <if test="apCode != null">
+                        #{apCode,jdbcType=VARCHAR},
+                    </if>
+                    <if test="documentCode != null">
+                        #{documentCode,jdbcType=VARCHAR},
+                    </if>
+                    <if test="iabDocumentId != null">
+                        #{iabDocumentId,jdbcType=BIGINT},
+                    </if>
+                    <if test="iabDocumentlineId != null">
+                        #{iabDocumentlineId,jdbcType=BIGINT},
+                    </if>
+                    <if test="createUser != null">
+                        #{createUser,jdbcType=BIGINT},
+                    </if>
+                    <if test="createTime != null">
+                        #{createTime,jdbcType=TIMESTAMP}
+                    </if>
+            </trim>
+        </insert>
+
+        <insert id="insertBatch">
+            insert into wms_iv_attributebatch (iab_id,product_id,company_id,warehouse_id,warehouse_code,product_name,product_name_local,product_barcode,product_upc_code,batch_no,product_category_id,spec_type,weight,product_length,product_width,product_height,vol,stock_unit,product_color,product_size,price,texture,image_path,mid_bag_qty,mid_bag_weight,mid_bag_length,mid_bag_width,mid_bag_height,mid_bag_vol,mid_bag_barcode,big_bag_qty,big_bag_weight,big_bag_length,big_bag_width,big_bag_height,big_bag_vol,big_bag_barcode,product_date,effective_date,qs_code,ap_code,document_code,iab_document_id,iab_documentline_id,create_user,create_time) values
+            <foreach collection="list" item="item" separator=",">
+                (
+                    #{item.id,jdbcType=BIGINT},
+                    #{item.productId,jdbcType=BIGINT},
+                    #{item.companyId,jdbcType=BIGINT},
+                    #{item.warehouseId,jdbcType=BIGINT},
+                    #{item.warehouseCode,jdbcType=VARCHAR},
+                    #{item.productName,jdbcType=VARCHAR},
+                    #{item.productNameLocal,jdbcType=VARCHAR},
+                    #{item.productBarcode,jdbcType=VARCHAR},
+                    #{item.productUpcCode,jdbcType=VARCHAR},
+                    #{item.batchNo,jdbcType=VARCHAR},
+                    #{item.productCategoryId,jdbcType=BIGINT},
+                    #{item.specType,jdbcType=VARCHAR},
+                    #{item.weight,jdbcType=DECIMAL},
+                    #{item.productLength,jdbcType=DECIMAL},
+                    #{item.productWidth,jdbcType=DECIMAL},
+                    #{item.productHeight,jdbcType=DECIMAL},
+                    #{item.vol,jdbcType=DECIMAL},
+                    #{item.stockUnit,jdbcType=BIGINT},
+                    #{item.productColor,jdbcType=VARCHAR},
+                    #{item.productSize,jdbcType=VARCHAR},
+                    #{item.price,jdbcType=DECIMAL},
+                    #{item.texture,jdbcType=VARCHAR},
+                    #{item.imagePath,jdbcType=VARCHAR},
+                    #{item.midBagQty,jdbcType=INTEGER},
+                    #{item.midBagWeight,jdbcType=DECIMAL},
+                    #{item.midBagLength,jdbcType=DECIMAL},
+                    #{item.midBagWidth,jdbcType=DECIMAL},
+                    #{item.midBagHeight,jdbcType=DECIMAL},
+                    #{item.midBagVol,jdbcType=DECIMAL},
+                    #{item.midBagBarcode,jdbcType=VARCHAR},
+                    #{item.bigBagQty,jdbcType=INTEGER},
+                    #{item.bigBagWeight,jdbcType=DECIMAL},
+                    #{item.bigBagLength,jdbcType=DECIMAL},
+                    #{item.bigBagWidth,jdbcType=DECIMAL},
+                    #{item.bigBagHeight,jdbcType=DECIMAL},
+                    #{item.bigBagVol,jdbcType=DECIMAL},
+                    #{item.bigBagBarcode,jdbcType=VARCHAR},
+                    #{item.productDate,jdbcType=TIMESTAMP},
+                    #{item.effectiveDate,jdbcType=TIMESTAMP},
+                    #{item.qsCode,jdbcType=VARCHAR},
+                    #{item.apCode,jdbcType=VARCHAR},
+                    #{item.documentCode,jdbcType=VARCHAR},
+                    #{item.iabDocumentId,jdbcType=BIGINT},
+                    #{item.iabDocumentlineId,jdbcType=BIGINT},
+                    #{item.createUser,jdbcType=BIGINT},
+                    #{item.createTime,jdbcType=TIMESTAMP}
+                )
+            </foreach>
+        </insert>
+
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+        delete from wms_iv_attributebatch
+        where iab_id = #{id,jdbcType=BIGINT}
+    </delete>
+
+    <delete id="deleteByPrimaryKeys">
+        delete from wms_iv_attributebatch where iab_id in
+        <foreach close=")" collection="list" item="item" open="(" separator=",">
+            #{item}
+        </foreach>
+    </delete>
+
+    <update id="updateByPrimaryKey">
+        update wms_iv_attributebatch
+        <set>
+                product_id = #{productId,jdbcType=BIGINT},
+                company_id = #{companyId,jdbcType=BIGINT},
+                warehouse_id = #{warehouseId,jdbcType=BIGINT},
+                warehouse_code = #{warehouseCode,jdbcType=VARCHAR},
+                product_name = #{productName,jdbcType=VARCHAR},
+                product_name_local = #{productNameLocal,jdbcType=VARCHAR},
+                product_barcode = #{productBarcode,jdbcType=VARCHAR},
+                product_upc_code = #{productUpcCode,jdbcType=VARCHAR},
+                batch_no = #{batchNo,jdbcType=VARCHAR},
+                product_category_id = #{productCategoryId,jdbcType=BIGINT},
+                spec_type = #{specType,jdbcType=VARCHAR},
+                weight = #{weight,jdbcType=DECIMAL},
+                product_length = #{productLength,jdbcType=DECIMAL},
+                product_width = #{productWidth,jdbcType=DECIMAL},
+                product_height = #{productHeight,jdbcType=DECIMAL},
+                vol = #{vol,jdbcType=DECIMAL},
+                stock_unit = #{stockUnit,jdbcType=BIGINT},
+                product_color = #{productColor,jdbcType=VARCHAR},
+                product_size = #{productSize,jdbcType=VARCHAR},
+                price = #{price,jdbcType=DECIMAL},
+                texture = #{texture,jdbcType=VARCHAR},
+                image_path = #{imagePath,jdbcType=VARCHAR},
+                mid_bag_qty = #{midBagQty,jdbcType=INTEGER},
+                mid_bag_weight = #{midBagWeight,jdbcType=DECIMAL},
+                mid_bag_length = #{midBagLength,jdbcType=DECIMAL},
+                mid_bag_width = #{midBagWidth,jdbcType=DECIMAL},
+                mid_bag_height = #{midBagHeight,jdbcType=DECIMAL},
+                mid_bag_vol = #{midBagVol,jdbcType=DECIMAL},
+                mid_bag_barcode = #{midBagBarcode,jdbcType=VARCHAR},
+                big_bag_qty = #{bigBagQty,jdbcType=INTEGER},
+                big_bag_weight = #{bigBagWeight,jdbcType=DECIMAL},
+                big_bag_length = #{bigBagLength,jdbcType=DECIMAL},
+                big_bag_width = #{bigBagWidth,jdbcType=DECIMAL},
+                big_bag_height = #{bigBagHeight,jdbcType=DECIMAL},
+                big_bag_vol = #{bigBagVol,jdbcType=DECIMAL},
+                big_bag_barcode = #{bigBagBarcode,jdbcType=VARCHAR},
+                product_date = #{productDate,jdbcType=TIMESTAMP},
+                effective_date = #{effectiveDate,jdbcType=TIMESTAMP},
+                qs_code = #{qsCode,jdbcType=VARCHAR},
+                ap_code = #{apCode,jdbcType=VARCHAR},
+                document_code = #{documentCode,jdbcType=VARCHAR},
+                iab_document_id = #{iabDocumentId,jdbcType=BIGINT},
+                iab_documentline_id = #{iabDocumentlineId,jdbcType=BIGINT},
+                create_user = #{createUser,jdbcType=BIGINT},
+                create_time = #{createTime,jdbcType=TIMESTAMP}
+        </set>
+        where iab_id = #{id,jdbcType=BIGINT}
+    </update>
+
+    <update id="updateByPrimaryKeySelective">
+        update wms_iv_attributebatch
+        <set>
+                <if test="productId != null">
+                    product_id = #{productId,jdbcType=BIGINT},
+                </if>
+                <if test="companyId != null">
+                    company_id = #{companyId,jdbcType=BIGINT},
+                </if>
+                <if test="warehouseId != null">
+                    warehouse_id = #{warehouseId,jdbcType=BIGINT},
+                </if>
+                <if test="warehouseCode != null">
+                    warehouse_code = #{warehouseCode,jdbcType=VARCHAR},
+                </if>
+                <if test="productName != null">
+                    product_name = #{productName,jdbcType=VARCHAR},
+                </if>
+                <if test="productNameLocal != null">
+                    product_name_local = #{productNameLocal,jdbcType=VARCHAR},
+                </if>
+                <if test="productBarcode != null">
+                    product_barcode = #{productBarcode,jdbcType=VARCHAR},
+                </if>
+                <if test="productUpcCode != null">
+                    product_upc_code = #{productUpcCode,jdbcType=VARCHAR},
+                </if>
+                <if test="batchNo != null">
+                    batch_no = #{batchNo,jdbcType=VARCHAR},
+                </if>
+                <if test="productCategoryId != null">
+                    product_category_id = #{productCategoryId,jdbcType=BIGINT},
+                </if>
+                <if test="specType != null">
+                    spec_type = #{specType,jdbcType=VARCHAR},
+                </if>
+                <if test="weight != null">
+                    weight = #{weight,jdbcType=DECIMAL},
+                </if>
+                <if test="productLength != null">
+                    product_length = #{productLength,jdbcType=DECIMAL},
+                </if>
+                <if test="productWidth != null">
+                    product_width = #{productWidth,jdbcType=DECIMAL},
+                </if>
+                <if test="productHeight != null">
+                    product_height = #{productHeight,jdbcType=DECIMAL},
+                </if>
+                <if test="vol != null">
+                    vol = #{vol,jdbcType=DECIMAL},
+                </if>
+                <if test="stockUnit != null">
+                    stock_unit = #{stockUnit,jdbcType=BIGINT},
+                </if>
+                <if test="productColor != null">
+                    product_color = #{productColor,jdbcType=VARCHAR},
+                </if>
+                <if test="productSize != null">
+                    product_size = #{productSize,jdbcType=VARCHAR},
+                </if>
+                <if test="price != null">
+                    price = #{price,jdbcType=DECIMAL},
+                </if>
+                <if test="texture != null">
+                    texture = #{texture,jdbcType=VARCHAR},
+                </if>
+                <if test="imagePath != null">
+                    image_path = #{imagePath,jdbcType=VARCHAR},
+                </if>
+                <if test="midBagQty != null">
+                    mid_bag_qty = #{midBagQty,jdbcType=INTEGER},
+                </if>
+                <if test="midBagWeight != null">
+                    mid_bag_weight = #{midBagWeight,jdbcType=DECIMAL},
+                </if>
+                <if test="midBagLength != null">
+                    mid_bag_length = #{midBagLength,jdbcType=DECIMAL},
+                </if>
+                <if test="midBagWidth != null">
+                    mid_bag_width = #{midBagWidth,jdbcType=DECIMAL},
+                </if>
+                <if test="midBagHeight != null">
+                    mid_bag_height = #{midBagHeight,jdbcType=DECIMAL},
+                </if>
+                <if test="midBagVol != null">
+                    mid_bag_vol = #{midBagVol,jdbcType=DECIMAL},
+                </if>
+                <if test="midBagBarcode != null">
+                    mid_bag_barcode = #{midBagBarcode,jdbcType=VARCHAR},
+                </if>
+                <if test="bigBagQty != null">
+                    big_bag_qty = #{bigBagQty,jdbcType=INTEGER},
+                </if>
+                <if test="bigBagWeight != null">
+                    big_bag_weight = #{bigBagWeight,jdbcType=DECIMAL},
+                </if>
+                <if test="bigBagLength != null">
+                    big_bag_length = #{bigBagLength,jdbcType=DECIMAL},
+                </if>
+                <if test="bigBagWidth != null">
+                    big_bag_width = #{bigBagWidth,jdbcType=DECIMAL},
+                </if>
+                <if test="bigBagHeight != null">
+                    big_bag_height = #{bigBagHeight,jdbcType=DECIMAL},
+                </if>
+                <if test="bigBagVol != null">
+                    big_bag_vol = #{bigBagVol,jdbcType=DECIMAL},
+                </if>
+                <if test="bigBagBarcode != null">
+                    big_bag_barcode = #{bigBagBarcode,jdbcType=VARCHAR},
+                </if>
+                <if test="productDate != null">
+                    product_date = #{productDate,jdbcType=TIMESTAMP},
+                </if>
+                <if test="effectiveDate != null">
+                    effective_date = #{effectiveDate,jdbcType=TIMESTAMP},
+                </if>
+                <if test="qsCode != null">
+                    qs_code = #{qsCode,jdbcType=VARCHAR},
+                </if>
+                <if test="apCode != null">
+                    ap_code = #{apCode,jdbcType=VARCHAR},
+                </if>
+                <if test="documentCode != null">
+                    document_code = #{documentCode,jdbcType=VARCHAR},
+                </if>
+                <if test="iabDocumentId != null">
+                    iab_document_id = #{iabDocumentId,jdbcType=BIGINT},
+                </if>
+                <if test="iabDocumentlineId != null">
+                    iab_documentline_id = #{iabDocumentlineId,jdbcType=BIGINT},
+                </if>
+                <if test="createUser != null">
+                    create_user = #{createUser,jdbcType=BIGINT},
+                </if>
+                <if test="createTime != null">
+                    create_time = #{createTime,jdbcType=TIMESTAMP}
+                </if>
+        </set>
+        where iab_id = #{id,jdbcType=BIGINT}
+    </update>
+
+    <update id="updateBatch">
+        <foreach close="" collection="list" item="item" open="" separator=";">
+            update wms_iv_attributebatch
+            <set>
+                    <if test="item.productId != null">
+                        product_id = #{item.productId,jdbcType=BIGINT},
+                    </if>
+                    <if test="item.companyId != null">
+                        company_id = #{item.companyId,jdbcType=BIGINT},
+                    </if>
+                    <if test="item.warehouseId != null">
+                        warehouse_id = #{item.warehouseId,jdbcType=BIGINT},
+                    </if>
+                    <if test="item.warehouseCode != null">
+                        warehouse_code = #{item.warehouseCode,jdbcType=VARCHAR},
+                    </if>
+                    <if test="item.productName != null">
+                        product_name = #{item.productName,jdbcType=VARCHAR},
+                    </if>
+                    <if test="item.productNameLocal != null">
+                        product_name_local = #{item.productNameLocal,jdbcType=VARCHAR},
+                    </if>
+                    <if test="item.productBarcode != null">
+                        product_barcode = #{item.productBarcode,jdbcType=VARCHAR},
+                    </if>
+                    <if test="item.productUpcCode != null">
+                        product_upc_code = #{item.productUpcCode,jdbcType=VARCHAR},
+                    </if>
+                    <if test="item.batchNo != null">
+                        batch_no = #{item.batchNo,jdbcType=VARCHAR},
+                    </if>
+                    <if test="item.productCategoryId != null">
+                        product_category_id = #{item.productCategoryId,jdbcType=BIGINT},
+                    </if>
+                    <if test="item.specType != null">
+                        spec_type = #{item.specType,jdbcType=VARCHAR},
+                    </if>
+                    <if test="item.weight != null">
+                        weight = #{item.weight,jdbcType=DECIMAL},
+                    </if>
+                    <if test="item.productLength != null">
+                        product_length = #{item.productLength,jdbcType=DECIMAL},
+                    </if>
+                    <if test="item.productWidth != null">
+                        product_width = #{item.productWidth,jdbcType=DECIMAL},
+                    </if>
+                    <if test="item.productHeight != null">
+                        product_height = #{item.productHeight,jdbcType=DECIMAL},
+                    </if>
+                    <if test="item.vol != null">
+                        vol = #{item.vol,jdbcType=DECIMAL},
+                    </if>
+                    <if test="item.stockUnit != null">
+                        stock_unit = #{item.stockUnit,jdbcType=BIGINT},
+                    </if>
+                    <if test="item.productColor != null">
+                        product_color = #{item.productColor,jdbcType=VARCHAR},
+                    </if>
+                    <if test="item.productSize != null">
+                        product_size = #{item.productSize,jdbcType=VARCHAR},
+                    </if>
+                    <if test="item.price != null">
+                        price = #{item.price,jdbcType=DECIMAL},
+                    </if>
+                    <if test="item.texture != null">
+                        texture = #{item.texture,jdbcType=VARCHAR},
+                    </if>
+                    <if test="item.imagePath != null">
+                        image_path = #{item.imagePath,jdbcType=VARCHAR},
+                    </if>
+                    <if test="item.midBagQty != null">
+                        mid_bag_qty = #{item.midBagQty,jdbcType=INTEGER},
+                    </if>
+                    <if test="item.midBagWeight != null">
+                        mid_bag_weight = #{item.midBagWeight,jdbcType=DECIMAL},
+                    </if>
+                    <if test="item.midBagLength != null">
+                        mid_bag_length = #{item.midBagLength,jdbcType=DECIMAL},
+                    </if>
+                    <if test="item.midBagWidth != null">
+                        mid_bag_width = #{item.midBagWidth,jdbcType=DECIMAL},
+                    </if>
+                    <if test="item.midBagHeight != null">
+                        mid_bag_height = #{item.midBagHeight,jdbcType=DECIMAL},
+                    </if>
+                    <if test="item.midBagVol != null">
+                        mid_bag_vol = #{item.midBagVol,jdbcType=DECIMAL},
+                    </if>
+                    <if test="item.midBagBarcode != null">
+                        mid_bag_barcode = #{item.midBagBarcode,jdbcType=VARCHAR},
+                    </if>
+                    <if test="item.bigBagQty != null">
+                        big_bag_qty = #{item.bigBagQty,jdbcType=INTEGER},
+                    </if>
+                    <if test="item.bigBagWeight != null">
+                        big_bag_weight = #{item.bigBagWeight,jdbcType=DECIMAL},
+                    </if>
+                    <if test="item.bigBagLength != null">
+                        big_bag_length = #{item.bigBagLength,jdbcType=DECIMAL},
+                    </if>
+                    <if test="item.bigBagWidth != null">
+                        big_bag_width = #{item.bigBagWidth,jdbcType=DECIMAL},
+                    </if>
+                    <if test="item.bigBagHeight != null">
+                        big_bag_height = #{item.bigBagHeight,jdbcType=DECIMAL},
+                    </if>
+                    <if test="item.bigBagVol != null">
+                        big_bag_vol = #{item.bigBagVol,jdbcType=DECIMAL},
+                    </if>
+                    <if test="item.bigBagBarcode != null">
+                        big_bag_barcode = #{item.bigBagBarcode,jdbcType=VARCHAR},
+                    </if>
+                    <if test="item.productDate != null">
+                        product_date = #{item.productDate,jdbcType=TIMESTAMP},
+                    </if>
+                    <if test="item.effectiveDate != null">
+                        effective_date = #{item.effectiveDate,jdbcType=TIMESTAMP},
+                    </if>
+                    <if test="item.qsCode != null">
+                        qs_code = #{item.qsCode,jdbcType=VARCHAR},
+                    </if>
+                    <if test="item.apCode != null">
+                        ap_code = #{item.apCode,jdbcType=VARCHAR},
+                    </if>
+                    <if test="item.documentCode != null">
+                        document_code = #{item.documentCode,jdbcType=VARCHAR},
+                    </if>
+                    <if test="item.iabDocumentId != null">
+                        iab_document_id = #{item.iabDocumentId,jdbcType=BIGINT},
+                    </if>
+                    <if test="item.iabDocumentlineId != null">
+                        iab_documentline_id = #{item.iabDocumentlineId,jdbcType=BIGINT},
+                    </if>
+                    <if test="item.createUser != null">
+                        create_user = #{item.createUser,jdbcType=BIGINT},
+                    </if>
+                    <if test="item.createTime != null">
+                        create_time = #{item.createTime,jdbcType=TIMESTAMP}
+                    </if>
+            </set>
+            where iab_id = #{item.id,jdbcType=BIGINT}
+        </foreach>
+    </update>
+
+    <select id="selectByPrimaryKey" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List" />
+        from wms_iv_attributebatch
+        where iab_id = #{id,jdbcType=BIGINT}
+    </select>
+
+    <select id="selectByPrimaryKeyWithLock" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List" />
+        from wms_iv_attributebatch
+        where iab_id = #{id,jdbcType=BIGINT} for update
+    </select>
+
+    <select id="selectByPrimaryKeys" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List" />
+        from wms_iv_attributebatch where iab_id in
+        <foreach close=")" collection="list" item="item" open="(" separator=",">
+            #{item}
+        </foreach>
+    </select>
+
+    <select id="selectByEntity" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from wms_iv_attributebatch
+        <where>
+                <if test="id != null">
+                    and iab_id=#{id,jdbcType=BIGINT}
+                </if>
+                <if test="productId != null">
+                    and product_id=#{productId,jdbcType=BIGINT}
+                </if>
+                <if test="companyId != null">
+                    and company_id=#{companyId,jdbcType=BIGINT}
+                </if>
+                <if test="warehouseId != null">
+                    and warehouse_id=#{warehouseId,jdbcType=BIGINT}
+                </if>
+                <if test="warehouseCode != null">
+                    and warehouse_code=#{warehouseCode,jdbcType=VARCHAR}
+                </if>
+                <if test="productName != null">
+                    and product_name=#{productName,jdbcType=VARCHAR}
+                </if>
+                <if test="productNameLocal != null">
+                    and product_name_local=#{productNameLocal,jdbcType=VARCHAR}
+                </if>
+                <if test="productBarcode != null">
+                    and product_barcode=#{productBarcode,jdbcType=VARCHAR}
+                </if>
+                <if test="productUpcCode != null">
+                    and product_upc_code=#{productUpcCode,jdbcType=VARCHAR}
+                </if>
+                <if test="batchNo != null">
+                    and batch_no=#{batchNo,jdbcType=VARCHAR}
+                </if>
+                <if test="productCategoryId != null">
+                    and product_category_id=#{productCategoryId,jdbcType=BIGINT}
+                </if>
+                <if test="specType != null">
+                    and spec_type=#{specType,jdbcType=VARCHAR}
+                </if>
+                <if test="weight != null">
+                    and weight=#{weight,jdbcType=DECIMAL}
+                </if>
+                <if test="productLength != null">
+                    and product_length=#{productLength,jdbcType=DECIMAL}
+                </if>
+                <if test="productWidth != null">
+                    and product_width=#{productWidth,jdbcType=DECIMAL}
+                </if>
+                <if test="productHeight != null">
+                    and product_height=#{productHeight,jdbcType=DECIMAL}
+                </if>
+                <if test="vol != null">
+                    and vol=#{vol,jdbcType=DECIMAL}
+                </if>
+                <if test="stockUnit != null">
+                    and stock_unit=#{stockUnit,jdbcType=BIGINT}
+                </if>
+                <if test="productColor != null">
+                    and product_color=#{productColor,jdbcType=VARCHAR}
+                </if>
+                <if test="productSize != null">
+                    and product_size=#{productSize,jdbcType=VARCHAR}
+                </if>
+                <if test="price != null">
+                    and price=#{price,jdbcType=DECIMAL}
+                </if>
+                <if test="texture != null">
+                    and texture=#{texture,jdbcType=VARCHAR}
+                </if>
+                <if test="imagePath != null">
+                    and image_path=#{imagePath,jdbcType=VARCHAR}
+                </if>
+                <if test="midBagQty != null">
+                    and mid_bag_qty=#{midBagQty,jdbcType=INTEGER}
+                </if>
+                <if test="midBagWeight != null">
+                    and mid_bag_weight=#{midBagWeight,jdbcType=DECIMAL}
+                </if>
+                <if test="midBagLength != null">
+                    and mid_bag_length=#{midBagLength,jdbcType=DECIMAL}
+                </if>
+                <if test="midBagWidth != null">
+                    and mid_bag_width=#{midBagWidth,jdbcType=DECIMAL}
+                </if>
+                <if test="midBagHeight != null">
+                    and mid_bag_height=#{midBagHeight,jdbcType=DECIMAL}
+                </if>
+                <if test="midBagVol != null">
+                    and mid_bag_vol=#{midBagVol,jdbcType=DECIMAL}
+                </if>
+                <if test="midBagBarcode != null">
+                    and mid_bag_barcode=#{midBagBarcode,jdbcType=VARCHAR}
+                </if>
+                <if test="bigBagQty != null">
+                    and big_bag_qty=#{bigBagQty,jdbcType=INTEGER}
+                </if>
+                <if test="bigBagWeight != null">
+                    and big_bag_weight=#{bigBagWeight,jdbcType=DECIMAL}
+                </if>
+                <if test="bigBagLength != null">
+                    and big_bag_length=#{bigBagLength,jdbcType=DECIMAL}
+                </if>
+                <if test="bigBagWidth != null">
+                    and big_bag_width=#{bigBagWidth,jdbcType=DECIMAL}
+                </if>
+                <if test="bigBagHeight != null">
+                    and big_bag_height=#{bigBagHeight,jdbcType=DECIMAL}
+                </if>
+                <if test="bigBagVol != null">
+                    and big_bag_vol=#{bigBagVol,jdbcType=DECIMAL}
+                </if>
+                <if test="bigBagBarcode != null">
+                    and big_bag_barcode=#{bigBagBarcode,jdbcType=VARCHAR}
+                </if>
+                <if test="productDate != null">
+                    and product_date=#{productDate,jdbcType=TIMESTAMP}
+                </if>
+                <if test="effectiveDate != null">
+                    and effective_date=#{effectiveDate,jdbcType=TIMESTAMP}
+                </if>
+                <if test="qsCode != null">
+                    and qs_code=#{qsCode,jdbcType=VARCHAR}
+                </if>
+                <if test="apCode != null">
+                    and ap_code=#{apCode,jdbcType=VARCHAR}
+                </if>
+                <if test="documentCode != null">
+                    and document_code=#{documentCode,jdbcType=VARCHAR}
+                </if>
+                <if test="iabDocumentId != null">
+                    and iab_document_id=#{iabDocumentId,jdbcType=BIGINT}
+                </if>
+                <if test="iabDocumentlineId != null">
+                    and iab_documentline_id=#{iabDocumentlineId,jdbcType=BIGINT}
+                </if>
+                <if test="createUser != null">
+                    and create_user=#{createUser,jdbcType=BIGINT}
+                </if>
+                <if test="createTime != null">
+                    and create_time=#{createTime,jdbcType=TIMESTAMP}
+                </if>
+        </where>
+    </select>
+
+    <select id="selectByConditions" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from wms_iv_attributebatch
+        <where>
+                <if test="id != null">
+                    and iab_id ${id}
+                </if>
+                <if test="productId != null">
+                    and product_id ${productId}
+                </if>
+                <if test="companyId != null">
+                    and company_id ${companyId}
+                </if>
+                <if test="warehouseId != null">
+                    and warehouse_id ${warehouseId}
+                </if>
+                <if test="warehouseCode != null">
+                    and warehouse_code ${warehouseCode}
+                </if>
+                <if test="productName != null">
+                    and product_name ${productName}
+                </if>
+                <if test="productNameLocal != null">
+                    and product_name_local ${productNameLocal}
+                </if>
+                <if test="productBarcode != null">
+                    and product_barcode ${productBarcode}
+                </if>
+                <if test="productUpcCode != null">
+                    and product_upc_code ${productUpcCode}
+                </if>
+                <if test="batchNo != null">
+                    and batch_no ${batchNo}
+                </if>
+                <if test="productCategoryId != null">
+                    and product_category_id ${productCategoryId}
+                </if>
+                <if test="specType != null">
+                    and spec_type ${specType}
+                </if>
+                <if test="weight != null">
+                    and weight ${weight}
+                </if>
+                <if test="productLength != null">
+                    and product_length ${productLength}
+                </if>
+                <if test="productWidth != null">
+                    and product_width ${productWidth}
+                </if>
+                <if test="productHeight != null">
+                    and product_height ${productHeight}
+                </if>
+                <if test="vol != null">
+                    and vol ${vol}
+                </if>
+                <if test="stockUnit != null">
+                    and stock_unit ${stockUnit}
+                </if>
+                <if test="productColor != null">
+                    and product_color ${productColor}
+                </if>
+                <if test="productSize != null">
+                    and product_size ${productSize}
+                </if>
+                <if test="price != null">
+                    and price ${price}
+                </if>
+                <if test="texture != null">
+                    and texture ${texture}
+                </if>
+                <if test="imagePath != null">
+                    and image_path ${imagePath}
+                </if>
+                <if test="midBagQty != null">
+                    and mid_bag_qty ${midBagQty}
+                </if>
+                <if test="midBagWeight != null">
+                    and mid_bag_weight ${midBagWeight}
+                </if>
+                <if test="midBagLength != null">
+                    and mid_bag_length ${midBagLength}
+                </if>
+                <if test="midBagWidth != null">
+                    and mid_bag_width ${midBagWidth}
+                </if>
+                <if test="midBagHeight != null">
+                    and mid_bag_height ${midBagHeight}
+                </if>
+                <if test="midBagVol != null">
+                    and mid_bag_vol ${midBagVol}
+                </if>
+                <if test="midBagBarcode != null">
+                    and mid_bag_barcode ${midBagBarcode}
+                </if>
+                <if test="bigBagQty != null">
+                    and big_bag_qty ${bigBagQty}
+                </if>
+                <if test="bigBagWeight != null">
+                    and big_bag_weight ${bigBagWeight}
+                </if>
+                <if test="bigBagLength != null">
+                    and big_bag_length ${bigBagLength}
+                </if>
+                <if test="bigBagWidth != null">
+                    and big_bag_width ${bigBagWidth}
+                </if>
+                <if test="bigBagHeight != null">
+                    and big_bag_height ${bigBagHeight}
+                </if>
+                <if test="bigBagVol != null">
+                    and big_bag_vol ${bigBagVol}
+                </if>
+                <if test="bigBagBarcode != null">
+                    and big_bag_barcode ${bigBagBarcode}
+                </if>
+                <if test="productDate != null">
+                    and product_date ${productDate}
+                </if>
+                <if test="effectiveDate != null">
+                    and effective_date ${effectiveDate}
+                </if>
+                <if test="qsCode != null">
+                    and qs_code ${qsCode}
+                </if>
+                <if test="apCode != null">
+                    and ap_code ${apCode}
+                </if>
+                <if test="documentCode != null">
+                    and document_code ${documentCode}
+                </if>
+                <if test="iabDocumentId != null">
+                    and iab_document_id ${iabDocumentId}
+                </if>
+                <if test="iabDocumentlineId != null">
+                    and iab_documentline_id ${iabDocumentlineId}
+                </if>
+                <if test="createUser != null">
+                    and create_user ${createUser}
+                </if>
+                <if test="createTime != null">
+                    and create_time ${createTime}
+                </if>
+        </where>
+        <if test="orderBy != null">
+            order by ${orderBy}
+        </if>
+    </select>
+
+    <select id="selectAll" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from wms_iv_attributebatch
+    </select>
+
+    <select id="count" resultType="java.lang.Long">
+        select count(*) from wms_iv_attributebatch
+    </select>
+
+    <select id="selectByFunction">
+        select ${function}(${column}) from wms_iv_attributebatch
+    </select>
+
+</mapper>

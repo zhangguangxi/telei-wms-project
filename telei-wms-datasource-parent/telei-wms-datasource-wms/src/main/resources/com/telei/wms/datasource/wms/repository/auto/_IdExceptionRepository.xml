@@ -1,0 +1,172 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.telei.wms.datasource.wms.repository.IdExceptionRepository">
+    <resultMap id="BaseResultMap" type="com.telei.wms.datasource.wms.model.IdException">
+        <id column="ide_id" jdbcType="INTEGER" property="id"/>
+            <result column="id_id" jdbcType="BIGINT" property="idId"/>
+            <result column="exception_note" jdbcType="VARCHAR" property="exceptionNote"/>
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        ide_id,id_id,exception_note
+    </sql>
+
+        <insert id="insert" keyProperty="id" useGeneratedKeys="true">
+            insert into id_exception (id_id,exception_note)
+            values (#{id,jdbcType=INTEGER},#{idId,jdbcType=BIGINT},#{exceptionNote,jdbcType=VARCHAR})
+        </insert>
+
+        <insert id="insertSelective" keyProperty="id" useGeneratedKeys="true">
+            insert into id_exception
+            <trim prefix="(" suffix=")" suffixOverrides=",">
+                    <if test="idId != null">
+                        id_id,
+                    </if>
+                    <if test="exceptionNote != null">
+                        exception_note
+                    </if>
+            </trim>
+            <trim prefix="values (" suffix=")" suffixOverrides=",">
+                    <if test="idId != null">
+                        #{idId,jdbcType=BIGINT},
+                    </if>
+                    <if test="exceptionNote != null">
+                        #{exceptionNote,jdbcType=VARCHAR}
+                    </if>
+            </trim>
+        </insert>
+
+        <insert id="insertBatch" keyProperty="id" useGeneratedKeys="true">
+            insert into id_exception (id_id,exception_note) values
+            <foreach collection="list" item="item" separator=",">
+                (
+                    #{item.idId,jdbcType=BIGINT},
+                    #{item.exceptionNote,jdbcType=VARCHAR}
+                )
+            </foreach>
+        </insert>
+
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+        delete from id_exception
+        where ide_id = #{id,jdbcType=INTEGER}
+    </delete>
+
+    <delete id="deleteByPrimaryKeys">
+        delete from id_exception where ide_id in
+        <foreach close=")" collection="list" item="item" open="(" separator=",">
+            #{item}
+        </foreach>
+    </delete>
+
+    <update id="updateByPrimaryKey">
+        update id_exception
+        <set>
+                id_id = #{idId,jdbcType=BIGINT},
+                exception_note = #{exceptionNote,jdbcType=VARCHAR}
+        </set>
+        where ide_id = #{id,jdbcType=INTEGER}
+    </update>
+
+    <update id="updateByPrimaryKeySelective">
+        update id_exception
+        <set>
+                <if test="idId != null">
+                    id_id = #{idId,jdbcType=BIGINT},
+                </if>
+                <if test="exceptionNote != null">
+                    exception_note = #{exceptionNote,jdbcType=VARCHAR}
+                </if>
+        </set>
+        where ide_id = #{id,jdbcType=INTEGER}
+    </update>
+
+    <update id="updateBatch">
+        <foreach close="" collection="list" item="item" open="" separator=";">
+            update id_exception
+            <set>
+                    <if test="item.idId != null">
+                        id_id = #{item.idId,jdbcType=BIGINT},
+                    </if>
+                    <if test="item.exceptionNote != null">
+                        exception_note = #{item.exceptionNote,jdbcType=VARCHAR}
+                    </if>
+            </set>
+            where ide_id = #{item.id,jdbcType=INTEGER}
+        </foreach>
+    </update>
+
+    <select id="selectByPrimaryKey" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List" />
+        from id_exception
+        where ide_id = #{id,jdbcType=INTEGER}
+    </select>
+
+    <select id="selectByPrimaryKeyWithLock" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List" />
+        from id_exception
+        where ide_id = #{id,jdbcType=INTEGER} for update
+    </select>
+
+    <select id="selectByPrimaryKeys" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List" />
+        from id_exception where ide_id in
+        <foreach close=")" collection="list" item="item" open="(" separator=",">
+            #{item}
+        </foreach>
+    </select>
+
+    <select id="selectByEntity" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from id_exception
+        <where>
+                <if test="id != null">
+                    and ide_id=#{id,jdbcType=INTEGER}
+                </if>
+                <if test="idId != null">
+                    and id_id=#{idId,jdbcType=BIGINT}
+                </if>
+                <if test="exceptionNote != null">
+                    and exception_note=#{exceptionNote,jdbcType=VARCHAR}
+                </if>
+        </where>
+    </select>
+
+    <select id="selectByConditions" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from id_exception
+        <where>
+                <if test="id != null">
+                    and ide_id ${id}
+                </if>
+                <if test="idId != null">
+                    and id_id ${idId}
+                </if>
+                <if test="exceptionNote != null">
+                    and exception_note ${exceptionNote}
+                </if>
+        </where>
+        <if test="orderBy != null">
+            order by ${orderBy}
+        </if>
+    </select>
+
+    <select id="selectAll" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from id_exception
+    </select>
+
+    <select id="count" resultType="java.lang.Long">
+        select count(*) from id_exception
+    </select>
+
+    <select id="selectByFunction">
+        select ${function}(${column}) from id_exception
+    </select>
+
+</mapper>

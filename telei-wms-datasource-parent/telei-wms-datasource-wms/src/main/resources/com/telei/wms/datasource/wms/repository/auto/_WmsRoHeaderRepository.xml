@@ -1,0 +1,914 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.telei.wms.datasource.wms.repository.WmsRoHeaderRepository">
+    <resultMap id="BaseResultMap" type="com.telei.wms.datasource.wms.model.WmsRoHeader">
+        <id column="ro_id" jdbcType="BIGINT" property="id"/>
+            <result column="ro_code" jdbcType="VARCHAR" property="roCode"/>
+            <result column="po_id" jdbcType="BIGINT" property="poId"/>
+            <result column="rp_id" jdbcType="BIGINT" property="rpId"/>
+            <result column="company_id" jdbcType="BIGINT" property="companyId"/>
+            <result column="warehouse_id" jdbcType="BIGINT" property="warehouseId"/>
+            <result column="warehouse_code" jdbcType="VARCHAR" property="warehouseCode"/>
+            <result column="supplier_id" jdbcType="BIGINT" property="supplierId"/>
+            <result column="customer_id" jdbcType="BIGINT" property="customerId"/>
+            <result column="cust_order_no" jdbcType="VARCHAR" property="custOrderNo"/>
+            <result column="order_type" jdbcType="VARCHAR" property="orderType"/>
+            <result column="est_arrive_time" jdbcType="TIMESTAMP" property="estArriveTime"/>
+            <result column="delivery_time" jdbcType="TIMESTAMP" property="deliveryTime"/>
+            <result column="total_weight" jdbcType="DECIMAL" property="totalWeight"/>
+            <result column="total_vol" jdbcType="DECIMAL" property="totalVol"/>
+            <result column="total_qty" jdbcType="DECIMAL" property="totalQty"/>
+            <result column="total_amount" jdbcType="DECIMAL" property="totalAmount"/>
+            <result column="currency_id" jdbcType="INTEGER" property="currencyId"/>
+            <result column="species_qty" jdbcType="INTEGER" property="speciesQty"/>
+            <result column="rece_qty" jdbcType="DECIMAL" property="receQty"/>
+            <result column="rece_species_qty" jdbcType="INTEGER" property="receSpeciesQty"/>
+            <result column="putaway_qty" jdbcType="DECIMAL" property="putawayQty"/>
+            <result column="enforcement" jdbcType="INTEGER" property="enforcement"/>
+            <result column="recv_all_time" jdbcType="TIMESTAMP" property="recvAllTime"/>
+            <result column="putaway_all_time" jdbcType="TIMESTAMP" property="putawayAllTime"/>
+            <result column="order_status" jdbcType="VARCHAR" property="orderStatus"/>
+            <result column="owner_user" jdbcType="BIGINT" property="ownerUser"/>
+            <result column="memo" jdbcType="VARCHAR" property="memo"/>
+            <result column="logistics_company" jdbcType="VARCHAR" property="logisticsCompany"/>
+            <result column="tracking_no" jdbcType="VARCHAR" property="trackingNo"/>
+            <result column="supplier_contact_id" jdbcType="BIGINT" property="supplierContactId"/>
+            <result column="supplier_contact_name" jdbcType="VARCHAR" property="supplierContactName"/>
+            <result column="supplier_contact_mobile" jdbcType="VARCHAR" property="supplierContactMobile"/>
+            <result column="supplier_contact_address" jdbcType="VARCHAR" property="supplierContactAddress"/>
+            <result column="create_user" jdbcType="VARCHAR" property="createUser"/>
+            <result column="create_time" jdbcType="TIMESTAMP" property="createTime"/>
+            <result column="last_update_user" jdbcType="VARCHAR" property="lastUpdateUser"/>
+            <result column="last_update_time" jdbcType="TIMESTAMP" property="lastUpdateTime"/>
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        ro_id,ro_code,po_id,rp_id,company_id,warehouse_id,warehouse_code,supplier_id,customer_id,cust_order_no,order_type,est_arrive_time,delivery_time,total_weight,total_vol,total_qty,total_amount,currency_id,species_qty,rece_qty,rece_species_qty,putaway_qty,enforcement,recv_all_time,putaway_all_time,order_status,owner_user,memo,logistics_company,tracking_no,supplier_contact_id,supplier_contact_name,supplier_contact_mobile,supplier_contact_address,create_user,create_time,last_update_user,last_update_time
+    </sql>
+
+        <insert id="insert">
+            insert into wms_ro_header (ro_id,ro_code,po_id,rp_id,company_id,warehouse_id,warehouse_code,supplier_id,customer_id,cust_order_no,order_type,est_arrive_time,delivery_time,total_weight,total_vol,total_qty,total_amount,currency_id,species_qty,rece_qty,rece_species_qty,putaway_qty,enforcement,recv_all_time,putaway_all_time,order_status,owner_user,memo,logistics_company,tracking_no,supplier_contact_id,supplier_contact_name,supplier_contact_mobile,supplier_contact_address,create_user,create_time,last_update_user,last_update_time)
+            values (#{id,jdbcType=BIGINT},#{roCode,jdbcType=VARCHAR},#{poId,jdbcType=BIGINT},#{rpId,jdbcType=BIGINT},#{companyId,jdbcType=BIGINT},#{warehouseId,jdbcType=BIGINT},#{warehouseCode,jdbcType=VARCHAR},#{supplierId,jdbcType=BIGINT},#{customerId,jdbcType=BIGINT},#{custOrderNo,jdbcType=VARCHAR},#{orderType,jdbcType=VARCHAR},#{estArriveTime,jdbcType=TIMESTAMP},#{deliveryTime,jdbcType=TIMESTAMP},#{totalWeight,jdbcType=DECIMAL},#{totalVol,jdbcType=DECIMAL},#{totalQty,jdbcType=DECIMAL},#{totalAmount,jdbcType=DECIMAL},#{currencyId,jdbcType=INTEGER},#{speciesQty,jdbcType=INTEGER},#{receQty,jdbcType=DECIMAL},#{receSpeciesQty,jdbcType=INTEGER},#{putawayQty,jdbcType=DECIMAL},#{enforcement,jdbcType=INTEGER},#{recvAllTime,jdbcType=TIMESTAMP},#{putawayAllTime,jdbcType=TIMESTAMP},#{orderStatus,jdbcType=VARCHAR},#{ownerUser,jdbcType=BIGINT},#{memo,jdbcType=VARCHAR},#{logisticsCompany,jdbcType=VARCHAR},#{trackingNo,jdbcType=VARCHAR},#{supplierContactId,jdbcType=BIGINT},#{supplierContactName,jdbcType=VARCHAR},#{supplierContactMobile,jdbcType=VARCHAR},#{supplierContactAddress,jdbcType=VARCHAR},#{createUser,jdbcType=VARCHAR},#{createTime,jdbcType=TIMESTAMP},#{lastUpdateUser,jdbcType=VARCHAR},#{lastUpdateTime,jdbcType=TIMESTAMP})
+        </insert>
+
+        <insert id="insertSelective">
+            insert into wms_ro_header
+            <trim prefix="(" suffix=")" suffixOverrides=",">
+                    <if test="id != null">
+                        ro_id,
+                    </if>
+                    <if test="roCode != null">
+                        ro_code,
+                    </if>
+                    <if test="poId != null">
+                        po_id,
+                    </if>
+                    <if test="rpId != null">
+                        rp_id,
+                    </if>
+                    <if test="companyId != null">
+                        company_id,
+                    </if>
+                    <if test="warehouseId != null">
+                        warehouse_id,
+                    </if>
+                    <if test="warehouseCode != null">
+                        warehouse_code,
+                    </if>
+                    <if test="supplierId != null">
+                        supplier_id,
+                    </if>
+                    <if test="customerId != null">
+                        customer_id,
+                    </if>
+                    <if test="custOrderNo != null">
+                        cust_order_no,
+                    </if>
+                    <if test="orderType != null">
+                        order_type,
+                    </if>
+                    <if test="estArriveTime != null">
+                        est_arrive_time,
+                    </if>
+                    <if test="deliveryTime != null">
+                        delivery_time,
+                    </if>
+                    <if test="totalWeight != null">
+                        total_weight,
+                    </if>
+                    <if test="totalVol != null">
+                        total_vol,
+                    </if>
+                    <if test="totalQty != null">
+                        total_qty,
+                    </if>
+                    <if test="totalAmount != null">
+                        total_amount,
+                    </if>
+                    <if test="currencyId != null">
+                        currency_id,
+                    </if>
+                    <if test="speciesQty != null">
+                        species_qty,
+                    </if>
+                    <if test="receQty != null">
+                        rece_qty,
+                    </if>
+                    <if test="receSpeciesQty != null">
+                        rece_species_qty,
+                    </if>
+                    <if test="putawayQty != null">
+                        putaway_qty,
+                    </if>
+                    <if test="enforcement != null">
+                        enforcement,
+                    </if>
+                    <if test="recvAllTime != null">
+                        recv_all_time,
+                    </if>
+                    <if test="putawayAllTime != null">
+                        putaway_all_time,
+                    </if>
+                    <if test="orderStatus != null">
+                        order_status,
+                    </if>
+                    <if test="ownerUser != null">
+                        owner_user,
+                    </if>
+                    <if test="memo != null">
+                        memo,
+                    </if>
+                    <if test="logisticsCompany != null">
+                        logistics_company,
+                    </if>
+                    <if test="trackingNo != null">
+                        tracking_no,
+                    </if>
+                    <if test="supplierContactId != null">
+                        supplier_contact_id,
+                    </if>
+                    <if test="supplierContactName != null">
+                        supplier_contact_name,
+                    </if>
+                    <if test="supplierContactMobile != null">
+                        supplier_contact_mobile,
+                    </if>
+                    <if test="supplierContactAddress != null">
+                        supplier_contact_address,
+                    </if>
+                    <if test="createUser != null">
+                        create_user,
+                    </if>
+                    <if test="createTime != null">
+                        create_time,
+                    </if>
+                    <if test="lastUpdateUser != null">
+                        last_update_user,
+                    </if>
+                    <if test="lastUpdateTime != null">
+                        last_update_time
+                    </if>
+            </trim>
+            <trim prefix="values (" suffix=")" suffixOverrides=",">
+                    <if test="id != null">
+                        #{id,jdbcType=BIGINT},
+                    </if>
+                    <if test="roCode != null">
+                        #{roCode,jdbcType=VARCHAR},
+                    </if>
+                    <if test="poId != null">
+                        #{poId,jdbcType=BIGINT},
+                    </if>
+                    <if test="rpId != null">
+                        #{rpId,jdbcType=BIGINT},
+                    </if>
+                    <if test="companyId != null">
+                        #{companyId,jdbcType=BIGINT},
+                    </if>
+                    <if test="warehouseId != null">
+                        #{warehouseId,jdbcType=BIGINT},
+                    </if>
+                    <if test="warehouseCode != null">
+                        #{warehouseCode,jdbcType=VARCHAR},
+                    </if>
+                    <if test="supplierId != null">
+                        #{supplierId,jdbcType=BIGINT},
+                    </if>
+                    <if test="customerId != null">
+                        #{customerId,jdbcType=BIGINT},
+                    </if>
+                    <if test="custOrderNo != null">
+                        #{custOrderNo,jdbcType=VARCHAR},
+                    </if>
+                    <if test="orderType != null">
+                        #{orderType,jdbcType=VARCHAR},
+                    </if>
+                    <if test="estArriveTime != null">
+                        #{estArriveTime,jdbcType=TIMESTAMP},
+                    </if>
+                    <if test="deliveryTime != null">
+                        #{deliveryTime,jdbcType=TIMESTAMP},
+                    </if>
+                    <if test="totalWeight != null">
+                        #{totalWeight,jdbcType=DECIMAL},
+                    </if>
+                    <if test="totalVol != null">
+                        #{totalVol,jdbcType=DECIMAL},
+                    </if>
+                    <if test="totalQty != null">
+                        #{totalQty,jdbcType=DECIMAL},
+                    </if>
+                    <if test="totalAmount != null">
+                        #{totalAmount,jdbcType=DECIMAL},
+                    </if>
+                    <if test="currencyId != null">
+                        #{currencyId,jdbcType=INTEGER},
+                    </if>
+                    <if test="speciesQty != null">
+                        #{speciesQty,jdbcType=INTEGER},
+                    </if>
+                    <if test="receQty != null">
+                        #{receQty,jdbcType=DECIMAL},
+                    </if>
+                    <if test="receSpeciesQty != null">
+                        #{receSpeciesQty,jdbcType=INTEGER},
+                    </if>
+                    <if test="putawayQty != null">
+                        #{putawayQty,jdbcType=DECIMAL},
+                    </if>
+                    <if test="enforcement != null">
+                        #{enforcement,jdbcType=INTEGER},
+                    </if>
+                    <if test="recvAllTime != null">
+                        #{recvAllTime,jdbcType=TIMESTAMP},
+                    </if>
+                    <if test="putawayAllTime != null">
+                        #{putawayAllTime,jdbcType=TIMESTAMP},
+                    </if>
+                    <if test="orderStatus != null">
+                        #{orderStatus,jdbcType=VARCHAR},
+                    </if>
+                    <if test="ownerUser != null">
+                        #{ownerUser,jdbcType=BIGINT},
+                    </if>
+                    <if test="memo != null">
+                        #{memo,jdbcType=VARCHAR},
+                    </if>
+                    <if test="logisticsCompany != null">
+                        #{logisticsCompany,jdbcType=VARCHAR},
+                    </if>
+                    <if test="trackingNo != null">
+                        #{trackingNo,jdbcType=VARCHAR},
+                    </if>
+                    <if test="supplierContactId != null">
+                        #{supplierContactId,jdbcType=BIGINT},
+                    </if>
+                    <if test="supplierContactName != null">
+                        #{supplierContactName,jdbcType=VARCHAR},
+                    </if>
+                    <if test="supplierContactMobile != null">
+                        #{supplierContactMobile,jdbcType=VARCHAR},
+                    </if>
+                    <if test="supplierContactAddress != null">
+                        #{supplierContactAddress,jdbcType=VARCHAR},
+                    </if>
+                    <if test="createUser != null">
+                        #{createUser,jdbcType=VARCHAR},
+                    </if>
+                    <if test="createTime != null">
+                        #{createTime,jdbcType=TIMESTAMP},
+                    </if>
+                    <if test="lastUpdateUser != null">
+                        #{lastUpdateUser,jdbcType=VARCHAR},
+                    </if>
+                    <if test="lastUpdateTime != null">
+                        #{lastUpdateTime,jdbcType=TIMESTAMP}
+                    </if>
+            </trim>
+        </insert>
+
+        <insert id="insertBatch">
+            insert into wms_ro_header (ro_id,ro_code,po_id,rp_id,company_id,warehouse_id,warehouse_code,supplier_id,customer_id,cust_order_no,order_type,est_arrive_time,delivery_time,total_weight,total_vol,total_qty,total_amount,currency_id,species_qty,rece_qty,rece_species_qty,putaway_qty,enforcement,recv_all_time,putaway_all_time,order_status,owner_user,memo,logistics_company,tracking_no,supplier_contact_id,supplier_contact_name,supplier_contact_mobile,supplier_contact_address,create_user,create_time,last_update_user,last_update_time) values
+            <foreach collection="list" item="item" separator=",">
+                (
+                    #{item.id,jdbcType=BIGINT},
+                    #{item.roCode,jdbcType=VARCHAR},
+                    #{item.poId,jdbcType=BIGINT},
+                    #{item.rpId,jdbcType=BIGINT},
+                    #{item.companyId,jdbcType=BIGINT},
+                    #{item.warehouseId,jdbcType=BIGINT},
+                    #{item.warehouseCode,jdbcType=VARCHAR},
+                    #{item.supplierId,jdbcType=BIGINT},
+                    #{item.customerId,jdbcType=BIGINT},
+                    #{item.custOrderNo,jdbcType=VARCHAR},
+                    #{item.orderType,jdbcType=VARCHAR},
+                    #{item.estArriveTime,jdbcType=TIMESTAMP},
+                    #{item.deliveryTime,jdbcType=TIMESTAMP},
+                    #{item.totalWeight,jdbcType=DECIMAL},
+                    #{item.totalVol,jdbcType=DECIMAL},
+                    #{item.totalQty,jdbcType=DECIMAL},
+                    #{item.totalAmount,jdbcType=DECIMAL},
+                    #{item.currencyId,jdbcType=INTEGER},
+                    #{item.speciesQty,jdbcType=INTEGER},
+                    #{item.receQty,jdbcType=DECIMAL},
+                    #{item.receSpeciesQty,jdbcType=INTEGER},
+                    #{item.putawayQty,jdbcType=DECIMAL},
+                    #{item.enforcement,jdbcType=INTEGER},
+                    #{item.recvAllTime,jdbcType=TIMESTAMP},
+                    #{item.putawayAllTime,jdbcType=TIMESTAMP},
+                    #{item.orderStatus,jdbcType=VARCHAR},
+                    #{item.ownerUser,jdbcType=BIGINT},
+                    #{item.memo,jdbcType=VARCHAR},
+                    #{item.logisticsCompany,jdbcType=VARCHAR},
+                    #{item.trackingNo,jdbcType=VARCHAR},
+                    #{item.supplierContactId,jdbcType=BIGINT},
+                    #{item.supplierContactName,jdbcType=VARCHAR},
+                    #{item.supplierContactMobile,jdbcType=VARCHAR},
+                    #{item.supplierContactAddress,jdbcType=VARCHAR},
+                    #{item.createUser,jdbcType=VARCHAR},
+                    #{item.createTime,jdbcType=TIMESTAMP},
+                    #{item.lastUpdateUser,jdbcType=VARCHAR},
+                    #{item.lastUpdateTime,jdbcType=TIMESTAMP}
+                )
+            </foreach>
+        </insert>
+
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+        delete from wms_ro_header
+        where ro_id = #{id,jdbcType=BIGINT}
+    </delete>
+
+    <delete id="deleteByPrimaryKeys">
+        delete from wms_ro_header where ro_id in
+        <foreach close=")" collection="list" item="item" open="(" separator=",">
+            #{item}
+        </foreach>
+    </delete>
+
+    <update id="updateByPrimaryKey">
+        update wms_ro_header
+        <set>
+                ro_code = #{roCode,jdbcType=VARCHAR},
+                po_id = #{poId,jdbcType=BIGINT},
+                rp_id = #{rpId,jdbcType=BIGINT},
+                company_id = #{companyId,jdbcType=BIGINT},
+                warehouse_id = #{warehouseId,jdbcType=BIGINT},
+                warehouse_code = #{warehouseCode,jdbcType=VARCHAR},
+                supplier_id = #{supplierId,jdbcType=BIGINT},
+                customer_id = #{customerId,jdbcType=BIGINT},
+                cust_order_no = #{custOrderNo,jdbcType=VARCHAR},
+                order_type = #{orderType,jdbcType=VARCHAR},
+                est_arrive_time = #{estArriveTime,jdbcType=TIMESTAMP},
+                delivery_time = #{deliveryTime,jdbcType=TIMESTAMP},
+                total_weight = #{totalWeight,jdbcType=DECIMAL},
+                total_vol = #{totalVol,jdbcType=DECIMAL},
+                total_qty = #{totalQty,jdbcType=DECIMAL},
+                total_amount = #{totalAmount,jdbcType=DECIMAL},
+                currency_id = #{currencyId,jdbcType=INTEGER},
+                species_qty = #{speciesQty,jdbcType=INTEGER},
+                rece_qty = #{receQty,jdbcType=DECIMAL},
+                rece_species_qty = #{receSpeciesQty,jdbcType=INTEGER},
+                putaway_qty = #{putawayQty,jdbcType=DECIMAL},
+                enforcement = #{enforcement,jdbcType=INTEGER},
+                recv_all_time = #{recvAllTime,jdbcType=TIMESTAMP},
+                putaway_all_time = #{putawayAllTime,jdbcType=TIMESTAMP},
+                order_status = #{orderStatus,jdbcType=VARCHAR},
+                owner_user = #{ownerUser,jdbcType=BIGINT},
+                memo = #{memo,jdbcType=VARCHAR},
+                logistics_company = #{logisticsCompany,jdbcType=VARCHAR},
+                tracking_no = #{trackingNo,jdbcType=VARCHAR},
+                supplier_contact_id = #{supplierContactId,jdbcType=BIGINT},
+                supplier_contact_name = #{supplierContactName,jdbcType=VARCHAR},
+                supplier_contact_mobile = #{supplierContactMobile,jdbcType=VARCHAR},
+                supplier_contact_address = #{supplierContactAddress,jdbcType=VARCHAR},
+                create_user = #{createUser,jdbcType=VARCHAR},
+                create_time = #{createTime,jdbcType=TIMESTAMP},
+                last_update_user = #{lastUpdateUser,jdbcType=VARCHAR},
+                last_update_time = #{lastUpdateTime,jdbcType=TIMESTAMP}
+        </set>
+        where ro_id = #{id,jdbcType=BIGINT}
+    </update>
+
+    <update id="updateByPrimaryKeySelective">
+        update wms_ro_header
+        <set>
+                <if test="roCode != null">
+                    ro_code = #{roCode,jdbcType=VARCHAR},
+                </if>
+                <if test="poId != null">
+                    po_id = #{poId,jdbcType=BIGINT},
+                </if>
+                <if test="rpId != null">
+                    rp_id = #{rpId,jdbcType=BIGINT},
+                </if>
+                <if test="companyId != null">
+                    company_id = #{companyId,jdbcType=BIGINT},
+                </if>
+                <if test="warehouseId != null">
+                    warehouse_id = #{warehouseId,jdbcType=BIGINT},
+                </if>
+                <if test="warehouseCode != null">
+                    warehouse_code = #{warehouseCode,jdbcType=VARCHAR},
+                </if>
+                <if test="supplierId != null">
+                    supplier_id = #{supplierId,jdbcType=BIGINT},
+                </if>
+                <if test="customerId != null">
+                    customer_id = #{customerId,jdbcType=BIGINT},
+                </if>
+                <if test="custOrderNo != null">
+                    cust_order_no = #{custOrderNo,jdbcType=VARCHAR},
+                </if>
+                <if test="orderType != null">
+                    order_type = #{orderType,jdbcType=VARCHAR},
+                </if>
+                <if test="estArriveTime != null">
+                    est_arrive_time = #{estArriveTime,jdbcType=TIMESTAMP},
+                </if>
+                <if test="deliveryTime != null">
+                    delivery_time = #{deliveryTime,jdbcType=TIMESTAMP},
+                </if>
+                <if test="totalWeight != null">
+                    total_weight = #{totalWeight,jdbcType=DECIMAL},
+                </if>
+                <if test="totalVol != null">
+                    total_vol = #{totalVol,jdbcType=DECIMAL},
+                </if>
+                <if test="totalQty != null">
+                    total_qty = #{totalQty,jdbcType=DECIMAL},
+                </if>
+                <if test="totalAmount != null">
+                    total_amount = #{totalAmount,jdbcType=DECIMAL},
+                </if>
+                <if test="currencyId != null">
+                    currency_id = #{currencyId,jdbcType=INTEGER},
+                </if>
+                <if test="speciesQty != null">
+                    species_qty = #{speciesQty,jdbcType=INTEGER},
+                </if>
+                <if test="receQty != null">
+                    rece_qty = #{receQty,jdbcType=DECIMAL},
+                </if>
+                <if test="receSpeciesQty != null">
+                    rece_species_qty = #{receSpeciesQty,jdbcType=INTEGER},
+                </if>
+                <if test="putawayQty != null">
+                    putaway_qty = #{putawayQty,jdbcType=DECIMAL},
+                </if>
+                <if test="enforcement != null">
+                    enforcement = #{enforcement,jdbcType=INTEGER},
+                </if>
+                <if test="recvAllTime != null">
+                    recv_all_time = #{recvAllTime,jdbcType=TIMESTAMP},
+                </if>
+                <if test="putawayAllTime != null">
+                    putaway_all_time = #{putawayAllTime,jdbcType=TIMESTAMP},
+                </if>
+                <if test="orderStatus != null">
+                    order_status = #{orderStatus,jdbcType=VARCHAR},
+                </if>
+                <if test="ownerUser != null">
+                    owner_user = #{ownerUser,jdbcType=BIGINT},
+                </if>
+                <if test="memo != null">
+                    memo = #{memo,jdbcType=VARCHAR},
+                </if>
+                <if test="logisticsCompany != null">
+                    logistics_company = #{logisticsCompany,jdbcType=VARCHAR},
+                </if>
+                <if test="trackingNo != null">
+                    tracking_no = #{trackingNo,jdbcType=VARCHAR},
+                </if>
+                <if test="supplierContactId != null">
+                    supplier_contact_id = #{supplierContactId,jdbcType=BIGINT},
+                </if>
+                <if test="supplierContactName != null">
+                    supplier_contact_name = #{supplierContactName,jdbcType=VARCHAR},
+                </if>
+                <if test="supplierContactMobile != null">
+                    supplier_contact_mobile = #{supplierContactMobile,jdbcType=VARCHAR},
+                </if>
+                <if test="supplierContactAddress != null">
+                    supplier_contact_address = #{supplierContactAddress,jdbcType=VARCHAR},
+                </if>
+                <if test="createUser != null">
+                    create_user = #{createUser,jdbcType=VARCHAR},
+                </if>
+                <if test="createTime != null">
+                    create_time = #{createTime,jdbcType=TIMESTAMP},
+                </if>
+                <if test="lastUpdateUser != null">
+                    last_update_user = #{lastUpdateUser,jdbcType=VARCHAR},
+                </if>
+                <if test="lastUpdateTime != null">
+                    last_update_time = #{lastUpdateTime,jdbcType=TIMESTAMP}
+                </if>
+        </set>
+        where ro_id = #{id,jdbcType=BIGINT}
+    </update>
+
+    <update id="updateBatch">
+        <foreach close="" collection="list" item="item" open="" separator=";">
+            update wms_ro_header
+            <set>
+                    <if test="item.roCode != null">
+                        ro_code = #{item.roCode,jdbcType=VARCHAR},
+                    </if>
+                    <if test="item.poId != null">
+                        po_id = #{item.poId,jdbcType=BIGINT},
+                    </if>
+                    <if test="item.rpId != null">
+                        rp_id = #{item.rpId,jdbcType=BIGINT},
+                    </if>
+                    <if test="item.companyId != null">
+                        company_id = #{item.companyId,jdbcType=BIGINT},
+                    </if>
+                    <if test="item.warehouseId != null">
+                        warehouse_id = #{item.warehouseId,jdbcType=BIGINT},
+                    </if>
+                    <if test="item.warehouseCode != null">
+                        warehouse_code = #{item.warehouseCode,jdbcType=VARCHAR},
+                    </if>
+                    <if test="item.supplierId != null">
+                        supplier_id = #{item.supplierId,jdbcType=BIGINT},
+                    </if>
+                    <if test="item.customerId != null">
+                        customer_id = #{item.customerId,jdbcType=BIGINT},
+                    </if>
+                    <if test="item.custOrderNo != null">
+                        cust_order_no = #{item.custOrderNo,jdbcType=VARCHAR},
+                    </if>
+                    <if test="item.orderType != null">
+                        order_type = #{item.orderType,jdbcType=VARCHAR},
+                    </if>
+                    <if test="item.estArriveTime != null">
+                        est_arrive_time = #{item.estArriveTime,jdbcType=TIMESTAMP},
+                    </if>
+                    <if test="item.deliveryTime != null">
+                        delivery_time = #{item.deliveryTime,jdbcType=TIMESTAMP},
+                    </if>
+                    <if test="item.totalWeight != null">
+                        total_weight = #{item.totalWeight,jdbcType=DECIMAL},
+                    </if>
+                    <if test="item.totalVol != null">
+                        total_vol = #{item.totalVol,jdbcType=DECIMAL},
+                    </if>
+                    <if test="item.totalQty != null">
+                        total_qty = #{item.totalQty,jdbcType=DECIMAL},
+                    </if>
+                    <if test="item.totalAmount != null">
+                        total_amount = #{item.totalAmount,jdbcType=DECIMAL},
+                    </if>
+                    <if test="item.currencyId != null">
+                        currency_id = #{item.currencyId,jdbcType=INTEGER},
+                    </if>
+                    <if test="item.speciesQty != null">
+                        species_qty = #{item.speciesQty,jdbcType=INTEGER},
+                    </if>
+                    <if test="item.receQty != null">
+                        rece_qty = #{item.receQty,jdbcType=DECIMAL},
+                    </if>
+                    <if test="item.receSpeciesQty != null">
+                        rece_species_qty = #{item.receSpeciesQty,jdbcType=INTEGER},
+                    </if>
+                    <if test="item.putawayQty != null">
+                        putaway_qty = #{item.putawayQty,jdbcType=DECIMAL},
+                    </if>
+                    <if test="item.enforcement != null">
+                        enforcement = #{item.enforcement,jdbcType=INTEGER},
+                    </if>
+                    <if test="item.recvAllTime != null">
+                        recv_all_time = #{item.recvAllTime,jdbcType=TIMESTAMP},
+                    </if>
+                    <if test="item.putawayAllTime != null">
+                        putaway_all_time = #{item.putawayAllTime,jdbcType=TIMESTAMP},
+                    </if>
+                    <if test="item.orderStatus != null">
+                        order_status = #{item.orderStatus,jdbcType=VARCHAR},
+                    </if>
+                    <if test="item.ownerUser != null">
+                        owner_user = #{item.ownerUser,jdbcType=BIGINT},
+                    </if>
+                    <if test="item.memo != null">
+                        memo = #{item.memo,jdbcType=VARCHAR},
+                    </if>
+                    <if test="item.logisticsCompany != null">
+                        logistics_company = #{item.logisticsCompany,jdbcType=VARCHAR},
+                    </if>
+                    <if test="item.trackingNo != null">
+                        tracking_no = #{item.trackingNo,jdbcType=VARCHAR},
+                    </if>
+                    <if test="item.supplierContactId != null">
+                        supplier_contact_id = #{item.supplierContactId,jdbcType=BIGINT},
+                    </if>
+                    <if test="item.supplierContactName != null">
+                        supplier_contact_name = #{item.supplierContactName,jdbcType=VARCHAR},
+                    </if>
+                    <if test="item.supplierContactMobile != null">
+                        supplier_contact_mobile = #{item.supplierContactMobile,jdbcType=VARCHAR},
+                    </if>
+                    <if test="item.supplierContactAddress != null">
+                        supplier_contact_address = #{item.supplierContactAddress,jdbcType=VARCHAR},
+                    </if>
+                    <if test="item.createUser != null">
+                        create_user = #{item.createUser,jdbcType=VARCHAR},
+                    </if>
+                    <if test="item.createTime != null">
+                        create_time = #{item.createTime,jdbcType=TIMESTAMP},
+                    </if>
+                    <if test="item.lastUpdateUser != null">
+                        last_update_user = #{item.lastUpdateUser,jdbcType=VARCHAR},
+                    </if>
+                    <if test="item.lastUpdateTime != null">
+                        last_update_time = #{item.lastUpdateTime,jdbcType=TIMESTAMP}
+                    </if>
+            </set>
+            where ro_id = #{item.id,jdbcType=BIGINT}
+        </foreach>
+    </update>
+
+    <select id="selectByPrimaryKey" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List" />
+        from wms_ro_header
+        where ro_id = #{id,jdbcType=BIGINT}
+    </select>
+
+    <select id="selectByPrimaryKeyWithLock" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List" />
+        from wms_ro_header
+        where ro_id = #{id,jdbcType=BIGINT} for update
+    </select>
+
+    <select id="selectByPrimaryKeys" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List" />
+        from wms_ro_header where ro_id in
+        <foreach close=")" collection="list" item="item" open="(" separator=",">
+            #{item}
+        </foreach>
+    </select>
+
+    <select id="selectByEntity" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from wms_ro_header
+        <where>
+                <if test="id != null">
+                    and ro_id=#{id,jdbcType=BIGINT}
+                </if>
+                <if test="roCode != null">
+                    and ro_code=#{roCode,jdbcType=VARCHAR}
+                </if>
+                <if test="poId != null">
+                    and po_id=#{poId,jdbcType=BIGINT}
+                </if>
+                <if test="rpId != null">
+                    and rp_id=#{rpId,jdbcType=BIGINT}
+                </if>
+                <if test="companyId != null">
+                    and company_id=#{companyId,jdbcType=BIGINT}
+                </if>
+                <if test="warehouseId != null">
+                    and warehouse_id=#{warehouseId,jdbcType=BIGINT}
+                </if>
+                <if test="warehouseCode != null">
+                    and warehouse_code=#{warehouseCode,jdbcType=VARCHAR}
+                </if>
+                <if test="supplierId != null">
+                    and supplier_id=#{supplierId,jdbcType=BIGINT}
+                </if>
+                <if test="customerId != null">
+                    and customer_id=#{customerId,jdbcType=BIGINT}
+                </if>
+                <if test="custOrderNo != null">
+                    and cust_order_no=#{custOrderNo,jdbcType=VARCHAR}
+                </if>
+                <if test="orderType != null">
+                    and order_type=#{orderType,jdbcType=VARCHAR}
+                </if>
+                <if test="estArriveTime != null">
+                    and est_arrive_time=#{estArriveTime,jdbcType=TIMESTAMP}
+                </if>
+                <if test="deliveryTime != null">
+                    and delivery_time=#{deliveryTime,jdbcType=TIMESTAMP}
+                </if>
+                <if test="totalWeight != null">
+                    and total_weight=#{totalWeight,jdbcType=DECIMAL}
+                </if>
+                <if test="totalVol != null">
+                    and total_vol=#{totalVol,jdbcType=DECIMAL}
+                </if>
+                <if test="totalQty != null">
+                    and total_qty=#{totalQty,jdbcType=DECIMAL}
+                </if>
+                <if test="totalAmount != null">
+                    and total_amount=#{totalAmount,jdbcType=DECIMAL}
+                </if>
+                <if test="currencyId != null">
+                    and currency_id=#{currencyId,jdbcType=INTEGER}
+                </if>
+                <if test="speciesQty != null">
+                    and species_qty=#{speciesQty,jdbcType=INTEGER}
+                </if>
+                <if test="receQty != null">
+                    and rece_qty=#{receQty,jdbcType=DECIMAL}
+                </if>
+                <if test="receSpeciesQty != null">
+                    and rece_species_qty=#{receSpeciesQty,jdbcType=INTEGER}
+                </if>
+                <if test="putawayQty != null">
+                    and putaway_qty=#{putawayQty,jdbcType=DECIMAL}
+                </if>
+                <if test="enforcement != null">
+                    and enforcement=#{enforcement,jdbcType=INTEGER}
+                </if>
+                <if test="recvAllTime != null">
+                    and recv_all_time=#{recvAllTime,jdbcType=TIMESTAMP}
+                </if>
+                <if test="putawayAllTime != null">
+                    and putaway_all_time=#{putawayAllTime,jdbcType=TIMESTAMP}
+                </if>
+                <if test="orderStatus != null">
+                    and order_status=#{orderStatus,jdbcType=VARCHAR}
+                </if>
+                <if test="ownerUser != null">
+                    and owner_user=#{ownerUser,jdbcType=BIGINT}
+                </if>
+                <if test="memo != null">
+                    and memo=#{memo,jdbcType=VARCHAR}
+                </if>
+                <if test="logisticsCompany != null">
+                    and logistics_company=#{logisticsCompany,jdbcType=VARCHAR}
+                </if>
+                <if test="trackingNo != null">
+                    and tracking_no=#{trackingNo,jdbcType=VARCHAR}
+                </if>
+                <if test="supplierContactId != null">
+                    and supplier_contact_id=#{supplierContactId,jdbcType=BIGINT}
+                </if>
+                <if test="supplierContactName != null">
+                    and supplier_contact_name=#{supplierContactName,jdbcType=VARCHAR}
+                </if>
+                <if test="supplierContactMobile != null">
+                    and supplier_contact_mobile=#{supplierContactMobile,jdbcType=VARCHAR}
+                </if>
+                <if test="supplierContactAddress != null">
+                    and supplier_contact_address=#{supplierContactAddress,jdbcType=VARCHAR}
+                </if>
+                <if test="createUser != null">
+                    and create_user=#{createUser,jdbcType=VARCHAR}
+                </if>
+                <if test="createTime != null">
+                    and create_time=#{createTime,jdbcType=TIMESTAMP}
+                </if>
+                <if test="lastUpdateUser != null">
+                    and last_update_user=#{lastUpdateUser,jdbcType=VARCHAR}
+                </if>
+                <if test="lastUpdateTime != null">
+                    and last_update_time=#{lastUpdateTime,jdbcType=TIMESTAMP}
+                </if>
+        </where>
+    </select>
+
+    <select id="selectByConditions" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from wms_ro_header
+        <where>
+                <if test="id != null">
+                    and ro_id ${id}
+                </if>
+                <if test="roCode != null">
+                    and ro_code ${roCode}
+                </if>
+                <if test="poId != null">
+                    and po_id ${poId}
+                </if>
+                <if test="rpId != null">
+                    and rp_id ${rpId}
+                </if>
+                <if test="companyId != null">
+                    and company_id ${companyId}
+                </if>
+                <if test="warehouseId != null">
+                    and warehouse_id ${warehouseId}
+                </if>
+                <if test="warehouseCode != null">
+                    and warehouse_code ${warehouseCode}
+                </if>
+                <if test="supplierId != null">
+                    and supplier_id ${supplierId}
+                </if>
+                <if test="customerId != null">
+                    and customer_id ${customerId}
+                </if>
+                <if test="custOrderNo != null">
+                    and cust_order_no ${custOrderNo}
+                </if>
+                <if test="orderType != null">
+                    and order_type ${orderType}
+                </if>
+                <if test="estArriveTime != null">
+                    and est_arrive_time ${estArriveTime}
+                </if>
+                <if test="deliveryTime != null">
+                    and delivery_time ${deliveryTime}
+                </if>
+                <if test="totalWeight != null">
+                    and total_weight ${totalWeight}
+                </if>
+                <if test="totalVol != null">
+                    and total_vol ${totalVol}
+                </if>
+                <if test="totalQty != null">
+                    and total_qty ${totalQty}
+                </if>
+                <if test="totalAmount != null">
+                    and total_amount ${totalAmount}
+                </if>
+                <if test="currencyId != null">
+                    and currency_id ${currencyId}
+                </if>
+                <if test="speciesQty != null">
+                    and species_qty ${speciesQty}
+                </if>
+                <if test="receQty != null">
+                    and rece_qty ${receQty}
+                </if>
+                <if test="receSpeciesQty != null">
+                    and rece_species_qty ${receSpeciesQty}
+                </if>
+                <if test="putawayQty != null">
+                    and putaway_qty ${putawayQty}
+                </if>
+                <if test="enforcement != null">
+                    and enforcement ${enforcement}
+                </if>
+                <if test="recvAllTime != null">
+                    and recv_all_time ${recvAllTime}
+                </if>
+                <if test="putawayAllTime != null">
+                    and putaway_all_time ${putawayAllTime}
+                </if>
+                <if test="orderStatus != null">
+                    and order_status ${orderStatus}
+                </if>
+                <if test="ownerUser != null">
+                    and owner_user ${ownerUser}
+                </if>
+                <if test="memo != null">
+                    and memo ${memo}
+                </if>
+                <if test="logisticsCompany != null">
+                    and logistics_company ${logisticsCompany}
+                </if>
+                <if test="trackingNo != null">
+                    and tracking_no ${trackingNo}
+                </if>
+                <if test="supplierContactId != null">
+                    and supplier_contact_id ${supplierContactId}
+                </if>
+                <if test="supplierContactName != null">
+                    and supplier_contact_name ${supplierContactName}
+                </if>
+                <if test="supplierContactMobile != null">
+                    and supplier_contact_mobile ${supplierContactMobile}
+                </if>
+                <if test="supplierContactAddress != null">
+                    and supplier_contact_address ${supplierContactAddress}
+                </if>
+                <if test="createUser != null">
+                    and create_user ${createUser}
+                </if>
+                <if test="createTime != null">
+                    and create_time ${createTime}
+                </if>
+                <if test="lastUpdateUser != null">
+                    and last_update_user ${lastUpdateUser}
+                </if>
+                <if test="lastUpdateTime != null">
+                    and last_update_time ${lastUpdateTime}
+                </if>
+        </where>
+        <if test="orderBy != null">
+            order by ${orderBy}
+        </if>
+    </select>
+
+    <select id="selectAll" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from wms_ro_header
+    </select>
+
+    <select id="count" resultType="java.lang.Long">
+        select count(*) from wms_ro_header
+    </select>
+
+    <select id="selectByFunction">
+        select ${function}(${column}) from wms_ro_header
+    </select>
+
+</mapper>

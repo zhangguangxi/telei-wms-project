@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.telei.wms.datasource.wms.repository.WmsRoHeaderRepository">
+
+    <resultMap id="PageQueryResultMap" extends="BaseResultMap" type="com.telei.wms.datasource.wms.vo.RoHeaderPageQueryResponseVo">
+        <result column="warehouse_name" jdbcType="VARCHAR" property="warehouseName"/>
+        <result column="supplier_name" jdbcType="VARCHAR" property="supplierName"/>
+    </resultMap>
+
+    <sql id="Page_Query_Column_List">
+        wrh.ro_id,
+        wrh.ro_code,
+        wrh.po_id,
+        wrh.rp_id,
+        wrh.company_id,
+        wrh.warehouse_id,
+        wrh.warehouse_code,
+        wrh.supplier_id,
+        wrh.customer_id,
+        wrh.cust_order_no,
+        wrh.order_type,
+        wrh.est_arrive_time,
+        wrh.delivery_time,
+        wrh.total_weight,
+        wrh.total_vol,
+        wrh.total_qty,
+        wrh.total_amount,
+        wrh.currency_id,
+        wrh.species_qty,
+        wrh.rece_qty,
+        wrh.rece_species_qty,
+        wrh.putaway_qty,
+        wrh.enforcement,
+        wrh.recv_all_time,
+        wrh.putaway_all_time,
+        wrh.order_status,
+        wrh.owner_user,
+        wrh.memo,
+        wrh.logistics_company,
+        wrh.tracking_no,
+        wrh.supplier_contact_id,
+        wrh.supplier_contact_name,
+        wrh.supplier_contact_mobile,
+        wrh.supplier_contact_address,
+        wrh.create_user,
+        wrh.create_time,
+        wrh.last_update_user,
+        wrh.last_update_time,
+        cw.warehouse_name,
+        cs.supplier_name
+    </sql>
+
+    <select id="findAll" resultMap="PageQueryResultMap">
+        SELECT
+        <include refid="Page_Query_Column_List"/>
+        FROM wms_ro_header wrh
+        INNER JOIN cdm.cdm_warehouse cw ON cw.warehouse_id = wrh.warehouse_id
+        INNER JOIN cdm.cdm_supplier cs ON cs.supplier_id = wrh.supplier_id
+        <where>
+            <if test="roCode != null and roCode != ''">
+                wrh.ro_code=#{roCode}
+            </if>
+            <if test="startTime != null and endTime != null and startTime != '' and endTime != ''">
+                AND wrh.create_time&gt;=#{startTime} AND wrh.create_time&lt;=#{endTime}
+            </if>
+            <if test="warehouseId != null and warehouseId != ''">
+                AND wrh.warehouse_id=#{warehouseId}
+            </if>
+            <if test="ownerUser != null and ownerUser != ''">
+                AND wrh.owner_user=#{ownerUser}
+            </if>
+            <if test="orderStatus != null and orderStatus != ''">
+                AND wrh.order_status=#{orderStatus}
+            </if>
+            AND wrh.order_status!='99'
+        </where>
+        ORDER BY wrh.ro_id DESC
+    </select>
+
+</mapper>
+

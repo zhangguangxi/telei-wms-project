@@ -1,0 +1,331 @@
+########################################common options########################################
+server:
+  port: 8813
+# spring
+spring:
+  profiles:
+    active: dev
+  application:
+    name: telei-wms-api
+  # message
+  messages:
+    basename: i18n/messages,i18n/validation/messages
+    encoding: UTF-8
+  # servlet
+  servlet:
+    multipart:
+      max-file-size: 1024MB
+      max-request-size: 1024MB
+#log
+logging:
+  level:
+    root: info
+    org.springframework.data: debug
+    com.telei: debug
+  #    com.telei.wms.datasource.wms.*: debug
+  file:
+    name: logs/${spring.application.name}.log
+
+# swagger(参考：https://github.com/SpringForAll/spring-boot-starter-swagger)
+swagger:
+  base-package: com.telei
+  base-path: /**
+  exclude-path: /error
+  global-operation-parameters:
+    - name: token
+      description: 令牌
+      modelRef: string
+      parameterType: header
+      required: false
+
+
+customize:
+  feign:
+    auth-url: http://127.0.0.1:20010
+    wms-url: http://127.0.0.1:8811
+  permission-switch:
+    auto-sync: false
+
+##########################################profile options######################################
+
+---
+spring:
+  profiles: local
+  rabbitmq:
+    host: localhost
+    port: 5672
+    username: admin
+    password: admin1314
+    virtual-host: /
+    listener:
+      simple:
+        #开启ack
+        acknowledge-mode: manual
+        #并发配置
+        concurrency: 1
+        max-concurrency: 10
+
+#datasource:
+datasource:
+  wms:
+    driverClassName: com.mysql.jdbc.Driver
+    filters: stat
+    initialSize: 1
+    maxActive: 40
+    maxOpenPreparedStatements: 20
+    maxPoolPreparedStatementPerConnectionSize: 20
+    maxWait: 10000
+    minEvictableIdleTimeMillis: 300000
+    minIdle: 1
+    poolPreparedStatements: true
+    testOnBorrow: true
+    testOnReturn: true
+    testWhileIdle: true
+    timeBetweenEvictionRunsMillis: 60000
+    type: com.alibaba.druid.pool.DruidDataSource
+    url: jdbc:mysql://zodiac:13306/wms?characterEncoding=utf8&allowMultiQueries=true&useUnicode=true&useSSL=false
+    username: root
+    password: "@0Ww5fhsYROP%%$I"
+    validationQuery:  'x'
+
+id-generator:
+  machine-id: 1
+
+upload:
+  images:
+    postUri: http://192.168.1.114:20011/internal/980107
+
+#jetcache
+jetcache:
+  statIntervalMinutes: 15
+  areaInCacheName: false
+  local:
+    default:
+      type: caffeine
+      keyConvertor: fastjson
+  remote:
+    default:
+      type: redis.lettuce
+      keyConvertor: fastjson
+      uri: redis://127.0.0.1:6379/0
+#      uri: redis://admin1314@192.168.1.114:6379/0
+
+
+---
+spring:
+  profiles: dev
+  #rabbitmq配置
+  rabbitmq:
+    host: 192.168.1.114
+    port: 5672
+    username: admin
+    password: admin1314
+    virtual-host: /
+    listener:
+      simple:
+        #开启ack
+        acknowledge-mode: manual
+        #并发配置
+        concurrency: 1
+        max-concurrency: 10
+
+#datasource:
+datasource:
+  wms:
+    driverClassName: com.mysql.jdbc.Driver
+    filters: stat
+    initialSize: 1
+    maxActive: 40
+    maxOpenPreparedStatements: 20
+    maxPoolPreparedStatementPerConnectionSize: 20
+    maxWait: 10000
+    minEvictableIdleTimeMillis: 300000
+    minIdle: 1
+    poolPreparedStatements: true
+    testOnBorrow: true
+    testOnReturn: true
+    testWhileIdle: true
+    timeBetweenEvictionRunsMillis: 60000
+    type: com.alibaba.druid.pool.DruidDataSource
+    url: jdbc:mysql://192.168.1.114:3306/wms?characterEncoding=utf8&allowMultiQueries=true&useUnicode=true&useSSL=false
+    username: root
+    password: admin1314
+    #    url: jdbc:mysql://127.0.0.1:3306/wms_db?characterEncoding=utf8&allowMultiQueries=true
+    #    username: root
+    #    password: admin
+    validationQuery:  'x'
+
+id-generator:
+  machine-id: 1
+
+#数据同步配置
+id-instantdirective:
+  #当前server名称
+  server-name: HANGHZHOU
+  #当前系统
+  system: WMS
+  #数据埋点配置
+  data-dependencies:
+    WmsRoHeaderService: wms_ro_header
+    WmsRoLineService: wms_ro_line
+
+#当前节点系统之间数据交互配置
+wms-id-instantdirective:
+  #当前系统
+  system: WMS
+  #服务节点
+  nodes:
+    CDM: http://127.0.0.1:8811/internal/012301
+    OMS: http://127.0.0.1:8812/internal/021401
+    WMS: http://127.0.0.1:8813/internal/1030201
+
+upload:
+  images:
+    postUri: http://192.168.1.114:20011/internal/980107
+
+#jetcache
+jetcache:
+  statIntervalMinutes: 15
+  areaInCacheName: false
+  local:
+    default:
+      type: caffeine
+      keyConvertor: fastjson
+  remote:
+    default:
+      type: redis.lettuce
+      keyConvertor: fastjson
+      #      uri: redis://127.0.0.1:6379/0
+      uri: redis://admin1314@192.168.1.114:6379/0
+
+---
+spring:
+  profiles: test
+
+#datasource:
+datasource:
+  wms:
+    driverClassName: com.mysql.jdbc.Driver
+    filters: stat
+    initialSize: 1
+    maxActive: 40
+    maxOpenPreparedStatements: 20
+    maxPoolPreparedStatementPerConnectionSize: 20
+    maxWait: 10000
+    minEvictableIdleTimeMillis: 300000
+    minIdle: 1
+    poolPreparedStatements: true
+    testOnBorrow: true
+    testOnReturn: true
+    testWhileIdle: true
+    timeBetweenEvictionRunsMillis: 60000
+    type: com.alibaba.druid.pool.DruidDataSource
+    url: jdbc:mysql://192.168.1.113:3306/wms?characterEncoding=utf8&allowMultiQueries=true&useUnicode=true&useSSL=false
+    username: root
+    password: admin1314
+    validationQuery:  'x'
+
+id-generator:
+  machine-id: 1
+
+upload:
+  images:
+    postUri: http://192.168.1.113:20011/internal/980107
+
+#jetcache
+jetcache:
+  statIntervalMinutes: 15
+  areaInCacheName: false
+  local:
+    default:
+      type: caffeine
+      keyConvertor: fastjson
+  remote:
+    default:
+      type: redis.lettuce
+      keyConvertor: fastjson
+      #      uri: redis://127.0.0.1:6379/0
+      uri: redis://admin1314@192.168.1.113:6379/0
+
+---
+spring:
+  profiles: prod
+  #rabbitmq配置
+  rabbitmq:
+    host: 127.0.0.1
+    port: 5672
+    username: admin
+    password: admin1314
+    virtual-host: /
+    listener:
+      simple:
+        #开启ack
+        acknowledge-mode: manual
+        #并发配置
+        concurrency: 1
+        max-concurrency: 1
+
+#datasource:
+datasource:
+  wms:
+    driverClassName: com.mysql.jdbc.Driver
+    filters: stat
+    initialSize: 1
+    maxActive: 40
+    maxOpenPreparedStatements: 20
+    maxPoolPreparedStatementPerConnectionSize: 20
+    maxWait: 10000
+    minEvictableIdleTimeMillis: 300000
+    minIdle: 1
+    poolPreparedStatements: true
+    testOnBorrow: true
+    testOnReturn: true
+    testWhileIdle: true
+    timeBetweenEvictionRunsMillis: 60000
+    type: com.alibaba.druid.pool.DruidDataSource
+    url: jdbc:mysql://127.0.0.1:3306/wms?characterEncoding=utf8&allowMultiQueries=true&useUnicode=true&useSSL=false
+    username: root
+    password: admin1314
+    validationQuery:  'x'
+
+id-generator:
+  machine-id: 1
+
+#数据同步配置
+id-instantdirective:
+  #当前server名称
+  server-name: HANGHZHOU
+  #当前系统
+  system: WMS
+  #数据埋点配置
+  data-dependencies:
+    WmsRoHeaderService: wms_ro_header
+    WmsRoLineService: wms_ro_line
+
+#当前节点系统之间数据交互配置
+wms-id-instantdirective:
+  #当前系统
+  system: WMS
+  #服务节点
+  nodes:
+    CDM: http://127.0.0.1:8811/internal/012301
+    OMS: http://127.0.0.1:8812/internal/021401
+
+upload:
+  images:
+    postUri: http://127.0.0.1:20011/internal/980107
+
+#jetcache
+jetcache:
+  statIntervalMinutes: 15
+  areaInCacheName: false
+  local:
+    default:
+      type: caffeine
+      keyConvertor: fastjson
+  remote:
+    default:
+      type: redis.lettuce
+      keyConvertor: fastjson
+      #      uri: redis://127.0.0.1:6379/0
+      uri: redis://admin1314@127.0.0.1:6379/0

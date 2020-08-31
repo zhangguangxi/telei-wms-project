@@ -1,0 +1,424 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.telei.wms.datasource.wms.repository.IdInstantdirectiveRepository">
+    <resultMap id="BaseResultMap" type="com.telei.wms.datasource.wms.model.IdInstantdirective">
+        <id column="id_id" jdbcType="BIGINT" property="id"/>
+            <result column="from_node" jdbcType="VARCHAR" property="fromNode"/>
+            <result column="target_node" jdbcType="VARCHAR" property="targetNode"/>
+            <result column="id_system" jdbcType="VARCHAR" property="idSystem"/>
+            <result column="id_table" jdbcType="VARCHAR" property="idTable"/>
+            <result column="id_row_id" jdbcType="BIGINT" property="idRowId"/>
+            <result column="operation_code" jdbcType="VARCHAR" property="operationCode"/>
+            <result column="order_context" jdbcType="VARCHAR" property="orderContext"/>
+            <result column="is_code" jdbcType="VARCHAR" property="isCode"/>
+            <result column="create_time" jdbcType="TIMESTAMP" property="createTime"/>
+            <result column="finish_time" jdbcType="TIMESTAMP" property="finishTime"/>
+            <result column="id_note" jdbcType="VARCHAR" property="idNote"/>
+            <result column="id_result" jdbcType="VARCHAR" property="idResult"/>
+            <result column="send_count" jdbcType="INTEGER" property="sendCount"/>
+            <result column="process_count" jdbcType="INTEGER" property="processCount"/>
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        id_id,from_node,target_node,id_system,id_table,id_row_id,operation_code,order_context,is_code,create_time,finish_time,id_note,id_result,send_count,process_count
+    </sql>
+
+        <insert id="insert" keyProperty="id" useGeneratedKeys="true">
+            insert into id_instantdirective (from_node,target_node,id_system,id_table,id_row_id,operation_code,order_context,is_code,create_time,finish_time,id_note,id_result,send_count,process_count)
+            values (#{id,jdbcType=BIGINT},#{fromNode,jdbcType=VARCHAR},#{targetNode,jdbcType=VARCHAR},#{idSystem,jdbcType=VARCHAR},#{idTable,jdbcType=VARCHAR},#{idRowId,jdbcType=BIGINT},#{operationCode,jdbcType=VARCHAR},#{orderContext,jdbcType=VARCHAR},#{isCode,jdbcType=VARCHAR},#{createTime,jdbcType=TIMESTAMP},#{finishTime,jdbcType=TIMESTAMP},#{idNote,jdbcType=VARCHAR},#{idResult,jdbcType=VARCHAR},#{sendCount,jdbcType=INTEGER},#{processCount,jdbcType=INTEGER})
+        </insert>
+
+        <insert id="insertSelective" keyProperty="id" useGeneratedKeys="true">
+            insert into id_instantdirective
+            <trim prefix="(" suffix=")" suffixOverrides=",">
+                    <if test="fromNode != null">
+                        from_node,
+                    </if>
+                    <if test="targetNode != null">
+                        target_node,
+                    </if>
+                    <if test="idSystem != null">
+                        id_system,
+                    </if>
+                    <if test="idTable != null">
+                        id_table,
+                    </if>
+                    <if test="idRowId != null">
+                        id_row_id,
+                    </if>
+                    <if test="operationCode != null">
+                        operation_code,
+                    </if>
+                    <if test="orderContext != null">
+                        order_context,
+                    </if>
+                    <if test="isCode != null">
+                        is_code,
+                    </if>
+                    <if test="createTime != null">
+                        create_time,
+                    </if>
+                    <if test="finishTime != null">
+                        finish_time,
+                    </if>
+                    <if test="idNote != null">
+                        id_note,
+                    </if>
+                    <if test="idResult != null">
+                        id_result,
+                    </if>
+                    <if test="sendCount != null">
+                        send_count,
+                    </if>
+                    <if test="processCount != null">
+                        process_count
+                    </if>
+            </trim>
+            <trim prefix="values (" suffix=")" suffixOverrides=",">
+                    <if test="fromNode != null">
+                        #{fromNode,jdbcType=VARCHAR},
+                    </if>
+                    <if test="targetNode != null">
+                        #{targetNode,jdbcType=VARCHAR},
+                    </if>
+                    <if test="idSystem != null">
+                        #{idSystem,jdbcType=VARCHAR},
+                    </if>
+                    <if test="idTable != null">
+                        #{idTable,jdbcType=VARCHAR},
+                    </if>
+                    <if test="idRowId != null">
+                        #{idRowId,jdbcType=BIGINT},
+                    </if>
+                    <if test="operationCode != null">
+                        #{operationCode,jdbcType=VARCHAR},
+                    </if>
+                    <if test="orderContext != null">
+                        #{orderContext,jdbcType=VARCHAR},
+                    </if>
+                    <if test="isCode != null">
+                        #{isCode,jdbcType=VARCHAR},
+                    </if>
+                    <if test="createTime != null">
+                        #{createTime,jdbcType=TIMESTAMP},
+                    </if>
+                    <if test="finishTime != null">
+                        #{finishTime,jdbcType=TIMESTAMP},
+                    </if>
+                    <if test="idNote != null">
+                        #{idNote,jdbcType=VARCHAR},
+                    </if>
+                    <if test="idResult != null">
+                        #{idResult,jdbcType=VARCHAR},
+                    </if>
+                    <if test="sendCount != null">
+                        #{sendCount,jdbcType=INTEGER},
+                    </if>
+                    <if test="processCount != null">
+                        #{processCount,jdbcType=INTEGER}
+                    </if>
+            </trim>
+        </insert>
+
+        <insert id="insertBatch" keyProperty="id" useGeneratedKeys="true">
+            insert into id_instantdirective (from_node,target_node,id_system,id_table,id_row_id,operation_code,order_context,is_code,create_time,finish_time,id_note,id_result,send_count,process_count) values
+            <foreach collection="list" item="item" separator=",">
+                (
+                    #{item.fromNode,jdbcType=VARCHAR},
+                    #{item.targetNode,jdbcType=VARCHAR},
+                    #{item.idSystem,jdbcType=VARCHAR},
+                    #{item.idTable,jdbcType=VARCHAR},
+                    #{item.idRowId,jdbcType=BIGINT},
+                    #{item.operationCode,jdbcType=VARCHAR},
+                    #{item.orderContext,jdbcType=VARCHAR},
+                    #{item.isCode,jdbcType=VARCHAR},
+                    #{item.createTime,jdbcType=TIMESTAMP},
+                    #{item.finishTime,jdbcType=TIMESTAMP},
+                    #{item.idNote,jdbcType=VARCHAR},
+                    #{item.idResult,jdbcType=VARCHAR},
+                    #{item.sendCount,jdbcType=INTEGER},
+                    #{item.processCount,jdbcType=INTEGER}
+                )
+            </foreach>
+        </insert>
+
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+        delete from id_instantdirective
+        where id_id = #{id,jdbcType=BIGINT}
+    </delete>
+
+    <delete id="deleteByPrimaryKeys">
+        delete from id_instantdirective where id_id in
+        <foreach close=")" collection="list" item="item" open="(" separator=",">
+            #{item}
+        </foreach>
+    </delete>
+
+    <update id="updateByPrimaryKey">
+        update id_instantdirective
+        <set>
+                from_node = #{fromNode,jdbcType=VARCHAR},
+                target_node = #{targetNode,jdbcType=VARCHAR},
+                id_system = #{idSystem,jdbcType=VARCHAR},
+                id_table = #{idTable,jdbcType=VARCHAR},
+                id_row_id = #{idRowId,jdbcType=BIGINT},
+                operation_code = #{operationCode,jdbcType=VARCHAR},
+                order_context = #{orderContext,jdbcType=VARCHAR},
+                is_code = #{isCode,jdbcType=VARCHAR},
+                create_time = #{createTime,jdbcType=TIMESTAMP},
+                finish_time = #{finishTime,jdbcType=TIMESTAMP},
+                id_note = #{idNote,jdbcType=VARCHAR},
+                id_result = #{idResult,jdbcType=VARCHAR},
+                send_count = #{sendCount,jdbcType=INTEGER},
+                process_count = #{processCount,jdbcType=INTEGER}
+        </set>
+        where id_id = #{id,jdbcType=BIGINT}
+    </update>
+
+    <update id="updateByPrimaryKeySelective">
+        update id_instantdirective
+        <set>
+                <if test="fromNode != null">
+                    from_node = #{fromNode,jdbcType=VARCHAR},
+                </if>
+                <if test="targetNode != null">
+                    target_node = #{targetNode,jdbcType=VARCHAR},
+                </if>
+                <if test="idSystem != null">
+                    id_system = #{idSystem,jdbcType=VARCHAR},
+                </if>
+                <if test="idTable != null">
+                    id_table = #{idTable,jdbcType=VARCHAR},
+                </if>
+                <if test="idRowId != null">
+                    id_row_id = #{idRowId,jdbcType=BIGINT},
+                </if>
+                <if test="operationCode != null">
+                    operation_code = #{operationCode,jdbcType=VARCHAR},
+                </if>
+                <if test="orderContext != null">
+                    order_context = #{orderContext,jdbcType=VARCHAR},
+                </if>
+                <if test="isCode != null">
+                    is_code = #{isCode,jdbcType=VARCHAR},
+                </if>
+                <if test="createTime != null">
+                    create_time = #{createTime,jdbcType=TIMESTAMP},
+                </if>
+                <if test="finishTime != null">
+                    finish_time = #{finishTime,jdbcType=TIMESTAMP},
+                </if>
+                <if test="idNote != null">
+                    id_note = #{idNote,jdbcType=VARCHAR},
+                </if>
+                <if test="idResult != null">
+                    id_result = #{idResult,jdbcType=VARCHAR},
+                </if>
+                <if test="sendCount != null">
+                    send_count = #{sendCount,jdbcType=INTEGER},
+                </if>
+                <if test="processCount != null">
+                    process_count = #{processCount,jdbcType=INTEGER}
+                </if>
+        </set>
+        where id_id = #{id,jdbcType=BIGINT}
+    </update>
+
+    <update id="updateBatch">
+        <foreach close="" collection="list" item="item" open="" separator=";">
+            update id_instantdirective
+            <set>
+                    <if test="item.fromNode != null">
+                        from_node = #{item.fromNode,jdbcType=VARCHAR},
+                    </if>
+                    <if test="item.targetNode != null">
+                        target_node = #{item.targetNode,jdbcType=VARCHAR},
+                    </if>
+                    <if test="item.idSystem != null">
+                        id_system = #{item.idSystem,jdbcType=VARCHAR},
+                    </if>
+                    <if test="item.idTable != null">
+                        id_table = #{item.idTable,jdbcType=VARCHAR},
+                    </if>
+                    <if test="item.idRowId != null">
+                        id_row_id = #{item.idRowId,jdbcType=BIGINT},
+                    </if>
+                    <if test="item.operationCode != null">
+                        operation_code = #{item.operationCode,jdbcType=VARCHAR},
+                    </if>
+                    <if test="item.orderContext != null">
+                        order_context = #{item.orderContext,jdbcType=VARCHAR},
+                    </if>
+                    <if test="item.isCode != null">
+                        is_code = #{item.isCode,jdbcType=VARCHAR},
+                    </if>
+                    <if test="item.createTime != null">
+                        create_time = #{item.createTime,jdbcType=TIMESTAMP},
+                    </if>
+                    <if test="item.finishTime != null">
+                        finish_time = #{item.finishTime,jdbcType=TIMESTAMP},
+                    </if>
+                    <if test="item.idNote != null">
+                        id_note = #{item.idNote,jdbcType=VARCHAR},
+                    </if>
+                    <if test="item.idResult != null">
+                        id_result = #{item.idResult,jdbcType=VARCHAR},
+                    </if>
+                    <if test="item.sendCount != null">
+                        send_count = #{item.sendCount,jdbcType=INTEGER},
+                    </if>
+                    <if test="item.processCount != null">
+                        process_count = #{item.processCount,jdbcType=INTEGER}
+                    </if>
+            </set>
+            where id_id = #{item.id,jdbcType=BIGINT}
+        </foreach>
+    </update>
+
+    <select id="selectByPrimaryKey" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List" />
+        from id_instantdirective
+        where id_id = #{id,jdbcType=BIGINT}
+    </select>
+
+    <select id="selectByPrimaryKeyWithLock" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List" />
+        from id_instantdirective
+        where id_id = #{id,jdbcType=BIGINT} for update
+    </select>
+
+    <select id="selectByPrimaryKeys" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List" />
+        from id_instantdirective where id_id in
+        <foreach close=")" collection="list" item="item" open="(" separator=",">
+            #{item}
+        </foreach>
+    </select>
+
+    <select id="selectByEntity" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from id_instantdirective
+        <where>
+                <if test="id != null">
+                    and id_id=#{id,jdbcType=BIGINT}
+                </if>
+                <if test="fromNode != null">
+                    and from_node=#{fromNode,jdbcType=VARCHAR}
+                </if>
+                <if test="targetNode != null">
+                    and target_node=#{targetNode,jdbcType=VARCHAR}
+                </if>
+                <if test="idSystem != null">
+                    and id_system=#{idSystem,jdbcType=VARCHAR}
+                </if>
+                <if test="idTable != null">
+                    and id_table=#{idTable,jdbcType=VARCHAR}
+                </if>
+                <if test="idRowId != null">
+                    and id_row_id=#{idRowId,jdbcType=BIGINT}
+                </if>
+                <if test="operationCode != null">
+                    and operation_code=#{operationCode,jdbcType=VARCHAR}
+                </if>
+                <if test="orderContext != null">
+                    and order_context=#{orderContext,jdbcType=VARCHAR}
+                </if>
+                <if test="isCode != null">
+                    and is_code=#{isCode,jdbcType=VARCHAR}
+                </if>
+                <if test="createTime != null">
+                    and create_time=#{createTime,jdbcType=TIMESTAMP}
+                </if>
+                <if test="finishTime != null">
+                    and finish_time=#{finishTime,jdbcType=TIMESTAMP}
+                </if>
+                <if test="idNote != null">
+                    and id_note=#{idNote,jdbcType=VARCHAR}
+                </if>
+                <if test="idResult != null">
+                    and id_result=#{idResult,jdbcType=VARCHAR}
+                </if>
+                <if test="sendCount != null">
+                    and send_count=#{sendCount,jdbcType=INTEGER}
+                </if>
+                <if test="processCount != null">
+                    and process_count=#{processCount,jdbcType=INTEGER}
+                </if>
+        </where>
+    </select>
+
+    <select id="selectByConditions" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from id_instantdirective
+        <where>
+                <if test="id != null">
+                    and id_id ${id}
+                </if>
+                <if test="fromNode != null">
+                    and from_node ${fromNode}
+                </if>
+                <if test="targetNode != null">
+                    and target_node ${targetNode}
+                </if>
+                <if test="idSystem != null">
+                    and id_system ${idSystem}
+                </if>
+                <if test="idTable != null">
+                    and id_table ${idTable}
+                </if>
+                <if test="idRowId != null">
+                    and id_row_id ${idRowId}
+                </if>
+                <if test="operationCode != null">
+                    and operation_code ${operationCode}
+                </if>
+                <if test="orderContext != null">
+                    and order_context ${orderContext}
+                </if>
+                <if test="isCode != null">
+                    and is_code ${isCode}
+                </if>
+                <if test="createTime != null">
+                    and create_time ${createTime}
+                </if>
+                <if test="finishTime != null">
+                    and finish_time ${finishTime}
+                </if>
+                <if test="idNote != null">
+                    and id_note ${idNote}
+                </if>
+                <if test="idResult != null">
+                    and id_result ${idResult}
+                </if>
+                <if test="sendCount != null">
+                    and send_count ${sendCount}
+                </if>
+                <if test="processCount != null">
+                    and process_count ${processCount}
+                </if>
+        </where>
+        <if test="orderBy != null">
+            order by ${orderBy}
+        </if>
+    </select>
+
+    <select id="selectAll" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from id_instantdirective
+    </select>
+
+    <select id="count" resultType="java.lang.Long">
+        select count(*) from id_instantdirective
+    </select>
+
+    <select id="selectByFunction">
+        select ${function}(${column}) from id_instantdirective
+    </select>
+
+</mapper>
