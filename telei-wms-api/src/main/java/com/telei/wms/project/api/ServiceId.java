@@ -56,9 +56,6 @@ public class ServiceId {
     @RightResource(rightSystem = "wms", rightItem = "入库任务", rightFunction = "入库任务修改主单")
     public static final String WMS_RO_HEADER_UPDATE = "1030303";
 
-
-
-
     /**
      * 收货
      * 04
@@ -73,7 +70,7 @@ public class ServiceId {
     public static final String WMS_ROO_PAGE_QUERY = "1030403";
 
     @RightResource(rightSystem = "wms", rightItem = "收货单", rightFunction = "收货单详情")
-    public static final String OMS_ROO_DETAIL = "1030404";
+    public static final String WMS_ROO_DETAIL = "1030404";
 
     /**
      * 库存管理
@@ -91,4 +88,38 @@ public class ServiceId {
     @RightResource(rightSystem = "wms", rightItem = "库存管理", rightFunction = "移库")
     public static final String WMS_INVENTORY_SHIFT = "1030504";
 
+    /**
+     * 库存初始化
+     * 06
+     */
+    @RightResource(rightSystem = "wms", rightItem = "库存初始化", rightFunction = "新增库存初始化")
+    public static final String WMS_INIT_ADD = "1030601";
+
+    @RightResource(rightSystem = "wms", rightItem = "库存初始化", rightFunction = "审核库存初始化")
+    public static final String WMS_INIT_AUDIT = "1030602";
+
+    @RightResource(rightSystem = "wms", rightItem = "库存初始化", rightFunction = "库存初始化查询")
+    public static final String WMS_INIT_PAGE_QUERY = "1030603";
+
+    @RightResource(rightSystem = "wms", rightItem = "库存初始化", rightFunction = "库存初始化详情")
+    public static final String WMS_INIT_DETAIL = "1030604";
+
+    /**
+     * 上架单
+     * 07
+     */
+    @RightResource(rightSystem = "wms", rightItem = "上架单", rightFunction = "新增上架单")
+    public static final String WMS_PAO_ADD = "1030701";
+
+    @RightResource(rightSystem = "wms", rightItem = "上架单", rightFunction = "上架单详细")
+    public static final String WMS_PAO_DETAIL = "1030702";
+
+    @RightResource(rightSystem = "wms", rightItem = "上架单", rightFunction = "上架单分页查询")
+    public static final String WMS_PAO_PAGE_QUERY = "1030703";
+
+    @RightResource(rightSystem = "wms", rightItem = "上架单", rightFunction = "上架单修改")
+    public static final String WMS_PAO_UPDATE = "1030704";
+
+    @RightResource(rightSystem = "wms", rightItem = "上架单", rightFunction = "取消上架单")
+    public static final String WMS_PAO_CANCEL = "1030705";
 }

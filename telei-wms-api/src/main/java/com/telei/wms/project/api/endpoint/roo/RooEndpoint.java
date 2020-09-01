@@ -47,7 +47,7 @@ public class RooEndpoint {
     }
 
     @ApiOperation("收货单详情")
-    @PostMapping(ServiceId.OMS_ROO_DETAIL)
+    @PostMapping(ServiceId.WMS_ROO_DETAIL)
     public RooHeaderDetailResponse rooHeaderDetail(@RequestBody @Valid RooHeaderDetailRequest request) {
         return rooBussiness.rooHeaderDetail(request);
     }

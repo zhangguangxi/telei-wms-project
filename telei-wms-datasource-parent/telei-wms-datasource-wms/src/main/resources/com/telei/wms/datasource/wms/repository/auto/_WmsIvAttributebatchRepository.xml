@@ -25,14 +25,14 @@
             <result column="price" jdbcType="DECIMAL" property="price"/>
             <result column="texture" jdbcType="VARCHAR" property="texture"/>
             <result column="image_path" jdbcType="VARCHAR" property="imagePath"/>
-            <result column="mid_bag_qty" jdbcType="INTEGER" property="midBagQty"/>
+            <result column="mid_bag_rate" jdbcType="INTEGER" property="midBagRate"/>
             <result column="mid_bag_weight" jdbcType="DECIMAL" property="midBagWeight"/>
             <result column="mid_bag_length" jdbcType="DECIMAL" property="midBagLength"/>
             <result column="mid_bag_width" jdbcType="DECIMAL" property="midBagWidth"/>
             <result column="mid_bag_height" jdbcType="DECIMAL" property="midBagHeight"/>
             <result column="mid_bag_vol" jdbcType="DECIMAL" property="midBagVol"/>
             <result column="mid_bag_barcode" jdbcType="VARCHAR" property="midBagBarcode"/>
-            <result column="big_bag_qty" jdbcType="INTEGER" property="bigBagQty"/>
+            <result column="big_bag_rate" jdbcType="INTEGER" property="bigBagRate"/>
             <result column="big_bag_weight" jdbcType="DECIMAL" property="bigBagWeight"/>
             <result column="big_bag_length" jdbcType="DECIMAL" property="bigBagLength"/>
             <result column="big_bag_width" jdbcType="DECIMAL" property="bigBagWidth"/>
@@ -51,12 +51,12 @@
     </resultMap>
 
     <sql id="Base_Column_List">
-        iab_id,product_id,company_id,warehouse_id,warehouse_code,product_name,product_name_local,product_barcode,product_upc_code,batch_no,product_category_id,spec_type,weight,product_length,product_width,product_height,vol,stock_unit,product_color,product_size,price,texture,image_path,mid_bag_qty,mid_bag_weight,mid_bag_length,mid_bag_width,mid_bag_height,mid_bag_vol,mid_bag_barcode,big_bag_qty,big_bag_weight,big_bag_length,big_bag_width,big_bag_height,big_bag_vol,big_bag_barcode,product_date,effective_date,qs_code,ap_code,document_code,iab_document_id,iab_documentline_id,create_user,create_time
+        iab_id,product_id,company_id,warehouse_id,warehouse_code,product_name,product_name_local,product_barcode,product_upc_code,batch_no,product_category_id,spec_type,weight,product_length,product_width,product_height,vol,stock_unit,product_color,product_size,price,texture,image_path,mid_bag_rate,mid_bag_weight,mid_bag_length,mid_bag_width,mid_bag_height,mid_bag_vol,mid_bag_barcode,big_bag_rate,big_bag_weight,big_bag_length,big_bag_width,big_bag_height,big_bag_vol,big_bag_barcode,product_date,effective_date,qs_code,ap_code,document_code,iab_document_id,iab_documentline_id,create_user,create_time
     </sql>
 
         <insert id="insert">
-            insert into wms_iv_attributebatch (iab_id,product_id,company_id,warehouse_id,warehouse_code,product_name,product_name_local,product_barcode,product_upc_code,batch_no,product_category_id,spec_type,weight,product_length,product_width,product_height,vol,stock_unit,product_color,product_size,price,texture,image_path,mid_bag_qty,mid_bag_weight,mid_bag_length,mid_bag_width,mid_bag_height,mid_bag_vol,mid_bag_barcode,big_bag_qty,big_bag_weight,big_bag_length,big_bag_width,big_bag_height,big_bag_vol,big_bag_barcode,product_date,effective_date,qs_code,ap_code,document_code,iab_document_id,iab_documentline_id,create_user,create_time)
-            values (#{id,jdbcType=BIGINT},#{productId,jdbcType=BIGINT},#{companyId,jdbcType=BIGINT},#{warehouseId,jdbcType=BIGINT},#{warehouseCode,jdbcType=VARCHAR},#{productName,jdbcType=VARCHAR},#{productNameLocal,jdbcType=VARCHAR},#{productBarcode,jdbcType=VARCHAR},#{productUpcCode,jdbcType=VARCHAR},#{batchNo,jdbcType=VARCHAR},#{productCategoryId,jdbcType=BIGINT},#{specType,jdbcType=VARCHAR},#{weight,jdbcType=DECIMAL},#{productLength,jdbcType=DECIMAL},#{productWidth,jdbcType=DECIMAL},#{productHeight,jdbcType=DECIMAL},#{vol,jdbcType=DECIMAL},#{stockUnit,jdbcType=BIGINT},#{productColor,jdbcType=VARCHAR},#{productSize,jdbcType=VARCHAR},#{price,jdbcType=DECIMAL},#{texture,jdbcType=VARCHAR},#{imagePath,jdbcType=VARCHAR},#{midBagQty,jdbcType=INTEGER},#{midBagWeight,jdbcType=DECIMAL},#{midBagLength,jdbcType=DECIMAL},#{midBagWidth,jdbcType=DECIMAL},#{midBagHeight,jdbcType=DECIMAL},#{midBagVol,jdbcType=DECIMAL},#{midBagBarcode,jdbcType=VARCHAR},#{bigBagQty,jdbcType=INTEGER},#{bigBagWeight,jdbcType=DECIMAL},#{bigBagLength,jdbcType=DECIMAL},#{bigBagWidth,jdbcType=DECIMAL},#{bigBagHeight,jdbcType=DECIMAL},#{bigBagVol,jdbcType=DECIMAL},#{bigBagBarcode,jdbcType=VARCHAR},#{productDate,jdbcType=TIMESTAMP},#{effectiveDate,jdbcType=TIMESTAMP},#{qsCode,jdbcType=VARCHAR},#{apCode,jdbcType=VARCHAR},#{documentCode,jdbcType=VARCHAR},#{iabDocumentId,jdbcType=BIGINT},#{iabDocumentlineId,jdbcType=BIGINT},#{createUser,jdbcType=BIGINT},#{createTime,jdbcType=TIMESTAMP})
+            insert into wms_iv_attributebatch (iab_id,product_id,company_id,warehouse_id,warehouse_code,product_name,product_name_local,product_barcode,product_upc_code,batch_no,product_category_id,spec_type,weight,product_length,product_width,product_height,vol,stock_unit,product_color,product_size,price,texture,image_path,mid_bag_rate,mid_bag_weight,mid_bag_length,mid_bag_width,mid_bag_height,mid_bag_vol,mid_bag_barcode,big_bag_rate,big_bag_weight,big_bag_length,big_bag_width,big_bag_height,big_bag_vol,big_bag_barcode,product_date,effective_date,qs_code,ap_code,document_code,iab_document_id,iab_documentline_id,create_user,create_time)
+            values (#{id,jdbcType=BIGINT},#{productId,jdbcType=BIGINT},#{companyId,jdbcType=BIGINT},#{warehouseId,jdbcType=BIGINT},#{warehouseCode,jdbcType=VARCHAR},#{productName,jdbcType=VARCHAR},#{productNameLocal,jdbcType=VARCHAR},#{productBarcode,jdbcType=VARCHAR},#{productUpcCode,jdbcType=VARCHAR},#{batchNo,jdbcType=VARCHAR},#{productCategoryId,jdbcType=BIGINT},#{specType,jdbcType=VARCHAR},#{weight,jdbcType=DECIMAL},#{productLength,jdbcType=DECIMAL},#{productWidth,jdbcType=DECIMAL},#{productHeight,jdbcType=DECIMAL},#{vol,jdbcType=DECIMAL},#{stockUnit,jdbcType=BIGINT},#{productColor,jdbcType=VARCHAR},#{productSize,jdbcType=VARCHAR},#{price,jdbcType=DECIMAL},#{texture,jdbcType=VARCHAR},#{imagePath,jdbcType=VARCHAR},#{midBagRate,jdbcType=INTEGER},#{midBagWeight,jdbcType=DECIMAL},#{midBagLength,jdbcType=DECIMAL},#{midBagWidth,jdbcType=DECIMAL},#{midBagHeight,jdbcType=DECIMAL},#{midBagVol,jdbcType=DECIMAL},#{midBagBarcode,jdbcType=VARCHAR},#{bigBagRate,jdbcType=INTEGER},#{bigBagWeight,jdbcType=DECIMAL},#{bigBagLength,jdbcType=DECIMAL},#{bigBagWidth,jdbcType=DECIMAL},#{bigBagHeight,jdbcType=DECIMAL},#{bigBagVol,jdbcType=DECIMAL},#{bigBagBarcode,jdbcType=VARCHAR},#{productDate,jdbcType=TIMESTAMP},#{effectiveDate,jdbcType=TIMESTAMP},#{qsCode,jdbcType=VARCHAR},#{apCode,jdbcType=VARCHAR},#{documentCode,jdbcType=VARCHAR},#{iabDocumentId,jdbcType=BIGINT},#{iabDocumentlineId,jdbcType=BIGINT},#{createUser,jdbcType=BIGINT},#{createTime,jdbcType=TIMESTAMP})
         </insert>
 
         <insert id="insertSelective">
@@ -131,8 +131,8 @@
                     <if test="imagePath != null">
                         image_path,
                     </if>
-                    <if test="midBagQty != null">
-                        mid_bag_qty,
+                    <if test="midBagRate != null">
+                        mid_bag_rate,
                     </if>
                     <if test="midBagWeight != null">
                         mid_bag_weight,
@@ -152,8 +152,8 @@
                     <if test="midBagBarcode != null">
                         mid_bag_barcode,
                     </if>
-                    <if test="bigBagQty != null">
-                        big_bag_qty,
+                    <if test="bigBagRate != null">
+                        big_bag_rate,
                     </if>
                     <if test="bigBagWeight != null">
                         big_bag_weight,
@@ -271,8 +271,8 @@
                     <if test="imagePath != null">
                         #{imagePath,jdbcType=VARCHAR},
                     </if>
-                    <if test="midBagQty != null">
-                        #{midBagQty,jdbcType=INTEGER},
+                    <if test="midBagRate != null">
+                        #{midBagRate,jdbcType=INTEGER},
                     </if>
                     <if test="midBagWeight != null">
                         #{midBagWeight,jdbcType=DECIMAL},
@@ -292,8 +292,8 @@
                     <if test="midBagBarcode != null">
                         #{midBagBarcode,jdbcType=VARCHAR},
                     </if>
-                    <if test="bigBagQty != null">
-                        #{bigBagQty,jdbcType=INTEGER},
+                    <if test="bigBagRate != null">
+                        #{bigBagRate,jdbcType=INTEGER},
                     </if>
                     <if test="bigBagWeight != null">
                         #{bigBagWeight,jdbcType=DECIMAL},
@@ -344,7 +344,7 @@
         </insert>
 
         <insert id="insertBatch">
-            insert into wms_iv_attributebatch (iab_id,product_id,company_id,warehouse_id,warehouse_code,product_name,product_name_local,product_barcode,product_upc_code,batch_no,product_category_id,spec_type,weight,product_length,product_width,product_height,vol,stock_unit,product_color,product_size,price,texture,image_path,mid_bag_qty,mid_bag_weight,mid_bag_length,mid_bag_width,mid_bag_height,mid_bag_vol,mid_bag_barcode,big_bag_qty,big_bag_weight,big_bag_length,big_bag_width,big_bag_height,big_bag_vol,big_bag_barcode,product_date,effective_date,qs_code,ap_code,document_code,iab_document_id,iab_documentline_id,create_user,create_time) values
+            insert into wms_iv_attributebatch (iab_id,product_id,company_id,warehouse_id,warehouse_code,product_name,product_name_local,product_barcode,product_upc_code,batch_no,product_category_id,spec_type,weight,product_length,product_width,product_height,vol,stock_unit,product_color,product_size,price,texture,image_path,mid_bag_rate,mid_bag_weight,mid_bag_length,mid_bag_width,mid_bag_height,mid_bag_vol,mid_bag_barcode,big_bag_rate,big_bag_weight,big_bag_length,big_bag_width,big_bag_height,big_bag_vol,big_bag_barcode,product_date,effective_date,qs_code,ap_code,document_code,iab_document_id,iab_documentline_id,create_user,create_time) values
             <foreach collection="list" item="item" separator=",">
                 (
                     #{item.id,jdbcType=BIGINT},
@@ -370,14 +370,14 @@
                     #{item.price,jdbcType=DECIMAL},
                     #{item.texture,jdbcType=VARCHAR},
                     #{item.imagePath,jdbcType=VARCHAR},
-                    #{item.midBagQty,jdbcType=INTEGER},
+                    #{item.midBagRate,jdbcType=INTEGER},
                     #{item.midBagWeight,jdbcType=DECIMAL},
                     #{item.midBagLength,jdbcType=DECIMAL},
                     #{item.midBagWidth,jdbcType=DECIMAL},
                     #{item.midBagHeight,jdbcType=DECIMAL},
                     #{item.midBagVol,jdbcType=DECIMAL},
                     #{item.midBagBarcode,jdbcType=VARCHAR},
-                    #{item.bigBagQty,jdbcType=INTEGER},
+                    #{item.bigBagRate,jdbcType=INTEGER},
                     #{item.bigBagWeight,jdbcType=DECIMAL},
                     #{item.bigBagLength,jdbcType=DECIMAL},
                     #{item.bigBagWidth,jdbcType=DECIMAL},
@@ -434,14 +434,14 @@
                 price = #{price,jdbcType=DECIMAL},
                 texture = #{texture,jdbcType=VARCHAR},
                 image_path = #{imagePath,jdbcType=VARCHAR},
-                mid_bag_qty = #{midBagQty,jdbcType=INTEGER},
+                mid_bag_rate = #{midBagRate,jdbcType=INTEGER},
                 mid_bag_weight = #{midBagWeight,jdbcType=DECIMAL},
                 mid_bag_length = #{midBagLength,jdbcType=DECIMAL},
                 mid_bag_width = #{midBagWidth,jdbcType=DECIMAL},
                 mid_bag_height = #{midBagHeight,jdbcType=DECIMAL},
                 mid_bag_vol = #{midBagVol,jdbcType=DECIMAL},
                 mid_bag_barcode = #{midBagBarcode,jdbcType=VARCHAR},
-                big_bag_qty = #{bigBagQty,jdbcType=INTEGER},
+                big_bag_rate = #{bigBagRate,jdbcType=INTEGER},
                 big_bag_weight = #{bigBagWeight,jdbcType=DECIMAL},
                 big_bag_length = #{bigBagLength,jdbcType=DECIMAL},
                 big_bag_width = #{bigBagWidth,jdbcType=DECIMAL},
@@ -530,8 +530,8 @@
                 <if test="imagePath != null">
                     image_path = #{imagePath,jdbcType=VARCHAR},
                 </if>
-                <if test="midBagQty != null">
-                    mid_bag_qty = #{midBagQty,jdbcType=INTEGER},
+                <if test="midBagRate != null">
+                    mid_bag_rate = #{midBagRate,jdbcType=INTEGER},
                 </if>
                 <if test="midBagWeight != null">
                     mid_bag_weight = #{midBagWeight,jdbcType=DECIMAL},
@@ -551,8 +551,8 @@
                 <if test="midBagBarcode != null">
                     mid_bag_barcode = #{midBagBarcode,jdbcType=VARCHAR},
                 </if>
-                <if test="bigBagQty != null">
-                    big_bag_qty = #{bigBagQty,jdbcType=INTEGER},
+                <if test="bigBagRate != null">
+                    big_bag_rate = #{bigBagRate,jdbcType=INTEGER},
                 </if>
                 <if test="bigBagWeight != null">
                     big_bag_weight = #{bigBagWeight,jdbcType=DECIMAL},
@@ -673,8 +673,8 @@
                     <if test="item.imagePath != null">
                         image_path = #{item.imagePath,jdbcType=VARCHAR},
                     </if>
-                    <if test="item.midBagQty != null">
-                        mid_bag_qty = #{item.midBagQty,jdbcType=INTEGER},
+                    <if test="item.midBagRate != null">
+                        mid_bag_rate = #{item.midBagRate,jdbcType=INTEGER},
                     </if>
                     <if test="item.midBagWeight != null">
                         mid_bag_weight = #{item.midBagWeight,jdbcType=DECIMAL},
@@ -694,8 +694,8 @@
                     <if test="item.midBagBarcode != null">
                         mid_bag_barcode = #{item.midBagBarcode,jdbcType=VARCHAR},
                     </if>
-                    <if test="item.bigBagQty != null">
-                        big_bag_qty = #{item.bigBagQty,jdbcType=INTEGER},
+                    <if test="item.bigBagRate != null">
+                        big_bag_rate = #{item.bigBagRate,jdbcType=INTEGER},
                     </if>
                     <if test="item.bigBagWeight != null">
                         big_bag_weight = #{item.bigBagWeight,jdbcType=DECIMAL},
@@ -844,8 +844,8 @@
                 <if test="imagePath != null">
                     and image_path=#{imagePath,jdbcType=VARCHAR}
                 </if>
-                <if test="midBagQty != null">
-                    and mid_bag_qty=#{midBagQty,jdbcType=INTEGER}
+                <if test="midBagRate != null">
+                    and mid_bag_rate=#{midBagRate,jdbcType=INTEGER}
                 </if>
                 <if test="midBagWeight != null">
                     and mid_bag_weight=#{midBagWeight,jdbcType=DECIMAL}
@@ -865,8 +865,8 @@
                 <if test="midBagBarcode != null">
                     and mid_bag_barcode=#{midBagBarcode,jdbcType=VARCHAR}
                 </if>
-                <if test="bigBagQty != null">
-                    and big_bag_qty=#{bigBagQty,jdbcType=INTEGER}
+                <if test="bigBagRate != null">
+                    and big_bag_rate=#{bigBagRate,jdbcType=INTEGER}
                 </if>
                 <if test="bigBagWeight != null">
                     and big_bag_weight=#{bigBagWeight,jdbcType=DECIMAL}
@@ -990,8 +990,8 @@
                 <if test="imagePath != null">
                     and image_path ${imagePath}
                 </if>
-                <if test="midBagQty != null">
-                    and mid_bag_qty ${midBagQty}
+                <if test="midBagRate != null">
+                    and mid_bag_rate ${midBagRate}
                 </if>
                 <if test="midBagWeight != null">
                     and mid_bag_weight ${midBagWeight}
@@ -1011,8 +1011,8 @@
                 <if test="midBagBarcode != null">
                     and mid_bag_barcode ${midBagBarcode}
                 </if>
-                <if test="bigBagQty != null">
-                    and big_bag_qty ${bigBagQty}
+                <if test="bigBagRate != null">
+                    and big_bag_rate ${bigBagRate}
                 </if>
                 <if test="bigBagWeight != null">
                     and big_bag_weight ${bigBagWeight}

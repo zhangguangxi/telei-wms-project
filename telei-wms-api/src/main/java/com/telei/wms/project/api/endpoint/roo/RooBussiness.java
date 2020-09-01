@@ -103,6 +103,7 @@ public class RooBussiness {
             //根据产品id列表获取产品列表信息
             ProductDetailRequest productDetailRequest = new ProductDetailRequest();
             productDetailRequest.setIds(productIds);
+            productDetailRequest.setCompanyId(CustomRequestContext.getUserInfo().getCompanyId());
             ApiResponse detailResponse = productFeignClient.selectProductList(productDetailRequest);
             ProductListResponse response = JSON.parseObject(JSON.toJSONString(detailResponse.getData()), ProductListResponse.class);
             Map<Long, ProductDetailResponse> productDetailResponseMap = new HashMap<>();
@@ -155,6 +156,20 @@ public class RooBussiness {
                     wmsIvAttributebatch.setPrice(productResponse.getSellingPriceReference());
                     wmsIvAttributebatch.setTexture(productResponse.getTexture());
                     wmsIvAttributebatch.setImagePath(productResponse.getImagePath());
+                    wmsIvAttributebatch.setMidBagBarcode(productResponse.getMidBagBarcode());
+                    wmsIvAttributebatch.setMidBagHeight(productResponse.getMidBagHeight());
+                    wmsIvAttributebatch.setMidBagLength(productResponse.getMidBagLength());
+                    wmsIvAttributebatch.setMidBagRate(productResponse.getMidBagQty());
+                    wmsIvAttributebatch.setMidBagVol(productResponse.getMidBagVol());
+                    wmsIvAttributebatch.setMidBagWeight(productResponse.getMidBagWeight());
+                    wmsIvAttributebatch.setMidBagWidth(productResponse.getMidBagWidth());
+                    wmsIvAttributebatch.setBigBagBarcode(productResponse.getBigBagBarcode());
+                    wmsIvAttributebatch.setBigBagHeight(productResponse.getBigBagHeight());
+                    wmsIvAttributebatch.setBigBagLength(productResponse.getBigBagLength());
+                    wmsIvAttributebatch.setBigBagRate(productResponse.getBigBagQty());
+                    wmsIvAttributebatch.setBigBagVol(productResponse.getBigBagVol());
+                    wmsIvAttributebatch.setBigBagWeight(productResponse.getBigBagWeight());
+                    wmsIvAttributebatch.setBigBagWidth(productResponse.getBigBagWidth());
                 }
                 wmsIvAttributebatchList.add(wmsIvAttributebatch);
             }
@@ -242,6 +257,7 @@ public class RooBussiness {
             //根据产品id列表获取产品列表信息
             ProductDetailRequest productDetailRequest = new ProductDetailRequest();
             productDetailRequest.setIds(productIds);
+            productDetailRequest.setCompanyId(CustomRequestContext.getUserInfo().getCompanyId());
             ApiResponse detailResponse = productFeignClient.selectProductList(productDetailRequest);
             ProductListResponse response = JSON.parseObject(JSON.toJSONString(detailResponse.getData()), ProductListResponse.class);
             if (StringUtils.isNotNull(response)) {

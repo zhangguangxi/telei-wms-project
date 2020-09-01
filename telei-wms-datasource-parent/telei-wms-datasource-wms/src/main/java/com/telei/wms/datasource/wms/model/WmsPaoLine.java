@@ -1,9 +1,10 @@
 package com.telei.wms.datasource.wms.model;
 
 import com.nuochen.framework.autocoding.domain.Entity;
+import lombok.Data;
+
 import java.math.BigDecimal;
 import java.util.Date;
-import lombok.Data;
 
 /**
 * wms_pao_line 上架单明细
@@ -16,6 +17,8 @@ public class WmsPaoLine implements Entity<Long> {
     private Long paoId;
     /** 入库单单头id */
     private Long roId;
+    /** 对应计划明细的id */
+    private Long rolId;
     /** 收货作单头id */
     private Long rooId;
     /** 收货单号 */
@@ -23,7 +26,7 @@ public class WmsPaoLine implements Entity<Long> {
     /** 收货单收货明细id */
     private Long roolId;
     /** 产品id */
-    private Integer productId;
+    private Long productId;
     /** 单位毛重(KG) */
     private BigDecimal unitGrossWeight;
     /** 单价 */

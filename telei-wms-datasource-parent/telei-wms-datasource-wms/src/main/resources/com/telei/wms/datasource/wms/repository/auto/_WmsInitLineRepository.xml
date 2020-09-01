@@ -1,0 +1,305 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.telei.wms.datasource.wms.repository.WmsInitLineRepository">
+    <resultMap id="BaseResultMap" type="com.telei.wms.datasource.wms.model.WmsInitLine">
+        <id column="ivil_id" jdbcType="BIGINT" property="id"/>
+            <result column="ivih_id" jdbcType="BIGINT" property="ivihId"/>
+            <result column="product_id" jdbcType="BIGINT" property="productId"/>
+            <result column="lc_code" jdbcType="VARCHAR" property="lcCode"/>
+            <result column="iv_fifo_time" jdbcType="TIMESTAMP" property="ivFifoTime"/>
+            <result column="iv_qty" jdbcType="DECIMAL" property="ivQty"/>
+            <result column="product_date" jdbcType="TIMESTAMP" property="productDate"/>
+            <result column="iv_effective_date" jdbcType="TIMESTAMP" property="ivEffectiveDate"/>
+            <result column="batch_no" jdbcType="VARCHAR" property="batchNo"/>
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        ivil_id,ivih_id,product_id,lc_code,iv_fifo_time,iv_qty,product_date,iv_effective_date,batch_no
+    </sql>
+
+        <insert id="insert">
+            insert into wms_init_line (ivil_id,ivih_id,product_id,lc_code,iv_fifo_time,iv_qty,product_date,iv_effective_date,batch_no)
+            values (#{id,jdbcType=BIGINT},#{ivihId,jdbcType=BIGINT},#{productId,jdbcType=BIGINT},#{lcCode,jdbcType=VARCHAR},#{ivFifoTime,jdbcType=TIMESTAMP},#{ivQty,jdbcType=DECIMAL},#{productDate,jdbcType=TIMESTAMP},#{ivEffectiveDate,jdbcType=TIMESTAMP},#{batchNo,jdbcType=VARCHAR})
+        </insert>
+
+        <insert id="insertSelective">
+            insert into wms_init_line
+            <trim prefix="(" suffix=")" suffixOverrides=",">
+                    <if test="id != null">
+                        ivil_id,
+                    </if>
+                    <if test="ivihId != null">
+                        ivih_id,
+                    </if>
+                    <if test="productId != null">
+                        product_id,
+                    </if>
+                    <if test="lcCode != null">
+                        lc_code,
+                    </if>
+                    <if test="ivFifoTime != null">
+                        iv_fifo_time,
+                    </if>
+                    <if test="ivQty != null">
+                        iv_qty,
+                    </if>
+                    <if test="productDate != null">
+                        product_date,
+                    </if>
+                    <if test="ivEffectiveDate != null">
+                        iv_effective_date,
+                    </if>
+                    <if test="batchNo != null">
+                        batch_no
+                    </if>
+            </trim>
+            <trim prefix="values (" suffix=")" suffixOverrides=",">
+                    <if test="id != null">
+                        #{id,jdbcType=BIGINT},
+                    </if>
+                    <if test="ivihId != null">
+                        #{ivihId,jdbcType=BIGINT},
+                    </if>
+                    <if test="productId != null">
+                        #{productId,jdbcType=BIGINT},
+                    </if>
+                    <if test="lcCode != null">
+                        #{lcCode,jdbcType=VARCHAR},
+                    </if>
+                    <if test="ivFifoTime != null">
+                        #{ivFifoTime,jdbcType=TIMESTAMP},
+                    </if>
+                    <if test="ivQty != null">
+                        #{ivQty,jdbcType=DECIMAL},
+                    </if>
+                    <if test="productDate != null">
+                        #{productDate,jdbcType=TIMESTAMP},
+                    </if>
+                    <if test="ivEffectiveDate != null">
+                        #{ivEffectiveDate,jdbcType=TIMESTAMP},
+                    </if>
+                    <if test="batchNo != null">
+                        #{batchNo,jdbcType=VARCHAR}
+                    </if>
+            </trim>
+        </insert>
+
+        <insert id="insertBatch">
+            insert into wms_init_line (ivil_id,ivih_id,product_id,lc_code,iv_fifo_time,iv_qty,product_date,iv_effective_date,batch_no) values
+            <foreach collection="list" item="item" separator=",">
+                (
+                    #{item.id,jdbcType=BIGINT},
+                    #{item.ivihId,jdbcType=BIGINT},
+                    #{item.productId,jdbcType=BIGINT},
+                    #{item.lcCode,jdbcType=VARCHAR},
+                    #{item.ivFifoTime,jdbcType=TIMESTAMP},
+                    #{item.ivQty,jdbcType=DECIMAL},
+                    #{item.productDate,jdbcType=TIMESTAMP},
+                    #{item.ivEffectiveDate,jdbcType=TIMESTAMP},
+                    #{item.batchNo,jdbcType=VARCHAR}
+                )
+            </foreach>
+        </insert>
+
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+        delete from wms_init_line
+        where ivil_id = #{id,jdbcType=BIGINT}
+    </delete>
+
+    <delete id="deleteByPrimaryKeys">
+        delete from wms_init_line where ivil_id in
+        <foreach close=")" collection="list" item="item" open="(" separator=",">
+            #{item}
+        </foreach>
+    </delete>
+
+    <update id="updateByPrimaryKey">
+        update wms_init_line
+        <set>
+                ivih_id = #{ivihId,jdbcType=BIGINT},
+                product_id = #{productId,jdbcType=BIGINT},
+                lc_code = #{lcCode,jdbcType=VARCHAR},
+                iv_fifo_time = #{ivFifoTime,jdbcType=TIMESTAMP},
+                iv_qty = #{ivQty,jdbcType=DECIMAL},
+                product_date = #{productDate,jdbcType=TIMESTAMP},
+                iv_effective_date = #{ivEffectiveDate,jdbcType=TIMESTAMP},
+                batch_no = #{batchNo,jdbcType=VARCHAR}
+        </set>
+        where ivil_id = #{id,jdbcType=BIGINT}
+    </update>
+
+    <update id="updateByPrimaryKeySelective">
+        update wms_init_line
+        <set>
+                <if test="ivihId != null">
+                    ivih_id = #{ivihId,jdbcType=BIGINT},
+                </if>
+                <if test="productId != null">
+                    product_id = #{productId,jdbcType=BIGINT},
+                </if>
+                <if test="lcCode != null">
+                    lc_code = #{lcCode,jdbcType=VARCHAR},
+                </if>
+                <if test="ivFifoTime != null">
+                    iv_fifo_time = #{ivFifoTime,jdbcType=TIMESTAMP},
+                </if>
+                <if test="ivQty != null">
+                    iv_qty = #{ivQty,jdbcType=DECIMAL},
+                </if>
+                <if test="productDate != null">
+                    product_date = #{productDate,jdbcType=TIMESTAMP},
+                </if>
+                <if test="ivEffectiveDate != null">
+                    iv_effective_date = #{ivEffectiveDate,jdbcType=TIMESTAMP},
+                </if>
+                <if test="batchNo != null">
+                    batch_no = #{batchNo,jdbcType=VARCHAR}
+                </if>
+        </set>
+        where ivil_id = #{id,jdbcType=BIGINT}
+    </update>
+
+    <update id="updateBatch">
+        <foreach close="" collection="list" item="item" open="" separator=";">
+            update wms_init_line
+            <set>
+                    <if test="item.ivihId != null">
+                        ivih_id = #{item.ivihId,jdbcType=BIGINT},
+                    </if>
+                    <if test="item.productId != null">
+                        product_id = #{item.productId,jdbcType=BIGINT},
+                    </if>
+                    <if test="item.lcCode != null">
+                        lc_code = #{item.lcCode,jdbcType=VARCHAR},
+                    </if>
+                    <if test="item.ivFifoTime != null">
+                        iv_fifo_time = #{item.ivFifoTime,jdbcType=TIMESTAMP},
+                    </if>
+                    <if test="item.ivQty != null">
+                        iv_qty = #{item.ivQty,jdbcType=DECIMAL},
+                    </if>
+                    <if test="item.productDate != null">
+                        product_date = #{item.productDate,jdbcType=TIMESTAMP},
+                    </if>
+                    <if test="item.ivEffectiveDate != null">
+                        iv_effective_date = #{item.ivEffectiveDate,jdbcType=TIMESTAMP},
+                    </if>
+                    <if test="item.batchNo != null">
+                        batch_no = #{item.batchNo,jdbcType=VARCHAR}
+                    </if>
+            </set>
+            where ivil_id = #{item.id,jdbcType=BIGINT}
+        </foreach>
+    </update>
+
+    <select id="selectByPrimaryKey" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List" />
+        from wms_init_line
+        where ivil_id = #{id,jdbcType=BIGINT}
+    </select>
+
+    <select id="selectByPrimaryKeyWithLock" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List" />
+        from wms_init_line
+        where ivil_id = #{id,jdbcType=BIGINT} for update
+    </select>
+
+    <select id="selectByPrimaryKeys" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List" />
+        from wms_init_line where ivil_id in
+        <foreach close=")" collection="list" item="item" open="(" separator=",">
+            #{item}
+        </foreach>
+    </select>
+
+    <select id="selectByEntity" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from wms_init_line
+        <where>
+                <if test="id != null">
+                    and ivil_id=#{id,jdbcType=BIGINT}
+                </if>
+                <if test="ivihId != null">
+                    and ivih_id=#{ivihId,jdbcType=BIGINT}
+                </if>
+                <if test="productId != null">
+                    and product_id=#{productId,jdbcType=BIGINT}
+                </if>
+                <if test="lcCode != null">
+                    and lc_code=#{lcCode,jdbcType=VARCHAR}
+                </if>
+                <if test="ivFifoTime != null">
+                    and iv_fifo_time=#{ivFifoTime,jdbcType=TIMESTAMP}
+                </if>
+                <if test="ivQty != null">
+                    and iv_qty=#{ivQty,jdbcType=DECIMAL}
+                </if>
+                <if test="productDate != null">
+                    and product_date=#{productDate,jdbcType=TIMESTAMP}
+                </if>
+                <if test="ivEffectiveDate != null">
+                    and iv_effective_date=#{ivEffectiveDate,jdbcType=TIMESTAMP}
+                </if>
+                <if test="batchNo != null">
+                    and batch_no=#{batchNo,jdbcType=VARCHAR}
+                </if>
+        </where>
+    </select>
+
+    <select id="selectByConditions" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from wms_init_line
+        <where>
+                <if test="id != null">
+                    and ivil_id ${id}
+                </if>
+                <if test="ivihId != null">
+                    and ivih_id ${ivihId}
+                </if>
+                <if test="productId != null">
+                    and product_id ${productId}
+                </if>
+                <if test="lcCode != null">
+                    and lc_code ${lcCode}
+                </if>
+                <if test="ivFifoTime != null">
+                    and iv_fifo_time ${ivFifoTime}
+                </if>
+                <if test="ivQty != null">
+                    and iv_qty ${ivQty}
+                </if>
+                <if test="productDate != null">
+                    and product_date ${productDate}
+                </if>
+                <if test="ivEffectiveDate != null">
+                    and iv_effective_date ${ivEffectiveDate}
+                </if>
+                <if test="batchNo != null">
+                    and batch_no ${batchNo}
+                </if>
+        </where>
+        <if test="orderBy != null">
+            order by ${orderBy}
+        </if>
+    </select>
+
+    <select id="selectAll" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from wms_init_line
+    </select>
+
+    <select id="count" resultType="java.lang.Long">
+        select count(*) from wms_init_line
+    </select>
+
+    <select id="selectByFunction">
+        select ${function}(${column}) from wms_init_line
+    </select>
+
+</mapper>

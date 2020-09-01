@@ -17,6 +17,8 @@ public class ProductDetailRequest {
     private String productName;
     /** 产品分类 */
     private Long productCategoryId;
+    /** 公司id */
+    private Long companyId;
     /**规格*/
     private String specType;
     /**体积*/

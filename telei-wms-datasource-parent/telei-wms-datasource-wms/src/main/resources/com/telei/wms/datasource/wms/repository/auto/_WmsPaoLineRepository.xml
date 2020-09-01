@@ -5,10 +5,11 @@
         <id column="paol_id" jdbcType="BIGINT" property="paolId"/>
         <result column="pao_id" jdbcType="BIGINT" property="paoId"/>
         <result column="ro_id" jdbcType="BIGINT" property="roId"/>
+        <result column="rol_id" jdbcType="BIGINT" property="rolId"/>
         <result column="roo_id" jdbcType="BIGINT" property="rooId"/>
         <result column="roo_code" jdbcType="VARCHAR" property="rooCode"/>
         <result column="rool_id" jdbcType="BIGINT" property="roolId"/>
-        <result column="product_id" jdbcType="INTEGER" property="productId"/>
+        <result column="product_id" jdbcType="BIGINT" property="productId"/>
         <result column="unit_gross_weight" jdbcType="DECIMAL" property="unitGrossWeight"/>
         <result column="unit_price" jdbcType="DECIMAL" property="unitPrice"/>
         <result column="unit_vol" jdbcType="DECIMAL" property="unitVol"/>
@@ -30,12 +31,12 @@
     </resultMap>
 
     <sql id="Base_Column_List">
-        paol_id,pao_id,ro_id,roo_id,roo_code,rool_id,product_id,unit_gross_weight,unit_price,unit_vol,memo,paol_qty,stock_unit,line_total_weight,line_net_weight,line_total_vol,pao_status,create_user,create_time,iab_id,prep_lc_code,lc_code,paol_fifo_time,putaway_time,putaway_user
+        paol_id,pao_id,ro_id,rol_id,roo_id,roo_code,rool_id,product_id,unit_gross_weight,unit_price,unit_vol,memo,paol_qty,stock_unit,line_total_weight,line_net_weight,line_total_vol,pao_status,create_user,create_time,iab_id,prep_lc_code,lc_code,paol_fifo_time,putaway_time,putaway_user
     </sql>
 
     <insert id="insert">
-        insert into wms_pao_line (paol_id,pao_id,ro_id,roo_id,roo_code,rool_id,product_id,unit_gross_weight,unit_price,unit_vol,memo,paol_qty,stock_unit,line_total_weight,line_net_weight,line_total_vol,pao_status,create_user,create_time,iab_id,prep_lc_code,lc_code,paol_fifo_time,putaway_time,putaway_user)
-        values (#{paolId,jdbcType=BIGINT},#{paoId,jdbcType=BIGINT},#{roId,jdbcType=BIGINT},#{rooId,jdbcType=BIGINT},#{rooCode,jdbcType=VARCHAR},#{roolId,jdbcType=BIGINT},#{productId,jdbcType=INTEGER},#{unitGrossWeight,jdbcType=DECIMAL},#{unitPrice,jdbcType=DECIMAL},#{unitVol,jdbcType=DECIMAL},#{memo,jdbcType=VARCHAR},#{paolQty,jdbcType=DECIMAL},#{stockUnit,jdbcType=INTEGER},#{lineTotalWeight,jdbcType=DECIMAL},#{lineNetWeight,jdbcType=DECIMAL},#{lineTotalVol,jdbcType=DECIMAL},#{paoStatus,jdbcType=VARCHAR},#{createUser,jdbcType=VARCHAR},#{createTime,jdbcType=TIMESTAMP},#{iabId,jdbcType=INTEGER},#{prepLcCode,jdbcType=VARCHAR},#{lcCode,jdbcType=VARCHAR},#{paolFifoTime,jdbcType=TIMESTAMP},#{putawayTime,jdbcType=TIMESTAMP},#{putawayUser,jdbcType=VARCHAR})
+        insert into wms_pao_line (paol_id,pao_id,ro_id,rol_id,roo_id,roo_code,rool_id,product_id,unit_gross_weight,unit_price,unit_vol,memo,paol_qty,stock_unit,line_total_weight,line_net_weight,line_total_vol,pao_status,create_user,create_time,iab_id,prep_lc_code,lc_code,paol_fifo_time,putaway_time,putaway_user)
+        values (#{paolId,jdbcType=BIGINT},#{paoId,jdbcType=BIGINT},#{roId,jdbcType=BIGINT},#{rolId,jdbcType=BIGINT},#{rooId,jdbcType=BIGINT},#{rooCode,jdbcType=VARCHAR},#{roolId,jdbcType=BIGINT},#{productId,jdbcType=BIGINT},#{unitGrossWeight,jdbcType=DECIMAL},#{unitPrice,jdbcType=DECIMAL},#{unitVol,jdbcType=DECIMAL},#{memo,jdbcType=VARCHAR},#{paolQty,jdbcType=DECIMAL},#{stockUnit,jdbcType=INTEGER},#{lineTotalWeight,jdbcType=DECIMAL},#{lineNetWeight,jdbcType=DECIMAL},#{lineTotalVol,jdbcType=DECIMAL},#{paoStatus,jdbcType=VARCHAR},#{createUser,jdbcType=VARCHAR},#{createTime,jdbcType=TIMESTAMP},#{iabId,jdbcType=INTEGER},#{prepLcCode,jdbcType=VARCHAR},#{lcCode,jdbcType=VARCHAR},#{paolFifoTime,jdbcType=TIMESTAMP},#{putawayTime,jdbcType=TIMESTAMP},#{putawayUser,jdbcType=VARCHAR})
     </insert>
 
     <insert id="insertSelective">
@@ -49,6 +50,9 @@
             </if>
             <if test="roId != null">
                 ro_id,
+            </if>
+            <if test="rolId != null">
+                rol_id,
             </if>
             <if test="rooId != null">
                 roo_id,
@@ -127,6 +131,9 @@
             <if test="roId != null">
                 #{roId,jdbcType=BIGINT},
             </if>
+            <if test="rolId != null">
+                #{rolId,jdbcType=BIGINT},
+            </if>
             <if test="rooId != null">
                 #{rooId,jdbcType=BIGINT},
             </if>
@@ -137,7 +144,7 @@
                 #{roolId,jdbcType=BIGINT},
             </if>
             <if test="productId != null">
-                #{productId,jdbcType=INTEGER},
+                #{productId,jdbcType=BIGINT},
             </if>
             <if test="unitGrossWeight != null">
                 #{unitGrossWeight,jdbcType=DECIMAL},
@@ -197,16 +204,17 @@
     </insert>
 
     <insert id="insertBatch">
-        insert into wms_pao_line (paol_id,pao_id,ro_id,roo_id,roo_code,rool_id,product_id,unit_gross_weight,unit_price,unit_vol,memo,paol_qty,stock_unit,line_total_weight,line_net_weight,line_total_vol,pao_status,create_user,create_time,iab_id,prep_lc_code,lc_code,paol_fifo_time,putaway_time,putaway_user) values
+        insert into wms_pao_line (paol_id,pao_id,ro_id,rol_id,roo_id,roo_code,rool_id,product_id,unit_gross_weight,unit_price,unit_vol,memo,paol_qty,stock_unit,line_total_weight,line_net_weight,line_total_vol,pao_status,create_user,create_time,iab_id,prep_lc_code,lc_code,paol_fifo_time,putaway_time,putaway_user) values
         <foreach collection="list" item="item" separator=",">
             (
             #{item.paolId,jdbcType=BIGINT},
             #{item.paoId,jdbcType=BIGINT},
             #{item.roId,jdbcType=BIGINT},
+            #{item.rolId,jdbcType=BIGINT},
             #{item.rooId,jdbcType=BIGINT},
             #{item.rooCode,jdbcType=VARCHAR},
             #{item.roolId,jdbcType=BIGINT},
-            #{item.productId,jdbcType=INTEGER},
+            #{item.productId,jdbcType=BIGINT},
             #{item.unitGrossWeight,jdbcType=DECIMAL},
             #{item.unitPrice,jdbcType=DECIMAL},
             #{item.unitVol,jdbcType=DECIMAL},
@@ -246,10 +254,11 @@
         <set>
             pao_id = #{paoId,jdbcType=BIGINT},
             ro_id = #{roId,jdbcType=BIGINT},
+            rol_id = #{rolId,jdbcType=BIGINT},
             roo_id = #{rooId,jdbcType=BIGINT},
             roo_code = #{rooCode,jdbcType=VARCHAR},
             rool_id = #{roolId,jdbcType=BIGINT},
-            product_id = #{productId,jdbcType=INTEGER},
+            product_id = #{productId,jdbcType=BIGINT},
             unit_gross_weight = #{unitGrossWeight,jdbcType=DECIMAL},
             unit_price = #{unitPrice,jdbcType=DECIMAL},
             unit_vol = #{unitVol,jdbcType=DECIMAL},
@@ -281,6 +290,9 @@
             <if test="roId != null">
                 ro_id = #{roId,jdbcType=BIGINT},
             </if>
+            <if test="rolId != null">
+                rol_id = #{rolId,jdbcType=BIGINT},
+            </if>
             <if test="rooId != null">
                 roo_id = #{rooId,jdbcType=BIGINT},
             </if>
@@ -291,7 +303,7 @@
                 rool_id = #{roolId,jdbcType=BIGINT},
             </if>
             <if test="productId != null">
-                product_id = #{productId,jdbcType=INTEGER},
+                product_id = #{productId,jdbcType=BIGINT},
             </if>
             <if test="unitGrossWeight != null">
                 unit_gross_weight = #{unitGrossWeight,jdbcType=DECIMAL},
@@ -361,6 +373,9 @@
                 <if test="item.roId != null">
                     ro_id = #{item.roId,jdbcType=BIGINT},
                 </if>
+                <if test="item.rolId != null">
+                    rol_id = #{item.rolId,jdbcType=BIGINT},
+                </if>
                 <if test="item.rooId != null">
                     roo_id = #{item.rooId,jdbcType=BIGINT},
                 </if>
@@ -371,7 +386,7 @@
                     rool_id = #{item.roolId,jdbcType=BIGINT},
                 </if>
                 <if test="item.productId != null">
-                    product_id = #{item.productId,jdbcType=INTEGER},
+                    product_id = #{item.productId,jdbcType=BIGINT},
                 </if>
                 <if test="item.unitGrossWeight != null">
                     unit_gross_weight = #{item.unitGrossWeight,jdbcType=DECIMAL},
@@ -469,6 +484,9 @@
             <if test="roId != null">
                 and ro_id=#{roId,jdbcType=BIGINT}
             </if>
+            <if test="rolId != null">
+                and rol_id=#{rolId,jdbcType=BIGINT}
+            </if>
             <if test="rooId != null">
                 and roo_id=#{rooId,jdbcType=BIGINT}
             </if>
@@ -479,7 +497,7 @@
                 and rool_id=#{roolId,jdbcType=BIGINT}
             </if>
             <if test="productId != null">
-                and product_id=#{productId,jdbcType=INTEGER}
+                and product_id=#{productId,jdbcType=BIGINT}
             </if>
             <if test="unitGrossWeight != null">
                 and unit_gross_weight=#{unitGrossWeight,jdbcType=DECIMAL}
@@ -551,6 +569,9 @@
             </if>
             <if test="roId != null">
                 and ro_id ${roId}
+            </if>
+            <if test="rolId != null">
+                and rol_id ${rolId}
             </if>
             <if test="rooId != null">
                 and roo_id ${rooId}

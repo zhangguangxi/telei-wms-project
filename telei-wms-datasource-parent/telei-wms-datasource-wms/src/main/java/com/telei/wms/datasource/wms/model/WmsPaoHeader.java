@@ -20,6 +20,10 @@ public class WmsPaoHeader implements Entity<Long> {
     private Long roId;
     /** 入库任务单号 */
     private String roCode;
+    /** 收货作单头id */
+    private Long rooId;
+    /** 收货单号 */
+    private String rooCode;
     /** 商家订单号 */
     private String custOrderNo;
     /** 公司id */

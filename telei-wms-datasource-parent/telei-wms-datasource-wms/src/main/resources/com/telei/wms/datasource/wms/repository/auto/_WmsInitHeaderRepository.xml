@@ -1,0 +1,347 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.telei.wms.datasource.wms.repository.WmsInitHeaderRepository">
+    <resultMap id="BaseResultMap" type="com.telei.wms.datasource.wms.model.WmsInitHeader">
+        <id column="ivih_id" jdbcType="BIGINT" property="id"/>
+            <result column="ivih_code" jdbcType="VARCHAR" property="ivihCode"/>
+            <result column="ivih_status" jdbcType="VARCHAR" property="ivihStatus"/>
+            <result column="company_id" jdbcType="BIGINT" property="companyId"/>
+            <result column="warehouse_id" jdbcType="BIGINT" property="warehouseId"/>
+            <result column="warehouse_code" jdbcType="VARCHAR" property="warehouseCode"/>
+            <result column="memo" jdbcType="VARCHAR" property="memo"/>
+            <result column="create_time" jdbcType="TIMESTAMP" property="createTime"/>
+            <result column="create_user" jdbcType="VARCHAR" property="createUser"/>
+            <result column="audit_time" jdbcType="TIMESTAMP" property="auditTime"/>
+            <result column="audit_user" jdbcType="VARCHAR" property="auditUser"/>
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        ivih_id,ivih_code,ivih_status,company_id,warehouse_id,warehouse_code,memo,create_time,create_user,audit_time,audit_user
+    </sql>
+
+        <insert id="insert">
+            insert into wms_init_header (ivih_id,ivih_code,ivih_status,company_id,warehouse_id,warehouse_code,memo,create_time,create_user,audit_time,audit_user)
+            values (#{id,jdbcType=BIGINT},#{ivihCode,jdbcType=VARCHAR},#{ivihStatus,jdbcType=VARCHAR},#{companyId,jdbcType=BIGINT},#{warehouseId,jdbcType=BIGINT},#{warehouseCode,jdbcType=VARCHAR},#{memo,jdbcType=VARCHAR},#{createTime,jdbcType=TIMESTAMP},#{createUser,jdbcType=VARCHAR},#{auditTime,jdbcType=TIMESTAMP},#{auditUser,jdbcType=VARCHAR})
+        </insert>
+
+        <insert id="insertSelective">
+            insert into wms_init_header
+            <trim prefix="(" suffix=")" suffixOverrides=",">
+                    <if test="id != null">
+                        ivih_id,
+                    </if>
+                    <if test="ivihCode != null">
+                        ivih_code,
+                    </if>
+                    <if test="ivihStatus != null">
+                        ivih_status,
+                    </if>
+                    <if test="companyId != null">
+                        company_id,
+                    </if>
+                    <if test="warehouseId != null">
+                        warehouse_id,
+                    </if>
+                    <if test="warehouseCode != null">
+                        warehouse_code,
+                    </if>
+                    <if test="memo != null">
+                        memo,
+                    </if>
+                    <if test="createTime != null">
+                        create_time,
+                    </if>
+                    <if test="createUser != null">
+                        create_user,
+                    </if>
+                    <if test="auditTime != null">
+                        audit_time,
+                    </if>
+                    <if test="auditUser != null">
+                        audit_user
+                    </if>
+            </trim>
+            <trim prefix="values (" suffix=")" suffixOverrides=",">
+                    <if test="id != null">
+                        #{id,jdbcType=BIGINT},
+                    </if>
+                    <if test="ivihCode != null">
+                        #{ivihCode,jdbcType=VARCHAR},
+                    </if>
+                    <if test="ivihStatus != null">
+                        #{ivihStatus,jdbcType=VARCHAR},
+                    </if>
+                    <if test="companyId != null">
+                        #{companyId,jdbcType=BIGINT},
+                    </if>
+                    <if test="warehouseId != null">
+                        #{warehouseId,jdbcType=BIGINT},
+                    </if>
+                    <if test="warehouseCode != null">
+                        #{warehouseCode,jdbcType=VARCHAR},
+                    </if>
+                    <if test="memo != null">
+                        #{memo,jdbcType=VARCHAR},
+                    </if>
+                    <if test="createTime != null">
+                        #{createTime,jdbcType=TIMESTAMP},
+                    </if>
+                    <if test="createUser != null">
+                        #{createUser,jdbcType=VARCHAR},
+                    </if>
+                    <if test="auditTime != null">
+                        #{auditTime,jdbcType=TIMESTAMP},
+                    </if>
+                    <if test="auditUser != null">
+                        #{auditUser,jdbcType=VARCHAR}
+                    </if>
+            </trim>
+        </insert>
+
+        <insert id="insertBatch">
+            insert into wms_init_header (ivih_id,ivih_code,ivih_status,company_id,warehouse_id,warehouse_code,memo,create_time,create_user,audit_time,audit_user) values
+            <foreach collection="list" item="item" separator=",">
+                (
+                    #{item.id,jdbcType=BIGINT},
+                    #{item.ivihCode,jdbcType=VARCHAR},
+                    #{item.ivihStatus,jdbcType=VARCHAR},
+                    #{item.companyId,jdbcType=BIGINT},
+                    #{item.warehouseId,jdbcType=BIGINT},
+                    #{item.warehouseCode,jdbcType=VARCHAR},
+                    #{item.memo,jdbcType=VARCHAR},
+                    #{item.createTime,jdbcType=TIMESTAMP},
+                    #{item.createUser,jdbcType=VARCHAR},
+                    #{item.auditTime,jdbcType=TIMESTAMP},
+                    #{item.auditUser,jdbcType=VARCHAR}
+                )
+            </foreach>
+        </insert>
+
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+        delete from wms_init_header
+        where ivih_id = #{id,jdbcType=BIGINT}
+    </delete>
+
+    <delete id="deleteByPrimaryKeys">
+        delete from wms_init_header where ivih_id in
+        <foreach close=")" collection="list" item="item" open="(" separator=",">
+            #{item}
+        </foreach>
+    </delete>
+
+    <update id="updateByPrimaryKey">
+        update wms_init_header
+        <set>
+                ivih_code = #{ivihCode,jdbcType=VARCHAR},
+                ivih_status = #{ivihStatus,jdbcType=VARCHAR},
+                company_id = #{companyId,jdbcType=BIGINT},
+                warehouse_id = #{warehouseId,jdbcType=BIGINT},
+                warehouse_code = #{warehouseCode,jdbcType=VARCHAR},
+                memo = #{memo,jdbcType=VARCHAR},
+                create_time = #{createTime,jdbcType=TIMESTAMP},
+                create_user = #{createUser,jdbcType=VARCHAR},
+                audit_time = #{auditTime,jdbcType=TIMESTAMP},
+                audit_user = #{auditUser,jdbcType=VARCHAR}
+        </set>
+        where ivih_id = #{id,jdbcType=BIGINT}
+    </update>
+
+    <update id="updateByPrimaryKeySelective">
+        update wms_init_header
+        <set>
+                <if test="ivihCode != null">
+                    ivih_code = #{ivihCode,jdbcType=VARCHAR},
+                </if>
+                <if test="ivihStatus != null">
+                    ivih_status = #{ivihStatus,jdbcType=VARCHAR},
+                </if>
+                <if test="companyId != null">
+                    company_id = #{companyId,jdbcType=BIGINT},
+                </if>
+                <if test="warehouseId != null">
+                    warehouse_id = #{warehouseId,jdbcType=BIGINT},
+                </if>
+                <if test="warehouseCode != null">
+                    warehouse_code = #{warehouseCode,jdbcType=VARCHAR},
+                </if>
+                <if test="memo != null">
+                    memo = #{memo,jdbcType=VARCHAR},
+                </if>
+                <if test="createTime != null">
+                    create_time = #{createTime,jdbcType=TIMESTAMP},
+                </if>
+                <if test="createUser != null">
+                    create_user = #{createUser,jdbcType=VARCHAR},
+                </if>
+                <if test="auditTime != null">
+                    audit_time = #{auditTime,jdbcType=TIMESTAMP},
+                </if>
+                <if test="auditUser != null">
+                    audit_user = #{auditUser,jdbcType=VARCHAR}
+                </if>
+        </set>
+        where ivih_id = #{id,jdbcType=BIGINT}
+    </update>
+
+    <update id="updateBatch">
+        <foreach close="" collection="list" item="item" open="" separator=";">
+            update wms_init_header
+            <set>
+                    <if test="item.ivihCode != null">
+                        ivih_code = #{item.ivihCode,jdbcType=VARCHAR},
+                    </if>
+                    <if test="item.ivihStatus != null">
+                        ivih_status = #{item.ivihStatus,jdbcType=VARCHAR},
+                    </if>
+                    <if test="item.companyId != null">
+                        company_id = #{item.companyId,jdbcType=BIGINT},
+                    </if>
+                    <if test="item.warehouseId != null">
+                        warehouse_id = #{item.warehouseId,jdbcType=BIGINT},
+                    </if>
+                    <if test="item.warehouseCode != null">
+                        warehouse_code = #{item.warehouseCode,jdbcType=VARCHAR},
+                    </if>
+                    <if test="item.memo != null">
+                        memo = #{item.memo,jdbcType=VARCHAR},
+                    </if>
+                    <if test="item.createTime != null">
+                        create_time = #{item.createTime,jdbcType=TIMESTAMP},
+                    </if>
+                    <if test="item.createUser != null">
+                        create_user = #{item.createUser,jdbcType=VARCHAR},
+                    </if>
+                    <if test="item.auditTime != null">
+                        audit_time = #{item.auditTime,jdbcType=TIMESTAMP},
+                    </if>
+                    <if test="item.auditUser != null">
+                        audit_user = #{item.auditUser,jdbcType=VARCHAR}
+                    </if>
+            </set>
+            where ivih_id = #{item.id,jdbcType=BIGINT}
+        </foreach>
+    </update>
+
+    <select id="selectByPrimaryKey" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List" />
+        from wms_init_header
+        where ivih_id = #{id,jdbcType=BIGINT}
+    </select>
+
+    <select id="selectByPrimaryKeyWithLock" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List" />
+        from wms_init_header
+        where ivih_id = #{id,jdbcType=BIGINT} for update
+    </select>
+
+    <select id="selectByPrimaryKeys" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List" />
+        from wms_init_header where ivih_id in
+        <foreach close=")" collection="list" item="item" open="(" separator=",">
+            #{item}
+        </foreach>
+    </select>
+
+    <select id="selectByEntity" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from wms_init_header
+        <where>
+                <if test="id != null">
+                    and ivih_id=#{id,jdbcType=BIGINT}
+                </if>
+                <if test="ivihCode != null">
+                    and ivih_code=#{ivihCode,jdbcType=VARCHAR}
+                </if>
+                <if test="ivihStatus != null">
+                    and ivih_status=#{ivihStatus,jdbcType=VARCHAR}
+                </if>
+                <if test="companyId != null">
+                    and company_id=#{companyId,jdbcType=BIGINT}
+                </if>
+                <if test="warehouseId != null">
+                    and warehouse_id=#{warehouseId,jdbcType=BIGINT}
+                </if>
+                <if test="warehouseCode != null">
+                    and warehouse_code=#{warehouseCode,jdbcType=VARCHAR}
+                </if>
+                <if test="memo != null">
+                    and memo=#{memo,jdbcType=VARCHAR}
+                </if>
+                <if test="createTime != null">
+                    and create_time=#{createTime,jdbcType=TIMESTAMP}
+                </if>
+                <if test="createUser != null">
+                    and create_user=#{createUser,jdbcType=VARCHAR}
+                </if>
+                <if test="auditTime != null">
+                    and audit_time=#{auditTime,jdbcType=TIMESTAMP}
+                </if>
+                <if test="auditUser != null">
+                    and audit_user=#{auditUser,jdbcType=VARCHAR}
+                </if>
+        </where>
+    </select>
+
+    <select id="selectByConditions" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from wms_init_header
+        <where>
+                <if test="id != null">
+                    and ivih_id ${id}
+                </if>
+                <if test="ivihCode != null">
+                    and ivih_code ${ivihCode}
+                </if>
+                <if test="ivihStatus != null">
+                    and ivih_status ${ivihStatus}
+                </if>
+                <if test="companyId != null">
+                    and company_id ${companyId}
+                </if>
+                <if test="warehouseId != null">
+                    and warehouse_id ${warehouseId}
+                </if>
+                <if test="warehouseCode != null">
+                    and warehouse_code ${warehouseCode}
+                </if>
+                <if test="memo != null">
+                    and memo ${memo}
+                </if>
+                <if test="createTime != null">
+                    and create_time ${createTime}
+                </if>
+                <if test="createUser != null">
+                    and create_user ${createUser}
+                </if>
+                <if test="auditTime != null">
+                    and audit_time ${auditTime}
+                </if>
+                <if test="auditUser != null">
+                    and audit_user ${auditUser}
+                </if>
+        </where>
+        <if test="orderBy != null">
+            order by ${orderBy}
+        </if>
+    </select>
+
+    <select id="selectAll" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from wms_init_header
+    </select>
+
+    <select id="count" resultType="java.lang.Long">
+        select count(*) from wms_init_header
+    </select>
+
+    <select id="selectByFunction">
+        select ${function}(${column}) from wms_init_header
+    </select>
+
+</mapper>

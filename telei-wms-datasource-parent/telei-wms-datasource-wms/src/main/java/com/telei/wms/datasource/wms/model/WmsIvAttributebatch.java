@@ -56,8 +56,8 @@ public class WmsIvAttributebatch implements Entity<Long> {
     private String texture;
     /** 图片路径 */
     private String imagePath;
-    /** 中包数量 */
-    private Integer midBagQty;
+    /** 中包转换数 = 产品表中包转换数 */
+    private Integer midBagRate;
     /** 中包毛重(KG) */
     private BigDecimal midBagWeight;
     /** 中包长(CM) */
@@ -70,8 +70,8 @@ public class WmsIvAttributebatch implements Entity<Long> {
     private BigDecimal midBagVol;
     /** 中包条码 */
     private String midBagBarcode;
-    /** 大包数量 */
-    private Integer bigBagQty;
+    /** 大包转换数 = 产品表大包转换数 */
+    private Integer bigBagRate;
     /** 大包毛重(KG) */
     private BigDecimal bigBagWeight;
     /** 大包长(CM) */

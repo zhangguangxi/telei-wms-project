@@ -36,6 +36,8 @@ public class InventoryAddBussinessRequest {
         private BigDecimal midBagQty;
         /** 大包数量 */
         private BigDecimal bigBagQty;
+        /**上架单单头id*/
+        private Long paoId;
         /**上架单明细id*/
         private Long paolId;
         /**收货单id*/

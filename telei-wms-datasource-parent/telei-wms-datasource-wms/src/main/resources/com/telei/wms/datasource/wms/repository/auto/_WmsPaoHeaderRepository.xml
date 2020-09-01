@@ -7,6 +7,8 @@
         <result column="order_type" jdbcType="VARCHAR" property="orderType"/>
         <result column="ro_id" jdbcType="BIGINT" property="roId"/>
         <result column="ro_code" jdbcType="VARCHAR" property="roCode"/>
+        <result column="roo_id" jdbcType="BIGINT" property="rooId"/>
+        <result column="roo_code" jdbcType="VARCHAR" property="rooCode"/>
         <result column="cust_order_no" jdbcType="VARCHAR" property="custOrderNo"/>
         <result column="company_id" jdbcType="BIGINT" property="companyId"/>
         <result column="warehouse_id" jdbcType="BIGINT" property="warehouseId"/>
@@ -26,12 +28,12 @@
     </resultMap>
 
     <sql id="Base_Column_List">
-        pao_id,pao_code,order_type,ro_id,ro_code,cust_order_no,company_id,warehouse_id,warehouse_code,total_qty,total_weight,total_net_weight,total_vol,putaway_qty,pao_status,create_user,create_time,lastupdate_user,lastupdate_time,putaway_user,putaway_time
+        pao_id,pao_code,order_type,ro_id,ro_code,roo_id,roo_code,cust_order_no,company_id,warehouse_id,warehouse_code,total_qty,total_weight,total_net_weight,total_vol,putaway_qty,pao_status,create_user,create_time,lastupdate_user,lastupdate_time,putaway_user,putaway_time
     </sql>
 
     <insert id="insert">
-        insert into wms_pao_header (pao_id,pao_code,order_type,ro_id,ro_code,cust_order_no,company_id,warehouse_id,warehouse_code,total_qty,total_weight,total_net_weight,total_vol,putaway_qty,pao_status,create_user,create_time,lastupdate_user,lastupdate_time,putaway_user,putaway_time)
-        values (#{paoId,jdbcType=BIGINT},#{paoCode,jdbcType=VARCHAR},#{orderType,jdbcType=VARCHAR},#{roId,jdbcType=BIGINT},#{roCode,jdbcType=VARCHAR},#{custOrderNo,jdbcType=VARCHAR},#{companyId,jdbcType=BIGINT},#{warehouseId,jdbcType=BIGINT},#{warehouseCode,jdbcType=VARCHAR},#{totalQty,jdbcType=DECIMAL},#{totalWeight,jdbcType=DECIMAL},#{totalNetWeight,jdbcType=DECIMAL},#{totalVol,jdbcType=DECIMAL},#{putawayQty,jdbcType=DECIMAL},#{paoStatus,jdbcType=VARCHAR},#{createUser,jdbcType=VARCHAR},#{createTime,jdbcType=TIMESTAMP},#{lastupdateUser,jdbcType=TIMESTAMP},#{lastupdateTime,jdbcType=VARCHAR},#{putawayUser,jdbcType=VARCHAR},#{putawayTime,jdbcType=TIMESTAMP})
+        insert into wms_pao_header (pao_id,pao_code,order_type,ro_id,ro_code,roo_id,roo_code,cust_order_no,company_id,warehouse_id,warehouse_code,total_qty,total_weight,total_net_weight,total_vol,putaway_qty,pao_status,create_user,create_time,lastupdate_user,lastupdate_time,putaway_user,putaway_time)
+        values (#{paoId,jdbcType=BIGINT},#{paoCode,jdbcType=VARCHAR},#{orderType,jdbcType=VARCHAR},#{roId,jdbcType=BIGINT},#{roCode,jdbcType=VARCHAR},#{rooId,jdbcType=BIGINT},#{rooCode,jdbcType=VARCHAR},#{custOrderNo,jdbcType=VARCHAR},#{companyId,jdbcType=BIGINT},#{warehouseId,jdbcType=BIGINT},#{warehouseCode,jdbcType=VARCHAR},#{totalQty,jdbcType=DECIMAL},#{totalWeight,jdbcType=DECIMAL},#{totalNetWeight,jdbcType=DECIMAL},#{totalVol,jdbcType=DECIMAL},#{putawayQty,jdbcType=DECIMAL},#{paoStatus,jdbcType=VARCHAR},#{createUser,jdbcType=VARCHAR},#{createTime,jdbcType=TIMESTAMP},#{lastupdateUser,jdbcType=TIMESTAMP},#{lastupdateTime,jdbcType=VARCHAR},#{putawayUser,jdbcType=VARCHAR},#{putawayTime,jdbcType=TIMESTAMP})
     </insert>
 
     <insert id="insertSelective">
@@ -51,6 +53,12 @@
             </if>
             <if test="roCode != null">
                 ro_code,
+            </if>
+            <if test="rooId != null">
+                roo_id,
+            </if>
+            <if test="rooCode != null">
+                roo_code,
             </if>
             <if test="custOrderNo != null">
                 cust_order_no,
@@ -117,6 +125,12 @@
             <if test="roCode != null">
                 #{roCode,jdbcType=VARCHAR},
             </if>
+            <if test="rooId != null">
+                #{rooId,jdbcType=BIGINT},
+            </if>
+            <if test="rooCode != null">
+                #{rooCode,jdbcType=VARCHAR},
+            </if>
             <if test="custOrderNo != null">
                 #{custOrderNo,jdbcType=VARCHAR},
             </if>
@@ -169,7 +183,7 @@
     </insert>
 
     <insert id="insertBatch">
-        insert into wms_pao_header (pao_id,pao_code,order_type,ro_id,ro_code,cust_order_no,company_id,warehouse_id,warehouse_code,total_qty,total_weight,total_net_weight,total_vol,putaway_qty,pao_status,create_user,create_time,lastupdate_user,lastupdate_time,putaway_user,putaway_time) values
+        insert into wms_pao_header (pao_id,pao_code,order_type,ro_id,ro_code,roo_id,roo_code,cust_order_no,company_id,warehouse_id,warehouse_code,total_qty,total_weight,total_net_weight,total_vol,putaway_qty,pao_status,create_user,create_time,lastupdate_user,lastupdate_time,putaway_user,putaway_time) values
         <foreach collection="list" item="item" separator=",">
             (
             #{item.paoId,jdbcType=BIGINT},
@@ -177,6 +191,8 @@
             #{item.orderType,jdbcType=VARCHAR},
             #{item.roId,jdbcType=BIGINT},
             #{item.roCode,jdbcType=VARCHAR},
+            #{item.rooId,jdbcType=BIGINT},
+            #{item.rooCode,jdbcType=VARCHAR},
             #{item.custOrderNo,jdbcType=VARCHAR},
             #{item.companyId,jdbcType=BIGINT},
             #{item.warehouseId,jdbcType=BIGINT},
@@ -216,6 +232,8 @@
             order_type = #{orderType,jdbcType=VARCHAR},
             ro_id = #{roId,jdbcType=BIGINT},
             ro_code = #{roCode,jdbcType=VARCHAR},
+            roo_id = #{rooId,jdbcType=BIGINT},
+            roo_code = #{rooCode,jdbcType=VARCHAR},
             cust_order_no = #{custOrderNo,jdbcType=VARCHAR},
             company_id = #{companyId,jdbcType=BIGINT},
             warehouse_id = #{warehouseId,jdbcType=BIGINT},
@@ -250,6 +268,12 @@
             </if>
             <if test="roCode != null">
                 ro_code = #{roCode,jdbcType=VARCHAR},
+            </if>
+            <if test="rooId != null">
+                roo_id = #{rooId,jdbcType=BIGINT},
+            </if>
+            <if test="rooCode != null">
+                roo_code = #{rooCode,jdbcType=VARCHAR},
             </if>
             <if test="custOrderNo != null">
                 cust_order_no = #{custOrderNo,jdbcType=VARCHAR},
@@ -318,6 +342,12 @@
                 </if>
                 <if test="item.roCode != null">
                     ro_code = #{item.roCode,jdbcType=VARCHAR},
+                </if>
+                <if test="item.rooId != null">
+                    roo_id = #{item.rooId,jdbcType=BIGINT},
+                </if>
+                <if test="item.rooCode != null">
+                    roo_code = #{item.rooCode,jdbcType=VARCHAR},
                 </if>
                 <if test="item.custOrderNo != null">
                     cust_order_no = #{item.custOrderNo,jdbcType=VARCHAR},
@@ -415,6 +445,12 @@
             <if test="roCode != null">
                 and ro_code=#{roCode,jdbcType=VARCHAR}
             </if>
+            <if test="rooId != null">
+                and roo_id=#{rooId,jdbcType=BIGINT}
+            </if>
+            <if test="rooCode != null">
+                and roo_code=#{rooCode,jdbcType=VARCHAR}
+            </if>
             <if test="custOrderNo != null">
                 and cust_order_no=#{custOrderNo,jdbcType=VARCHAR}
             </if>
@@ -485,6 +521,12 @@
             </if>
             <if test="roCode != null">
                 and ro_code ${roCode}
+            </if>
+            <if test="rooId != null">
+                and roo_id ${rooId}
+            </if>
+            <if test="rooCode != null">
+                and roo_code ${rooCode}
             </if>
             <if test="custOrderNo != null">
                 and cust_order_no ${custOrderNo}
