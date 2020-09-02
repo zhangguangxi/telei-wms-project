@@ -169,7 +169,7 @@ public class InventoryBussiness {
         //2.5 收货单单头-预处理(更新 putawayQty)
         Map<Long, BigDecimal> rooQtyMap = requestList.stream().collect(Collectors.toMap(InventoryAddBussinessRequest.InventoryAddRequestCondition::getRooId, InventoryAddBussinessRequest.InventoryAddRequestCondition::getIvQty));
         if(Objects.isNull(rooQtyMap) || rooQtyMap.isEmpty()){
-            ErrorCode.INVENTORY_ADD_ERROR_ROO_ID_IS_NULL_4021.throwError();
+            ErrorCode.INVENTORY_ADD_ERROR_ROO_ID_IS_NULL_4007.throwError();
         }
 
         List<WmsRooHeader> rooHeaderList = wmsRooHeaderService.selectByPrimaryKeys(requestRooIdList);
