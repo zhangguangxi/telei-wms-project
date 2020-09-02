@@ -33,8 +33,8 @@ import static com.telei.infrastructure.component.commons.utils.LockMapUtil.*;
 @Service
 public class RoBussiness {
 
-    //已删除
-    private static final String DELETED_STATUS = "99";
+    //删除
+    private static final String DELETE_STATUS = "99";
 
     @Autowired
     private Id idGenerator;
@@ -135,7 +135,7 @@ public class RoBussiness {
         if (Objects.isNull(wmsRoHeader)) {
             //待同步状态
             omsRecovicePlan.setOrderStatus("90");
-        } else if (DELETED_STATUS.equals(wmsRoHeader.getOrderStatus())) {
+        } else if (DELETE_STATUS.equals(wmsRoHeader.getOrderStatus())) {
             //已撤销状态
             omsRecovicePlan.setOrderStatus("91");
         } else if (wmsRoHeader.getReceQty().intValue() <= 0) {
@@ -144,7 +144,7 @@ public class RoBussiness {
                 //取消入库任务
                 WmsRoHeader updateWmsRoHeader = new WmsRoHeader();
                 updateWmsRoHeader.setId(wmsRoHeader.getId());
-                updateWmsRoHeader.setOrderStatus(DELETED_STATUS);
+                updateWmsRoHeader.setOrderStatus(DELETE_STATUS);
                 wmsRoHeaderService.updateByPrimaryKey(updateWmsRoHeader);
                 //已撤销状态
                 omsRecovicePlan.setOrderStatus("91");

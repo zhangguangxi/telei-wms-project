@@ -78,15 +78,16 @@ public class ServiceId {
      */
     @RightResource(rightSystem = "wms", rightItem = "库存管理", rightFunction = "上架")
     public static final String WMS_INVENTORY_PUT_ON_SHELF = "1030501";
-
     @RightResource(rightSystem = "wms", rightItem = "库存管理", rightFunction = "调多")
     public static final String WMS_INVENTORY_ADJUST_INCREASE = "1030502";
-
     @RightResource(rightSystem = "wms", rightItem = "库存管理", rightFunction = "调少")
     public static final String WMS_INVENTORY_ADJUST_REDUCE = "1030503";
-
+    @RightResource(rightSystem = "wms", rightItem = "库存管理", rightFunction = "审核")
+    public static final String WMS_INVENTORY_ADJUST_REVIEW = "1030504";
     @RightResource(rightSystem = "wms", rightItem = "库存管理", rightFunction = "移库")
-    public static final String WMS_INVENTORY_SHIFT = "1030504";
+    public static final String WMS_INVENTORY_ADJUST_SHIFT = "1030505";
+
+
 
     /**
      * 库存初始化

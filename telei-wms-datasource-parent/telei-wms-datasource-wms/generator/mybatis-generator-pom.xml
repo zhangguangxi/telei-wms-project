@@ -98,12 +98,14 @@
                     <!-- ################# 表名映射 ################# -->
                     <tables>
 <!--                        <table><tableName>goods</tableName></table>-->
-                        <table><tableName>wms_inventory</tableName></table>
-                        <table><tableName>wms_inventory_history</tableName></table>
+<!--                        <table><tableName>wms_inventory</tableName></table>-->
+<!--                        <table><tableName>wms_inventory_history</tableName></table>-->
 <!--                        <table><tableName>wms_iv_transaction</tableName></table>-->
 <!--                        <table><tableName>wms_iv_split</tableName></table>-->
-                        <table><tableName>wms_pao_header</tableName></table>
-                        <table><tableName>wms_pao_line</tableName></table>
+<!--                        <table><tableName>wms_pao_header</tableName></table>-->
+<!--                        <table><tableName>wms_pao_line</tableName></table>-->
+                        <table><tableName>wms_adjt_header</tableName></table>
+                        <table><tableName>wms_adjt_line</tableName></table>
                     </tables>
                 </configuration>
 

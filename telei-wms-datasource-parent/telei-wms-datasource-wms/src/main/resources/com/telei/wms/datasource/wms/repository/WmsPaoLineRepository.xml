@@ -1,5 +1,88 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.telei.wms.datasource.wms.repository.WmsPaoLineRepository">
+
+    <resultMap id="PageQueryResultMap" extends="BaseResultMap" type="com.telei.wms.datasource.wms.vo.PaoLinePageQueryResponseVo">
+        <result column="product_no" jdbcType="VARCHAR" property="productNo"/>
+        <result column="product_name" jdbcType="VARCHAR" property="productName"/>
+        <result column="product_barcode" jdbcType="VARCHAR" property="productBarcode"/>
+        <result column="brand" jdbcType="VARCHAR" property="brand"/>
+        <result column="place_of_origin" jdbcType="VARCHAR" property="placeOfOrigin"/>
+        <result column="spec_type" jdbcType="VARCHAR" property="specType"/>
+    </resultMap>
+
+    <sql id="Page_Query_Column_List">
+        wpl.paol_id,
+        wpl.pao_id,
+        wpl.ro_id,
+        wpl.roo_id,
+        wpl.roo_code,
+        wpl.rool_id,
+        wpl.product_id,
+        wpl.unit_gross_weight,
+        wpl.unit_price,
+        wpl.unit_vol,
+        wpl.memo,
+        wpl.paol_qty,
+        wpl.stock_unit,
+        wpl.line_total_weight,
+        wpl.line_net_weight,
+        wpl.line_total_vol,
+        wpl.pao_status,
+        wpl.create_user,
+        wpl.create_time,
+        wpl.iab_id,
+        wpl.prep_lc_code,
+        wpl.lc_code,
+        wpl.paol_fifo_time,
+        wpl.putaway_time,
+        wpl.putaway_user,
+        cp.product_no,
+        cp.product_name,
+        cp.product_barcode,
+        cp.brand,
+        cp.place_of_origin,
+        cp.spec_type
+    </sql>
+
+    <select id="findAll" resultMap="PageQueryResultMap">
+        SELECT
+        <include refid="Page_Query_Column_List"/>
+        FROM wms_pao_line wpl
+        LEFT JOIN cdm.cdm_product cp ON cp.product_id = wpl.product_id
+        WHERE wpl.pao_id = #{paoId,jdbcType=BIGINT}
+        ORDER BY wpl.paol_id DESC
+    </select>
+
+    <resultMap id="LocationResultMap" type="com.telei.wms.datasource.wms.vo.PaoLineLocationResponseVo">
+        <result column="product_id" jdbcType="VARCHAR" property="productId"/>
+        <result column="lc_code" jdbcType="VARCHAR" property="lcCode"/>
+    </resultMap>
+
+    <select id="findLocationAll" resultMap="LocationResultMap">
+        SELECT
+            product_id,
+            lc_code
+        FROM
+            wms_inventory
+        WHERE
+            iv_id IN (
+                SELECT
+                    max(iv_id)
+                FROM
+                    wms_inventory ih
+                INNER JOIN wms_location l ON l.lc_code = ih.lc_code
+                AND l.lc_type = 'S'
+                WHERE
+                    ih.warehouse_id = #{warehouseId,jdbcType=BIGINT}
+                AND ih.product_id IN
+                <foreach close=")" collection="productIds" item="item" open="(" separator=",">
+                    #{item}
+                </foreach>
+                GROUP BY
+                    ih.product_id
+            )
+    </select>
+
 </mapper>
 

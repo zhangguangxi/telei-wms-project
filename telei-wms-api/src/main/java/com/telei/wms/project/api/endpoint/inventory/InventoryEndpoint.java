@@ -38,7 +38,7 @@ public class InventoryEndpoint {
     @PostMapping(ServiceId.WMS_INVENTORY_ADJUST_INCREASE)
     public InventoryIncreaseResponse increaseInventory(@Valid @RequestBody InventoryIncreaseRequest request){
         InventoryIncreaseBussinessRequest bussinessRequest = DataConvertUtil.parseDataAsObject(request, InventoryIncreaseBussinessRequest.class);
-        InventoryIncreaseBussinessResponse bussinessResponse = inventoryBussiness.adjustInventory(bussinessRequest);
+        InventoryIncreaseBussinessResponse bussinessResponse = inventoryBussiness.increaseInventory(bussinessRequest);
         return DataConvertUtil.parseDataAsObject(bussinessResponse, InventoryIncreaseResponse.class);
     }
 
@@ -50,21 +50,21 @@ public class InventoryEndpoint {
         return DataConvertUtil.parseDataAsObject(bussinessResponse, InventoryReduceResponse.class);
     }
 
+    @ApiOperation("审核")
+    @PostMapping(ServiceId.WMS_INVENTORY_ADJUST_REVIEW)
+    public InventoryReviewResponse reviewInventory(@Valid @RequestBody InventoryReviewRequest request){
+        InventoryReviewBussinessRequest bussinessRequest = DataConvertUtil.parseDataAsObject(request, InventoryReviewBussinessRequest.class);
+        InventoryReviewBussinessResponse bussinessResponse = inventoryBussiness.reviewInventory(bussinessRequest);
+        return DataConvertUtil.parseDataAsObject(bussinessResponse, InventoryReviewResponse.class);
+    }
+
     @ApiOperation("移库")
-    @PostMapping(ServiceId.WMS_INVENTORY_SHIFT)
-    public InventoryShiftResponse shiftInventory(@Valid @RequestBody InventoryShiftRequest request){
+    @PostMapping(ServiceId.WMS_INVENTORY_ADJUST_SHIFT)
+    public InventoryShiftResponse reviewInventory(@Valid @RequestBody InventoryShiftRequest request){
         InventoryShiftBussinessRequest bussinessRequest = DataConvertUtil.parseDataAsObject(request, InventoryShiftBussinessRequest.class);
         InventoryShiftBussinessResponse bussinessResponse = inventoryBussiness.shiftInventory(bussinessRequest);
         return DataConvertUtil.parseDataAsObject(bussinessResponse, InventoryShiftResponse.class);
     }
-
-//    @ApiOperation("移库导入")
-//    @PostMapping(ServiceId.WMS_INVENTORY_IMPORT)
-//    public InventoryImportResponse shiftInventory(@Valid @RequestBody InventoryImportRequest request){
-//        InventoryImportBussinessRequest bussinessRequest = DataConvertUtil.parseDataAsObject(request, InventoryImportBussinessRequest.class);
-//        InventoryImportBussinessResponse bussinessResponse = inventoryBussiness.ImportInventory(bussinessRequest);
-//        return DataConvertUtil.parseDataAsObject(bussinessResponse,InventoryImportResponse.class);
-//    }
 
 
 }

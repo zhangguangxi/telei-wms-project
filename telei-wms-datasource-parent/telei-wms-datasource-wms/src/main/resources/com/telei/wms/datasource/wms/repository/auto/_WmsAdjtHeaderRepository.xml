@@ -1,0 +1,389 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.telei.wms.datasource.wms.repository.WmsAdjtHeaderRepository">
+    <resultMap id="BaseResultMap" type="com.telei.wms.datasource.wms.model.WmsAdjtHeader">
+        <id column="adjh_id" jdbcType="BIGINT" property="adjhId"/>
+        <result column="adjh_code" jdbcType="VARCHAR" property="adjhCode"/>
+        <result column="company_id" jdbcType="VARCHAR" property="companyId"/>
+        <result column="warehouse_id" jdbcType="BIGINT" property="warehouseId"/>
+        <result column="warehouse_code" jdbcType="VARCHAR" property="warehouseCode"/>
+        <result column="adjh_type" jdbcType="VARCHAR" property="adjhType"/>
+        <result column="ivih_status" jdbcType="VARCHAR" property="ivihStatus"/>
+        <result column="biz_date" jdbcType="TIMESTAMP" property="bizDate"/>
+        <result column="reason" jdbcType="VARCHAR" property="reason"/>
+        <result column="create_time" jdbcType="TIMESTAMP" property="createTime"/>
+        <result column="create_user" jdbcType="VARCHAR" property="createUser"/>
+        <result column="audit_time" jdbcType="TIMESTAMP" property="auditTime"/>
+        <result column="audit_user" jdbcType="VARCHAR" property="auditUser"/>
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        adjh_id,adjh_code,company_id,warehouse_id,warehouse_code,adjh_type,ivih_status,biz_date,reason,create_time,create_user,audit_time,audit_user
+    </sql>
+
+    <insert id="insert">
+        insert into wms_adjt_header (adjh_id,adjh_code,company_id,warehouse_id,warehouse_code,adjh_type,ivih_status,biz_date,reason,create_time,create_user,audit_time,audit_user)
+        values (#{adjhId,jdbcType=BIGINT},#{adjhCode,jdbcType=VARCHAR},#{companyId,jdbcType=VARCHAR},#{warehouseId,jdbcType=BIGINT},#{warehouseCode,jdbcType=VARCHAR},#{adjhType,jdbcType=VARCHAR},#{ivihStatus,jdbcType=VARCHAR},#{bizDate,jdbcType=TIMESTAMP},#{reason,jdbcType=VARCHAR},#{createTime,jdbcType=TIMESTAMP},#{createUser,jdbcType=VARCHAR},#{auditTime,jdbcType=TIMESTAMP},#{auditUser,jdbcType=VARCHAR})
+    </insert>
+
+    <insert id="insertSelective">
+        insert into wms_adjt_header
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="adjhId != null">
+                adjh_id,
+            </if>
+            <if test="adjhCode != null">
+                adjh_code,
+            </if>
+            <if test="companyId != null">
+                company_id,
+            </if>
+            <if test="warehouseId != null">
+                warehouse_id,
+            </if>
+            <if test="warehouseCode != null">
+                warehouse_code,
+            </if>
+            <if test="adjhType != null">
+                adjh_type,
+            </if>
+            <if test="ivihStatus != null">
+                ivih_status,
+            </if>
+            <if test="bizDate != null">
+                biz_date,
+            </if>
+            <if test="reason != null">
+                reason,
+            </if>
+            <if test="createTime != null">
+                create_time,
+            </if>
+            <if test="createUser != null">
+                create_user,
+            </if>
+            <if test="auditTime != null">
+                audit_time,
+            </if>
+            <if test="auditUser != null">
+                audit_user
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="adjhId != null">
+                #{adjhId,jdbcType=BIGINT},
+            </if>
+            <if test="adjhCode != null">
+                #{adjhCode,jdbcType=VARCHAR},
+            </if>
+            <if test="companyId != null">
+                #{companyId,jdbcType=VARCHAR},
+            </if>
+            <if test="warehouseId != null">
+                #{warehouseId,jdbcType=BIGINT},
+            </if>
+            <if test="warehouseCode != null">
+                #{warehouseCode,jdbcType=VARCHAR},
+            </if>
+            <if test="adjhType != null">
+                #{adjhType,jdbcType=VARCHAR},
+            </if>
+            <if test="ivihStatus != null">
+                #{ivihStatus,jdbcType=VARCHAR},
+            </if>
+            <if test="bizDate != null">
+                #{bizDate,jdbcType=TIMESTAMP},
+            </if>
+            <if test="reason != null">
+                #{reason,jdbcType=VARCHAR},
+            </if>
+            <if test="createTime != null">
+                #{createTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="createUser != null">
+                #{createUser,jdbcType=VARCHAR},
+            </if>
+            <if test="auditTime != null">
+                #{auditTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="auditUser != null">
+                #{auditUser,jdbcType=VARCHAR}
+            </if>
+        </trim>
+    </insert>
+
+    <insert id="insertBatch">
+        insert into wms_adjt_header (adjh_id,adjh_code,company_id,warehouse_id,warehouse_code,adjh_type,ivih_status,biz_date,reason,create_time,create_user,audit_time,audit_user) values
+        <foreach collection="list" item="item" separator=",">
+            (
+            #{item.adjhId,jdbcType=BIGINT},
+            #{item.adjhCode,jdbcType=VARCHAR},
+            #{item.companyId,jdbcType=VARCHAR},
+            #{item.warehouseId,jdbcType=BIGINT},
+            #{item.warehouseCode,jdbcType=VARCHAR},
+            #{item.adjhType,jdbcType=VARCHAR},
+            #{item.ivihStatus,jdbcType=VARCHAR},
+            #{item.bizDate,jdbcType=TIMESTAMP},
+            #{item.reason,jdbcType=VARCHAR},
+            #{item.createTime,jdbcType=TIMESTAMP},
+            #{item.createUser,jdbcType=VARCHAR},
+            #{item.auditTime,jdbcType=TIMESTAMP},
+            #{item.auditUser,jdbcType=VARCHAR}
+            )
+        </foreach>
+    </insert>
+
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+        delete from wms_adjt_header
+        where adjh_id = #{adjhId,jdbcType=BIGINT}
+    </delete>
+
+    <delete id="deleteByPrimaryKeys">
+        delete from wms_adjt_header where adjh_id in
+        <foreach close=")" collection="list" item="item" open="(" separator=",">
+            #{item}
+        </foreach>
+    </delete>
+
+    <update id="updateByPrimaryKey">
+        update wms_adjt_header
+        <set>
+            adjh_code = #{adjhCode,jdbcType=VARCHAR},
+            company_id = #{companyId,jdbcType=VARCHAR},
+            warehouse_id = #{warehouseId,jdbcType=BIGINT},
+            warehouse_code = #{warehouseCode,jdbcType=VARCHAR},
+            adjh_type = #{adjhType,jdbcType=VARCHAR},
+            ivih_status = #{ivihStatus,jdbcType=VARCHAR},
+            biz_date = #{bizDate,jdbcType=TIMESTAMP},
+            reason = #{reason,jdbcType=VARCHAR},
+            create_time = #{createTime,jdbcType=TIMESTAMP},
+            create_user = #{createUser,jdbcType=VARCHAR},
+            audit_time = #{auditTime,jdbcType=TIMESTAMP},
+            audit_user = #{auditUser,jdbcType=VARCHAR}
+        </set>
+        where adjh_id = #{adjhId,jdbcType=BIGINT}
+    </update>
+
+    <update id="updateByPrimaryKeySelective">
+        update wms_adjt_header
+        <set>
+            <if test="adjhCode != null">
+                adjh_code = #{adjhCode,jdbcType=VARCHAR},
+            </if>
+            <if test="companyId != null">
+                company_id = #{companyId,jdbcType=VARCHAR},
+            </if>
+            <if test="warehouseId != null">
+                warehouse_id = #{warehouseId,jdbcType=BIGINT},
+            </if>
+            <if test="warehouseCode != null">
+                warehouse_code = #{warehouseCode,jdbcType=VARCHAR},
+            </if>
+            <if test="adjhType != null">
+                adjh_type = #{adjhType,jdbcType=VARCHAR},
+            </if>
+            <if test="ivihStatus != null">
+                ivih_status = #{ivihStatus,jdbcType=VARCHAR},
+            </if>
+            <if test="bizDate != null">
+                biz_date = #{bizDate,jdbcType=TIMESTAMP},
+            </if>
+            <if test="reason != null">
+                reason = #{reason,jdbcType=VARCHAR},
+            </if>
+            <if test="createTime != null">
+                create_time = #{createTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="createUser != null">
+                create_user = #{createUser,jdbcType=VARCHAR},
+            </if>
+            <if test="auditTime != null">
+                audit_time = #{auditTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="auditUser != null">
+                audit_user = #{auditUser,jdbcType=VARCHAR}
+            </if>
+        </set>
+        where adjh_id = #{adjhId,jdbcType=BIGINT}
+    </update>
+
+    <update id="updateBatch">
+        <foreach close="" collection="list" item="item" open="" separator=";">
+            update wms_adjt_header
+            <set>
+                <if test="item.adjhCode != null">
+                    adjh_code = #{item.adjhCode,jdbcType=VARCHAR},
+                </if>
+                <if test="item.companyId != null">
+                    company_id = #{item.companyId,jdbcType=VARCHAR},
+                </if>
+                <if test="item.warehouseId != null">
+                    warehouse_id = #{item.warehouseId,jdbcType=BIGINT},
+                </if>
+                <if test="item.warehouseCode != null">
+                    warehouse_code = #{item.warehouseCode,jdbcType=VARCHAR},
+                </if>
+                <if test="item.adjhType != null">
+                    adjh_type = #{item.adjhType,jdbcType=VARCHAR},
+                </if>
+                <if test="item.ivihStatus != null">
+                    ivih_status = #{item.ivihStatus,jdbcType=VARCHAR},
+                </if>
+                <if test="item.bizDate != null">
+                    biz_date = #{item.bizDate,jdbcType=TIMESTAMP},
+                </if>
+                <if test="item.reason != null">
+                    reason = #{item.reason,jdbcType=VARCHAR},
+                </if>
+                <if test="item.createTime != null">
+                    create_time = #{item.createTime,jdbcType=TIMESTAMP},
+                </if>
+                <if test="item.createUser != null">
+                    create_user = #{item.createUser,jdbcType=VARCHAR},
+                </if>
+                <if test="item.auditTime != null">
+                    audit_time = #{item.auditTime,jdbcType=TIMESTAMP},
+                </if>
+                <if test="item.auditUser != null">
+                    audit_user = #{item.auditUser,jdbcType=VARCHAR}
+                </if>
+            </set>
+            where adjh_id = #{item.adjhId,jdbcType=BIGINT}
+        </foreach>
+    </update>
+
+    <select id="selectByPrimaryKey" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List" />
+        from wms_adjt_header
+        where adjh_id = #{adjhId,jdbcType=BIGINT}
+    </select>
+
+    <select id="selectByPrimaryKeyWithLock" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List" />
+        from wms_adjt_header
+        where adjh_id = #{adjhId,jdbcType=BIGINT} for update
+    </select>
+
+    <select id="selectByPrimaryKeys" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List" />
+        from wms_adjt_header where adjh_id in
+        <foreach close=")" collection="list" item="item" open="(" separator=",">
+            #{item}
+        </foreach>
+    </select>
+
+    <select id="selectByEntity" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from wms_adjt_header
+        <where>
+            <if test="adjhId != null">
+                and adjh_id=#{adjhId,jdbcType=BIGINT}
+            </if>
+            <if test="adjhCode != null">
+                and adjh_code=#{adjhCode,jdbcType=VARCHAR}
+            </if>
+            <if test="companyId != null">
+                and company_id=#{companyId,jdbcType=VARCHAR}
+            </if>
+            <if test="warehouseId != null">
+                and warehouse_id=#{warehouseId,jdbcType=BIGINT}
+            </if>
+            <if test="warehouseCode != null">
+                and warehouse_code=#{warehouseCode,jdbcType=VARCHAR}
+            </if>
+            <if test="adjhType != null">
+                and adjh_type=#{adjhType,jdbcType=VARCHAR}
+            </if>
+            <if test="ivihStatus != null">
+                and ivih_status=#{ivihStatus,jdbcType=VARCHAR}
+            </if>
+            <if test="bizDate != null">
+                and biz_date=#{bizDate,jdbcType=TIMESTAMP}
+            </if>
+            <if test="reason != null">
+                and reason=#{reason,jdbcType=VARCHAR}
+            </if>
+            <if test="createTime != null">
+                and create_time=#{createTime,jdbcType=TIMESTAMP}
+            </if>
+            <if test="createUser != null">
+                and create_user=#{createUser,jdbcType=VARCHAR}
+            </if>
+            <if test="auditTime != null">
+                and audit_time=#{auditTime,jdbcType=TIMESTAMP}
+            </if>
+            <if test="auditUser != null">
+                and audit_user=#{auditUser,jdbcType=VARCHAR}
+            </if>
+        </where>
+    </select>
+
+    <select id="selectByConditions" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from wms_adjt_header
+        <where>
+            <if test="adjhId != null">
+                and adjh_id ${adjhId}
+            </if>
+            <if test="adjhCode != null">
+                and adjh_code ${adjhCode}
+            </if>
+            <if test="companyId != null">
+                and company_id ${companyId}
+            </if>
+            <if test="warehouseId != null">
+                and warehouse_id ${warehouseId}
+            </if>
+            <if test="warehouseCode != null">
+                and warehouse_code ${warehouseCode}
+            </if>
+            <if test="adjhType != null">
+                and adjh_type ${adjhType}
+            </if>
+            <if test="ivihStatus != null">
+                and ivih_status ${ivihStatus}
+            </if>
+            <if test="bizDate != null">
+                and biz_date ${bizDate}
+            </if>
+            <if test="reason != null">
+                and reason ${reason}
+            </if>
+            <if test="createTime != null">
+                and create_time ${createTime}
+            </if>
+            <if test="createUser != null">
+                and create_user ${createUser}
+            </if>
+            <if test="auditTime != null">
+                and audit_time ${auditTime}
+            </if>
+            <if test="auditUser != null">
+                and audit_user ${auditUser}
+            </if>
+        </where>
+        <if test="orderBy != null">
+            order by ${orderBy}
+        </if>
+    </select>
+
+    <select id="selectAll" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from wms_adjt_header
+    </select>
+
+    <select id="count" resultType="java.lang.Long">
+        select count(*) from wms_adjt_header
+    </select>
+
+    <select id="selectByFunction">
+        select ${function}(${column}) from wms_adjt_header
+    </select>
+
+</mapper>

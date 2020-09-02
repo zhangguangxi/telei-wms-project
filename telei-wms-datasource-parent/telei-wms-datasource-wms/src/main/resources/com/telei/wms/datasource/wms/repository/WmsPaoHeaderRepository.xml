@@ -1,5 +1,34 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.telei.wms.datasource.wms.repository.WmsPaoHeaderRepository">
+
+    <resultMap id="PageQueryResultMap" extends="BaseResultMap" type="com.telei.wms.datasource.wms.vo.PaoHeaderPageQueryResponseVo">
+    </resultMap>
+
+    <select id="findAll" resultMap="PageQueryResultMap">
+        SELECT
+        <include refid="Base_Column_List"/>
+        FROM wms_pao_header wph
+        <where>
+            <if test="startTime != null and endTime != null and startTime != '' and endTime != ''">
+                wph.create_time&gt;=#{startTime} AND wph.create_time&lt;=#{endTime}
+            </if>
+            <if test="rooCode != null and rooCode != ''">
+                AND wph.roo_code=#{rooCode}
+            </if>
+            <if test="paoCode != null and paoCode != ''">
+                AND wph.pao_code=#{paoCode}
+            </if>
+            <if test="putawayUser != null and putawayUser != ''">
+                AND wph.putaway_user=#{putawayUser}
+            </if>
+            <if test="paoStatus != null">
+                AND wph.pao_status=#{paoStatus}
+            </if>
+            AND wph.pao_status!='99'
+        </where>
+        ORDER BY wph.pao_id DESC
+    </select>
+
 </mapper>
 

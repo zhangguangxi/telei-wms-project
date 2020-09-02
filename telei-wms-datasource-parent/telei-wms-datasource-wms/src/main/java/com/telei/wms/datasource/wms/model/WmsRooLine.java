@@ -1,9 +1,10 @@
 package com.telei.wms.datasource.wms.model;
 
 import com.nuochen.framework.autocoding.domain.Entity;
+import lombok.Data;
+
 import java.math.BigDecimal;
 import java.util.Date;
-import lombok.Data;
 
 /**
  * wms_roo_line 收货操作单
@@ -30,6 +31,8 @@ public class WmsRooLine implements Entity<Long> {
     private BigDecimal palnQty;
     /** 收货数量 */
     private BigDecimal receQty;
+    /** 生成上架单数量 */
+    private BigDecimal tmpPutawayQty;
     /** 计量单位 */
     private Long stockUnit;
     /** 规格型号 */

@@ -1,24 +1,18 @@
-package com.telei.wms.datasource.wms.model;
+package com.telei.wms.project.api.endpoint.pao.dto;
 
-import com.nuochen.framework.autocoding.domain.Entity;
 import lombok.Data;
 
 import java.math.BigDecimal;
 import java.util.Date;
 
-/**
- * wms_pao_line 上架单明细
- */
 @Data
-public class WmsPaoLine implements Entity<Long> {
+public class PaoLineDetailResponse {
     /** id */
     private Long id;
     /** 单头id */
     private Long paoId;
     /** 入库单单头id */
     private Long roId;
-    /** 对应计划明细的id */
-    private Long rolId;
     /** 收货作单头id */
     private Long rooId;
     /** 收货单号 */

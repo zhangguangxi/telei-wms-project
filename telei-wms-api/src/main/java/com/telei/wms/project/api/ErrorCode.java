@@ -63,10 +63,18 @@ public enum ErrorCode {
     INVENTORY_ADD_ERROR_ROOL_ID_IS_NULL_4021,
     INVENTORY_ADD_ERROR_ROO_ID_IS_NULL_4022,
 
+    /***
+     * 库存调整单
+     */
+    ADJT_INCREASE_ERROR_4001,
+    ADJT_INCREASE_ERROR_4002,
+
     /**
      * 上架单
      */
     PAO_NOT_EXIST_4001,
+    PAO_ADD_ERROR_4002,
+    PAO_CANCEL_ERROR_4003,
     ;
 
     private  String code;

@@ -1,16 +1,13 @@
-package com.telei.wms.datasource.wms.model;
+package com.telei.wms.project.api.endpoint.pao.dto;
 
-import com.nuochen.framework.autocoding.domain.Entity;
 import lombok.Data;
 
 import java.math.BigDecimal;
 import java.util.Date;
+import java.util.List;
 
-/**
- * wms_pao_header 上架单
- */
 @Data
-public class WmsPaoHeader implements Entity<Long> {
+public class PaoHeaderDetailResponse {
     /** id */
     private Long id;
     /** 业务单据编号-按单据编码规则生成 */
@@ -21,10 +18,6 @@ public class WmsPaoHeader implements Entity<Long> {
     private Long roId;
     /** 入库任务单号 */
     private String roCode;
-    /** 收货作单头id */
-    private Long rooId;
-    /** 收货单号 */
-    private String rooCode;
     /** 商家订单号 */
     private String custOrderNo;
     /** 公司id */
@@ -50,11 +43,13 @@ public class WmsPaoHeader implements Entity<Long> {
     /** 创建时间 */
     private Date createTime;
     /** 最后更新用户 */
-    private String lastupdateUser;
+    private Date lastupdateUser;
     /** 最后更新时间 */
-    private Date lastupdateTime;
+    private String lastupdateTime;
     /** 上架用户 */
     private String putawayUser;
     /** 上架时间 */
     private Date putawayTime;
+
+    private List<PaoLineDetailResponse> paoLines;
 }

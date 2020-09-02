@@ -1,8 +1,8 @@
 package com.telei.wms.project.api.endpoint.init.dto;
 
+import com.telei.wms.datasource.wms.vo.WmsInitLineVO;
 import lombok.Data;
 
-import java.math.BigDecimal;
 import java.util.Date;
 import java.util.List;
 
@@ -34,5 +34,5 @@ public class InitHeaderDetailResponse {
     /** 审核用户 */
     private String auditUser;
 
-    private List<InitLineDetailResponse> initLines;
+    private List<WmsInitLineVO> initLines;
 }

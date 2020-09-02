@@ -1,0 +1,326 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.telei.wms.datasource.wms.repository.WmsAdjtLineRepository">
+    <resultMap id="BaseResultMap" type="com.telei.wms.datasource.wms.model.WmsAdjtLine">
+        <id column="adjl_id" jdbcType="BIGINT" property="adjlId"/>
+        <result column="adjh_id" jdbcType="BIGINT" property="adjhId"/>
+        <result column="iv_id" jdbcType="BIGINT" property="ivId"/>
+        <result column="product_id" jdbcType="BIGINT" property="productId"/>
+        <result column="lc_code" jdbcType="VARCHAR" property="lcCode"/>
+        <result column="iv_qty" jdbcType="DECIMAL" property="ivQty"/>
+        <result column="iv_id_adjt" jdbcType="BIGINT" property="ivIdAdjt"/>
+        <result column="lc_code_adjt" jdbcType="VARCHAR" property="lcCodeAdjt"/>
+        <result column="iv_adjh_type" jdbcType="VARCHAR" property="ivAdjhType"/>
+        <result column="iv_qty_adjt" jdbcType="DECIMAL" property="ivQtyAdjt"/>
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        adjl_id,adjh_id,iv_id,product_id,lc_code,iv_qty,iv_id_adjt,lc_code_adjt,iv_adjh_type,iv_qty_adjt
+    </sql>
+
+    <insert id="insert">
+        insert into wms_adjt_line (adjl_id,adjh_id,iv_id,product_id,lc_code,iv_qty,iv_id_adjt,lc_code_adjt,iv_adjh_type,iv_qty_adjt)
+        values (#{adjlId,jdbcType=BIGINT},#{adjhId,jdbcType=BIGINT},#{ivId,jdbcType=BIGINT},#{productId,jdbcType=BIGINT},#{lcCode,jdbcType=VARCHAR},#{ivQty,jdbcType=DECIMAL},#{ivIdAdjt,jdbcType=BIGINT},#{lcCodeAdjt,jdbcType=VARCHAR},#{ivAdjhType,jdbcType=VARCHAR},#{ivQtyAdjt,jdbcType=DECIMAL})
+    </insert>
+
+    <insert id="insertSelective">
+        insert into wms_adjt_line
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="adjlId != null">
+                adjl_id,
+            </if>
+            <if test="adjhId != null">
+                adjh_id,
+            </if>
+            <if test="ivId != null">
+                iv_id,
+            </if>
+            <if test="productId != null">
+                product_id,
+            </if>
+            <if test="lcCode != null">
+                lc_code,
+            </if>
+            <if test="ivQty != null">
+                iv_qty,
+            </if>
+            <if test="ivIdAdjt != null">
+                iv_id_adjt,
+            </if>
+            <if test="lcCodeAdjt != null">
+                lc_code_adjt,
+            </if>
+            <if test="ivAdjhType != null">
+                iv_adjh_type,
+            </if>
+            <if test="ivQtyAdjt != null">
+                iv_qty_adjt
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="adjlId != null">
+                #{adjlId,jdbcType=BIGINT},
+            </if>
+            <if test="adjhId != null">
+                #{adjhId,jdbcType=BIGINT},
+            </if>
+            <if test="ivId != null">
+                #{ivId,jdbcType=BIGINT},
+            </if>
+            <if test="productId != null">
+                #{productId,jdbcType=BIGINT},
+            </if>
+            <if test="lcCode != null">
+                #{lcCode,jdbcType=VARCHAR},
+            </if>
+            <if test="ivQty != null">
+                #{ivQty,jdbcType=DECIMAL},
+            </if>
+            <if test="ivIdAdjt != null">
+                #{ivIdAdjt,jdbcType=BIGINT},
+            </if>
+            <if test="lcCodeAdjt != null">
+                #{lcCodeAdjt,jdbcType=VARCHAR},
+            </if>
+            <if test="ivAdjhType != null">
+                #{ivAdjhType,jdbcType=VARCHAR},
+            </if>
+            <if test="ivQtyAdjt != null">
+                #{ivQtyAdjt,jdbcType=DECIMAL}
+            </if>
+        </trim>
+    </insert>
+
+    <insert id="insertBatch">
+        insert into wms_adjt_line (adjl_id,adjh_id,iv_id,product_id,lc_code,iv_qty,iv_id_adjt,lc_code_adjt,iv_adjh_type,iv_qty_adjt) values
+        <foreach collection="list" item="item" separator=",">
+            (
+            #{item.adjlId,jdbcType=BIGINT},
+            #{item.adjhId,jdbcType=BIGINT},
+            #{item.ivId,jdbcType=BIGINT},
+            #{item.productId,jdbcType=BIGINT},
+            #{item.lcCode,jdbcType=VARCHAR},
+            #{item.ivQty,jdbcType=DECIMAL},
+            #{item.ivIdAdjt,jdbcType=BIGINT},
+            #{item.lcCodeAdjt,jdbcType=VARCHAR},
+            #{item.ivAdjhType,jdbcType=VARCHAR},
+            #{item.ivQtyAdjt,jdbcType=DECIMAL}
+            )
+        </foreach>
+    </insert>
+
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+        delete from wms_adjt_line
+        where adjl_id = #{adjlId,jdbcType=BIGINT}
+    </delete>
+
+    <delete id="deleteByPrimaryKeys">
+        delete from wms_adjt_line where adjl_id in
+        <foreach close=")" collection="list" item="item" open="(" separator=",">
+            #{item}
+        </foreach>
+    </delete>
+
+    <update id="updateByPrimaryKey">
+        update wms_adjt_line
+        <set>
+            adjh_id = #{adjhId,jdbcType=BIGINT},
+            iv_id = #{ivId,jdbcType=BIGINT},
+            product_id = #{productId,jdbcType=BIGINT},
+            lc_code = #{lcCode,jdbcType=VARCHAR},
+            iv_qty = #{ivQty,jdbcType=DECIMAL},
+            iv_id_adjt = #{ivIdAdjt,jdbcType=BIGINT},
+            lc_code_adjt = #{lcCodeAdjt,jdbcType=VARCHAR},
+            iv_adjh_type = #{ivAdjhType,jdbcType=VARCHAR},
+            iv_qty_adjt = #{ivQtyAdjt,jdbcType=DECIMAL}
+        </set>
+        where adjl_id = #{adjlId,jdbcType=BIGINT}
+    </update>
+
+    <update id="updateByPrimaryKeySelective">
+        update wms_adjt_line
+        <set>
+            <if test="adjhId != null">
+                adjh_id = #{adjhId,jdbcType=BIGINT},
+            </if>
+            <if test="ivId != null">
+                iv_id = #{ivId,jdbcType=BIGINT},
+            </if>
+            <if test="productId != null">
+                product_id = #{productId,jdbcType=BIGINT},
+            </if>
+            <if test="lcCode != null">
+                lc_code = #{lcCode,jdbcType=VARCHAR},
+            </if>
+            <if test="ivQty != null">
+                iv_qty = #{ivQty,jdbcType=DECIMAL},
+            </if>
+            <if test="ivIdAdjt != null">
+                iv_id_adjt = #{ivIdAdjt,jdbcType=BIGINT},
+            </if>
+            <if test="lcCodeAdjt != null">
+                lc_code_adjt = #{lcCodeAdjt,jdbcType=VARCHAR},
+            </if>
+            <if test="ivAdjhType != null">
+                iv_adjh_type = #{ivAdjhType,jdbcType=VARCHAR},
+            </if>
+            <if test="ivQtyAdjt != null">
+                iv_qty_adjt = #{ivQtyAdjt,jdbcType=DECIMAL}
+            </if>
+        </set>
+        where adjl_id = #{adjlId,jdbcType=BIGINT}
+    </update>
+
+    <update id="updateBatch">
+        <foreach close="" collection="list" item="item" open="" separator=";">
+            update wms_adjt_line
+            <set>
+                <if test="item.adjhId != null">
+                    adjh_id = #{item.adjhId,jdbcType=BIGINT},
+                </if>
+                <if test="item.ivId != null">
+                    iv_id = #{item.ivId,jdbcType=BIGINT},
+                </if>
+                <if test="item.productId != null">
+                    product_id = #{item.productId,jdbcType=BIGINT},
+                </if>
+                <if test="item.lcCode != null">
+                    lc_code = #{item.lcCode,jdbcType=VARCHAR},
+                </if>
+                <if test="item.ivQty != null">
+                    iv_qty = #{item.ivQty,jdbcType=DECIMAL},
+                </if>
+                <if test="item.ivIdAdjt != null">
+                    iv_id_adjt = #{item.ivIdAdjt,jdbcType=BIGINT},
+                </if>
+                <if test="item.lcCodeAdjt != null">
+                    lc_code_adjt = #{item.lcCodeAdjt,jdbcType=VARCHAR},
+                </if>
+                <if test="item.ivAdjhType != null">
+                    iv_adjh_type = #{item.ivAdjhType,jdbcType=VARCHAR},
+                </if>
+                <if test="item.ivQtyAdjt != null">
+                    iv_qty_adjt = #{item.ivQtyAdjt,jdbcType=DECIMAL}
+                </if>
+            </set>
+            where adjl_id = #{item.adjlId,jdbcType=BIGINT}
+        </foreach>
+    </update>
+
+    <select id="selectByPrimaryKey" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List" />
+        from wms_adjt_line
+        where adjl_id = #{adjlId,jdbcType=BIGINT}
+    </select>
+
+    <select id="selectByPrimaryKeyWithLock" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List" />
+        from wms_adjt_line
+        where adjl_id = #{adjlId,jdbcType=BIGINT} for update
+    </select>
+
+    <select id="selectByPrimaryKeys" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List" />
+        from wms_adjt_line where adjl_id in
+        <foreach close=")" collection="list" item="item" open="(" separator=",">
+            #{item}
+        </foreach>
+    </select>
+
+    <select id="selectByEntity" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from wms_adjt_line
+        <where>
+            <if test="adjlId != null">
+                and adjl_id=#{adjlId,jdbcType=BIGINT}
+            </if>
+            <if test="adjhId != null">
+                and adjh_id=#{adjhId,jdbcType=BIGINT}
+            </if>
+            <if test="ivId != null">
+                and iv_id=#{ivId,jdbcType=BIGINT}
+            </if>
+            <if test="productId != null">
+                and product_id=#{productId,jdbcType=BIGINT}
+            </if>
+            <if test="lcCode != null">
+                and lc_code=#{lcCode,jdbcType=VARCHAR}
+            </if>
+            <if test="ivQty != null">
+                and iv_qty=#{ivQty,jdbcType=DECIMAL}
+            </if>
+            <if test="ivIdAdjt != null">
+                and iv_id_adjt=#{ivIdAdjt,jdbcType=BIGINT}
+            </if>
+            <if test="lcCodeAdjt != null">
+                and lc_code_adjt=#{lcCodeAdjt,jdbcType=VARCHAR}
+            </if>
+            <if test="ivAdjhType != null">
+                and iv_adjh_type=#{ivAdjhType,jdbcType=VARCHAR}
+            </if>
+            <if test="ivQtyAdjt != null">
+                and iv_qty_adjt=#{ivQtyAdjt,jdbcType=DECIMAL}
+            </if>
+        </where>
+    </select>
+
+    <select id="selectByConditions" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from wms_adjt_line
+        <where>
+            <if test="adjlId != null">
+                and adjl_id ${adjlId}
+            </if>
+            <if test="adjhId != null">
+                and adjh_id ${adjhId}
+            </if>
+            <if test="ivId != null">
+                and iv_id ${ivId}
+            </if>
+            <if test="productId != null">
+                and product_id ${productId}
+            </if>
+            <if test="lcCode != null">
+                and lc_code ${lcCode}
+            </if>
+            <if test="ivQty != null">
+                and iv_qty ${ivQty}
+            </if>
+            <if test="ivIdAdjt != null">
+                and iv_id_adjt ${ivIdAdjt}
+            </if>
+            <if test="lcCodeAdjt != null">
+                and lc_code_adjt ${lcCodeAdjt}
+            </if>
+            <if test="ivAdjhType != null">
+                and iv_adjh_type ${ivAdjhType}
+            </if>
+            <if test="ivQtyAdjt != null">
+                and iv_qty_adjt ${ivQtyAdjt}
+            </if>
+        </where>
+        <if test="orderBy != null">
+            order by ${orderBy}
+        </if>
+    </select>
+
+    <select id="selectAll" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from wms_adjt_line
+    </select>
+
+    <select id="count" resultType="java.lang.Long">
+        select count(*) from wms_adjt_line
+    </select>
+
+    <select id="selectByFunction">
+        select ${function}(${column}) from wms_adjt_line
+    </select>
+
+</mapper>

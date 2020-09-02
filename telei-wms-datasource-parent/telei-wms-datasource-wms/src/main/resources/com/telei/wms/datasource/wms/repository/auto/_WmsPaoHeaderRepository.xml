@@ -2,220 +2,220 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.telei.wms.datasource.wms.repository.WmsPaoHeaderRepository">
     <resultMap id="BaseResultMap" type="com.telei.wms.datasource.wms.model.WmsPaoHeader">
-        <id column="pao_id" jdbcType="BIGINT" property="paoId"/>
-        <result column="pao_code" jdbcType="VARCHAR" property="paoCode"/>
-        <result column="order_type" jdbcType="VARCHAR" property="orderType"/>
-        <result column="ro_id" jdbcType="BIGINT" property="roId"/>
-        <result column="ro_code" jdbcType="VARCHAR" property="roCode"/>
-        <result column="roo_id" jdbcType="BIGINT" property="rooId"/>
-        <result column="roo_code" jdbcType="VARCHAR" property="rooCode"/>
-        <result column="cust_order_no" jdbcType="VARCHAR" property="custOrderNo"/>
-        <result column="company_id" jdbcType="BIGINT" property="companyId"/>
-        <result column="warehouse_id" jdbcType="BIGINT" property="warehouseId"/>
-        <result column="warehouse_code" jdbcType="VARCHAR" property="warehouseCode"/>
-        <result column="total_qty" jdbcType="DECIMAL" property="totalQty"/>
-        <result column="total_weight" jdbcType="DECIMAL" property="totalWeight"/>
-        <result column="total_net_weight" jdbcType="DECIMAL" property="totalNetWeight"/>
-        <result column="total_vol" jdbcType="DECIMAL" property="totalVol"/>
-        <result column="putaway_qty" jdbcType="DECIMAL" property="putawayQty"/>
-        <result column="pao_status" jdbcType="VARCHAR" property="paoStatus"/>
-        <result column="create_user" jdbcType="VARCHAR" property="createUser"/>
-        <result column="create_time" jdbcType="TIMESTAMP" property="createTime"/>
-        <result column="lastupdate_user" jdbcType="TIMESTAMP" property="lastupdateUser"/>
-        <result column="lastupdate_time" jdbcType="VARCHAR" property="lastupdateTime"/>
-        <result column="putaway_user" jdbcType="VARCHAR" property="putawayUser"/>
-        <result column="putaway_time" jdbcType="TIMESTAMP" property="putawayTime"/>
+        <id column="pao_id" jdbcType="BIGINT" property="id"/>
+            <result column="pao_code" jdbcType="VARCHAR" property="paoCode"/>
+            <result column="order_type" jdbcType="VARCHAR" property="orderType"/>
+            <result column="ro_id" jdbcType="BIGINT" property="roId"/>
+            <result column="ro_code" jdbcType="VARCHAR" property="roCode"/>
+            <result column="roo_id" jdbcType="BIGINT" property="rooId"/>
+            <result column="roo_code" jdbcType="VARCHAR" property="rooCode"/>
+            <result column="cust_order_no" jdbcType="VARCHAR" property="custOrderNo"/>
+            <result column="company_id" jdbcType="BIGINT" property="companyId"/>
+            <result column="warehouse_id" jdbcType="BIGINT" property="warehouseId"/>
+            <result column="warehouse_code" jdbcType="VARCHAR" property="warehouseCode"/>
+            <result column="total_qty" jdbcType="DECIMAL" property="totalQty"/>
+            <result column="total_weight" jdbcType="DECIMAL" property="totalWeight"/>
+            <result column="total_net_weight" jdbcType="DECIMAL" property="totalNetWeight"/>
+            <result column="total_vol" jdbcType="DECIMAL" property="totalVol"/>
+            <result column="putaway_qty" jdbcType="DECIMAL" property="putawayQty"/>
+            <result column="pao_status" jdbcType="VARCHAR" property="paoStatus"/>
+            <result column="create_user" jdbcType="VARCHAR" property="createUser"/>
+            <result column="create_time" jdbcType="TIMESTAMP" property="createTime"/>
+            <result column="lastupdate_user" jdbcType="VARCHAR" property="lastupdateUser"/>
+            <result column="lastupdate_time" jdbcType="TIMESTAMP" property="lastupdateTime"/>
+            <result column="putaway_user" jdbcType="VARCHAR" property="putawayUser"/>
+            <result column="putaway_time" jdbcType="TIMESTAMP" property="putawayTime"/>
     </resultMap>
 
     <sql id="Base_Column_List">
         pao_id,pao_code,order_type,ro_id,ro_code,roo_id,roo_code,cust_order_no,company_id,warehouse_id,warehouse_code,total_qty,total_weight,total_net_weight,total_vol,putaway_qty,pao_status,create_user,create_time,lastupdate_user,lastupdate_time,putaway_user,putaway_time
     </sql>
 
-    <insert id="insert">
-        insert into wms_pao_header (pao_id,pao_code,order_type,ro_id,ro_code,roo_id,roo_code,cust_order_no,company_id,warehouse_id,warehouse_code,total_qty,total_weight,total_net_weight,total_vol,putaway_qty,pao_status,create_user,create_time,lastupdate_user,lastupdate_time,putaway_user,putaway_time)
-        values (#{paoId,jdbcType=BIGINT},#{paoCode,jdbcType=VARCHAR},#{orderType,jdbcType=VARCHAR},#{roId,jdbcType=BIGINT},#{roCode,jdbcType=VARCHAR},#{rooId,jdbcType=BIGINT},#{rooCode,jdbcType=VARCHAR},#{custOrderNo,jdbcType=VARCHAR},#{companyId,jdbcType=BIGINT},#{warehouseId,jdbcType=BIGINT},#{warehouseCode,jdbcType=VARCHAR},#{totalQty,jdbcType=DECIMAL},#{totalWeight,jdbcType=DECIMAL},#{totalNetWeight,jdbcType=DECIMAL},#{totalVol,jdbcType=DECIMAL},#{putawayQty,jdbcType=DECIMAL},#{paoStatus,jdbcType=VARCHAR},#{createUser,jdbcType=VARCHAR},#{createTime,jdbcType=TIMESTAMP},#{lastupdateUser,jdbcType=TIMESTAMP},#{lastupdateTime,jdbcType=VARCHAR},#{putawayUser,jdbcType=VARCHAR},#{putawayTime,jdbcType=TIMESTAMP})
-    </insert>
+        <insert id="insert">
+            insert into wms_pao_header (pao_id,pao_code,order_type,ro_id,ro_code,roo_id,roo_code,cust_order_no,company_id,warehouse_id,warehouse_code,total_qty,total_weight,total_net_weight,total_vol,putaway_qty,pao_status,create_user,create_time,lastupdate_user,lastupdate_time,putaway_user,putaway_time)
+            values (#{id,jdbcType=BIGINT},#{paoCode,jdbcType=VARCHAR},#{orderType,jdbcType=VARCHAR},#{roId,jdbcType=BIGINT},#{roCode,jdbcType=VARCHAR},#{rooId,jdbcType=BIGINT},#{rooCode,jdbcType=VARCHAR},#{custOrderNo,jdbcType=VARCHAR},#{companyId,jdbcType=BIGINT},#{warehouseId,jdbcType=BIGINT},#{warehouseCode,jdbcType=VARCHAR},#{totalQty,jdbcType=DECIMAL},#{totalWeight,jdbcType=DECIMAL},#{totalNetWeight,jdbcType=DECIMAL},#{totalVol,jdbcType=DECIMAL},#{putawayQty,jdbcType=DECIMAL},#{paoStatus,jdbcType=VARCHAR},#{createUser,jdbcType=VARCHAR},#{createTime,jdbcType=TIMESTAMP},#{lastupdateUser,jdbcType=VARCHAR},#{lastupdateTime,jdbcType=TIMESTAMP},#{putawayUser,jdbcType=VARCHAR},#{putawayTime,jdbcType=TIMESTAMP})
+        </insert>
 
-    <insert id="insertSelective">
-        insert into wms_pao_header
-        <trim prefix="(" suffix=")" suffixOverrides=",">
-            <if test="paoId != null">
-                pao_id,
-            </if>
-            <if test="paoCode != null">
-                pao_code,
-            </if>
-            <if test="orderType != null">
-                order_type,
-            </if>
-            <if test="roId != null">
-                ro_id,
-            </if>
-            <if test="roCode != null">
-                ro_code,
-            </if>
-            <if test="rooId != null">
-                roo_id,
-            </if>
-            <if test="rooCode != null">
-                roo_code,
-            </if>
-            <if test="custOrderNo != null">
-                cust_order_no,
-            </if>
-            <if test="companyId != null">
-                company_id,
-            </if>
-            <if test="warehouseId != null">
-                warehouse_id,
-            </if>
-            <if test="warehouseCode != null">
-                warehouse_code,
-            </if>
-            <if test="totalQty != null">
-                total_qty,
-            </if>
-            <if test="totalWeight != null">
-                total_weight,
-            </if>
-            <if test="totalNetWeight != null">
-                total_net_weight,
-            </if>
-            <if test="totalVol != null">
-                total_vol,
-            </if>
-            <if test="putawayQty != null">
-                putaway_qty,
-            </if>
-            <if test="paoStatus != null">
-                pao_status,
-            </if>
-            <if test="createUser != null">
-                create_user,
-            </if>
-            <if test="createTime != null">
-                create_time,
-            </if>
-            <if test="lastupdateUser != null">
-                lastupdate_user,
-            </if>
-            <if test="lastupdateTime != null">
-                lastupdate_time,
-            </if>
-            <if test="putawayUser != null">
-                putaway_user,
-            </if>
-            <if test="putawayTime != null">
-                putaway_time
-            </if>
-        </trim>
-        <trim prefix="values (" suffix=")" suffixOverrides=",">
-            <if test="paoId != null">
-                #{paoId,jdbcType=BIGINT},
-            </if>
-            <if test="paoCode != null">
-                #{paoCode,jdbcType=VARCHAR},
-            </if>
-            <if test="orderType != null">
-                #{orderType,jdbcType=VARCHAR},
-            </if>
-            <if test="roId != null">
-                #{roId,jdbcType=BIGINT},
-            </if>
-            <if test="roCode != null">
-                #{roCode,jdbcType=VARCHAR},
-            </if>
-            <if test="rooId != null">
-                #{rooId,jdbcType=BIGINT},
-            </if>
-            <if test="rooCode != null">
-                #{rooCode,jdbcType=VARCHAR},
-            </if>
-            <if test="custOrderNo != null">
-                #{custOrderNo,jdbcType=VARCHAR},
-            </if>
-            <if test="companyId != null">
-                #{companyId,jdbcType=BIGINT},
-            </if>
-            <if test="warehouseId != null">
-                #{warehouseId,jdbcType=BIGINT},
-            </if>
-            <if test="warehouseCode != null">
-                #{warehouseCode,jdbcType=VARCHAR},
-            </if>
-            <if test="totalQty != null">
-                #{totalQty,jdbcType=DECIMAL},
-            </if>
-            <if test="totalWeight != null">
-                #{totalWeight,jdbcType=DECIMAL},
-            </if>
-            <if test="totalNetWeight != null">
-                #{totalNetWeight,jdbcType=DECIMAL},
-            </if>
-            <if test="totalVol != null">
-                #{totalVol,jdbcType=DECIMAL},
-            </if>
-            <if test="putawayQty != null">
-                #{putawayQty,jdbcType=DECIMAL},
-            </if>
-            <if test="paoStatus != null">
-                #{paoStatus,jdbcType=VARCHAR},
-            </if>
-            <if test="createUser != null">
-                #{createUser,jdbcType=VARCHAR},
-            </if>
-            <if test="createTime != null">
-                #{createTime,jdbcType=TIMESTAMP},
-            </if>
-            <if test="lastupdateUser != null">
-                #{lastupdateUser,jdbcType=TIMESTAMP},
-            </if>
-            <if test="lastupdateTime != null">
-                #{lastupdateTime,jdbcType=VARCHAR},
-            </if>
-            <if test="putawayUser != null">
-                #{putawayUser,jdbcType=VARCHAR},
-            </if>
-            <if test="putawayTime != null">
-                #{putawayTime,jdbcType=TIMESTAMP}
-            </if>
-        </trim>
-    </insert>
+        <insert id="insertSelective">
+            insert into wms_pao_header
+            <trim prefix="(" suffix=")" suffixOverrides=",">
+                    <if test="id != null">
+                        pao_id,
+                    </if>
+                    <if test="paoCode != null">
+                        pao_code,
+                    </if>
+                    <if test="orderType != null">
+                        order_type,
+                    </if>
+                    <if test="roId != null">
+                        ro_id,
+                    </if>
+                    <if test="roCode != null">
+                        ro_code,
+                    </if>
+                    <if test="rooId != null">
+                        roo_id,
+                    </if>
+                    <if test="rooCode != null">
+                        roo_code,
+                    </if>
+                    <if test="custOrderNo != null">
+                        cust_order_no,
+                    </if>
+                    <if test="companyId != null">
+                        company_id,
+                    </if>
+                    <if test="warehouseId != null">
+                        warehouse_id,
+                    </if>
+                    <if test="warehouseCode != null">
+                        warehouse_code,
+                    </if>
+                    <if test="totalQty != null">
+                        total_qty,
+                    </if>
+                    <if test="totalWeight != null">
+                        total_weight,
+                    </if>
+                    <if test="totalNetWeight != null">
+                        total_net_weight,
+                    </if>
+                    <if test="totalVol != null">
+                        total_vol,
+                    </if>
+                    <if test="putawayQty != null">
+                        putaway_qty,
+                    </if>
+                    <if test="paoStatus != null">
+                        pao_status,
+                    </if>
+                    <if test="createUser != null">
+                        create_user,
+                    </if>
+                    <if test="createTime != null">
+                        create_time,
+                    </if>
+                    <if test="lastupdateUser != null">
+                        lastupdate_user,
+                    </if>
+                    <if test="lastupdateTime != null">
+                        lastupdate_time,
+                    </if>
+                    <if test="putawayUser != null">
+                        putaway_user,
+                    </if>
+                    <if test="putawayTime != null">
+                        putaway_time
+                    </if>
+            </trim>
+            <trim prefix="values (" suffix=")" suffixOverrides=",">
+                    <if test="id != null">
+                        #{id,jdbcType=BIGINT},
+                    </if>
+                    <if test="paoCode != null">
+                        #{paoCode,jdbcType=VARCHAR},
+                    </if>
+                    <if test="orderType != null">
+                        #{orderType,jdbcType=VARCHAR},
+                    </if>
+                    <if test="roId != null">
+                        #{roId,jdbcType=BIGINT},
+                    </if>
+                    <if test="roCode != null">
+                        #{roCode,jdbcType=VARCHAR},
+                    </if>
+                    <if test="rooId != null">
+                        #{rooId,jdbcType=BIGINT},
+                    </if>
+                    <if test="rooCode != null">
+                        #{rooCode,jdbcType=VARCHAR},
+                    </if>
+                    <if test="custOrderNo != null">
+                        #{custOrderNo,jdbcType=VARCHAR},
+                    </if>
+                    <if test="companyId != null">
+                        #{companyId,jdbcType=BIGINT},
+                    </if>
+                    <if test="warehouseId != null">
+                        #{warehouseId,jdbcType=BIGINT},
+                    </if>
+                    <if test="warehouseCode != null">
+                        #{warehouseCode,jdbcType=VARCHAR},
+                    </if>
+                    <if test="totalQty != null">
+                        #{totalQty,jdbcType=DECIMAL},
+                    </if>
+                    <if test="totalWeight != null">
+                        #{totalWeight,jdbcType=DECIMAL},
+                    </if>
+                    <if test="totalNetWeight != null">
+                        #{totalNetWeight,jdbcType=DECIMAL},
+                    </if>
+                    <if test="totalVol != null">
+                        #{totalVol,jdbcType=DECIMAL},
+                    </if>
+                    <if test="putawayQty != null">
+                        #{putawayQty,jdbcType=DECIMAL},
+                    </if>
+                    <if test="paoStatus != null">
+                        #{paoStatus,jdbcType=VARCHAR},
+                    </if>
+                    <if test="createUser != null">
+                        #{createUser,jdbcType=VARCHAR},
+                    </if>
+                    <if test="createTime != null">
+                        #{createTime,jdbcType=TIMESTAMP},
+                    </if>
+                    <if test="lastupdateUser != null">
+                        #{lastupdateUser,jdbcType=VARCHAR},
+                    </if>
+                    <if test="lastupdateTime != null">
+                        #{lastupdateTime,jdbcType=TIMESTAMP},
+                    </if>
+                    <if test="putawayUser != null">
+                        #{putawayUser,jdbcType=VARCHAR},
+                    </if>
+                    <if test="putawayTime != null">
+                        #{putawayTime,jdbcType=TIMESTAMP}
+                    </if>
+            </trim>
+        </insert>
 
-    <insert id="insertBatch">
-        insert into wms_pao_header (pao_id,pao_code,order_type,ro_id,ro_code,roo_id,roo_code,cust_order_no,company_id,warehouse_id,warehouse_code,total_qty,total_weight,total_net_weight,total_vol,putaway_qty,pao_status,create_user,create_time,lastupdate_user,lastupdate_time,putaway_user,putaway_time) values
-        <foreach collection="list" item="item" separator=",">
-            (
-            #{item.paoId,jdbcType=BIGINT},
-            #{item.paoCode,jdbcType=VARCHAR},
-            #{item.orderType,jdbcType=VARCHAR},
-            #{item.roId,jdbcType=BIGINT},
-            #{item.roCode,jdbcType=VARCHAR},
-            #{item.rooId,jdbcType=BIGINT},
-            #{item.rooCode,jdbcType=VARCHAR},
-            #{item.custOrderNo,jdbcType=VARCHAR},
-            #{item.companyId,jdbcType=BIGINT},
-            #{item.warehouseId,jdbcType=BIGINT},
-            #{item.warehouseCode,jdbcType=VARCHAR},
-            #{item.totalQty,jdbcType=DECIMAL},
-            #{item.totalWeight,jdbcType=DECIMAL},
-            #{item.totalNetWeight,jdbcType=DECIMAL},
-            #{item.totalVol,jdbcType=DECIMAL},
-            #{item.putawayQty,jdbcType=DECIMAL},
-            #{item.paoStatus,jdbcType=VARCHAR},
-            #{item.createUser,jdbcType=VARCHAR},
-            #{item.createTime,jdbcType=TIMESTAMP},
-            #{item.lastupdateUser,jdbcType=TIMESTAMP},
-            #{item.lastupdateTime,jdbcType=VARCHAR},
-            #{item.putawayUser,jdbcType=VARCHAR},
-            #{item.putawayTime,jdbcType=TIMESTAMP}
-            )
-        </foreach>
-    </insert>
+        <insert id="insertBatch">
+            insert into wms_pao_header (pao_id,pao_code,order_type,ro_id,ro_code,roo_id,roo_code,cust_order_no,company_id,warehouse_id,warehouse_code,total_qty,total_weight,total_net_weight,total_vol,putaway_qty,pao_status,create_user,create_time,lastupdate_user,lastupdate_time,putaway_user,putaway_time) values
+            <foreach collection="list" item="item" separator=",">
+                (
+                    #{item.id,jdbcType=BIGINT},
+                    #{item.paoCode,jdbcType=VARCHAR},
+                    #{item.orderType,jdbcType=VARCHAR},
+                    #{item.roId,jdbcType=BIGINT},
+                    #{item.roCode,jdbcType=VARCHAR},
+                    #{item.rooId,jdbcType=BIGINT},
+                    #{item.rooCode,jdbcType=VARCHAR},
+                    #{item.custOrderNo,jdbcType=VARCHAR},
+                    #{item.companyId,jdbcType=BIGINT},
+                    #{item.warehouseId,jdbcType=BIGINT},
+                    #{item.warehouseCode,jdbcType=VARCHAR},
+                    #{item.totalQty,jdbcType=DECIMAL},
+                    #{item.totalWeight,jdbcType=DECIMAL},
+                    #{item.totalNetWeight,jdbcType=DECIMAL},
+                    #{item.totalVol,jdbcType=DECIMAL},
+                    #{item.putawayQty,jdbcType=DECIMAL},
+                    #{item.paoStatus,jdbcType=VARCHAR},
+                    #{item.createUser,jdbcType=VARCHAR},
+                    #{item.createTime,jdbcType=TIMESTAMP},
+                    #{item.lastupdateUser,jdbcType=VARCHAR},
+                    #{item.lastupdateTime,jdbcType=TIMESTAMP},
+                    #{item.putawayUser,jdbcType=VARCHAR},
+                    #{item.putawayTime,jdbcType=TIMESTAMP}
+                )
+            </foreach>
+        </insert>
 
     <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
         delete from wms_pao_header
-        where pao_id = #{paoId,jdbcType=BIGINT}
+        where pao_id = #{id,jdbcType=BIGINT}
     </delete>
 
     <delete id="deleteByPrimaryKeys">
@@ -228,177 +228,177 @@
     <update id="updateByPrimaryKey">
         update wms_pao_header
         <set>
-            pao_code = #{paoCode,jdbcType=VARCHAR},
-            order_type = #{orderType,jdbcType=VARCHAR},
-            ro_id = #{roId,jdbcType=BIGINT},
-            ro_code = #{roCode,jdbcType=VARCHAR},
-            roo_id = #{rooId,jdbcType=BIGINT},
-            roo_code = #{rooCode,jdbcType=VARCHAR},
-            cust_order_no = #{custOrderNo,jdbcType=VARCHAR},
-            company_id = #{companyId,jdbcType=BIGINT},
-            warehouse_id = #{warehouseId,jdbcType=BIGINT},
-            warehouse_code = #{warehouseCode,jdbcType=VARCHAR},
-            total_qty = #{totalQty,jdbcType=DECIMAL},
-            total_weight = #{totalWeight,jdbcType=DECIMAL},
-            total_net_weight = #{totalNetWeight,jdbcType=DECIMAL},
-            total_vol = #{totalVol,jdbcType=DECIMAL},
-            putaway_qty = #{putawayQty,jdbcType=DECIMAL},
-            pao_status = #{paoStatus,jdbcType=VARCHAR},
-            create_user = #{createUser,jdbcType=VARCHAR},
-            create_time = #{createTime,jdbcType=TIMESTAMP},
-            lastupdate_user = #{lastupdateUser,jdbcType=TIMESTAMP},
-            lastupdate_time = #{lastupdateTime,jdbcType=VARCHAR},
-            putaway_user = #{putawayUser,jdbcType=VARCHAR},
-            putaway_time = #{putawayTime,jdbcType=TIMESTAMP}
+                pao_code = #{paoCode,jdbcType=VARCHAR},
+                order_type = #{orderType,jdbcType=VARCHAR},
+                ro_id = #{roId,jdbcType=BIGINT},
+                ro_code = #{roCode,jdbcType=VARCHAR},
+                roo_id = #{rooId,jdbcType=BIGINT},
+                roo_code = #{rooCode,jdbcType=VARCHAR},
+                cust_order_no = #{custOrderNo,jdbcType=VARCHAR},
+                company_id = #{companyId,jdbcType=BIGINT},
+                warehouse_id = #{warehouseId,jdbcType=BIGINT},
+                warehouse_code = #{warehouseCode,jdbcType=VARCHAR},
+                total_qty = #{totalQty,jdbcType=DECIMAL},
+                total_weight = #{totalWeight,jdbcType=DECIMAL},
+                total_net_weight = #{totalNetWeight,jdbcType=DECIMAL},
+                total_vol = #{totalVol,jdbcType=DECIMAL},
+                putaway_qty = #{putawayQty,jdbcType=DECIMAL},
+                pao_status = #{paoStatus,jdbcType=VARCHAR},
+                create_user = #{createUser,jdbcType=VARCHAR},
+                create_time = #{createTime,jdbcType=TIMESTAMP},
+                lastupdate_user = #{lastupdateUser,jdbcType=VARCHAR},
+                lastupdate_time = #{lastupdateTime,jdbcType=TIMESTAMP},
+                putaway_user = #{putawayUser,jdbcType=VARCHAR},
+                putaway_time = #{putawayTime,jdbcType=TIMESTAMP}
         </set>
-        where pao_id = #{paoId,jdbcType=BIGINT}
+        where pao_id = #{id,jdbcType=BIGINT}
     </update>
 
     <update id="updateByPrimaryKeySelective">
         update wms_pao_header
         <set>
-            <if test="paoCode != null">
-                pao_code = #{paoCode,jdbcType=VARCHAR},
-            </if>
-            <if test="orderType != null">
-                order_type = #{orderType,jdbcType=VARCHAR},
-            </if>
-            <if test="roId != null">
-                ro_id = #{roId,jdbcType=BIGINT},
-            </if>
-            <if test="roCode != null">
-                ro_code = #{roCode,jdbcType=VARCHAR},
-            </if>
-            <if test="rooId != null">
-                roo_id = #{rooId,jdbcType=BIGINT},
-            </if>
-            <if test="rooCode != null">
-                roo_code = #{rooCode,jdbcType=VARCHAR},
-            </if>
-            <if test="custOrderNo != null">
-                cust_order_no = #{custOrderNo,jdbcType=VARCHAR},
-            </if>
-            <if test="companyId != null">
-                company_id = #{companyId,jdbcType=BIGINT},
-            </if>
-            <if test="warehouseId != null">
-                warehouse_id = #{warehouseId,jdbcType=BIGINT},
-            </if>
-            <if test="warehouseCode != null">
-                warehouse_code = #{warehouseCode,jdbcType=VARCHAR},
-            </if>
-            <if test="totalQty != null">
-                total_qty = #{totalQty,jdbcType=DECIMAL},
-            </if>
-            <if test="totalWeight != null">
-                total_weight = #{totalWeight,jdbcType=DECIMAL},
-            </if>
-            <if test="totalNetWeight != null">
-                total_net_weight = #{totalNetWeight,jdbcType=DECIMAL},
-            </if>
-            <if test="totalVol != null">
-                total_vol = #{totalVol,jdbcType=DECIMAL},
-            </if>
-            <if test="putawayQty != null">
-                putaway_qty = #{putawayQty,jdbcType=DECIMAL},
-            </if>
-            <if test="paoStatus != null">
-                pao_status = #{paoStatus,jdbcType=VARCHAR},
-            </if>
-            <if test="createUser != null">
-                create_user = #{createUser,jdbcType=VARCHAR},
-            </if>
-            <if test="createTime != null">
-                create_time = #{createTime,jdbcType=TIMESTAMP},
-            </if>
-            <if test="lastupdateUser != null">
-                lastupdate_user = #{lastupdateUser,jdbcType=TIMESTAMP},
-            </if>
-            <if test="lastupdateTime != null">
-                lastupdate_time = #{lastupdateTime,jdbcType=VARCHAR},
-            </if>
-            <if test="putawayUser != null">
-                putaway_user = #{putawayUser,jdbcType=VARCHAR},
-            </if>
-            <if test="putawayTime != null">
-                putaway_time = #{putawayTime,jdbcType=TIMESTAMP}
-            </if>
+                <if test="paoCode != null">
+                    pao_code = #{paoCode,jdbcType=VARCHAR},
+                </if>
+                <if test="orderType != null">
+                    order_type = #{orderType,jdbcType=VARCHAR},
+                </if>
+                <if test="roId != null">
+                    ro_id = #{roId,jdbcType=BIGINT},
+                </if>
+                <if test="roCode != null">
+                    ro_code = #{roCode,jdbcType=VARCHAR},
+                </if>
+                <if test="rooId != null">
+                    roo_id = #{rooId,jdbcType=BIGINT},
+                </if>
+                <if test="rooCode != null">
+                    roo_code = #{rooCode,jdbcType=VARCHAR},
+                </if>
+                <if test="custOrderNo != null">
+                    cust_order_no = #{custOrderNo,jdbcType=VARCHAR},
+                </if>
+                <if test="companyId != null">
+                    company_id = #{companyId,jdbcType=BIGINT},
+                </if>
+                <if test="warehouseId != null">
+                    warehouse_id = #{warehouseId,jdbcType=BIGINT},
+                </if>
+                <if test="warehouseCode != null">
+                    warehouse_code = #{warehouseCode,jdbcType=VARCHAR},
+                </if>
+                <if test="totalQty != null">
+                    total_qty = #{totalQty,jdbcType=DECIMAL},
+                </if>
+                <if test="totalWeight != null">
+                    total_weight = #{totalWeight,jdbcType=DECIMAL},
+                </if>
+                <if test="totalNetWeight != null">
+                    total_net_weight = #{totalNetWeight,jdbcType=DECIMAL},
+                </if>
+                <if test="totalVol != null">
+                    total_vol = #{totalVol,jdbcType=DECIMAL},
+                </if>
+                <if test="putawayQty != null">
+                    putaway_qty = #{putawayQty,jdbcType=DECIMAL},
+                </if>
+                <if test="paoStatus != null">
+                    pao_status = #{paoStatus,jdbcType=VARCHAR},
+                </if>
+                <if test="createUser != null">
+                    create_user = #{createUser,jdbcType=VARCHAR},
+                </if>
+                <if test="createTime != null">
+                    create_time = #{createTime,jdbcType=TIMESTAMP},
+                </if>
+                <if test="lastupdateUser != null">
+                    lastupdate_user = #{lastupdateUser,jdbcType=VARCHAR},
+                </if>
+                <if test="lastupdateTime != null">
+                    lastupdate_time = #{lastupdateTime,jdbcType=TIMESTAMP},
+                </if>
+                <if test="putawayUser != null">
+                    putaway_user = #{putawayUser,jdbcType=VARCHAR},
+                </if>
+                <if test="putawayTime != null">
+                    putaway_time = #{putawayTime,jdbcType=TIMESTAMP}
+                </if>
         </set>
-        where pao_id = #{paoId,jdbcType=BIGINT}
+        where pao_id = #{id,jdbcType=BIGINT}
     </update>
 
     <update id="updateBatch">
         <foreach close="" collection="list" item="item" open="" separator=";">
             update wms_pao_header
             <set>
-                <if test="item.paoCode != null">
-                    pao_code = #{item.paoCode,jdbcType=VARCHAR},
-                </if>
-                <if test="item.orderType != null">
-                    order_type = #{item.orderType,jdbcType=VARCHAR},
-                </if>
-                <if test="item.roId != null">
-                    ro_id = #{item.roId,jdbcType=BIGINT},
-                </if>
-                <if test="item.roCode != null">
-                    ro_code = #{item.roCode,jdbcType=VARCHAR},
-                </if>
-                <if test="item.rooId != null">
-                    roo_id = #{item.rooId,jdbcType=BIGINT},
-                </if>
-                <if test="item.rooCode != null">
-                    roo_code = #{item.rooCode,jdbcType=VARCHAR},
-                </if>
-                <if test="item.custOrderNo != null">
-                    cust_order_no = #{item.custOrderNo,jdbcType=VARCHAR},
-                </if>
-                <if test="item.companyId != null">
-                    company_id = #{item.companyId,jdbcType=BIGINT},
-                </if>
-                <if test="item.warehouseId != null">
-                    warehouse_id = #{item.warehouseId,jdbcType=BIGINT},
-                </if>
-                <if test="item.warehouseCode != null">
-                    warehouse_code = #{item.warehouseCode,jdbcType=VARCHAR},
-                </if>
-                <if test="item.totalQty != null">
-                    total_qty = #{item.totalQty,jdbcType=DECIMAL},
-                </if>
-                <if test="item.totalWeight != null">
-                    total_weight = #{item.totalWeight,jdbcType=DECIMAL},
-                </if>
-                <if test="item.totalNetWeight != null">
-                    total_net_weight = #{item.totalNetWeight,jdbcType=DECIMAL},
-                </if>
-                <if test="item.totalVol != null">
-                    total_vol = #{item.totalVol,jdbcType=DECIMAL},
-                </if>
-                <if test="item.putawayQty != null">
-                    putaway_qty = #{item.putawayQty,jdbcType=DECIMAL},
-                </if>
-                <if test="item.paoStatus != null">
-                    pao_status = #{item.paoStatus,jdbcType=VARCHAR},
-                </if>
-                <if test="item.createUser != null">
-                    create_user = #{item.createUser,jdbcType=VARCHAR},
-                </if>
-                <if test="item.createTime != null">
-                    create_time = #{item.createTime,jdbcType=TIMESTAMP},
-                </if>
-                <if test="item.lastupdateUser != null">
-                    lastupdate_user = #{item.lastupdateUser,jdbcType=TIMESTAMP},
-                </if>
-                <if test="item.lastupdateTime != null">
-                    lastupdate_time = #{item.lastupdateTime,jdbcType=VARCHAR},
-                </if>
-                <if test="item.putawayUser != null">
-                    putaway_user = #{item.putawayUser,jdbcType=VARCHAR},
-                </if>
-                <if test="item.putawayTime != null">
-                    putaway_time = #{item.putawayTime,jdbcType=TIMESTAMP}
-                </if>
+                    <if test="item.paoCode != null">
+                        pao_code = #{item.paoCode,jdbcType=VARCHAR},
+                    </if>
+                    <if test="item.orderType != null">
+                        order_type = #{item.orderType,jdbcType=VARCHAR},
+                    </if>
+                    <if test="item.roId != null">
+                        ro_id = #{item.roId,jdbcType=BIGINT},
+                    </if>
+                    <if test="item.roCode != null">
+                        ro_code = #{item.roCode,jdbcType=VARCHAR},
+                    </if>
+                    <if test="item.rooId != null">
+                        roo_id = #{item.rooId,jdbcType=BIGINT},
+                    </if>
+                    <if test="item.rooCode != null">
+                        roo_code = #{item.rooCode,jdbcType=VARCHAR},
+                    </if>
+                    <if test="item.custOrderNo != null">
+                        cust_order_no = #{item.custOrderNo,jdbcType=VARCHAR},
+                    </if>
+                    <if test="item.companyId != null">
+                        company_id = #{item.companyId,jdbcType=BIGINT},
+                    </if>
+                    <if test="item.warehouseId != null">
+                        warehouse_id = #{item.warehouseId,jdbcType=BIGINT},
+                    </if>
+                    <if test="item.warehouseCode != null">
+                        warehouse_code = #{item.warehouseCode,jdbcType=VARCHAR},
+                    </if>
+                    <if test="item.totalQty != null">
+                        total_qty = #{item.totalQty,jdbcType=DECIMAL},
+                    </if>
+                    <if test="item.totalWeight != null">
+                        total_weight = #{item.totalWeight,jdbcType=DECIMAL},
+                    </if>
+                    <if test="item.totalNetWeight != null">
+                        total_net_weight = #{item.totalNetWeight,jdbcType=DECIMAL},
+                    </if>
+                    <if test="item.totalVol != null">
+                        total_vol = #{item.totalVol,jdbcType=DECIMAL},
+                    </if>
+                    <if test="item.putawayQty != null">
+                        putaway_qty = #{item.putawayQty,jdbcType=DECIMAL},
+                    </if>
+                    <if test="item.paoStatus != null">
+                        pao_status = #{item.paoStatus,jdbcType=VARCHAR},
+                    </if>
+                    <if test="item.createUser != null">
+                        create_user = #{item.createUser,jdbcType=VARCHAR},
+                    </if>
+                    <if test="item.createTime != null">
+                        create_time = #{item.createTime,jdbcType=TIMESTAMP},
+                    </if>
+                    <if test="item.lastupdateUser != null">
+                        lastupdate_user = #{item.lastupdateUser,jdbcType=VARCHAR},
+                    </if>
+                    <if test="item.lastupdateTime != null">
+                        lastupdate_time = #{item.lastupdateTime,jdbcType=TIMESTAMP},
+                    </if>
+                    <if test="item.putawayUser != null">
+                        putaway_user = #{item.putawayUser,jdbcType=VARCHAR},
+                    </if>
+                    <if test="item.putawayTime != null">
+                        putaway_time = #{item.putawayTime,jdbcType=TIMESTAMP}
+                    </if>
             </set>
-            where pao_id = #{item.paoId,jdbcType=BIGINT}
+            where pao_id = #{item.id,jdbcType=BIGINT}
         </foreach>
     </update>
 
@@ -406,14 +406,14 @@
         select
         <include refid="Base_Column_List" />
         from wms_pao_header
-        where pao_id = #{paoId,jdbcType=BIGINT}
+        where pao_id = #{id,jdbcType=BIGINT}
     </select>
 
     <select id="selectByPrimaryKeyWithLock" resultMap="BaseResultMap">
         select
         <include refid="Base_Column_List" />
         from wms_pao_header
-        where pao_id = #{paoId,jdbcType=BIGINT} for update
+        where pao_id = #{id,jdbcType=BIGINT} for update
     </select>
 
     <select id="selectByPrimaryKeys" resultMap="BaseResultMap">
@@ -430,75 +430,75 @@
         <include refid="Base_Column_List"/>
         from wms_pao_header
         <where>
-            <if test="paoId != null">
-                and pao_id=#{paoId,jdbcType=BIGINT}
-            </if>
-            <if test="paoCode != null">
-                and pao_code=#{paoCode,jdbcType=VARCHAR}
-            </if>
-            <if test="orderType != null">
-                and order_type=#{orderType,jdbcType=VARCHAR}
-            </if>
-            <if test="roId != null">
-                and ro_id=#{roId,jdbcType=BIGINT}
-            </if>
-            <if test="roCode != null">
-                and ro_code=#{roCode,jdbcType=VARCHAR}
-            </if>
-            <if test="rooId != null">
-                and roo_id=#{rooId,jdbcType=BIGINT}
-            </if>
-            <if test="rooCode != null">
-                and roo_code=#{rooCode,jdbcType=VARCHAR}
-            </if>
-            <if test="custOrderNo != null">
-                and cust_order_no=#{custOrderNo,jdbcType=VARCHAR}
-            </if>
-            <if test="companyId != null">
-                and company_id=#{companyId,jdbcType=BIGINT}
-            </if>
-            <if test="warehouseId != null">
-                and warehouse_id=#{warehouseId,jdbcType=BIGINT}
-            </if>
-            <if test="warehouseCode != null">
-                and warehouse_code=#{warehouseCode,jdbcType=VARCHAR}
-            </if>
-            <if test="totalQty != null">
-                and total_qty=#{totalQty,jdbcType=DECIMAL}
-            </if>
-            <if test="totalWeight != null">
-                and total_weight=#{totalWeight,jdbcType=DECIMAL}
-            </if>
-            <if test="totalNetWeight != null">
-                and total_net_weight=#{totalNetWeight,jdbcType=DECIMAL}
-            </if>
-            <if test="totalVol != null">
-                and total_vol=#{totalVol,jdbcType=DECIMAL}
-            </if>
-            <if test="putawayQty != null">
-                and putaway_qty=#{putawayQty,jdbcType=DECIMAL}
-            </if>
-            <if test="paoStatus != null">
-                and pao_status=#{paoStatus,jdbcType=VARCHAR}
-            </if>
-            <if test="createUser != null">
-                and create_user=#{createUser,jdbcType=VARCHAR}
-            </if>
-            <if test="createTime != null">
-                and create_time=#{createTime,jdbcType=TIMESTAMP}
-            </if>
-            <if test="lastupdateUser != null">
-                and lastupdate_user=#{lastupdateUser,jdbcType=TIMESTAMP}
-            </if>
-            <if test="lastupdateTime != null">
-                and lastupdate_time=#{lastupdateTime,jdbcType=VARCHAR}
-            </if>
-            <if test="putawayUser != null">
-                and putaway_user=#{putawayUser,jdbcType=VARCHAR}
-            </if>
-            <if test="putawayTime != null">
-                and putaway_time=#{putawayTime,jdbcType=TIMESTAMP}
-            </if>
+                <if test="id != null">
+                    and pao_id=#{id,jdbcType=BIGINT}
+                </if>
+                <if test="paoCode != null">
+                    and pao_code=#{paoCode,jdbcType=VARCHAR}
+                </if>
+                <if test="orderType != null">
+                    and order_type=#{orderType,jdbcType=VARCHAR}
+                </if>
+                <if test="roId != null">
+                    and ro_id=#{roId,jdbcType=BIGINT}
+                </if>
+                <if test="roCode != null">
+                    and ro_code=#{roCode,jdbcType=VARCHAR}
+                </if>
+                <if test="rooId != null">
+                    and roo_id=#{rooId,jdbcType=BIGINT}
+                </if>
+                <if test="rooCode != null">
+                    and roo_code=#{rooCode,jdbcType=VARCHAR}
+                </if>
+                <if test="custOrderNo != null">
+                    and cust_order_no=#{custOrderNo,jdbcType=VARCHAR}
+                </if>
+                <if test="companyId != null">
+                    and company_id=#{companyId,jdbcType=BIGINT}
+                </if>
+                <if test="warehouseId != null">
+                    and warehouse_id=#{warehouseId,jdbcType=BIGINT}
+                </if>
+                <if test="warehouseCode != null">
+                    and warehouse_code=#{warehouseCode,jdbcType=VARCHAR}
+                </if>
+                <if test="totalQty != null">
+                    and total_qty=#{totalQty,jdbcType=DECIMAL}
+                </if>
+                <if test="totalWeight != null">
+                    and total_weight=#{totalWeight,jdbcType=DECIMAL}
+                </if>
+                <if test="totalNetWeight != null">
+                    and total_net_weight=#{totalNetWeight,jdbcType=DECIMAL}
+                </if>
+                <if test="totalVol != null">
+                    and total_vol=#{totalVol,jdbcType=DECIMAL}
+                </if>
+                <if test="putawayQty != null">
+                    and putaway_qty=#{putawayQty,jdbcType=DECIMAL}
+                </if>
+                <if test="paoStatus != null">
+                    and pao_status=#{paoStatus,jdbcType=VARCHAR}
+                </if>
+                <if test="createUser != null">
+                    and create_user=#{createUser,jdbcType=VARCHAR}
+                </if>
+                <if test="createTime != null">
+                    and create_time=#{createTime,jdbcType=TIMESTAMP}
+                </if>
+                <if test="lastupdateUser != null">
+                    and lastupdate_user=#{lastupdateUser,jdbcType=VARCHAR}
+                </if>
+                <if test="lastupdateTime != null">
+                    and lastupdate_time=#{lastupdateTime,jdbcType=TIMESTAMP}
+                </if>
+                <if test="putawayUser != null">
+                    and putaway_user=#{putawayUser,jdbcType=VARCHAR}
+                </if>
+                <if test="putawayTime != null">
+                    and putaway_time=#{putawayTime,jdbcType=TIMESTAMP}
+                </if>
         </where>
     </select>
 
@@ -507,75 +507,75 @@
         <include refid="Base_Column_List"/>
         from wms_pao_header
         <where>
-            <if test="paoId != null">
-                and pao_id ${paoId}
-            </if>
-            <if test="paoCode != null">
-                and pao_code ${paoCode}
-            </if>
-            <if test="orderType != null">
-                and order_type ${orderType}
-            </if>
-            <if test="roId != null">
-                and ro_id ${roId}
-            </if>
-            <if test="roCode != null">
-                and ro_code ${roCode}
-            </if>
-            <if test="rooId != null">
-                and roo_id ${rooId}
-            </if>
-            <if test="rooCode != null">
-                and roo_code ${rooCode}
-            </if>
-            <if test="custOrderNo != null">
-                and cust_order_no ${custOrderNo}
-            </if>
-            <if test="companyId != null">
-                and company_id ${companyId}
-            </if>
-            <if test="warehouseId != null">
-                and warehouse_id ${warehouseId}
-            </if>
-            <if test="warehouseCode != null">
-                and warehouse_code ${warehouseCode}
-            </if>
-            <if test="totalQty != null">
-                and total_qty ${totalQty}
-            </if>
-            <if test="totalWeight != null">
-                and total_weight ${totalWeight}
-            </if>
-            <if test="totalNetWeight != null">
-                and total_net_weight ${totalNetWeight}
-            </if>
-            <if test="totalVol != null">
-                and total_vol ${totalVol}
-            </if>
-            <if test="putawayQty != null">
-                and putaway_qty ${putawayQty}
-            </if>
-            <if test="paoStatus != null">
-                and pao_status ${paoStatus}
-            </if>
-            <if test="createUser != null">
-                and create_user ${createUser}
-            </if>
-            <if test="createTime != null">
-                and create_time ${createTime}
-            </if>
-            <if test="lastupdateUser != null">
-                and lastupdate_user ${lastupdateUser}
-            </if>
-            <if test="lastupdateTime != null">
-                and lastupdate_time ${lastupdateTime}
-            </if>
-            <if test="putawayUser != null">
-                and putaway_user ${putawayUser}
-            </if>
-            <if test="putawayTime != null">
-                and putaway_time ${putawayTime}
-            </if>
+                <if test="id != null">
+                    and pao_id ${id}
+                </if>
+                <if test="paoCode != null">
+                    and pao_code ${paoCode}
+                </if>
+                <if test="orderType != null">
+                    and order_type ${orderType}
+                </if>
+                <if test="roId != null">
+                    and ro_id ${roId}
+                </if>
+                <if test="roCode != null">
+                    and ro_code ${roCode}
+                </if>
+                <if test="rooId != null">
+                    and roo_id ${rooId}
+                </if>
+                <if test="rooCode != null">
+                    and roo_code ${rooCode}
+                </if>
+                <if test="custOrderNo != null">
+                    and cust_order_no ${custOrderNo}
+                </if>
+                <if test="companyId != null">
+                    and company_id ${companyId}
+                </if>
+                <if test="warehouseId != null">
+                    and warehouse_id ${warehouseId}
+                </if>
+                <if test="warehouseCode != null">
+                    and warehouse_code ${warehouseCode}
+                </if>
+                <if test="totalQty != null">
+                    and total_qty ${totalQty}
+                </if>
+                <if test="totalWeight != null">
+                    and total_weight ${totalWeight}
+                </if>
+                <if test="totalNetWeight != null">
+                    and total_net_weight ${totalNetWeight}
+                </if>
+                <if test="totalVol != null">
+                    and total_vol ${totalVol}
+                </if>
+                <if test="putawayQty != null">
+                    and putaway_qty ${putawayQty}
+                </if>
+                <if test="paoStatus != null">
+                    and pao_status ${paoStatus}
+                </if>
+                <if test="createUser != null">
+                    and create_user ${createUser}
+                </if>
+                <if test="createTime != null">
+                    and create_time ${createTime}
+                </if>
+                <if test="lastupdateUser != null">
+                    and lastupdate_user ${lastupdateUser}
+                </if>
+                <if test="lastupdateTime != null">
+                    and lastupdate_time ${lastupdateTime}
+                </if>
+                <if test="putawayUser != null">
+                    and putaway_user ${putawayUser}
+                </if>
+                <if test="putawayTime != null">
+                    and putaway_time ${putawayTime}
+                </if>
         </where>
         <if test="orderBy != null">
             order by ${orderBy}

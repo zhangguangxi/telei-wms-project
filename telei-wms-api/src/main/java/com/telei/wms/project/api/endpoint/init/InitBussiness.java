@@ -17,6 +17,7 @@ import com.telei.wms.customer.product.dto.ProductDetailResponse;
 import com.telei.wms.customer.product.dto.ProductListResponse;
 import com.telei.wms.datasource.wms.model.*;
 import com.telei.wms.datasource.wms.service.*;
+import com.telei.wms.datasource.wms.vo.WmsInitLineVO;
 import com.telei.wms.project.api.ErrorCode;
 import com.telei.wms.project.api.endpoint.init.dto.*;
 import com.telei.wms.project.api.utils.DataConvertUtil;
@@ -277,10 +278,10 @@ public class InitBussiness {
         InitHeaderDetailResponse response = DataConvertUtil.parseDataAsObject(wmsInitHeader, InitHeaderDetailResponse.class);
         WmsInitLine wmsInitLine = new WmsInitLine();
         wmsInitLine.setIvihId(request.getId());
-        List<WmsInitLine> wmsInitLineList = wmsInitLineService.selectByEntity(wmsInitLine);
+        // 应展示商品字段
+        List<WmsInitLineVO> wmsInitLineList = wmsInitLineService.selectInitLinesByEntity(wmsInitLine);
         if (!wmsInitLineList.isEmpty()) {
-            List<InitLineDetailResponse> initLineDetailResponses = DataConvertUtil.parseDataAsArray(wmsInitLineList, InitLineDetailResponse.class);
-            response.setInitLines(initLineDetailResponses);
+            response.setInitLines(wmsInitLineList);
         }
         return response;
     }

@@ -1,5 +1,93 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.telei.wms.datasource.wms.repository.WmsInitLineRepository">
+
+    <select id="selectInitLinesByEntity" resultType="com.telei.wms.datasource.wms.vo.WmsInitLineVO">
+        select
+            wil.ivil_id,
+            wil.ivih_id,
+            wil.product_id,
+            wil.lc_code,
+            wil.iv_fifo_time,
+            wil.iv_qty,
+            wil.product_date,
+            wil.iv_effective_date,
+            wil.batch_no,
+            cp.product_no,
+            cp.product_name,
+            cp.product_name_local,
+            cp.product_barcode,
+            cp.product_upc_code,
+            cp.product_category_id,
+            cp.spec_type,
+            cp.brand,
+            cp.place_of_origin,
+            cp.unit_gross_weight,
+            cp.product_length,
+            cp.product_width,
+            cp.product_height,
+            cp.unit_vol,
+            cp.stock_unit,
+            cp.product_color,
+            cp.product_size,
+            cp.cost_reference,
+            cp.currency_id,
+            cp.selling_price_reference,
+            cp.selling_currency_id,
+            cp.texture,
+            cp.memo,
+            cp.status,
+            cp.sale_status,
+            cp.image_path,
+            cp.mid_bag_qty,
+            cp.mid_bag_weight,
+            cp.mid_bag_length,
+            cp.mid_bag_width,
+            cp.mid_bag_height,
+            cp.mid_bag_vol,
+            cp.mid_bag_barcode,
+            cp.big_bag_qty,
+            cp.big_bag_weight,
+            cp.big_bag_length,
+            cp.big_bag_width,
+            cp.big_bag_height,
+            cp.big_bag_vol,
+            cp.big_bag_barcode
+        from wms_init_line wil
+        LEFT JOIN cdm.cdm_product cp ON cp.product_id = wil.product_id
+        <where>
+            <if test="id != null">
+                and wil.ivil_id ${id}
+            </if>
+            <if test="ivihId != null">
+                and wil.ivih_id ${ivihId}
+            </if>
+            <if test="productId != null">
+                and wil.product_id ${productId}
+            </if>
+            <if test="lcCode != null">
+                and wil.lc_code ${lcCode}
+            </if>
+            <if test="ivFifoTime != null">
+                and wil.iv_fifo_time ${ivFifoTime}
+            </if>
+            <if test="ivQty != null">
+                and wil.iv_qty ${ivQty}
+            </if>
+            <if test="productDate != null">
+                and wil.product_date ${productDate}
+            </if>
+            <if test="ivEffectiveDate != null">
+                and wil.iv_effective_date ${ivEffectiveDate}
+            </if>
+            <if test="batchNo != null">
+                and wil.batch_no ${batchNo}
+            </if>
+        </where>
+        <if test="orderBy != null">
+            order by ${orderBy}
+        </if>
+    </select>
+
 </mapper>
 
