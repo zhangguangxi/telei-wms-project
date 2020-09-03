@@ -68,6 +68,12 @@ public enum ErrorCode {
      */
     ADJT_INCREASE_ERROR_4001,
     ADJT_INCREASE_ERROR_4002,
+    ADJT_REDUCE_ERROR_4003,
+    ADJT_REDUCE_ERROR_4004,
+    ADJT_SHIFT_ERROR_4005,
+    ADJT_SHIFT_ERROR_4006,
+
+
 
     /**
      * 上架单

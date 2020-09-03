@@ -58,7 +58,7 @@ public class InventoryEndpoint {
         return DataConvertUtil.parseDataAsObject(bussinessResponse, InventoryReviewResponse.class);
     }
 
-    @ApiOperation("移库")
+    @ApiOperation("移位")
     @PostMapping(ServiceId.WMS_INVENTORY_ADJUST_SHIFT)
     public InventoryShiftResponse reviewInventory(@Valid @RequestBody InventoryShiftRequest request){
         InventoryShiftBussinessRequest bussinessRequest = DataConvertUtil.parseDataAsObject(request, InventoryShiftBussinessRequest.class);

@@ -26,7 +26,7 @@ public class WmsAdjtLine implements Entity<Long> {
     private Long ivIdAdjt;
     /** 调整库位 */
     private String lcCodeAdjt;
-    /** 库存调整类型，INCR 调增，LESS 调减 */
+    /** 库存调整类型，INCR 增，LESS 减，MOVE 移位 */
     private String ivAdjhType;
     /** 调整数量 */
     private BigDecimal ivQtyAdjt;

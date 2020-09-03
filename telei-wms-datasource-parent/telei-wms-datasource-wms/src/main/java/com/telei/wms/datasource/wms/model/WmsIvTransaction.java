@@ -1,9 +1,10 @@
 package com.telei.wms.datasource.wms.model;
 
 import com.nuochen.framework.autocoding.domain.Entity;
+import lombok.Data;
+
 import java.math.BigDecimal;
 import java.util.Date;
-import lombok.Data;
 
 /**
 * wms_iv_transaction 库存变动记录
@@ -14,11 +15,13 @@ public class WmsIvTransaction implements Entity<Long> {
     private Long ivtId;
     /** 应用类型代码，SHIP 签出扣减，PUTA 上架新增，ADJT 库存调整 */
     private String apCode;
-    /** 仓库编码 */
-    private String warehouseId;
+    /** 仓库id */
+    private Long warehouseId;
+    /** 仓库code */
+    private String warehouseCode;
     /** 商家编码 */
     private String customerId;
-    /** 产品序列码 */
+    /** 商品id */
     private Long productId;
     /** 先进先出时间 */
     private Date ivFifoTime;
@@ -36,6 +39,8 @@ public class WmsIvTransaction implements Entity<Long> {
     private Long ivtDocumentId;
     /** 引起库存变动单据明细id */
     private Long ivtDocumentlineId;
+    /** 库存变动类型，INCR 增，LESS 减，MOVE 移位 */
+    private String ivtChangeType;
     /** 调整数量，数量不变此值为0 */
     private BigDecimal dcQty;
     /** 库存id */

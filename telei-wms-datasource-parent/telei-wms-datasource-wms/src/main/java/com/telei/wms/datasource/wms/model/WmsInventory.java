@@ -7,12 +7,12 @@ import java.math.BigDecimal;
 import java.util.Date;
 
 /**
- * wms_inventory 库存表
- */
+* wms_inventory 库存表
+*/
 @Data
 public class WmsInventory implements Entity<Long> {
     /** id */
-    private Long id;
+    private Long ivId;
     /** 公司id */
     private Long companyId;
     /** 仓库id */
@@ -51,6 +51,8 @@ public class WmsInventory implements Entity<Long> {
     private Integer ivLocksign;
     /** 冻结锁，0可以操作，1不可以移库、拆分、出货、更新 */
     private Integer ivFreezesign;
+
+
     /** 业务日期 */
     private Date bizDate;
     /** 创建时间 */
@@ -75,4 +77,12 @@ public class WmsInventory implements Entity<Long> {
     private String batchNo;
     /** 原库存id */
     private Long ivIdFrom;
+    @Override
+    public Long getId() {
+        return ivId;
+    }
+    @Override
+    public void setId(Long id) {
+        this.ivId = id;
+    }
 }

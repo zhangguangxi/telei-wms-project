@@ -6,12 +6,12 @@ import java.util.Date;
 import lombok.Data;
 
 /**
- * wms_inventory_history 历史库存表
- */
+* wms_inventory_history 历史库存表
+*/
 @Data
 public class WmsInventoryHistory implements Entity<Long> {
     /** id */
-    private Long id;
+    private Long ivId;
     /** 公司id */
     private Long companyId;
     /** 仓库id */
@@ -74,4 +74,12 @@ public class WmsInventoryHistory implements Entity<Long> {
     private String batchNo;
     /** 原库存id */
     private Long ivIdFrom;
+    @Override
+    public Long getId() {
+        return ivId;
+    }
+    @Override
+    public void setId(Long id) {
+        this.ivId = id;
+    }
 }

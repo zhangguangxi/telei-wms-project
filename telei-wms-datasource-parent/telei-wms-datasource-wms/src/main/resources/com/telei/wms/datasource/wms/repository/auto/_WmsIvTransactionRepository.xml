@@ -4,7 +4,8 @@
     <resultMap id="BaseResultMap" type="com.telei.wms.datasource.wms.model.WmsIvTransaction">
         <id column="ivt_id" jdbcType="BIGINT" property="ivtId"/>
         <result column="ap_code" jdbcType="VARCHAR" property="apCode"/>
-        <result column="warehouse_id" jdbcType="VARCHAR" property="warehouseId"/>
+        <result column="warehouse_id" jdbcType="BIGINT" property="warehouseId"/>
+        <result column="warehouse_code" jdbcType="VARCHAR" property="warehouseCode"/>
         <result column="customer_id" jdbcType="VARCHAR" property="customerId"/>
         <result column="product_id" jdbcType="BIGINT" property="productId"/>
         <result column="iv_fifo_time" jdbcType="TIMESTAMP" property="ivFifoTime"/>
@@ -15,6 +16,7 @@
         <result column="ivt_document_code" jdbcType="VARCHAR" property="ivtDocumentCode"/>
         <result column="ivt_document_id" jdbcType="BIGINT" property="ivtDocumentId"/>
         <result column="ivt_documentline_id" jdbcType="BIGINT" property="ivtDocumentlineId"/>
+        <result column="ivt_change_type" jdbcType="VARCHAR" property="ivtChangeType"/>
         <result column="dc_qty" jdbcType="DECIMAL" property="dcQty"/>
         <result column="iv_id" jdbcType="BIGINT" property="ivId"/>
         <result column="iab_id" jdbcType="BIGINT" property="iabId"/>
@@ -24,12 +26,12 @@
     </resultMap>
 
     <sql id="Base_Column_List">
-        ivt_id,ap_code,warehouse_id,customer_id,product_id,iv_fifo_time,lc_code_from,iv_qty_from,lc_code_to,iv_qty_to,ivt_document_code,ivt_document_id,ivt_documentline_id,dc_qty,iv_id,iab_id,biz_date,create_time,create_user
+        ivt_id,ap_code,warehouse_id,warehouse_code,customer_id,product_id,iv_fifo_time,lc_code_from,iv_qty_from,lc_code_to,iv_qty_to,ivt_document_code,ivt_document_id,ivt_documentline_id,ivt_change_type,dc_qty,iv_id,iab_id,biz_date,create_time,create_user
     </sql>
 
     <insert id="insert">
-        insert into wms_iv_transaction (ivt_id,ap_code,warehouse_id,customer_id,product_id,iv_fifo_time,lc_code_from,iv_qty_from,lc_code_to,iv_qty_to,ivt_document_code,ivt_document_id,ivt_documentline_id,dc_qty,iv_id,iab_id,biz_date,create_time,create_user)
-        values (#{ivtId,jdbcType=BIGINT},#{apCode,jdbcType=VARCHAR},#{warehouseId,jdbcType=VARCHAR},#{customerId,jdbcType=VARCHAR},#{productId,jdbcType=BIGINT},#{ivFifoTime,jdbcType=TIMESTAMP},#{lcCodeFrom,jdbcType=VARCHAR},#{ivQtyFrom,jdbcType=DECIMAL},#{lcCodeTo,jdbcType=VARCHAR},#{ivQtyTo,jdbcType=DECIMAL},#{ivtDocumentCode,jdbcType=VARCHAR},#{ivtDocumentId,jdbcType=BIGINT},#{ivtDocumentlineId,jdbcType=BIGINT},#{dcQty,jdbcType=DECIMAL},#{ivId,jdbcType=BIGINT},#{iabId,jdbcType=BIGINT},#{bizDate,jdbcType=TIMESTAMP},#{createTime,jdbcType=TIMESTAMP},#{createUser,jdbcType=VARCHAR})
+        insert into wms_iv_transaction (ivt_id,ap_code,warehouse_id,warehouse_code,customer_id,product_id,iv_fifo_time,lc_code_from,iv_qty_from,lc_code_to,iv_qty_to,ivt_document_code,ivt_document_id,ivt_documentline_id,ivt_change_type,dc_qty,iv_id,iab_id,biz_date,create_time,create_user)
+        values (#{ivtId,jdbcType=BIGINT},#{apCode,jdbcType=VARCHAR},#{warehouseId,jdbcType=BIGINT},#{warehouseCode,jdbcType=VARCHAR},#{customerId,jdbcType=VARCHAR},#{productId,jdbcType=BIGINT},#{ivFifoTime,jdbcType=TIMESTAMP},#{lcCodeFrom,jdbcType=VARCHAR},#{ivQtyFrom,jdbcType=DECIMAL},#{lcCodeTo,jdbcType=VARCHAR},#{ivQtyTo,jdbcType=DECIMAL},#{ivtDocumentCode,jdbcType=VARCHAR},#{ivtDocumentId,jdbcType=BIGINT},#{ivtDocumentlineId,jdbcType=BIGINT},#{ivtChangeType,jdbcType=VARCHAR},#{dcQty,jdbcType=DECIMAL},#{ivId,jdbcType=BIGINT},#{iabId,jdbcType=BIGINT},#{bizDate,jdbcType=TIMESTAMP},#{createTime,jdbcType=TIMESTAMP},#{createUser,jdbcType=VARCHAR})
     </insert>
 
     <insert id="insertSelective">
@@ -43,6 +45,9 @@
             </if>
             <if test="warehouseId != null">
                 warehouse_id,
+            </if>
+            <if test="warehouseCode != null">
+                warehouse_code,
             </if>
             <if test="customerId != null">
                 customer_id,
@@ -74,6 +79,9 @@
             <if test="ivtDocumentlineId != null">
                 ivt_documentline_id,
             </if>
+            <if test="ivtChangeType != null">
+                ivt_change_type,
+            </if>
             <if test="dcQty != null">
                 dc_qty,
             </if>
@@ -101,7 +109,10 @@
                 #{apCode,jdbcType=VARCHAR},
             </if>
             <if test="warehouseId != null">
-                #{warehouseId,jdbcType=VARCHAR},
+                #{warehouseId,jdbcType=BIGINT},
+            </if>
+            <if test="warehouseCode != null">
+                #{warehouseCode,jdbcType=VARCHAR},
             </if>
             <if test="customerId != null">
                 #{customerId,jdbcType=VARCHAR},
@@ -133,6 +144,9 @@
             <if test="ivtDocumentlineId != null">
                 #{ivtDocumentlineId,jdbcType=BIGINT},
             </if>
+            <if test="ivtChangeType != null">
+                #{ivtChangeType,jdbcType=VARCHAR},
+            </if>
             <if test="dcQty != null">
                 #{dcQty,jdbcType=DECIMAL},
             </if>
@@ -155,12 +169,13 @@
     </insert>
 
     <insert id="insertBatch">
-        insert into wms_iv_transaction (ivt_id,ap_code,warehouse_id,customer_id,product_id,iv_fifo_time,lc_code_from,iv_qty_from,lc_code_to,iv_qty_to,ivt_document_code,ivt_document_id,ivt_documentline_id,dc_qty,iv_id,iab_id,biz_date,create_time,create_user) values
+        insert into wms_iv_transaction (ivt_id,ap_code,warehouse_id,warehouse_code,customer_id,product_id,iv_fifo_time,lc_code_from,iv_qty_from,lc_code_to,iv_qty_to,ivt_document_code,ivt_document_id,ivt_documentline_id,ivt_change_type,dc_qty,iv_id,iab_id,biz_date,create_time,create_user) values
         <foreach collection="list" item="item" separator=",">
             (
             #{item.ivtId,jdbcType=BIGINT},
             #{item.apCode,jdbcType=VARCHAR},
-            #{item.warehouseId,jdbcType=VARCHAR},
+            #{item.warehouseId,jdbcType=BIGINT},
+            #{item.warehouseCode,jdbcType=VARCHAR},
             #{item.customerId,jdbcType=VARCHAR},
             #{item.productId,jdbcType=BIGINT},
             #{item.ivFifoTime,jdbcType=TIMESTAMP},
@@ -171,6 +186,7 @@
             #{item.ivtDocumentCode,jdbcType=VARCHAR},
             #{item.ivtDocumentId,jdbcType=BIGINT},
             #{item.ivtDocumentlineId,jdbcType=BIGINT},
+            #{item.ivtChangeType,jdbcType=VARCHAR},
             #{item.dcQty,jdbcType=DECIMAL},
             #{item.ivId,jdbcType=BIGINT},
             #{item.iabId,jdbcType=BIGINT},
@@ -197,7 +213,8 @@
         update wms_iv_transaction
         <set>
             ap_code = #{apCode,jdbcType=VARCHAR},
-            warehouse_id = #{warehouseId,jdbcType=VARCHAR},
+            warehouse_id = #{warehouseId,jdbcType=BIGINT},
+            warehouse_code = #{warehouseCode,jdbcType=VARCHAR},
             customer_id = #{customerId,jdbcType=VARCHAR},
             product_id = #{productId,jdbcType=BIGINT},
             iv_fifo_time = #{ivFifoTime,jdbcType=TIMESTAMP},
@@ -208,6 +225,7 @@
             ivt_document_code = #{ivtDocumentCode,jdbcType=VARCHAR},
             ivt_document_id = #{ivtDocumentId,jdbcType=BIGINT},
             ivt_documentline_id = #{ivtDocumentlineId,jdbcType=BIGINT},
+            ivt_change_type = #{ivtChangeType,jdbcType=VARCHAR},
             dc_qty = #{dcQty,jdbcType=DECIMAL},
             iv_id = #{ivId,jdbcType=BIGINT},
             iab_id = #{iabId,jdbcType=BIGINT},
@@ -225,7 +243,10 @@
                 ap_code = #{apCode,jdbcType=VARCHAR},
             </if>
             <if test="warehouseId != null">
-                warehouse_id = #{warehouseId,jdbcType=VARCHAR},
+                warehouse_id = #{warehouseId,jdbcType=BIGINT},
+            </if>
+            <if test="warehouseCode != null">
+                warehouse_code = #{warehouseCode,jdbcType=VARCHAR},
             </if>
             <if test="customerId != null">
                 customer_id = #{customerId,jdbcType=VARCHAR},
@@ -257,6 +278,9 @@
             <if test="ivtDocumentlineId != null">
                 ivt_documentline_id = #{ivtDocumentlineId,jdbcType=BIGINT},
             </if>
+            <if test="ivtChangeType != null">
+                ivt_change_type = #{ivtChangeType,jdbcType=VARCHAR},
+            </if>
             <if test="dcQty != null">
                 dc_qty = #{dcQty,jdbcType=DECIMAL},
             </if>
@@ -287,7 +311,10 @@
                     ap_code = #{item.apCode,jdbcType=VARCHAR},
                 </if>
                 <if test="item.warehouseId != null">
-                    warehouse_id = #{item.warehouseId,jdbcType=VARCHAR},
+                    warehouse_id = #{item.warehouseId,jdbcType=BIGINT},
+                </if>
+                <if test="item.warehouseCode != null">
+                    warehouse_code = #{item.warehouseCode,jdbcType=VARCHAR},
                 </if>
                 <if test="item.customerId != null">
                     customer_id = #{item.customerId,jdbcType=VARCHAR},
@@ -318,6 +345,9 @@
                 </if>
                 <if test="item.ivtDocumentlineId != null">
                     ivt_documentline_id = #{item.ivtDocumentlineId,jdbcType=BIGINT},
+                </if>
+                <if test="item.ivtChangeType != null">
+                    ivt_change_type = #{item.ivtChangeType,jdbcType=VARCHAR},
                 </if>
                 <if test="item.dcQty != null">
                     dc_qty = #{item.dcQty,jdbcType=DECIMAL},
@@ -377,7 +407,10 @@
                 and ap_code=#{apCode,jdbcType=VARCHAR}
             </if>
             <if test="warehouseId != null">
-                and warehouse_id=#{warehouseId,jdbcType=VARCHAR}
+                and warehouse_id=#{warehouseId,jdbcType=BIGINT}
+            </if>
+            <if test="warehouseCode != null">
+                and warehouse_code=#{warehouseCode,jdbcType=VARCHAR}
             </if>
             <if test="customerId != null">
                 and customer_id=#{customerId,jdbcType=VARCHAR}
@@ -408,6 +441,9 @@
             </if>
             <if test="ivtDocumentlineId != null">
                 and ivt_documentline_id=#{ivtDocumentlineId,jdbcType=BIGINT}
+            </if>
+            <if test="ivtChangeType != null">
+                and ivt_change_type=#{ivtChangeType,jdbcType=VARCHAR}
             </if>
             <if test="dcQty != null">
                 and dc_qty=#{dcQty,jdbcType=DECIMAL}
@@ -444,6 +480,9 @@
             <if test="warehouseId != null">
                 and warehouse_id ${warehouseId}
             </if>
+            <if test="warehouseCode != null">
+                and warehouse_code ${warehouseCode}
+            </if>
             <if test="customerId != null">
                 and customer_id ${customerId}
             </if>
@@ -473,6 +512,9 @@
             </if>
             <if test="ivtDocumentlineId != null">
                 and ivt_documentline_id ${ivtDocumentlineId}
+            </if>
+            <if test="ivtChangeType != null">
+                and ivt_change_type ${ivtChangeType}
             </if>
             <if test="dcQty != null">
                 and dc_qty ${dcQty}

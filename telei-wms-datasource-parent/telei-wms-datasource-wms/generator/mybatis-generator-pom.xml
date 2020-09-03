@@ -104,8 +104,8 @@
 <!--                        <table><tableName>wms_iv_split</tableName></table>-->
 <!--                        <table><tableName>wms_pao_header</tableName></table>-->
 <!--                        <table><tableName>wms_pao_line</tableName></table>-->
-                        <table><tableName>wms_adjt_header</tableName></table>
-                        <table><tableName>wms_adjt_line</tableName></table>
+<!--                        <table><tableName>wms_adjt_header</tableName></table>-->
+<!--                        <table><tableName>wms_adjt_line</tableName></table>-->
                     </tables>
                 </configuration>
 
