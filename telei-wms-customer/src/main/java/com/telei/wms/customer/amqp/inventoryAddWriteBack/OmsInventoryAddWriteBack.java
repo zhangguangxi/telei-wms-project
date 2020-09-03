@@ -1,4 +1,4 @@
-package com.telei.wms.customer.amqp.inventoryWriteBack;
+package com.telei.wms.customer.amqp.inventoryAddWriteBack;
 
 import lombok.Data;
 
@@ -10,11 +10,11 @@ import java.util.List;
  * @date: 2020/9/1 14:55
  */
 @Data
-public class OmsInventoryWriteBack {
-    private List<OmsInventoryWriteBackCondition> list;
+public class OmsInventoryAddWriteBack {
+    private List<OmsInventoryAddWriteBackCondition> list;
 
     @Data
-    public static class OmsInventoryWriteBackCondition{
+    public static class OmsInventoryAddWriteBackCondition {
         /** 入库计划id */
         private Long rpId;
         /** 入库计划单明细id */

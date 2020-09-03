@@ -8,9 +8,9 @@ import org.springframework.stereotype.Component;
  * @date: 2020/9/1 15:10
  */
 @Component
-public class WmsOmsInventoryWriteBackProducer extends BaseProducer {
+public class WmsOmsInventoryAddWriteBackProducer extends BaseProducer {
     //队列名称
-    public static final String QUEUE_NAME = "WMS-OMS-InventoryWriteBackProducer";
+    public static final String QUEUE_NAME = "WMS-OMS-InventoryAddWriteBackProducer";
 
     @Override
     public String getQueueName() {

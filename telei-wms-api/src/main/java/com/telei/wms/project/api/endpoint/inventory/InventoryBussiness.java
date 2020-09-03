@@ -255,7 +255,7 @@ public class InventoryBussiness {
             item.setBigBagQty(ivQty.multiply(bigBagRate));//大包数量
             item.setBigBagExtraQty(ivQty.divideAndRemainder(bigBagRate)[1]);//大包剩余数量
             item.setMidBagRate(midBagRate); // 中包转化数(批次表记录)
-            item.setMidBagQty(ivQty.max(midBagRate));//中包数量
+            item.setMidBagQty(ivQty.multiply(midBagRate));//中包数量
             item.setMidBagExtraQty(ivQty.divideAndRemainder(midBagRate)[1]);//中包剩余数量
             item.setLastupdateUser(userInfo.getAccountId());//最近库存更新用户(上下文用户)
             item.setIvTranstime(nowWithUTC);//最近库存更新时间
@@ -464,24 +464,55 @@ public class InventoryBussiness {
         List<WmsInventory> waitDeleteList = new ArrayList<>();
         List<WmsInventory> waitAddList = new ArrayList<>();
         List<WmsInventory> waitUpdateList = new ArrayList<>();
+
+        List<WmsInventory> waitMoveDeleteList = new ArrayList<>();
+        List<WmsInventory> waitMoveAddList = new ArrayList<>();
+        List<WmsInventory> waitMoveUpdateList = new ArrayList<>();
+        List<WmsIvTransaction> transactionList = new ArrayList<>();
+        List<WmsIvSplit> waitAddSplitList = new ArrayList<>();
+
         convertInventories.stream().forEach(item ->{
             WmsAdjtLine adjtLine = adjLineIvId2EntityMap.get(item.getId());
             BigDecimal frontIvQty = adjtLine.getIvQty();
             BigDecimal dbIvQty = item.getIvQty();
             //移库
-            int i = frontIvQty.compareTo(dbIvQty);
+            int compareRet = frontIvQty.compareTo(dbIvQty);
+            if(compareRet < 0){
+                // TODO: 2020/9/3
+            }
             if(AdjustType.MOVE.name().equals(adjtLine.getIvAdjhType())){
-                int compareRet = i;
-                if(compareRet < 0){
-                    // TODO: 2020/9/3
-                }
                 //完全移库,记录transaction
                 if(compareRet == 0){
                     waitDeleteList.add(item);
+                    // TODO: 2020/9/3 记录transaction
                 }
                 //部分移库 更新、新增、transaction
                 if(compareRet > 0){
-                    
+                    //更新，将from进行减库操作
+                    WmsInventory updateItem = DataConvertUtil.parseDataAsObject(item, WmsInventory.class);
+                    WmsInventory addItem = DataConvertUtil.parseDataAsObject(item, WmsInventory.class);
+                    updateItem.setIvQty(dbIvQty.subtract(frontIvQty));
+                    waitUpdateList.add(updateItem);
+                    //记录transaction
+
+
+                    //新增
+                    addItem.setId(idGenerator.getUnique());
+                    addItem.setIvQty(frontIvQty);
+                    addItem.setBigBagQty(frontIvQty.multiply(addItem.getBigBagRate()));//大包数量
+                    addItem.setBigBagExtraQty(frontIvQty.divideAndRemainder(addItem.getBigBagRate())[1]);//大包剩余数量
+                    addItem.setMidBagQty(frontIvQty.multiply(addItem.getMidBagRate()));//中包数量
+                    addItem.setMidBagExtraQty(frontIvQty.divideAndRemainder(addItem.getMidBagRate())[1]);//中包剩余数量
+                    addItem.setLastupdateUser(currentUser.getAccountId());//最近库存更新用户(上下文用户)
+                    addItem.setIvTranstime(nowWithUTC);//最近库存更新时间
+                    addItem.setIvCreatetime(nowWithUTC);//创建时间
+                    addItem.setBizDate(nowWithUTC);//业务日期(与创建时间保持一致)
+                    waitAddList.add(addItem);
+
+                    //记录split单
+                    WmsIvSplit wmsIvSplit = new WmsIvSplit();
+
+
                 }
 
             }else{
@@ -493,12 +524,11 @@ public class InventoryBussiness {
                     waitAddList.add(item);
                 }else {
                     //库存调少
-                    i;
                     if(dbIvQty.subtract(frontIvQty).intValue() ==  0){
                         waitDeleteList.add(item);
                     }
                     //更新-库存减少
-                    item.setIvQty(ivQty.subtract(frontIvQty));
+                    item.setIvQty(dbIvQty.subtract(frontIvQty));
                     waitUpdateList.add(item);
                 }
             }
