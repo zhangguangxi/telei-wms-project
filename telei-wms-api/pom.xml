@@ -51,13 +51,6 @@
             <artifactId>jasypt-spring-boot-starter</artifactId>
         </dependency>
 
-
-        <dependency>
-            <groupId>com.telei.infrastructure</groupId>
-            <artifactId>telei-infrastructure-starter-idgenerator</artifactId>
-            <version>${version}</version>
-        </dependency>
-
         <dependency>
             <artifactId>telei-wms-commons</artifactId>
             <groupId>com.telei</groupId>
@@ -122,6 +115,17 @@
             <version>2.2.1.RELEASE</version>
         </dependency>
 
+        <dependency>
+            <groupId>com.telei</groupId>
+            <artifactId>telei-wms-gateway</artifactId>
+            <version>${version}</version>
+        </dependency>
+
+        <!-- jetCache -->
+        <dependency>
+            <groupId>com.alicp.jetcache</groupId>
+            <artifactId>jetcache-starter-redis-lettuce</artifactId>
+        </dependency>
     </dependencies>
 
     <build>

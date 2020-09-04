@@ -3,10 +3,10 @@
 <mapper namespace="com.telei.wms.datasource.wms.repository.WmsIvSplitRepository">
     <resultMap id="BaseResultMap" type="com.telei.wms.datasource.wms.model.WmsIvSplit">
         <id column="ivsp_id" jdbcType="BIGINT" property="ivspId"/>
-        <result column="iv_id" jdbcType="INTEGER" property="ivId"/>
+        <result column="iv_id" jdbcType="BIGINT" property="ivId"/>
         <result column="iv_qty" jdbcType="DECIMAL" property="ivQty"/>
         <result column="iv_qty_after" jdbcType="DECIMAL" property="ivQtyAfter"/>
-        <result column="iv_id_to" jdbcType="INTEGER" property="ivIdTo"/>
+        <result column="iv_id_to" jdbcType="BIGINT" property="ivIdTo"/>
         <result column="iv_qty_to" jdbcType="DECIMAL" property="ivQtyTo"/>
     </resultMap>
 
@@ -14,14 +14,17 @@
         ivsp_id,iv_id,iv_qty,iv_qty_after,iv_id_to,iv_qty_to
     </sql>
 
-    <insert id="insert" keyProperty="ivspId" useGeneratedKeys="true">
-        insert into wms_iv_split (iv_id,iv_qty,iv_qty_after,iv_id_to,iv_qty_to)
-        values (#{ivId,jdbcType=INTEGER},#{ivQty,jdbcType=DECIMAL},#{ivQtyAfter,jdbcType=DECIMAL},#{ivIdTo,jdbcType=INTEGER},#{ivQtyTo,jdbcType=DECIMAL})
+    <insert id="insert">
+        insert into wms_iv_split (ivsp_id,iv_id,iv_qty,iv_qty_after,iv_id_to,iv_qty_to)
+        values (#{ivspId,jdbcType=BIGINT},#{ivId,jdbcType=BIGINT},#{ivQty,jdbcType=DECIMAL},#{ivQtyAfter,jdbcType=DECIMAL},#{ivIdTo,jdbcType=BIGINT},#{ivQtyTo,jdbcType=DECIMAL})
     </insert>
 
-    <insert id="insertSelective" keyProperty="ivspId" useGeneratedKeys="true">
+    <insert id="insertSelective">
         insert into wms_iv_split
         <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="ivspId != null">
+                ivsp_id,
+            </if>
             <if test="ivId != null">
                 iv_id,
             </if>
@@ -39,8 +42,11 @@
             </if>
         </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="ivspId != null">
+                #{ivspId,jdbcType=BIGINT},
+            </if>
             <if test="ivId != null">
-                #{ivId,jdbcType=INTEGER},
+                #{ivId,jdbcType=BIGINT},
             </if>
             <if test="ivQty != null">
                 #{ivQty,jdbcType=DECIMAL},
@@ -49,7 +55,7 @@
                 #{ivQtyAfter,jdbcType=DECIMAL},
             </if>
             <if test="ivIdTo != null">
-                #{ivIdTo,jdbcType=INTEGER},
+                #{ivIdTo,jdbcType=BIGINT},
             </if>
             <if test="ivQtyTo != null">
                 #{ivQtyTo,jdbcType=DECIMAL}
@@ -57,14 +63,15 @@
         </trim>
     </insert>
 
-    <insert id="insertBatch" keyProperty="ivspId" useGeneratedKeys="true">
-        insert into wms_iv_split (iv_id,iv_qty,iv_qty_after,iv_id_to,iv_qty_to) values
+    <insert id="insertBatch">
+        insert into wms_iv_split (ivsp_id,iv_id,iv_qty,iv_qty_after,iv_id_to,iv_qty_to) values
         <foreach collection="list" item="item" separator=",">
             (
-            #{item.ivId,jdbcType=INTEGER},
+            #{item.ivspId,jdbcType=BIGINT},
+            #{item.ivId,jdbcType=BIGINT},
             #{item.ivQty,jdbcType=DECIMAL},
             #{item.ivQtyAfter,jdbcType=DECIMAL},
-            #{item.ivIdTo,jdbcType=INTEGER},
+            #{item.ivIdTo,jdbcType=BIGINT},
             #{item.ivQtyTo,jdbcType=DECIMAL}
             )
         </foreach>
@@ -85,10 +92,10 @@
     <update id="updateByPrimaryKey">
         update wms_iv_split
         <set>
-            iv_id = #{ivId,jdbcType=INTEGER},
+            iv_id = #{ivId,jdbcType=BIGINT},
             iv_qty = #{ivQty,jdbcType=DECIMAL},
             iv_qty_after = #{ivQtyAfter,jdbcType=DECIMAL},
-            iv_id_to = #{ivIdTo,jdbcType=INTEGER},
+            iv_id_to = #{ivIdTo,jdbcType=BIGINT},
             iv_qty_to = #{ivQtyTo,jdbcType=DECIMAL}
         </set>
         where ivsp_id = #{ivspId,jdbcType=BIGINT}
@@ -98,7 +105,7 @@
         update wms_iv_split
         <set>
             <if test="ivId != null">
-                iv_id = #{ivId,jdbcType=INTEGER},
+                iv_id = #{ivId,jdbcType=BIGINT},
             </if>
             <if test="ivQty != null">
                 iv_qty = #{ivQty,jdbcType=DECIMAL},
@@ -107,7 +114,7 @@
                 iv_qty_after = #{ivQtyAfter,jdbcType=DECIMAL},
             </if>
             <if test="ivIdTo != null">
-                iv_id_to = #{ivIdTo,jdbcType=INTEGER},
+                iv_id_to = #{ivIdTo,jdbcType=BIGINT},
             </if>
             <if test="ivQtyTo != null">
                 iv_qty_to = #{ivQtyTo,jdbcType=DECIMAL}
@@ -121,7 +128,7 @@
             update wms_iv_split
             <set>
                 <if test="item.ivId != null">
-                    iv_id = #{item.ivId,jdbcType=INTEGER},
+                    iv_id = #{item.ivId,jdbcType=BIGINT},
                 </if>
                 <if test="item.ivQty != null">
                     iv_qty = #{item.ivQty,jdbcType=DECIMAL},
@@ -130,7 +137,7 @@
                     iv_qty_after = #{item.ivQtyAfter,jdbcType=DECIMAL},
                 </if>
                 <if test="item.ivIdTo != null">
-                    iv_id_to = #{item.ivIdTo,jdbcType=INTEGER},
+                    iv_id_to = #{item.ivIdTo,jdbcType=BIGINT},
                 </if>
                 <if test="item.ivQtyTo != null">
                     iv_qty_to = #{item.ivQtyTo,jdbcType=DECIMAL}
@@ -172,7 +179,7 @@
                 and ivsp_id=#{ivspId,jdbcType=BIGINT}
             </if>
             <if test="ivId != null">
-                and iv_id=#{ivId,jdbcType=INTEGER}
+                and iv_id=#{ivId,jdbcType=BIGINT}
             </if>
             <if test="ivQty != null">
                 and iv_qty=#{ivQty,jdbcType=DECIMAL}
@@ -181,7 +188,7 @@
                 and iv_qty_after=#{ivQtyAfter,jdbcType=DECIMAL}
             </if>
             <if test="ivIdTo != null">
-                and iv_id_to=#{ivIdTo,jdbcType=INTEGER}
+                and iv_id_to=#{ivIdTo,jdbcType=BIGINT}
             </if>
             <if test="ivQtyTo != null">
                 and iv_qty_to=#{ivQtyTo,jdbcType=DECIMAL}

@@ -1,8 +1,9 @@
 package com.telei.wms.datasource.wms.model;
 
 import com.nuochen.framework.autocoding.domain.Entity;
-import java.math.BigDecimal;
 import lombok.Data;
+
+import java.math.BigDecimal;
 
 /**
 * wms_iv_split 库存记录拆分表
@@ -12,13 +13,13 @@ public class WmsIvSplit implements Entity<Long> {
     /** id */
     private Long ivspId;
     /** 原库存id */
-    private Integer ivId;
+    private Long ivId;
     /** 原库存数量 */
     private BigDecimal ivQty;
     /** 拆后库存数量 */
     private BigDecimal ivQtyAfter;
     /** 新库存id */
-    private Integer ivIdTo;
+    private Long ivIdTo;
     /** 拆分库存数量 */
     private BigDecimal ivQtyTo;
     @Override

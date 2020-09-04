@@ -10,7 +10,7 @@ import org.springframework.stereotype.Component;
 @Component
 public class WmsOmsInventoryAddWriteBackProducer extends BaseProducer {
     //队列名称
-    public static final String QUEUE_NAME = "WMS-OMS-InventoryAddWriteBackProducer";
+    public static final String QUEUE_NAME = "WMS-OMS-InventoryAddWriteBack";
 
     @Override
     public String getQueueName() {

@@ -19,6 +19,25 @@
         </dependency>
 
         <dependency>
+            <groupId>com.nuochen.framework</groupId>
+            <artifactId>nuochen-framework-app-gateway</artifactId>
+            <version>${version}</version>
+            <optional>true</optional>
+        </dependency>
+
+        <dependency>
+            <groupId>com.telei.infrastructure</groupId>
+            <artifactId>telei-infrastructure-component-commons</artifactId>
+            <version>${version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>com.telei.infrastructure</groupId>
+            <artifactId>telei-infrastructure-starter-idgenerator</artifactId>
+            <version>${version}</version>
+        </dependency>
+
+        <dependency>
             <groupId>org.projectlombok</groupId>
             <artifactId>lombok</artifactId>
             <scope>provided</scope>
@@ -35,6 +54,7 @@
             <groupId>com.alicp.jetcache</groupId>
             <artifactId>jetcache-starter-redis-lettuce</artifactId>
             <version>2.5.16</version>
+            <optional>true</optional>
         </dependency>
 
         <!-- apachepoi -->
@@ -79,9 +99,8 @@
         </dependency>
 
         <dependency>
-            <groupId>com.telei</groupId>
-            <artifactId>telei-wms-gateway</artifactId>
-            <version>${version}</version>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-web</artifactId>
         </dependency>
     </dependencies>
 </project>

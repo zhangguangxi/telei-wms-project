@@ -58,6 +58,10 @@ datasource:
 #    username: root
 #    password: admin
     validationQuery:  'x'
+
+id-generator:
+  machine-id: 1
+
 ---
 spring:
   profiles: test
@@ -84,3 +88,6 @@ datasource:
     username: root
     password: admin1314
     validationQuery:  'x'
+
+id-generator:
+  machine-id: 1

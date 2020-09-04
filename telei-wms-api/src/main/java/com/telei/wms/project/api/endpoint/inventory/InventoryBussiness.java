@@ -1,6 +1,7 @@
 package com.telei.wms.project.api.endpoint.inventory;
 
 import com.alibaba.fastjson.JSON;
+import com.google.common.collect.Lists;
 import com.nuochen.framework.app.api.ApiResponse;
 import com.telei.infrastructure.component.commons.CustomRequestContext;
 import com.telei.infrastructure.component.commons.dto.UserInfo;
@@ -9,6 +10,7 @@ import com.telei.infrastructure.component.idgenerator.contract.Id;
 import com.telei.wms.commons.utils.DateUtils;
 import com.telei.wms.commons.utils.StringUtils;
 import com.telei.wms.customer.amqp.inventoryAddWriteBack.OmsInventoryAddWriteBack;
+import com.telei.wms.customer.amqp.inventoryChangeWriteBack.OmsInventoryChangeWriteBack;
 import com.telei.wms.customer.businessNumber.BusinessNumberFeignClient;
 import com.telei.wms.customer.businessNumber.dto.BusinessNumberRequest;
 import com.telei.wms.customer.businessNumber.dto.BusinessNumberResponse;
@@ -32,6 +34,7 @@ import java.math.BigDecimal;
 import java.util.*;
 import java.util.function.Function;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 /**
  * @author: leo
@@ -417,192 +420,175 @@ public class InventoryBussiness {
      */
     @Transactional(rollbackFor = Exception.class)
     public InventoryReviewBussinessResponse reviewInventory(InventoryReviewBussinessRequest request) {
+        /**1.信息预处理*/
+        /**1.1信息预处理-库存调整单单头*/
         Long adjhId = request.getAdjhId();
         WmsAdjtHeader wmsAdjtHeader = wmsAdjtHeaderService.selectByPrimaryKey(adjhId);
         if(Objects.isNull(wmsAdjtHeader)){
-            // TODO: 2020/9/2
+            ErrorCode.ADJT_REVIEW_ERROR_4007.throwError();
         }
+        /**1.2信息预处理-库存调整单明细*/
         WmsAdjtLine wmsAdjtLine = new WmsAdjtLine();
-        wmsAdjtLine.setAdjhId(adjhId);
+        wmsAdjtLine.setAdjhId(wmsAdjtHeader.getAdjhId());
         List<WmsAdjtLine> adjtLineList = wmsAdjtLineService.selectByEntity(wmsAdjtLine);
         if(Objects.isNull(adjtLineList) || adjtLineList.isEmpty()){
-            // TODO: 2020/9/2
+             ErrorCode.ADJT_REVIEW_ERROR_4008.throwError();
         }
+        /**1.3信息预处理-库存记录*/
         List<Long> ivIdList = adjtLineList.stream().map(WmsAdjtLine::getIvId).collect(Collectors.toList());
         List<WmsInventory> inventoryList = wmsInventoryService.selectByPrimaryKeys(ivIdList);
         if(Objects.isNull(inventoryList) || inventoryList.isEmpty()){
-            // TODO: 2020/9/2
+            ErrorCode.ADJT_REVIEW_ERROR_4009.throwError();
         }
+        List<Object> lockKey = Arrays.asList(adjhId, ivIdList);
+        Object lockValue = LockMapUtil.tryLock(lockKey);
+        try{
+            /**2 公用信息提取*/
+            Map<Long, WmsAdjtLine> adjLineIvId2EntityMap = adjtLineList.stream().collect(Collectors.toMap(WmsAdjtLine::getIvId, Function.identity()));
+            UserInfo currentUser = CustomRequestContext.getUserInfo();
+            Date nowWithUTC = DateUtils.nowWithUTC();
 
-//        Map<String, List<WmsAdjtLine>> adjtMap = adjtLineList.stream().collect(Collectors.groupingBy(WmsAdjtLine::getIvAdjhType));
-        Map<Long, WmsAdjtLine> adjLineIvId2EntityMap = adjtLineList.stream().collect(Collectors.toMap(WmsAdjtLine::getIvId, Function.identity()));
-        //数据组装、库存、库存历史、库存事务
-        UserInfo currentUser = CustomRequestContext.getUserInfo();
-        Date nowWithUTC = DateUtils.nowWithUTC();
+            /**3 中转变量定义*/
+            List<WmsInventory> convertInventories = DataConvertUtil.parseDataAsArray(inventoryList, WmsInventory.class);
+            List<WmsInventory> waitDeleteList = Lists.newArrayList();
+            List<WmsInventory> waitAddList = Lists.newArrayList();
+            List<WmsInventory> waitUpdateList = Lists.newArrayList();
+            List<WmsInventory> waitMoveDeleteList = Lists.newArrayList();
+            List<WmsInventory> waitMoveAddList = Lists.newArrayList();
+            List<WmsInventory> waitMoveUpdateList = Lists.newArrayList();
+            List<WmsIvTransaction> transactionList = Lists.newArrayList();
+            List<WmsIvSplit> waitAddSplitList = Lists.newArrayList();
+            List<OmsInventoryChangeWriteBack.OmsInventoryChangeWriteBackCondition> writeBackList = Lists.newArrayList();
 
-//        List<WmsAdjtLine> incrList = adjtMap.get("INCR");
-//        List<WmsAdjtLine> lessList = adjtMap.get("LESS");
-//        List<WmsAdjtLine> moveList = adjtMap.get("MOVE");
-//
-//        if(Objects.nonNull(incrList) &&  !incrList.isEmpty()){
-//            incrList.stream().forEach(item ->{
-//
-//            });
-//        }
-//
-//        if(Objects.nonNull(lessList) && !lessList.isEmpty()){
-//
-//        }
-//
-//        if(Objects.nonNull(moveList ) && !moveList.isEmpty()){
-//
-//        }
-
-
-        Map<Long, WmsInventory> id2EntityMap = inventoryList.stream().collect(Collectors.toMap(WmsInventory::getId, Function.identity()));
-        List<WmsInventory> convertInventories = DataConvertUtil.parseDataAsArray(inventoryList, WmsInventory.class);
-        List<WmsInventory> waitDeleteList = new ArrayList<>();
-        List<WmsInventory> waitAddList = new ArrayList<>();
-        List<WmsInventory> waitUpdateList = new ArrayList<>();
-
-        List<WmsInventory> waitMoveDeleteList = new ArrayList<>();
-        List<WmsInventory> waitMoveAddList = new ArrayList<>();
-        List<WmsInventory> waitMoveUpdateList = new ArrayList<>();
-        List<WmsIvTransaction> transactionList = new ArrayList<>();
-        List<WmsIvSplit> waitAddSplitList = new ArrayList<>();
-
-        convertInventories.stream().forEach(item ->{
-            WmsAdjtLine adjtLine = adjLineIvId2EntityMap.get(item.getId());
-            BigDecimal frontIvQty = adjtLine.getIvQty();
-            BigDecimal dbIvQty = item.getIvQty();
-            //移库
-            int compareRet = frontIvQty.compareTo(dbIvQty);
-            if(compareRet < 0){
-                // TODO: 2020/9/3
-            }
-            if(AdjustType.MOVE.name().equals(adjtLine.getIvAdjhType())){
-                //完全移库,记录transaction
-                if(compareRet == 0){
-                    waitDeleteList.add(item);
-                    // TODO: 2020/9/3 记录transaction
-                }
-                //部分移库 更新、新增、transaction
-                if(compareRet > 0){
-                    //更新，将from进行减库操作
-                    WmsInventory updateItem = DataConvertUtil.parseDataAsObject(item, WmsInventory.class);
-                    WmsInventory addItem = DataConvertUtil.parseDataAsObject(item, WmsInventory.class);
-                    updateItem.setIvQty(dbIvQty.subtract(frontIvQty));
-                    waitUpdateList.add(updateItem);
-                    //记录transaction
-
-
-                    //新增
-                    addItem.setId(idGenerator.getUnique());
-                    addItem.setIvQty(frontIvQty);
-                    addItem.setBigBagQty(frontIvQty.multiply(addItem.getBigBagRate()));//大包数量
-                    addItem.setBigBagExtraQty(frontIvQty.divideAndRemainder(addItem.getBigBagRate())[1]);//大包剩余数量
-                    addItem.setMidBagQty(frontIvQty.multiply(addItem.getMidBagRate()));//中包数量
-                    addItem.setMidBagExtraQty(frontIvQty.divideAndRemainder(addItem.getMidBagRate())[1]);//中包剩余数量
-                    addItem.setLastupdateUser(currentUser.getAccountId());//最近库存更新用户(上下文用户)
-                    addItem.setIvTranstime(nowWithUTC);//最近库存更新时间
-                    addItem.setIvCreatetime(nowWithUTC);//创建时间
-                    addItem.setBizDate(nowWithUTC);//业务日期(与创建时间保持一致)
-                    waitAddList.add(addItem);
-
-                    //记录split单
-                    WmsIvSplit wmsIvSplit = new WmsIvSplit();
-
-
-                }
-
-            }else{
-                //库存调多 更新、transaction 
-                if(AdjustType.INCR.name().equals(adjtLine.getIvAdjhType())){
-                    item.setIvId(idGenerator.getUnique());
-                    item.setIvIdFrom(adjtLine.getId());
-                    item.setIvQty(frontIvQty);
-                    waitAddList.add(item);
-                }else {
-                    //库存调少
-                    if(dbIvQty.subtract(frontIvQty).intValue() ==  0){
-                        waitDeleteList.add(item);
+            /**4 业务数据组装*/
+            convertInventories.stream().forEach(item ->{
+                WmsAdjtLine adjtLine = adjLineIvId2EntityMap.get(item.getId());
+                BigDecimal frontIvQty = adjtLine.getIvQty();
+                BigDecimal dbIvQty = item.getIvQty();
+                int compareRet = dbIvQty.compareTo(frontIvQty);
+                WmsIvTransaction transaction = DataConvertUtil.parseDataAsObject(adjtLine, WmsIvTransaction.class);
+                OmsInventoryChangeWriteBack.OmsInventoryChangeWriteBackCondition writeBackCondition = DataConvertUtil.parseDataAsObject(item, OmsInventoryChangeWriteBack.OmsInventoryChangeWriteBackCondition.class);
+                writeBackCondition.setQty(frontIvQty);
+                transaction.setCreateTime(nowWithUTC);
+                transaction.setCreateUser(currentUser.getUserName());
+                long newIvId = idGenerator.getUnique();
+                /**4.1 业务数据组装-移库*/
+                if(AdjustType.MOVE.name().equals(adjtLine.getIvAdjhType())){
+                    if(compareRet < 0){
+                        ErrorCode.ADJT_REVIEW_ERROR_4010.throwError();
                     }
-                    //更新-库存减少
-                    item.setIvQty(dbIvQty.subtract(frontIvQty));
-                    waitUpdateList.add(item);
+                    transaction.setIvtChangeType("MOVE");
+                    transaction.setLcCodeFrom(item.getLcCode());
+                    transaction.setLcCodeTo(adjtLine.getLcCode());
+                    transaction.setIvQtyFrom(item.getIvQty());
+                    if(compareRet == 0){
+                        waitMoveDeleteList.add(item);
+                        transaction.setIvQtyTo(new BigDecimal("0"));
+                    }
+                    if(compareRet > 0){
+                        WmsInventory updateItem = DataConvertUtil.parseDataAsObject(item, WmsInventory.class);
+                        WmsInventory addItem = DataConvertUtil.parseDataAsObject(item, WmsInventory.class);
+                        updateItem.setIvQty(dbIvQty.subtract(frontIvQty));
+                        waitMoveUpdateList.add(updateItem);
+                        transaction.setIvQtyTo(item.getIvQty().subtract(adjtLine.getIvQty()));
+                        addItem.setId(newIvId);
+                        addItem.setIvQty(frontIvQty);
+                        addItem.setBigBagQty(frontIvQty.multiply(addItem.getBigBagRate()));//大包数量
+                        addItem.setBigBagExtraQty(frontIvQty.divideAndRemainder(addItem.getBigBagRate())[1]);//大包剩余数量
+                        addItem.setMidBagQty(frontIvQty.multiply(addItem.getMidBagRate()));//中包数量
+                        addItem.setMidBagExtraQty(frontIvQty.divideAndRemainder(addItem.getMidBagRate())[1]);//中包剩余数量
+                        addItem.setLastupdateUser(currentUser.getAccountId());//最近库存更新用户(上下文用户)
+                        addItem.setIvTranstime(nowWithUTC);//最近库存更新时间
+                        addItem.setIvCreatetime(nowWithUTC);//创建时间
+                        addItem.setBizDate(nowWithUTC);//业务日期(与创建时间保持一致)
+                        waitMoveAddList.add(addItem);
+                        //记录split单
+                        WmsIvSplit wmsIvSplit = new WmsIvSplit();
+                        wmsIvSplit.setIvId(item.getIvId());
+                        wmsIvSplit.setIvQty(item.getIvQty());
+                        wmsIvSplit.setIvQtyAfter(item.getIvQty().subtract(adjtLine.getIvQty()));
+                        wmsIvSplit.setIvQtyTo(adjtLine.getIvQty());
+                        wmsIvSplit.setIvIdTo(newIvId);
+                        waitAddSplitList.add(wmsIvSplit);
+                    }
+                }else{
+                    /**4.2 业务数据组装-库存调增*/
+                    if(AdjustType.INCR.name().equals(adjtLine.getIvAdjhType())){
+                        item.setIvId(newIvId);
+                        item.setIvIdFrom(adjtLine.getId());
+                        item.setIvQty(frontIvQty);
+                        waitAddList.add(item);
+                        writeBackCondition.setType(1);
+                        transaction.setIvQtyTo(item.getIvQty().add(adjtLine.getIvQty()));
+                    }else {
+                        /**4.3 业务数据组装-库存调减*/
+                        if(compareRet < 0){
+                            ErrorCode.ADJT_REVIEW_ERROR_4011.throwError();//审核失败-移库库存数不能大于现有库存
+                        }
+                        writeBackCondition.setType(2);
+                        if(compareRet ==  0){
+                            waitDeleteList.add(item);
+                        }else{
+                            item.setIvQty(dbIvQty.subtract(frontIvQty));
+                            waitUpdateList.add(item);
+                        }
+
+                        transaction.setIvQtyTo(item.getIvQty().subtract(adjtLine.getIvQty()));
+                    }
                 }
-            }
-        });
+                transactionList.add(transaction);
+                writeBackList.add(writeBackCondition);
+            });
 
-        if(!waitAddList.isEmpty()){
-            int countForIventoryAdd = wmsInventoryService.insertBatch(waitAddList);
-            if(countForIventoryAdd != waitAddList.size()){
-                // TODO: 2020/9/3
-            }
-            List<WmsInventoryHistory> wmsInventoryHistories = DataConvertUtil.parseDataAsArray(waitAddList, WmsInventoryHistory.class);
-            int countForInventoryHistoryAdd = wmsInventoryHistoryService.insertBatch(wmsInventoryHistories);
-            if(countForInventoryHistoryAdd != wmsInventoryHistories.size()){
-                // TODO: 2020/9/3
-            }
-            addTransactionRecord(adjLineIvId2EntityMap, currentUser, nowWithUTC, waitAddList,"KC","INCR");
+            /**5 数据落库*/
+            /**5.1 数据落库-库存新增*/
+            if(LockMapUtil.confirmLock(lockKey,lockValue)){
+                List<WmsInventory> addList = Stream.of(waitAddList, waitMoveAddList).flatMap(List::stream).collect(Collectors.toList());
+                if(!addList.isEmpty()){
+                    int countForIventoryAdd = wmsInventoryService.insertBatch(addList);
+                    if(countForIventoryAdd != addList.size()){
+                        ErrorCode.ADJT_REVIEW_ERROR_4012.throwError();//审核失败-移库库存数不能大于现有库存
+                    }
+                    List<WmsInventoryHistory> wmsInventoryHistories = DataConvertUtil.parseDataAsArray(addList, WmsInventoryHistory.class);
+                    int countForInventoryHistoryAdd = wmsInventoryHistoryService.insertBatch(wmsInventoryHistories);
+                    if(countForInventoryHistoryAdd != wmsInventoryHistories.size()){
+                        ErrorCode.ADJT_REVIEW_ERROR_4013.throwError();//审核失败-新增库存历史记录失败
+                    }
 
+                }
+                /**5.2 数据落库-库存更新*/
+                List<WmsInventory> updateList = Stream.of(waitUpdateList, waitMoveUpdateList).flatMap(List::stream).collect(Collectors.toList());
+                if(!updateList.isEmpty()){
+                    int countForUpdate = wmsInventoryService.updateBatch(updateList);
+                    if(countForUpdate != updateList.size()){
+                        ErrorCode.ADJT_REVIEW_ERROR_4014.throwError();//审核失败-库存记录更新失败
+                    }
+                }
+                /**5.3 数据落库-库存删除*/
+                List<WmsInventory> deleteList = Stream.of(waitDeleteList, waitMoveDeleteList).flatMap(List::stream).collect(Collectors.toList());
+                if(!deleteList.isEmpty()){
+                    List<Long> ivIds = deleteList.stream().map(WmsInventory::getId).collect(Collectors.toList());
+                    int countForDelete = wmsInventoryService.deleteByPrimaryKeys(ivIds);
+                    if(countForDelete != ivIds.size()){
+                        ErrorCode.ADJT_REVIEW_ERROR_4015.throwError();//审核失败-库存记录删移除失败
+                    }
+                }
+
+                /**6 异步回写上游(oms)单据(oms-inventory)*/
+                OmsInventoryChangeWriteBack omsInventoryChangeWriteBack = new OmsInventoryChangeWriteBack();
+                omsInventoryChangeWriteBack.setList(writeBackList);
+                WmsIdInstantdirective wmsIdInstantdirective = wmsIdInstantdirectiveBussiness.add("PUTON", "", omsInventoryChangeWriteBack);
+                this.wmsOmsInventoryChangeWriteBackProducer.send(wmsIdInstantdirective);
+            }
+        }catch (Exception e){
+            throw e;
+        }finally {
+            LockMapUtil.cancelLock(lockKey,lockValue);
         }
-
-        if(!waitUpdateList.isEmpty()){
-            int countForUpdate = wmsInventoryService.updateBatch(waitUpdateList);
-            if(countForUpdate != waitUpdateList.size()){
-                // TODO: 2020/9/3
-            }
-            addTransactionRecord(adjLineIvId2EntityMap, currentUser, nowWithUTC, waitAddList,"KC","LESS");
-        }
-
-        if(!waitDeleteList.isEmpty()){
-            List<Long> ivIds = waitDeleteList.stream().map(WmsInventory::getId).collect(Collectors.toList());
-            int countForDelete = wmsInventoryService.deleteByPrimaryKeys(ivIds);
-            if(countForDelete != ivIds.size()){
-            }
-            addTransactionRecord(adjLineIvId2EntityMap, currentUser, nowWithUTC, waitAddList,"KC","LESS");
-        }
-
-        //异步(MQ)回写oms的oms-inventory
-        // 指令入库
-        WmsIdInstantdirective wmsIdInstantdirective = wmsIdInstantdirectiveBussiness.add("PUTON", "", "");
-        // MQ发送指令
-        wmsOmsInventoryChangeWriteBackProducer.send(wmsIdInstantdirective);
 
         return new InventoryReviewBussinessResponse();
     }
 
-    /**
-     * 库存变动记录
-     * @param adjtLineIvId2EntityMap
-     * @param currentUser
-     * @param nowWithUTC
-     * @param list
-     * @param adjhType
-     * @param ivtChangeType
-     */
-    private void addTransactionRecord(Map<Long, WmsAdjtLine> adjtLineIvId2EntityMap, UserInfo currentUser, Date nowWithUTC, List<WmsInventory> list,String adjhType,String ivtChangeType) {
-        Map<Long, WmsInventory> ivId2EntityAddMap = list.stream().collect(Collectors.toMap(WmsInventory::getId, Function.identity()));
-        List<WmsIvTransaction> ivTransactions = DataConvertUtil.parseDataAsArray(list, WmsIvTransaction.class);
-        ivTransactions.stream().forEach(item ->{
-            WmsInventory inventory = ivId2EntityAddMap.get(item.getId());
-            WmsAdjtLine adjtLine = adjtLineIvId2EntityMap.get(item.getId());
-            item.setApCode(adjhType);
-            item.setLcCodeFrom(inventory.getLcCode());//原库位编码
-            item.setIvQtyFrom(inventory.getIvQty());//库存调整前数量
-            item.setIvQtyTo(adjtLine.getIvQty().add(inventory.getIvQty()));//库存调整后数量
-            item.setIvtChangeType(ivtChangeType);
-            item.setCreateTime(nowWithUTC);
-            item.setCreateUser(currentUser.getUserName());
-            if("MOVE".equals(ivtChangeType)){
-                item.setLcCodeTo(adjtLine.getLcCode());//变动后的库位编码
-                return;
-            }
-            item.setLcCodeTo("");//变动后的库位编码
-
-        });
-    }
 
     /**
      * 移库
@@ -682,4 +668,5 @@ public class InventoryBussiness {
             return false;
         }
     }
+
 }

@@ -63,6 +63,11 @@
             <version>${version}</version>
         </dependency>
 
+        <dependency>
+            <groupId>com.telei</groupId>
+            <artifactId>telei-wms-commons</artifactId>
+            <version>${version}</version>
+        </dependency>
     </dependencies>
 
     <build>
