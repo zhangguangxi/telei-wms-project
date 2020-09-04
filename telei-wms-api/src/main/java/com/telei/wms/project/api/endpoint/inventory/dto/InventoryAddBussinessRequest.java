@@ -46,12 +46,11 @@ public class InventoryAddBussinessRequest {
         private Long roolId;
         /**入库任务id*/
         private Long roId;
-        /** 引起库存变动业务单据编号 */
-        private String ivDocumentCode;
-        /** 引起库存变动单据id */
-        private Long ivDocumentId;
-        /**引起库存变动单据明细id  */
-        private Long ivDocumentlineId;
-
+//        /** 引起库存变动业务单据编号 */
+//        private String ivDocumentCode;
+//        /** 引起库存变动单据id */
+//        private Long ivDocumentId;
+//        /**引起库存变动单据明细id  */
+//        private Long ivDocumentlineId;
     }
 }

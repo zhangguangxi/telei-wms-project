@@ -32,6 +32,25 @@
         </dependency>
 
         <dependency>
+            <groupId>com.nuochen.framework</groupId>
+            <artifactId>nuochen-framework-app-gateway</artifactId>
+            <version>${version}</version>
+            <optional>true</optional>
+        </dependency>
+
+        <dependency>
+            <groupId>com.telei.infrastructure</groupId>
+            <artifactId>telei-infrastructure-component-commons</artifactId>
+            <version>${version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>com.telei.infrastructure</groupId>
+            <artifactId>telei-infrastructure-starter-idgenerator</artifactId>
+            <version>${version}</version>
+        </dependency>
+
+        <dependency>
             <groupId>com.telei.infrastructure</groupId>
             <artifactId>telei-infrastructure-starter-idgenerator</artifactId>
             <version>${version}</version>

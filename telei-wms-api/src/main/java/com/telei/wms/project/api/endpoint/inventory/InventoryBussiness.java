@@ -289,7 +289,7 @@ public class InventoryBussiness {
      * @param omsInventoryAddWriteBack
      */
     private void inventoryDataProcess(List<WmsInventory> inventoryList, WmsPaoHeader wmsPaoHeader, List<WmsPaoLine> paoLineList, List<WmsRooHeader> rooHeaderList, List<WmsRoHeader> roHeaderList, OmsInventoryAddWriteBack omsInventoryAddWriteBack) {
-        //3.1 库存/库存历史处理  插入wms_inventory wms_inventory_history
+        //3.1 库存/库存历史处理  插入wms_inventory wms_inventory_history wms_iv_transaction
         int countForInventory = wmsInventoryService.insertBatch(inventoryList);
         if(countForInventory != inventoryList.size()){
             ErrorCode.INVENTORY_ADD_ERROR_4014.throwError();
@@ -299,7 +299,10 @@ public class InventoryBussiness {
         if(countForInventoryHistory != inventoryHistoryList.size() ){
             ErrorCode.INVENTORY_ADD_ERROR_4015.throwError();
         }
-        // TODO: 2020/9/2 wms_inventory_transaction
+        // TODO: 2020/9/4
+        List<WmsIvTransaction> wmsIvTransactions = DataConvertUtil.parseDataAsArray(inventoryList, WmsIvTransaction.class);
+
+
         //3.2 更新上架单单头/上架单明细
         int countForPao = wmsPaoHeaderService.updateByPrimaryKey(wmsPaoHeader);
         if(countForPao <= 0){

@@ -46,15 +46,29 @@ public class InventoryAddRequest {
         @ApiModelProperty(value = "大包数量",example = "1234",position = 10)
         @Check
         private BigDecimal bigBagQty;
-
-        @ApiModelProperty(value = "上架单业务单据编号",example = "123412322",position = 11)
+        @ApiModelProperty(value = "上架单单头id",example = "1234",position = 11)
         @Check
-        private String ivDocumentCode;
-        @ApiModelProperty(value = "上架单单头id",example = "1234123",position = 12)
+        private Long paoId;
+        @ApiModelProperty(value = "上架单明细id",example = "1234",position = 12)
         @Check
-        private Long ivDocumentId;
-        @ApiModelProperty(value = "上架单明细id",example = "123423",position = 13)
+        private Long paolId;
+        @ApiModelProperty(value = "收货单id",example = "1234",position = 13)
         @Check
-        private Long ivDocumentlineId;
+        private Long rooId;
+        @ApiModelProperty(value = "收货单明细id",example = "1234",position = 14)
+        @Check
+        private Long roolId;
+        @ApiModelProperty(value = "入库任务id",example = "1234",position = 15)
+        @Check
+        private Long roId;
+//        @ApiModelProperty(value = "上架单业务单据编号",example = "123412322",position = 11)
+//        @Check
+//        private String ivDocumentCode;
+//        @ApiModelProperty(value = "上架单单头id",example = "1234123",position = 12)
+//        @Check
+//        private Long ivDocumentId;
+//        @ApiModelProperty(value = "上架单明细id",example = "123423",position = 13)
+//        @Check
+//        private Long ivDocumentlineId;
     }
 }
