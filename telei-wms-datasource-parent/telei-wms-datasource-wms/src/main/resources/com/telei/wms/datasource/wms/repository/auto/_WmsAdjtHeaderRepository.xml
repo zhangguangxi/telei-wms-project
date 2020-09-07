@@ -11,6 +11,17 @@
         <result column="ivih_status" jdbcType="VARCHAR" property="ivihStatus"/>
         <result column="biz_date" jdbcType="TIMESTAMP" property="bizDate"/>
         <result column="reason" jdbcType="VARCHAR" property="reason"/>
+        <result column="lc_code" jdbcType="VARCHAR" property="lcCode"/>
+        <result column="product_id" jdbcType="BIGINT" property="productId"/>
+        <result column="iv_qty" jdbcType="DECIMAL" property="ivQty"/>
+        <result column="lc_code_adjt" jdbcType="VARCHAR" property="lcCodeAdjt"/>
+        <result column="iv_qty_adjt" jdbcType="DECIMAL" property="ivQtyAdjt"/>
+        <result column="product_name" jdbcType="VARCHAR" property="productName"/>
+        <result column="product_name_local" jdbcType="VARCHAR" property="productNameLocal"/>
+        <result column="product_barcode" jdbcType="VARCHAR" property="productBarcode"/>
+        <result column="product_upc_code" jdbcType="VARCHAR" property="productUpcCode"/>
+        <result column="big_bag_qty" jdbcType="INTEGER" property="bigBagQty"/>
+        <result column="mid_bag_qty" jdbcType="INTEGER" property="midBagQty"/>
         <result column="create_time" jdbcType="TIMESTAMP" property="createTime"/>
         <result column="create_user" jdbcType="VARCHAR" property="createUser"/>
         <result column="audit_time" jdbcType="TIMESTAMP" property="auditTime"/>
@@ -18,12 +29,12 @@
     </resultMap>
 
     <sql id="Base_Column_List">
-        adjh_id,adjh_code,company_id,warehouse_id,warehouse_code,adjh_type,ivih_status,biz_date,reason,create_time,create_user,audit_time,audit_user
+        adjh_id,adjh_code,company_id,warehouse_id,warehouse_code,adjh_type,ivih_status,biz_date,reason,lc_code,product_id,iv_qty,lc_code_adjt,iv_qty_adjt,product_name,product_name_local,product_barcode,product_upc_code,big_bag_qty,mid_bag_qty,create_time,create_user,audit_time,audit_user
     </sql>
 
     <insert id="insert">
-        insert into wms_adjt_header (adjh_id,adjh_code,company_id,warehouse_id,warehouse_code,adjh_type,ivih_status,biz_date,reason,create_time,create_user,audit_time,audit_user)
-        values (#{adjhId,jdbcType=BIGINT},#{adjhCode,jdbcType=VARCHAR},#{companyId,jdbcType=VARCHAR},#{warehouseId,jdbcType=BIGINT},#{warehouseCode,jdbcType=VARCHAR},#{adjhType,jdbcType=VARCHAR},#{ivihStatus,jdbcType=VARCHAR},#{bizDate,jdbcType=TIMESTAMP},#{reason,jdbcType=VARCHAR},#{createTime,jdbcType=TIMESTAMP},#{createUser,jdbcType=VARCHAR},#{auditTime,jdbcType=TIMESTAMP},#{auditUser,jdbcType=VARCHAR})
+        insert into wms_adjt_header (adjh_id,adjh_code,company_id,warehouse_id,warehouse_code,adjh_type,ivih_status,biz_date,reason,lc_code,product_id,iv_qty,lc_code_adjt,iv_qty_adjt,product_name,product_name_local,product_barcode,product_upc_code,big_bag_qty,mid_bag_qty,create_time,create_user,audit_time,audit_user)
+        values (#{adjhId,jdbcType=BIGINT},#{adjhCode,jdbcType=VARCHAR},#{companyId,jdbcType=VARCHAR},#{warehouseId,jdbcType=BIGINT},#{warehouseCode,jdbcType=VARCHAR},#{adjhType,jdbcType=VARCHAR},#{ivihStatus,jdbcType=VARCHAR},#{bizDate,jdbcType=TIMESTAMP},#{reason,jdbcType=VARCHAR},#{lcCode,jdbcType=VARCHAR},#{productId,jdbcType=BIGINT},#{ivQty,jdbcType=DECIMAL},#{lcCodeAdjt,jdbcType=VARCHAR},#{ivQtyAdjt,jdbcType=DECIMAL},#{productName,jdbcType=VARCHAR},#{productNameLocal,jdbcType=VARCHAR},#{productBarcode,jdbcType=VARCHAR},#{productUpcCode,jdbcType=VARCHAR},#{bigBagQty,jdbcType=INTEGER},#{midBagQty,jdbcType=INTEGER},#{createTime,jdbcType=TIMESTAMP},#{createUser,jdbcType=VARCHAR},#{auditTime,jdbcType=TIMESTAMP},#{auditUser,jdbcType=VARCHAR})
     </insert>
 
     <insert id="insertSelective">
@@ -55,6 +66,39 @@
             </if>
             <if test="reason != null">
                 reason,
+            </if>
+            <if test="lcCode != null">
+                lc_code,
+            </if>
+            <if test="productId != null">
+                product_id,
+            </if>
+            <if test="ivQty != null">
+                iv_qty,
+            </if>
+            <if test="lcCodeAdjt != null">
+                lc_code_adjt,
+            </if>
+            <if test="ivQtyAdjt != null">
+                iv_qty_adjt,
+            </if>
+            <if test="productName != null">
+                product_name,
+            </if>
+            <if test="productNameLocal != null">
+                product_name_local,
+            </if>
+            <if test="productBarcode != null">
+                product_barcode,
+            </if>
+            <if test="productUpcCode != null">
+                product_upc_code,
+            </if>
+            <if test="bigBagQty != null">
+                big_bag_qty,
+            </if>
+            <if test="midBagQty != null">
+                mid_bag_qty,
             </if>
             <if test="createTime != null">
                 create_time,
@@ -97,6 +141,39 @@
             <if test="reason != null">
                 #{reason,jdbcType=VARCHAR},
             </if>
+            <if test="lcCode != null">
+                #{lcCode,jdbcType=VARCHAR},
+            </if>
+            <if test="productId != null">
+                #{productId,jdbcType=BIGINT},
+            </if>
+            <if test="ivQty != null">
+                #{ivQty,jdbcType=DECIMAL},
+            </if>
+            <if test="lcCodeAdjt != null">
+                #{lcCodeAdjt,jdbcType=VARCHAR},
+            </if>
+            <if test="ivQtyAdjt != null">
+                #{ivQtyAdjt,jdbcType=DECIMAL},
+            </if>
+            <if test="productName != null">
+                #{productName,jdbcType=VARCHAR},
+            </if>
+            <if test="productNameLocal != null">
+                #{productNameLocal,jdbcType=VARCHAR},
+            </if>
+            <if test="productBarcode != null">
+                #{productBarcode,jdbcType=VARCHAR},
+            </if>
+            <if test="productUpcCode != null">
+                #{productUpcCode,jdbcType=VARCHAR},
+            </if>
+            <if test="bigBagQty != null">
+                #{bigBagQty,jdbcType=INTEGER},
+            </if>
+            <if test="midBagQty != null">
+                #{midBagQty,jdbcType=INTEGER},
+            </if>
             <if test="createTime != null">
                 #{createTime,jdbcType=TIMESTAMP},
             </if>
@@ -113,7 +190,7 @@
     </insert>
 
     <insert id="insertBatch">
-        insert into wms_adjt_header (adjh_id,adjh_code,company_id,warehouse_id,warehouse_code,adjh_type,ivih_status,biz_date,reason,create_time,create_user,audit_time,audit_user) values
+        insert into wms_adjt_header (adjh_id,adjh_code,company_id,warehouse_id,warehouse_code,adjh_type,ivih_status,biz_date,reason,lc_code,product_id,iv_qty,lc_code_adjt,iv_qty_adjt,product_name,product_name_local,product_barcode,product_upc_code,big_bag_qty,mid_bag_qty,create_time,create_user,audit_time,audit_user) values
         <foreach collection="list" item="item" separator=",">
             (
             #{item.adjhId,jdbcType=BIGINT},
@@ -125,6 +202,17 @@
             #{item.ivihStatus,jdbcType=VARCHAR},
             #{item.bizDate,jdbcType=TIMESTAMP},
             #{item.reason,jdbcType=VARCHAR},
+            #{item.lcCode,jdbcType=VARCHAR},
+            #{item.productId,jdbcType=BIGINT},
+            #{item.ivQty,jdbcType=DECIMAL},
+            #{item.lcCodeAdjt,jdbcType=VARCHAR},
+            #{item.ivQtyAdjt,jdbcType=DECIMAL},
+            #{item.productName,jdbcType=VARCHAR},
+            #{item.productNameLocal,jdbcType=VARCHAR},
+            #{item.productBarcode,jdbcType=VARCHAR},
+            #{item.productUpcCode,jdbcType=VARCHAR},
+            #{item.bigBagQty,jdbcType=INTEGER},
+            #{item.midBagQty,jdbcType=INTEGER},
             #{item.createTime,jdbcType=TIMESTAMP},
             #{item.createUser,jdbcType=VARCHAR},
             #{item.auditTime,jdbcType=TIMESTAMP},
@@ -156,6 +244,17 @@
             ivih_status = #{ivihStatus,jdbcType=VARCHAR},
             biz_date = #{bizDate,jdbcType=TIMESTAMP},
             reason = #{reason,jdbcType=VARCHAR},
+            lc_code = #{lcCode,jdbcType=VARCHAR},
+            product_id = #{productId,jdbcType=BIGINT},
+            iv_qty = #{ivQty,jdbcType=DECIMAL},
+            lc_code_adjt = #{lcCodeAdjt,jdbcType=VARCHAR},
+            iv_qty_adjt = #{ivQtyAdjt,jdbcType=DECIMAL},
+            product_name = #{productName,jdbcType=VARCHAR},
+            product_name_local = #{productNameLocal,jdbcType=VARCHAR},
+            product_barcode = #{productBarcode,jdbcType=VARCHAR},
+            product_upc_code = #{productUpcCode,jdbcType=VARCHAR},
+            big_bag_qty = #{bigBagQty,jdbcType=INTEGER},
+            mid_bag_qty = #{midBagQty,jdbcType=INTEGER},
             create_time = #{createTime,jdbcType=TIMESTAMP},
             create_user = #{createUser,jdbcType=VARCHAR},
             audit_time = #{auditTime,jdbcType=TIMESTAMP},
@@ -190,6 +289,39 @@
             </if>
             <if test="reason != null">
                 reason = #{reason,jdbcType=VARCHAR},
+            </if>
+            <if test="lcCode != null">
+                lc_code = #{lcCode,jdbcType=VARCHAR},
+            </if>
+            <if test="productId != null">
+                product_id = #{productId,jdbcType=BIGINT},
+            </if>
+            <if test="ivQty != null">
+                iv_qty = #{ivQty,jdbcType=DECIMAL},
+            </if>
+            <if test="lcCodeAdjt != null">
+                lc_code_adjt = #{lcCodeAdjt,jdbcType=VARCHAR},
+            </if>
+            <if test="ivQtyAdjt != null">
+                iv_qty_adjt = #{ivQtyAdjt,jdbcType=DECIMAL},
+            </if>
+            <if test="productName != null">
+                product_name = #{productName,jdbcType=VARCHAR},
+            </if>
+            <if test="productNameLocal != null">
+                product_name_local = #{productNameLocal,jdbcType=VARCHAR},
+            </if>
+            <if test="productBarcode != null">
+                product_barcode = #{productBarcode,jdbcType=VARCHAR},
+            </if>
+            <if test="productUpcCode != null">
+                product_upc_code = #{productUpcCode,jdbcType=VARCHAR},
+            </if>
+            <if test="bigBagQty != null">
+                big_bag_qty = #{bigBagQty,jdbcType=INTEGER},
+            </if>
+            <if test="midBagQty != null">
+                mid_bag_qty = #{midBagQty,jdbcType=INTEGER},
             </if>
             <if test="createTime != null">
                 create_time = #{createTime,jdbcType=TIMESTAMP},
@@ -234,6 +366,39 @@
                 </if>
                 <if test="item.reason != null">
                     reason = #{item.reason,jdbcType=VARCHAR},
+                </if>
+                <if test="item.lcCode != null">
+                    lc_code = #{item.lcCode,jdbcType=VARCHAR},
+                </if>
+                <if test="item.productId != null">
+                    product_id = #{item.productId,jdbcType=BIGINT},
+                </if>
+                <if test="item.ivQty != null">
+                    iv_qty = #{item.ivQty,jdbcType=DECIMAL},
+                </if>
+                <if test="item.lcCodeAdjt != null">
+                    lc_code_adjt = #{item.lcCodeAdjt,jdbcType=VARCHAR},
+                </if>
+                <if test="item.ivQtyAdjt != null">
+                    iv_qty_adjt = #{item.ivQtyAdjt,jdbcType=DECIMAL},
+                </if>
+                <if test="item.productName != null">
+                    product_name = #{item.productName,jdbcType=VARCHAR},
+                </if>
+                <if test="item.productNameLocal != null">
+                    product_name_local = #{item.productNameLocal,jdbcType=VARCHAR},
+                </if>
+                <if test="item.productBarcode != null">
+                    product_barcode = #{item.productBarcode,jdbcType=VARCHAR},
+                </if>
+                <if test="item.productUpcCode != null">
+                    product_upc_code = #{item.productUpcCode,jdbcType=VARCHAR},
+                </if>
+                <if test="item.bigBagQty != null">
+                    big_bag_qty = #{item.bigBagQty,jdbcType=INTEGER},
+                </if>
+                <if test="item.midBagQty != null">
+                    mid_bag_qty = #{item.midBagQty,jdbcType=INTEGER},
                 </if>
                 <if test="item.createTime != null">
                     create_time = #{item.createTime,jdbcType=TIMESTAMP},
@@ -307,6 +472,39 @@
             <if test="reason != null">
                 and reason=#{reason,jdbcType=VARCHAR}
             </if>
+            <if test="lcCode != null">
+                and lc_code=#{lcCode,jdbcType=VARCHAR}
+            </if>
+            <if test="productId != null">
+                and product_id=#{productId,jdbcType=BIGINT}
+            </if>
+            <if test="ivQty != null">
+                and iv_qty=#{ivQty,jdbcType=DECIMAL}
+            </if>
+            <if test="lcCodeAdjt != null">
+                and lc_code_adjt=#{lcCodeAdjt,jdbcType=VARCHAR}
+            </if>
+            <if test="ivQtyAdjt != null">
+                and iv_qty_adjt=#{ivQtyAdjt,jdbcType=DECIMAL}
+            </if>
+            <if test="productName != null">
+                and product_name=#{productName,jdbcType=VARCHAR}
+            </if>
+            <if test="productNameLocal != null">
+                and product_name_local=#{productNameLocal,jdbcType=VARCHAR}
+            </if>
+            <if test="productBarcode != null">
+                and product_barcode=#{productBarcode,jdbcType=VARCHAR}
+            </if>
+            <if test="productUpcCode != null">
+                and product_upc_code=#{productUpcCode,jdbcType=VARCHAR}
+            </if>
+            <if test="bigBagQty != null">
+                and big_bag_qty=#{bigBagQty,jdbcType=INTEGER}
+            </if>
+            <if test="midBagQty != null">
+                and mid_bag_qty=#{midBagQty,jdbcType=INTEGER}
+            </if>
             <if test="createTime != null">
                 and create_time=#{createTime,jdbcType=TIMESTAMP}
             </if>
@@ -353,6 +551,39 @@
             </if>
             <if test="reason != null">
                 and reason ${reason}
+            </if>
+            <if test="lcCode != null">
+                and lc_code ${lcCode}
+            </if>
+            <if test="productId != null">
+                and product_id ${productId}
+            </if>
+            <if test="ivQty != null">
+                and iv_qty ${ivQty}
+            </if>
+            <if test="lcCodeAdjt != null">
+                and lc_code_adjt ${lcCodeAdjt}
+            </if>
+            <if test="ivQtyAdjt != null">
+                and iv_qty_adjt ${ivQtyAdjt}
+            </if>
+            <if test="productName != null">
+                and product_name ${productName}
+            </if>
+            <if test="productNameLocal != null">
+                and product_name_local ${productNameLocal}
+            </if>
+            <if test="productBarcode != null">
+                and product_barcode ${productBarcode}
+            </if>
+            <if test="productUpcCode != null">
+                and product_upc_code ${productUpcCode}
+            </if>
+            <if test="bigBagQty != null">
+                and big_bag_qty ${bigBagQty}
+            </if>
+            <if test="midBagQty != null">
+                and mid_bag_qty ${midBagQty}
             </if>
             <if test="createTime != null">
                 and create_time ${createTime}

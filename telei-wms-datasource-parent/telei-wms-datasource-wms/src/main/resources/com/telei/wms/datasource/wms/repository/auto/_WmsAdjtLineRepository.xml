@@ -5,7 +5,6 @@
         <id column="adjl_id" jdbcType="BIGINT" property="adjlId"/>
         <result column="adjh_id" jdbcType="BIGINT" property="adjhId"/>
         <result column="iv_id" jdbcType="BIGINT" property="ivId"/>
-        <result column="product_id" jdbcType="BIGINT" property="productId"/>
         <result column="lc_code" jdbcType="VARCHAR" property="lcCode"/>
         <result column="iv_qty" jdbcType="DECIMAL" property="ivQty"/>
         <result column="iv_id_adjt" jdbcType="BIGINT" property="ivIdAdjt"/>
@@ -15,12 +14,12 @@
     </resultMap>
 
     <sql id="Base_Column_List">
-        adjl_id,adjh_id,iv_id,product_id,lc_code,iv_qty,iv_id_adjt,lc_code_adjt,iv_adjh_type,iv_qty_adjt
+        adjl_id,adjh_id,iv_id,lc_code,iv_qty,iv_id_adjt,lc_code_adjt,iv_adjh_type,iv_qty_adjt
     </sql>
 
     <insert id="insert">
-        insert into wms_adjt_line (adjl_id,adjh_id,iv_id,product_id,lc_code,iv_qty,iv_id_adjt,lc_code_adjt,iv_adjh_type,iv_qty_adjt)
-        values (#{adjlId,jdbcType=BIGINT},#{adjhId,jdbcType=BIGINT},#{ivId,jdbcType=BIGINT},#{productId,jdbcType=BIGINT},#{lcCode,jdbcType=VARCHAR},#{ivQty,jdbcType=DECIMAL},#{ivIdAdjt,jdbcType=BIGINT},#{lcCodeAdjt,jdbcType=VARCHAR},#{ivAdjhType,jdbcType=VARCHAR},#{ivQtyAdjt,jdbcType=DECIMAL})
+        insert into wms_adjt_line (adjl_id,adjh_id,iv_id,lc_code,iv_qty,iv_id_adjt,lc_code_adjt,iv_adjh_type,iv_qty_adjt)
+        values (#{adjlId,jdbcType=BIGINT},#{adjhId,jdbcType=BIGINT},#{ivId,jdbcType=BIGINT},#{lcCode,jdbcType=VARCHAR},#{ivQty,jdbcType=DECIMAL},#{ivIdAdjt,jdbcType=BIGINT},#{lcCodeAdjt,jdbcType=VARCHAR},#{ivAdjhType,jdbcType=VARCHAR},#{ivQtyAdjt,jdbcType=DECIMAL})
     </insert>
 
     <insert id="insertSelective">
@@ -34,9 +33,6 @@
             </if>
             <if test="ivId != null">
                 iv_id,
-            </if>
-            <if test="productId != null">
-                product_id,
             </if>
             <if test="lcCode != null">
                 lc_code,
@@ -67,9 +63,6 @@
             <if test="ivId != null">
                 #{ivId,jdbcType=BIGINT},
             </if>
-            <if test="productId != null">
-                #{productId,jdbcType=BIGINT},
-            </if>
             <if test="lcCode != null">
                 #{lcCode,jdbcType=VARCHAR},
             </if>
@@ -92,13 +85,12 @@
     </insert>
 
     <insert id="insertBatch">
-        insert into wms_adjt_line (adjl_id,adjh_id,iv_id,product_id,lc_code,iv_qty,iv_id_adjt,lc_code_adjt,iv_adjh_type,iv_qty_adjt) values
+        insert into wms_adjt_line (adjl_id,adjh_id,iv_id,lc_code,iv_qty,iv_id_adjt,lc_code_adjt,iv_adjh_type,iv_qty_adjt) values
         <foreach collection="list" item="item" separator=",">
             (
             #{item.adjlId,jdbcType=BIGINT},
             #{item.adjhId,jdbcType=BIGINT},
             #{item.ivId,jdbcType=BIGINT},
-            #{item.productId,jdbcType=BIGINT},
             #{item.lcCode,jdbcType=VARCHAR},
             #{item.ivQty,jdbcType=DECIMAL},
             #{item.ivIdAdjt,jdbcType=BIGINT},
@@ -126,7 +118,6 @@
         <set>
             adjh_id = #{adjhId,jdbcType=BIGINT},
             iv_id = #{ivId,jdbcType=BIGINT},
-            product_id = #{productId,jdbcType=BIGINT},
             lc_code = #{lcCode,jdbcType=VARCHAR},
             iv_qty = #{ivQty,jdbcType=DECIMAL},
             iv_id_adjt = #{ivIdAdjt,jdbcType=BIGINT},
@@ -145,9 +136,6 @@
             </if>
             <if test="ivId != null">
                 iv_id = #{ivId,jdbcType=BIGINT},
-            </if>
-            <if test="productId != null">
-                product_id = #{productId,jdbcType=BIGINT},
             </if>
             <if test="lcCode != null">
                 lc_code = #{lcCode,jdbcType=VARCHAR},
@@ -180,9 +168,6 @@
                 </if>
                 <if test="item.ivId != null">
                     iv_id = #{item.ivId,jdbcType=BIGINT},
-                </if>
-                <if test="item.productId != null">
-                    product_id = #{item.productId,jdbcType=BIGINT},
                 </if>
                 <if test="item.lcCode != null">
                     lc_code = #{item.lcCode,jdbcType=VARCHAR},
@@ -244,9 +229,6 @@
             <if test="ivId != null">
                 and iv_id=#{ivId,jdbcType=BIGINT}
             </if>
-            <if test="productId != null">
-                and product_id=#{productId,jdbcType=BIGINT}
-            </if>
             <if test="lcCode != null">
                 and lc_code=#{lcCode,jdbcType=VARCHAR}
             </if>
@@ -281,9 +263,6 @@
             </if>
             <if test="ivId != null">
                 and iv_id ${ivId}
-            </if>
-            <if test="productId != null">
-                and product_id ${productId}
             </if>
             <if test="lcCode != null">
                 and lc_code ${lcCode}
