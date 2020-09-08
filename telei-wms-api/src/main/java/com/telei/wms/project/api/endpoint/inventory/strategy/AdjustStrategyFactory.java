@@ -1,7 +1,14 @@
 package com.telei.wms.project.api.endpoint.inventory.strategy;
 
 import com.nuochen.framework.component.commons.spring.SpringApplicationContext;
+import com.telei.infrastructure.component.commons.dto.UserInfo;
+import com.telei.wms.datasource.wms.model.WmsAdjtHeader;
+import com.telei.wms.datasource.wms.model.WmsInventory;
+import com.telei.wms.datasource.wms.model.WmsIvTransaction;
+import com.telei.wms.project.api.utils.DataConvertUtil;
 
+import java.math.BigDecimal;
+import java.util.Date;
 import java.util.Objects;
 
 /**
@@ -21,5 +28,30 @@ public class AdjustStrategyFactory {
             return null;
         }
         return  SpringApplicationContext.getBean(adjustEnum.getBeanName(), IAdjustStrategy.class);
+    }
+
+    /**
+     * 创建库存变动记录
+     *
+     * @param inventory
+     * @param lcCodeTo
+     * @param ivChangeType
+     * @param curIvIdQtyAdjt
+     * @param userInfo
+     * @param nowWithUtc
+     * @return
+     */
+    public static WmsIvTransaction createTransactionRecored(WmsInventory inventory,String lcCodeTo,  String ivChangeType ,BigDecimal curIvIdQtyAdjt, UserInfo userInfo, Date nowWithUtc) {
+        WmsIvTransaction wmsIvTransaction = DataConvertUtil.parseDataAsObject(inventory,WmsIvTransaction.class);
+        wmsIvTransaction.setApCode("ADJT");/**应用类型*/
+        wmsIvTransaction.setIvtChangeType(ivChangeType);/**库存变动类型*/
+        wmsIvTransaction.setLcCodeFrom(inventory.getLcCode());/**原库位编码*/
+        wmsIvTransaction.setLcCodeTo(lcCodeTo);/**目标库位编码*/
+        wmsIvTransaction.setIvQtyFrom(inventory.getIvQty());/**原数量*/
+        wmsIvTransaction.setIvQtyTo(inventory.getIvQty().add(curIvIdQtyAdjt));/**调整后数量*/
+        wmsIvTransaction.setDcQty(curIvIdQtyAdjt);/**调整数量*/
+        wmsIvTransaction.setCreateTime(nowWithUtc);
+        wmsIvTransaction.setCreateUser(userInfo.getUserName());
+        return wmsIvTransaction;
     }
 }
