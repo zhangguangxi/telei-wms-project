@@ -1,6 +1,7 @@
 package com.telei.wms.project.api.endpoint.inventory.strategy;
 
 import com.google.common.collect.Lists;
+import com.sun.xml.internal.ws.transport.http.DeploymentDescriptorParser;
 import com.telei.infrastructure.component.commons.dto.UserInfo;
 import com.telei.infrastructure.component.idgenerator.contract.Id;
 import com.telei.wms.customer.amqp.inventoryChangeWriteBack.OmsInventoryChangeWriteBack;
@@ -27,9 +28,10 @@ public class IncreaseAdjustStrategy implements IAdjustStrategy{
     @Override
     public List<OmsInventoryChangeWriteBack.OmsInventoryChangeWriteBackCondition> process(WmsAdjtHeader wmsAdjtHeader, List<WmsAdjtLine> wmsAdjtLineList, List<WmsInventory> WmsInventoryDbList,
                                                                                     List<WmsInventory> wmsInventoryAddList, List<WmsInventory> wmsInventoryUpdateList, List<Long> deleteIvidList,
-                                                                                    List<WmsIvTransaction> ivTransaction, UserInfo userInfo, Date nowWithUtc) {
+                                                                                    List<WmsIvTransaction> wmsIvTransactionList, UserInfo userInfo, Date nowWithUtc) {
         WmsInventory wmsInventory = WmsInventoryDbList.get(0);
-        BigDecimal ivQtyAdjt = wmsAdjtHeader.getIvQtyAdjt();
+        BigDecimal ivQtyAdjt = wmsAdjtHeader.getIvQtyAdjt();/**库存调整数*/
+        String lcCodeAdjt = wmsAdjtHeader.getLcCodeAdjt(); /**调整库位*/
         /**库存调整明细记录*/
         WmsAdjtLine wmsAdjtLine = new WmsAdjtLine();
         wmsAdjtLine.setIvAdjhType("INCREASE");/**库存调整类型*/
@@ -38,7 +40,7 @@ public class IncreaseAdjustStrategy implements IAdjustStrategy{
         wmsAdjtLine.setIvQty(wmsInventory.getIvQty());/**库存数量*/
         wmsAdjtLine.setIvQtyAdjt(ivQtyAdjt);/**库存调整数量*/
         wmsAdjtLine.setLcCode(wmsAdjtHeader.getLcCode());/**库位编码*/
-        wmsAdjtLine.setLcCodeAdjt(wmsAdjtHeader.getLcCodeAdjt());/**调整库位*/
+        wmsAdjtLine.setLcCodeAdjt(lcCodeAdjt);/**调整库位*/
         wmsAdjtLineList.add(wmsAdjtLine);
 
         /**新增库存记录*/
@@ -56,15 +58,8 @@ public class IncreaseAdjustStrategy implements IAdjustStrategy{
         wmsInventoryAddList.add(wmsInventoryAdd);
 
         /**库存变更记录*/
-        WmsIvTransaction wmsIvTransaction = DataConvertUtil.parseDataAsObject(wmsInventoryAdd, WmsIvTransaction.class);
-        wmsIvTransaction.setApCode("ADJT");/**应用类型*/
-        wmsIvTransaction.setIvtChangeType("INCREASE");/**库存变动类型*/
-        wmsIvTransaction.setLcCodeFrom(wmsInventory.getLcCode());/**原库位编码*/
-        wmsIvTransaction.setIvQtyFrom(wmsInventory.getIvQty());/**原数量*/
-        wmsIvTransaction.setIvQtyTo(wmsInventory.getIvQty().add(ivQtyAdjt));/**调整后数量*/
-        wmsIvTransaction.setDcQty(ivQtyAdjt);/**调整数量*/
-        wmsIvTransaction.setCreateTime(nowWithUtc);
-        wmsIvTransaction.setCreateUser(userInfo.getUserName());
+        WmsIvTransaction wmsIvTransaction = AdjustStrategyFactory.createTransactionRecored(wmsInventoryAdd, lcCodeAdjt, "INCREASE", ivQtyAdjt, userInfo, nowWithUtc);
+        wmsIvTransactionList.add(wmsIvTransaction);
 
         /**OMS库存同步,同步记录还是数量？*/
         List<OmsInventoryChangeWriteBack.OmsInventoryChangeWriteBackCondition> list = Lists.newArrayList();
