@@ -90,6 +90,9 @@ public class InventoryBussiness {
     @Autowired
     private WmsAdjtLineService wmsAdjtLineService;
 
+    @Autowired
+    private WmsIvTransactionService wmsIvTransactionService;
+
 
 
     /**
@@ -155,8 +158,8 @@ public class InventoryBussiness {
         //3.1 产品(商品)-预处理
         ProductDetailRequest productDetailRequest = new ProductDetailRequest();
         productDetailRequest.setIds(requestProductIdList);
-        ApiResponse productDetailResponse = productFeignClient.getProductDetailByBarCode(productDetailRequest);
-        ProductListResponse response = JSON.parseObject(JSON.toJSONString(productDetailResponse.getData()), ProductListResponse.class);
+        ApiResponse productListResponse = productFeignClient.selectProductList(productDetailRequest);
+        ProductListResponse response = JSON.parseObject(JSON.toJSONString(productListResponse.getData()), ProductListResponse.class);
         List<ProductDetailResponse> productList = response.getProductList();
         if(Objects.isNull(productList) || productList.isEmpty()){
             ErrorCode.INVENTORY_ADD_ERROR_PRODUCT_NOT_EXIST_4003.throwError();
@@ -299,9 +302,11 @@ public class InventoryBussiness {
         if(countForInventoryHistory != inventoryHistoryList.size() ){
             ErrorCode.INVENTORY_ADD_ERROR_4015.throwError();
         }
-        // TODO: 2020/9/4
         List<WmsIvTransaction> wmsIvTransactions = DataConvertUtil.parseDataAsArray(inventoryList, WmsIvTransaction.class);
-
+        int countForTransaction = wmsIvTransactionService.insertBatch(wmsIvTransactions);
+        if(countForTransaction != wmsIvTransactions.size()){
+            ErrorCode.INVENTORY_ADD_ERROR_4023.throwError();
+        }
 
         //3.2 更新上架单单头/上架单明细
         int countForPao = wmsPaoHeaderService.updateByPrimaryKey(wmsPaoHeader);
@@ -337,39 +342,74 @@ public class InventoryBussiness {
      */
     @Transactional(rollbackFor = Exception.class)
     public InventoryIncreaseBussinessResponse increaseInventory(InventoryIncreaseBussinessRequest request) {
+        adjustInventory(request,"INCR");
+        return new InventoryIncreaseBussinessResponse();
+    }
+
+    /**
+     * 库存调整
+     * @param request
+     * @param adjhType
+     */
+    private void adjustInventory(Object request,String adjhType) {
         /**基础信息*/
         Date nowWithUTC = DateUtils.nowWithUTC();
         UserInfo userInfo = CustomRequestContext.getUserInfo();
-        long adjtId = idGenerator.getUnique();
-        long adjtlId = idGenerator.getUnique();
+        long adjtId = idGenerator.getUnique();//库存调整单单头id
+        long adjtlId = idGenerator.getUnique();//库存调整单明细id
         String bussinessNumber = getBussinessNumber("wms");
 
         /**库存调整单单头*/
         WmsAdjtHeader wmsAdjtHeader = DataConvertUtil.parseDataAsObject(request, WmsAdjtHeader.class);
-        wmsAdjtHeader.setAdjhCode(bussinessNumber);
+        ProductDetailRequest productDetailRequest = new ProductDetailRequest();
+        productDetailRequest.setProductBarcode(wmsAdjtHeader.getProductBarcode());
+        ApiResponse apiResponse = productFeignClient.getProductDetailByBarCode(productDetailRequest);
+        ProductDetailResponse productDetailResponse = DataConvertUtil.parseDataAsObject(apiResponse.getData(), ProductDetailResponse.class);
+        if(Objects.isNull(productDetailResponse)){
+            // TODO: 2020/9/8
+        }
+        wmsAdjtHeader.setProductNameLocal(productDetailResponse.getProductNameLocal());//产品本地名称
+        wmsAdjtHeader.setProductUpcCode(productDetailResponse.getProductUpcCode());//UPC码
+        wmsAdjtHeader.setAdjhCode(bussinessNumber);//业务单据编码
         wmsAdjtHeader.setId(adjtId);
-        wmsAdjtHeader.setBizDate(nowWithUTC);
-        wmsAdjtHeader.setCreateTime(nowWithUTC);
-        wmsAdjtHeader.setCreateUser(userInfo.getUserName());
-        wmsAdjtHeader.setAdjhType("KC");
-        wmsAdjtHeader.setIvihStatus("20");
+        wmsAdjtHeader.setBizDate(nowWithUTC);//业务日期
+        wmsAdjtHeader.setCreateTime(nowWithUTC);//创建时间
+        wmsAdjtHeader.setAuditTime(nowWithUTC);//审核时间
+        wmsAdjtHeader.setCreateUser(userInfo.getUserName());//创建用户
+        wmsAdjtHeader.setAuditUser(userInfo.getUserName());// 审核用户
+        wmsAdjtHeader.setAdjhType(adjhType);//调整类型
+        wmsAdjtHeader.setIvihStatus("20");//库存调整状态
+        // TODO: 2020/9/8 大包数箱规/中包数箱规(调整单明细里面的ivId反查批次记录中的箱规(rate)，按照批次的创建时间正序排列，获取第一个 库存数量(调整前)
 
         /**库存调整单明细*/
+        WmsInventory wmsInventory = new WmsInventory();
+        wmsInventory.setLcCode(wmsAdjtHeader.getLcCode());
+        wmsInventory.setProductId(wmsAdjtHeader.getProductId());
+        //库存明细
+        List<WmsInventory> wmsInventories = wmsInventoryService.selectByLcCodeAndProductId(wmsInventory);
+        if(Objects.isNull(wmsInventories) || wmsInventories.isEmpty()){
+            // TODO: 2020/9/8
+        }
         WmsAdjtLine wmsAdjtLine = DataConvertUtil.parseDataAsObject(request, WmsAdjtLine.class);
         wmsAdjtLine.setId(adjtlId);
         wmsAdjtLine.setAdjhId(adjtId);
-        wmsAdjtLine.setIvAdjhType("INCR");
+        wmsAdjtLine.setIvAdjhType(adjhType);
 
-        /**数据状态处理*/
+        //todo 库存id的设置，移库与调减、升降都是记录记录原库存id，调增是记录新库存id
+
+        //区分类型处理(调增(INCREASE)、调减(REDUCE)、升任务(LIFTUP)、降任务(LIFTDOWN)、移(MOVE))
+
+
+       /**数据状态处理*/
         int countForAdjHeader = wmsAdjtHeaderService.insertSelective(wmsAdjtHeader);
         if(countForAdjHeader <= 0){
-            ErrorCode.ADJT_INCREASE_ERROR_4001.throwError();
+            ErrorCode.ADJT_ERROR_4001.throwError(adjhType);
         }
         int countForAdjLine = wmsAdjtLineService.insertSelective(wmsAdjtLine);
         if(countForAdjLine <= 0){
-            ErrorCode.ADJT_INCREASE_ERROR_4002.throwError();
+            ErrorCode.ADJT_ERROR_4002.throwError(adjhType);
         }
-        return new InventoryIncreaseBussinessResponse();
+
     }
 
 

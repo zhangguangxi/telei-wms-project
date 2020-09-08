@@ -4,6 +4,14 @@ import com.nuochen.framework.autocoding.domain.mybatis.BaseRepository;
 import com.telei.wms.datasource.wms.model.WmsInventory;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
+
 @Repository
 public interface WmsInventoryRepository extends BaseRepository<WmsInventory,Long> {
+    /**
+     * 根据库位编码与产品id查询库存
+     * @param wmsInventory
+     * @return
+     */
+    List<WmsInventory> selectByLcCodeAndProductId(WmsInventory wmsInventory);
 }

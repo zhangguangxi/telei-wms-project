@@ -18,8 +18,8 @@ public class InventoryIncreaseBussinessRequest {
     private String warehouseCode;
     /**原因*/
     private String reason;
-    /**库存id*/
-    private Long ivId;
+//    /**库存id*/
+//    private Long ivId;
     /**商品id*/
     private Long productId;
     /**库位编码*/
