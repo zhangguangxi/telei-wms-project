@@ -1,8 +1,9 @@
 package com.telei.wms.datasource.wms.model;
 
 import com.nuochen.framework.autocoding.domain.Entity;
-import java.math.BigDecimal;
 import lombok.Data;
+
+import java.math.BigDecimal;
 
 /**
 * wms_adjt_line 库存调整单明细
@@ -23,7 +24,7 @@ public class WmsAdjtLine implements Entity<Long> {
     private Long ivIdAdjt;
     /** 调整库位 */
     private String lcCodeAdjt;
-    /** 库存调整类型，INCR 增，LESS 减，MOVE 移位，同单头，冗余字段 */
+    /** 调整类型，MOVE 移位，INCREASE 调增，REDUCE	调减，LIFTUP 升任务，LIFTDOWN 降任务 */
     private String ivAdjhType;
     /** 调整数量 */
     private BigDecimal ivQtyAdjt;

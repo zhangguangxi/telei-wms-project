@@ -42,7 +42,7 @@ public class RooBussiness {
 
     @Autowired
     private Id idGenerator;
-
+    
     @Autowired
     private BusinessNumberFeignClient businessNumberFeignClient;
 

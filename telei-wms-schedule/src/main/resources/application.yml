@@ -33,6 +33,16 @@ logging:
 spring:
   profiles: dev
 
+id-generator:
+  machine-id: 1
+
+#数据同步配置
+id-instantdirective:
+  #当前server名称
+  server-name: HANGHZHOU
+  #当前系统
+  system: WMS
+
 #datasource:
 datasource:
   wms:
@@ -51,7 +61,7 @@ datasource:
     testWhileIdle: true
     timeBetweenEvictionRunsMillis: 60000
     type: com.alibaba.druid.pool.DruidDataSource
-    url: jdbc:mysql://192.168.1.114:3306/demo_wms_db?characterEncoding=utf8&allowMultiQueries=true
+    url: jdbc:mysql://192.168.1.114:3306/wms?characterEncoding=utf8&allowMultiQueries=true&useSSL=false
     username: root
     password: admin1314
 #    url: jdbc:mysql://127.0.0.1:3306/wms_db?characterEncoding=utf8&allowMultiQueries=true
@@ -59,12 +69,19 @@ datasource:
 #    password: admin
     validationQuery:  'x'
 
-id-generator:
-  machine-id: 1
-
 ---
 spring:
   profiles: test
+
+id-generator:
+  machine-id: 1
+
+#数据同步配置
+id-instantdirective:
+  #当前server名称
+  server-name: HANGHZHOU
+  #当前系统
+  system: WMS
 
 #datasource:
 datasource:
@@ -84,10 +101,7 @@ datasource:
     testWhileIdle: true
     timeBetweenEvictionRunsMillis: 60000
     type: com.alibaba.druid.pool.DruidDataSource
-    url: jdbc:mysql://192.168.1.114:3306/demo_wms_db?characterEncoding=utf8&allowMultiQueries=true
+    url: jdbc:mysql://192.168.1.114:3306/wms?characterEncoding=utf8&allowMultiQueries=true&useSSL=false
     username: root
     password: admin1314
     validationQuery:  'x'
-
-id-generator:
-  machine-id: 1

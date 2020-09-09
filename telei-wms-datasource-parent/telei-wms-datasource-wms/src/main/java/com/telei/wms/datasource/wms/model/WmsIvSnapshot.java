@@ -6,11 +6,15 @@ import java.util.Date;
 import lombok.Data;
 
 /**
-* wms_inventory 库存表
-*/
+ * wms_iv_snapshot 库存快照表
+ */
 @Data
-public class WmsInventory implements Entity<Long> {
-    /** id */
+public class WmsIvSnapshot implements Entity<Long> {
+    /** 快照id */
+    private Long id;
+    /** ivst_id,快照时间id */
+    private Long ivstId;
+    /** 库存id */
     private Long ivId;
     /** 公司id */
     private Long companyId;
@@ -33,7 +37,7 @@ public class WmsInventory implements Entity<Long> {
     /** 库存数量 */
     private BigDecimal ivQty;
     /** 计量单位 */
-    private Long stockUnit;
+    private Integer stockUnit;
     /** 中包数量 */
     private BigDecimal midBagQty;
     /** 中包转换数 */
@@ -46,9 +50,9 @@ public class WmsInventory implements Entity<Long> {
     private BigDecimal bigBagRate;
     /** 大包剩余数量 */
     private BigDecimal bigBagExtraQty;
-    /** 库存锁，0可以出出货，1不可以出货 */
+    /** 库存锁，N可以出出货，Y不可以出货 */
     private Integer ivLocksign;
-    /** 冻结锁，0可以操作，1不可以移库、拆分、出货、更新 */
+    /** 冻结锁，N可以操作，Y不可以移库、拆分、出货、更新 */
     private Integer ivFreezesign;
     /** 业务日期 */
     private Date bizDate;
@@ -72,12 +76,4 @@ public class WmsInventory implements Entity<Long> {
     private String batchNo;
     /** 原库存id */
     private Long ivIdFrom;
-    @Override
-    public Long getId() {
-        return ivId;
-    }
-    @Override
-    public void setId(Long id) {
-        this.ivId = id;
-    }
 }

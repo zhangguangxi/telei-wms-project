@@ -1,4 +1,4 @@
-package com.telei.wms.project.api.utils;
+package com.telei.wms.schedule.utils;
 
 import com.alibaba.fastjson.JSON;
 
@@ -30,4 +30,5 @@ public  class DataConvertUtil {
     public static  <T> List<T> parseDataAsArray(Object data,Class<T> type){
         return JSON.parseArray(JSON.toJSONString(data),type);
     }
+
 }

@@ -1,0 +1,536 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.telei.wms.datasource.wms.repository.WmsIvSnapshotDailyKnotRepository">
+    <resultMap id="BaseResultMap" type="com.telei.wms.datasource.wms.model.WmsIvSnapshotDailyKnot">
+        <id column="ivsdk_id" jdbcType="BIGINT" property="id"/>
+            <result column="company_id" jdbcType="BIGINT" property="companyId"/>
+            <result column="warehouse_id" jdbcType="BIGINT" property="warehouseId"/>
+            <result column="warehouse_code" jdbcType="VARCHAR" property="warehouseCode"/>
+            <result column="customer_id" jdbcType="BIGINT" property="customerId"/>
+            <result column="product_id" jdbcType="BIGINT" property="productId"/>
+            <result column="knot_lc_date" jdbcType="TIMESTAMP" property="knotLcDate"/>
+            <result column="knot_date" jdbcType="TIMESTAMP" property="knotDate"/>
+            <result column="snapshot_lc_date" jdbcType="TIMESTAMP" property="snapshotLcDate"/>
+            <result column="snapshot_date" jdbcType="TIMESTAMP" property="snapshotDate"/>
+            <result column="iv_qty" jdbcType="DECIMAL" property="ivQty"/>
+            <result column="total_weight" jdbcType="DECIMAL" property="totalWeight"/>
+            <result column="total_net_weight" jdbcType="DECIMAL" property="totalNetWeight"/>
+            <result column="total_vol" jdbcType="DECIMAL" property="totalVol"/>
+            <result column="lc_count" jdbcType="DECIMAL" property="lcCount"/>
+            <result column="big_bag_qty" jdbcType="DECIMAL" property="bigBagQty"/>
+            <result column="big_bag_extra_qty" jdbcType="DECIMAL" property="bigBagExtraQty"/>
+            <result column="mid_bag_qty" jdbcType="DECIMAL" property="midBagQty"/>
+            <result column="mid_bag_extra_qty" jdbcType="DECIMAL" property="midBagExtraQty"/>
+            <result column="create_time" jdbcType="TIMESTAMP" property="createTime"/>
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        ivsdk_id,company_id,warehouse_id,warehouse_code,customer_id,product_id,knot_lc_date,knot_date,snapshot_lc_date,snapshot_date,iv_qty,total_weight,total_net_weight,total_vol,lc_count,big_bag_qty,big_bag_extra_qty,mid_bag_qty,mid_bag_extra_qty,create_time
+    </sql>
+
+        <insert id="insert">
+            insert into wms_iv_snapshot_daily_knot (ivsdk_id,company_id,warehouse_id,warehouse_code,customer_id,product_id,knot_lc_date,knot_date,snapshot_lc_date,snapshot_date,iv_qty,total_weight,total_net_weight,total_vol,lc_count,big_bag_qty,big_bag_extra_qty,mid_bag_qty,mid_bag_extra_qty,create_time)
+            values (#{id,jdbcType=BIGINT},#{companyId,jdbcType=BIGINT},#{warehouseId,jdbcType=BIGINT},#{warehouseCode,jdbcType=VARCHAR},#{customerId,jdbcType=BIGINT},#{productId,jdbcType=BIGINT},#{knotLcDate,jdbcType=TIMESTAMP},#{knotDate,jdbcType=TIMESTAMP},#{snapshotLcDate,jdbcType=TIMESTAMP},#{snapshotDate,jdbcType=TIMESTAMP},#{ivQty,jdbcType=DECIMAL},#{totalWeight,jdbcType=DECIMAL},#{totalNetWeight,jdbcType=DECIMAL},#{totalVol,jdbcType=DECIMAL},#{lcCount,jdbcType=DECIMAL},#{bigBagQty,jdbcType=DECIMAL},#{bigBagExtraQty,jdbcType=DECIMAL},#{midBagQty,jdbcType=DECIMAL},#{midBagExtraQty,jdbcType=DECIMAL},#{createTime,jdbcType=TIMESTAMP})
+        </insert>
+
+        <insert id="insertSelective">
+            insert into wms_iv_snapshot_daily_knot
+            <trim prefix="(" suffix=")" suffixOverrides=",">
+                    <if test="id != null">
+                        ivsdk_id,
+                    </if>
+                    <if test="companyId != null">
+                        company_id,
+                    </if>
+                    <if test="warehouseId != null">
+                        warehouse_id,
+                    </if>
+                    <if test="warehouseCode != null">
+                        warehouse_code,
+                    </if>
+                    <if test="customerId != null">
+                        customer_id,
+                    </if>
+                    <if test="productId != null">
+                        product_id,
+                    </if>
+                    <if test="knotLcDate != null">
+                        knot_lc_date,
+                    </if>
+                    <if test="knotDate != null">
+                        knot_date,
+                    </if>
+                    <if test="snapshotLcDate != null">
+                        snapshot_lc_date,
+                    </if>
+                    <if test="snapshotDate != null">
+                        snapshot_date,
+                    </if>
+                    <if test="ivQty != null">
+                        iv_qty,
+                    </if>
+                    <if test="totalWeight != null">
+                        total_weight,
+                    </if>
+                    <if test="totalNetWeight != null">
+                        total_net_weight,
+                    </if>
+                    <if test="totalVol != null">
+                        total_vol,
+                    </if>
+                    <if test="lcCount != null">
+                        lc_count,
+                    </if>
+                    <if test="bigBagQty != null">
+                        big_bag_qty,
+                    </if>
+                    <if test="bigBagExtraQty != null">
+                        big_bag_extra_qty,
+                    </if>
+                    <if test="midBagQty != null">
+                        mid_bag_qty,
+                    </if>
+                    <if test="midBagExtraQty != null">
+                        mid_bag_extra_qty,
+                    </if>
+                    <if test="createTime != null">
+                        create_time
+                    </if>
+            </trim>
+            <trim prefix="values (" suffix=")" suffixOverrides=",">
+                    <if test="id != null">
+                        #{id,jdbcType=BIGINT},
+                    </if>
+                    <if test="companyId != null">
+                        #{companyId,jdbcType=BIGINT},
+                    </if>
+                    <if test="warehouseId != null">
+                        #{warehouseId,jdbcType=BIGINT},
+                    </if>
+                    <if test="warehouseCode != null">
+                        #{warehouseCode,jdbcType=VARCHAR},
+                    </if>
+                    <if test="customerId != null">
+                        #{customerId,jdbcType=BIGINT},
+                    </if>
+                    <if test="productId != null">
+                        #{productId,jdbcType=BIGINT},
+                    </if>
+                    <if test="knotLcDate != null">
+                        #{knotLcDate,jdbcType=TIMESTAMP},
+                    </if>
+                    <if test="knotDate != null">
+                        #{knotDate,jdbcType=TIMESTAMP},
+                    </if>
+                    <if test="snapshotLcDate != null">
+                        #{snapshotLcDate,jdbcType=TIMESTAMP},
+                    </if>
+                    <if test="snapshotDate != null">
+                        #{snapshotDate,jdbcType=TIMESTAMP},
+                    </if>
+                    <if test="ivQty != null">
+                        #{ivQty,jdbcType=DECIMAL},
+                    </if>
+                    <if test="totalWeight != null">
+                        #{totalWeight,jdbcType=DECIMAL},
+                    </if>
+                    <if test="totalNetWeight != null">
+                        #{totalNetWeight,jdbcType=DECIMAL},
+                    </if>
+                    <if test="totalVol != null">
+                        #{totalVol,jdbcType=DECIMAL},
+                    </if>
+                    <if test="lcCount != null">
+                        #{lcCount,jdbcType=DECIMAL},
+                    </if>
+                    <if test="bigBagQty != null">
+                        #{bigBagQty,jdbcType=DECIMAL},
+                    </if>
+                    <if test="bigBagExtraQty != null">
+                        #{bigBagExtraQty,jdbcType=DECIMAL},
+                    </if>
+                    <if test="midBagQty != null">
+                        #{midBagQty,jdbcType=DECIMAL},
+                    </if>
+                    <if test="midBagExtraQty != null">
+                        #{midBagExtraQty,jdbcType=DECIMAL},
+                    </if>
+                    <if test="createTime != null">
+                        #{createTime,jdbcType=TIMESTAMP}
+                    </if>
+            </trim>
+        </insert>
+
+        <insert id="insertBatch">
+            insert into wms_iv_snapshot_daily_knot (ivsdk_id,company_id,warehouse_id,warehouse_code,customer_id,product_id,knot_lc_date,knot_date,snapshot_lc_date,snapshot_date,iv_qty,total_weight,total_net_weight,total_vol,lc_count,big_bag_qty,big_bag_extra_qty,mid_bag_qty,mid_bag_extra_qty,create_time) values
+            <foreach collection="list" item="item" separator=",">
+                (
+                    #{item.id,jdbcType=BIGINT},
+                    #{item.companyId,jdbcType=BIGINT},
+                    #{item.warehouseId,jdbcType=BIGINT},
+                    #{item.warehouseCode,jdbcType=VARCHAR},
+                    #{item.customerId,jdbcType=BIGINT},
+                    #{item.productId,jdbcType=BIGINT},
+                    #{item.knotLcDate,jdbcType=TIMESTAMP},
+                    #{item.knotDate,jdbcType=TIMESTAMP},
+                    #{item.snapshotLcDate,jdbcType=TIMESTAMP},
+                    #{item.snapshotDate,jdbcType=TIMESTAMP},
+                    #{item.ivQty,jdbcType=DECIMAL},
+                    #{item.totalWeight,jdbcType=DECIMAL},
+                    #{item.totalNetWeight,jdbcType=DECIMAL},
+                    #{item.totalVol,jdbcType=DECIMAL},
+                    #{item.lcCount,jdbcType=DECIMAL},
+                    #{item.bigBagQty,jdbcType=DECIMAL},
+                    #{item.bigBagExtraQty,jdbcType=DECIMAL},
+                    #{item.midBagQty,jdbcType=DECIMAL},
+                    #{item.midBagExtraQty,jdbcType=DECIMAL},
+                    #{item.createTime,jdbcType=TIMESTAMP}
+                )
+            </foreach>
+        </insert>
+
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+        delete from wms_iv_snapshot_daily_knot
+        where ivsdk_id = #{id,jdbcType=BIGINT}
+    </delete>
+
+    <delete id="deleteByPrimaryKeys">
+        delete from wms_iv_snapshot_daily_knot where ivsdk_id in
+        <foreach close=")" collection="list" item="item" open="(" separator=",">
+            #{item}
+        </foreach>
+    </delete>
+
+    <update id="updateByPrimaryKey">
+        update wms_iv_snapshot_daily_knot
+        <set>
+                company_id = #{companyId,jdbcType=BIGINT},
+                warehouse_id = #{warehouseId,jdbcType=BIGINT},
+                warehouse_code = #{warehouseCode,jdbcType=VARCHAR},
+                customer_id = #{customerId,jdbcType=BIGINT},
+                product_id = #{productId,jdbcType=BIGINT},
+                knot_lc_date = #{knotLcDate,jdbcType=TIMESTAMP},
+                knot_date = #{knotDate,jdbcType=TIMESTAMP},
+                snapshot_lc_date = #{snapshotLcDate,jdbcType=TIMESTAMP},
+                snapshot_date = #{snapshotDate,jdbcType=TIMESTAMP},
+                iv_qty = #{ivQty,jdbcType=DECIMAL},
+                total_weight = #{totalWeight,jdbcType=DECIMAL},
+                total_net_weight = #{totalNetWeight,jdbcType=DECIMAL},
+                total_vol = #{totalVol,jdbcType=DECIMAL},
+                lc_count = #{lcCount,jdbcType=DECIMAL},
+                big_bag_qty = #{bigBagQty,jdbcType=DECIMAL},
+                big_bag_extra_qty = #{bigBagExtraQty,jdbcType=DECIMAL},
+                mid_bag_qty = #{midBagQty,jdbcType=DECIMAL},
+                mid_bag_extra_qty = #{midBagExtraQty,jdbcType=DECIMAL},
+                create_time = #{createTime,jdbcType=TIMESTAMP}
+        </set>
+        where ivsdk_id = #{id,jdbcType=BIGINT}
+    </update>
+
+    <update id="updateByPrimaryKeySelective">
+        update wms_iv_snapshot_daily_knot
+        <set>
+                <if test="companyId != null">
+                    company_id = #{companyId,jdbcType=BIGINT},
+                </if>
+                <if test="warehouseId != null">
+                    warehouse_id = #{warehouseId,jdbcType=BIGINT},
+                </if>
+                <if test="warehouseCode != null">
+                    warehouse_code = #{warehouseCode,jdbcType=VARCHAR},
+                </if>
+                <if test="customerId != null">
+                    customer_id = #{customerId,jdbcType=BIGINT},
+                </if>
+                <if test="productId != null">
+                    product_id = #{productId,jdbcType=BIGINT},
+                </if>
+                <if test="knotLcDate != null">
+                    knot_lc_date = #{knotLcDate,jdbcType=TIMESTAMP},
+                </if>
+                <if test="knotDate != null">
+                    knot_date = #{knotDate,jdbcType=TIMESTAMP},
+                </if>
+                <if test="snapshotLcDate != null">
+                    snapshot_lc_date = #{snapshotLcDate,jdbcType=TIMESTAMP},
+                </if>
+                <if test="snapshotDate != null">
+                    snapshot_date = #{snapshotDate,jdbcType=TIMESTAMP},
+                </if>
+                <if test="ivQty != null">
+                    iv_qty = #{ivQty,jdbcType=DECIMAL},
+                </if>
+                <if test="totalWeight != null">
+                    total_weight = #{totalWeight,jdbcType=DECIMAL},
+                </if>
+                <if test="totalNetWeight != null">
+                    total_net_weight = #{totalNetWeight,jdbcType=DECIMAL},
+                </if>
+                <if test="totalVol != null">
+                    total_vol = #{totalVol,jdbcType=DECIMAL},
+                </if>
+                <if test="lcCount != null">
+                    lc_count = #{lcCount,jdbcType=DECIMAL},
+                </if>
+                <if test="bigBagQty != null">
+                    big_bag_qty = #{bigBagQty,jdbcType=DECIMAL},
+                </if>
+                <if test="bigBagExtraQty != null">
+                    big_bag_extra_qty = #{bigBagExtraQty,jdbcType=DECIMAL},
+                </if>
+                <if test="midBagQty != null">
+                    mid_bag_qty = #{midBagQty,jdbcType=DECIMAL},
+                </if>
+                <if test="midBagExtraQty != null">
+                    mid_bag_extra_qty = #{midBagExtraQty,jdbcType=DECIMAL},
+                </if>
+                <if test="createTime != null">
+                    create_time = #{createTime,jdbcType=TIMESTAMP}
+                </if>
+        </set>
+        where ivsdk_id = #{id,jdbcType=BIGINT}
+    </update>
+
+    <update id="updateBatch">
+        <foreach close="" collection="list" item="item" open="" separator=";">
+            update wms_iv_snapshot_daily_knot
+            <set>
+                    <if test="item.companyId != null">
+                        company_id = #{item.companyId,jdbcType=BIGINT},
+                    </if>
+                    <if test="item.warehouseId != null">
+                        warehouse_id = #{item.warehouseId,jdbcType=BIGINT},
+                    </if>
+                    <if test="item.warehouseCode != null">
+                        warehouse_code = #{item.warehouseCode,jdbcType=VARCHAR},
+                    </if>
+                    <if test="item.customerId != null">
+                        customer_id = #{item.customerId,jdbcType=BIGINT},
+                    </if>
+                    <if test="item.productId != null">
+                        product_id = #{item.productId,jdbcType=BIGINT},
+                    </if>
+                    <if test="item.knotLcDate != null">
+                        knot_lc_date = #{item.knotLcDate,jdbcType=TIMESTAMP},
+                    </if>
+                    <if test="item.knotDate != null">
+                        knot_date = #{item.knotDate,jdbcType=TIMESTAMP},
+                    </if>
+                    <if test="item.snapshotLcDate != null">
+                        snapshot_lc_date = #{item.snapshotLcDate,jdbcType=TIMESTAMP},
+                    </if>
+                    <if test="item.snapshotDate != null">
+                        snapshot_date = #{item.snapshotDate,jdbcType=TIMESTAMP},
+                    </if>
+                    <if test="item.ivQty != null">
+                        iv_qty = #{item.ivQty,jdbcType=DECIMAL},
+                    </if>
+                    <if test="item.totalWeight != null">
+                        total_weight = #{item.totalWeight,jdbcType=DECIMAL},
+                    </if>
+                    <if test="item.totalNetWeight != null">
+                        total_net_weight = #{item.totalNetWeight,jdbcType=DECIMAL},
+                    </if>
+                    <if test="item.totalVol != null">
+                        total_vol = #{item.totalVol,jdbcType=DECIMAL},
+                    </if>
+                    <if test="item.lcCount != null">
+                        lc_count = #{item.lcCount,jdbcType=DECIMAL},
+                    </if>
+                    <if test="item.bigBagQty != null">
+                        big_bag_qty = #{item.bigBagQty,jdbcType=DECIMAL},
+                    </if>
+                    <if test="item.bigBagExtraQty != null">
+                        big_bag_extra_qty = #{item.bigBagExtraQty,jdbcType=DECIMAL},
+                    </if>
+                    <if test="item.midBagQty != null">
+                        mid_bag_qty = #{item.midBagQty,jdbcType=DECIMAL},
+                    </if>
+                    <if test="item.midBagExtraQty != null">
+                        mid_bag_extra_qty = #{item.midBagExtraQty,jdbcType=DECIMAL},
+                    </if>
+                    <if test="item.createTime != null">
+                        create_time = #{item.createTime,jdbcType=TIMESTAMP}
+                    </if>
+            </set>
+            where ivsdk_id = #{item.id,jdbcType=BIGINT}
+        </foreach>
+    </update>
+
+    <select id="selectByPrimaryKey" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List" />
+        from wms_iv_snapshot_daily_knot
+        where ivsdk_id = #{id,jdbcType=BIGINT}
+    </select>
+
+    <select id="selectByPrimaryKeyWithLock" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List" />
+        from wms_iv_snapshot_daily_knot
+        where ivsdk_id = #{id,jdbcType=BIGINT} for update
+    </select>
+
+    <select id="selectByPrimaryKeys" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List" />
+        from wms_iv_snapshot_daily_knot where ivsdk_id in
+        <foreach close=")" collection="list" item="item" open="(" separator=",">
+            #{item}
+        </foreach>
+    </select>
+
+    <select id="selectByEntity" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from wms_iv_snapshot_daily_knot
+        <where>
+                <if test="id != null">
+                    and ivsdk_id=#{id,jdbcType=BIGINT}
+                </if>
+                <if test="companyId != null">
+                    and company_id=#{companyId,jdbcType=BIGINT}
+                </if>
+                <if test="warehouseId != null">
+                    and warehouse_id=#{warehouseId,jdbcType=BIGINT}
+                </if>
+                <if test="warehouseCode != null">
+                    and warehouse_code=#{warehouseCode,jdbcType=VARCHAR}
+                </if>
+                <if test="customerId != null">
+                    and customer_id=#{customerId,jdbcType=BIGINT}
+                </if>
+                <if test="productId != null">
+                    and product_id=#{productId,jdbcType=BIGINT}
+                </if>
+                <if test="knotLcDate != null">
+                    and knot_lc_date=#{knotLcDate,jdbcType=TIMESTAMP}
+                </if>
+                <if test="knotDate != null">
+                    and knot_date=#{knotDate,jdbcType=TIMESTAMP}
+                </if>
+                <if test="snapshotLcDate != null">
+                    and snapshot_lc_date=#{snapshotLcDate,jdbcType=TIMESTAMP}
+                </if>
+                <if test="snapshotDate != null">
+                    and snapshot_date=#{snapshotDate,jdbcType=TIMESTAMP}
+                </if>
+                <if test="ivQty != null">
+                    and iv_qty=#{ivQty,jdbcType=DECIMAL}
+                </if>
+                <if test="totalWeight != null">
+                    and total_weight=#{totalWeight,jdbcType=DECIMAL}
+                </if>
+                <if test="totalNetWeight != null">
+                    and total_net_weight=#{totalNetWeight,jdbcType=DECIMAL}
+                </if>
+                <if test="totalVol != null">
+                    and total_vol=#{totalVol,jdbcType=DECIMAL}
+                </if>
+                <if test="lcCount != null">
+                    and lc_count=#{lcCount,jdbcType=DECIMAL}
+                </if>
+                <if test="bigBagQty != null">
+                    and big_bag_qty=#{bigBagQty,jdbcType=DECIMAL}
+                </if>
+                <if test="bigBagExtraQty != null">
+                    and big_bag_extra_qty=#{bigBagExtraQty,jdbcType=DECIMAL}
+                </if>
+                <if test="midBagQty != null">
+                    and mid_bag_qty=#{midBagQty,jdbcType=DECIMAL}
+                </if>
+                <if test="midBagExtraQty != null">
+                    and mid_bag_extra_qty=#{midBagExtraQty,jdbcType=DECIMAL}
+                </if>
+                <if test="createTime != null">
+                    and create_time=#{createTime,jdbcType=TIMESTAMP}
+                </if>
+        </where>
+    </select>
+
+    <select id="selectByConditions" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from wms_iv_snapshot_daily_knot
+        <where>
+                <if test="id != null">
+                    and ivsdk_id ${id}
+                </if>
+                <if test="companyId != null">
+                    and company_id ${companyId}
+                </if>
+                <if test="warehouseId != null">
+                    and warehouse_id ${warehouseId}
+                </if>
+                <if test="warehouseCode != null">
+                    and warehouse_code ${warehouseCode}
+                </if>
+                <if test="customerId != null">
+                    and customer_id ${customerId}
+                </if>
+                <if test="productId != null">
+                    and product_id ${productId}
+                </if>
+                <if test="knotLcDate != null">
+                    and knot_lc_date ${knotLcDate}
+                </if>
+                <if test="knotDate != null">
+                    and knot_date ${knotDate}
+                </if>
+                <if test="snapshotLcDate != null">
+                    and snapshot_lc_date ${snapshotLcDate}
+                </if>
+                <if test="snapshotDate != null">
+                    and snapshot_date ${snapshotDate}
+                </if>
+                <if test="ivQty != null">
+                    and iv_qty ${ivQty}
+                </if>
+                <if test="totalWeight != null">
+                    and total_weight ${totalWeight}
+                </if>
+                <if test="totalNetWeight != null">
+                    and total_net_weight ${totalNetWeight}
+                </if>
+                <if test="totalVol != null">
+                    and total_vol ${totalVol}
+                </if>
+                <if test="lcCount != null">
+                    and lc_count ${lcCount}
+                </if>
+                <if test="bigBagQty != null">
+                    and big_bag_qty ${bigBagQty}
+                </if>
+                <if test="bigBagExtraQty != null">
+                    and big_bag_extra_qty ${bigBagExtraQty}
+                </if>
+                <if test="midBagQty != null">
+                    and mid_bag_qty ${midBagQty}
+                </if>
+                <if test="midBagExtraQty != null">
+                    and mid_bag_extra_qty ${midBagExtraQty}
+                </if>
+                <if test="createTime != null">
+                    and create_time ${createTime}
+                </if>
+        </where>
+        <if test="orderBy != null">
+            order by ${orderBy}
+        </if>
+    </select>
+
+    <select id="selectAll" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from wms_iv_snapshot_daily_knot
+    </select>
+
+    <select id="count" resultType="java.lang.Long">
+        select count(*) from wms_iv_snapshot_daily_knot
+    </select>
+
+    <select id="selectByFunction">
+        select ${function}(${column}) from wms_iv_snapshot_daily_knot
+    </select>
+
+</mapper>

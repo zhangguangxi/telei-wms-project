@@ -2,10 +2,7 @@ package com.telei.wms.project.api.endpoint.inventory.strategy;
 
 import com.telei.infrastructure.component.commons.dto.UserInfo;
 import com.telei.wms.customer.amqp.inventoryChangeWriteBack.OmsInventoryChangeWriteBack;
-import com.telei.wms.datasource.wms.model.WmsAdjtHeader;
-import com.telei.wms.datasource.wms.model.WmsAdjtLine;
-import com.telei.wms.datasource.wms.model.WmsInventory;
-import com.telei.wms.datasource.wms.model.WmsIvTransaction;
+import com.telei.wms.datasource.wms.model.*;
 
 import java.util.Date;
 import java.util.List;
@@ -16,9 +13,10 @@ import java.util.List;
  */
 public interface IAdjustStrategy {
     default List<OmsInventoryChangeWriteBack.OmsInventoryChangeWriteBackCondition> process(WmsAdjtHeader wmsAdjtHeader, List<WmsAdjtLine> wmsAdjtLineList,
-                                                                                     List<WmsInventory> WmsInventoryDbList,
-                                                                                     List<WmsInventory> wmsInventoryAddList, List<WmsInventory> wmsInventoryUpdateList,
-                                                                                     List<Long> deleteIvidList, List<WmsIvTransaction> ivTransaction, UserInfo userInfo, Date nowWithUtc){
+                                                                                           List<WmsInventory> WmsInventoryDbList,
+                                                                                           List<WmsInventory> wmsInventoryAddList, List<WmsInventory> wmsInventoryUpdateList,
+                                                                                           List<Long> deleteIvidList, List<WmsIvTransaction> ivTransaction,
+                                                                                           List<WmsIvSplit> wmsIvSplitList,UserInfo userInfo, Date nowWithUtc){
         return null;
     };
 }

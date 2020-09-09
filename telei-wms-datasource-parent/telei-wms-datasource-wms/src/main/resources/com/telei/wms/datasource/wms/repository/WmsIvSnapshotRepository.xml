@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.telei.wms.datasource.wms.repository.WmsIvSnapshotRepository">
+
+        <resultMap id="StatisticsResultMap" type="com.telei.wms.datasource.wms.vo.WmsIvSnapshotDailyKnotVO">
+            <result column="company_id" jdbcType="BIGINT" property="companyId"/>
+            <result column="warehouse_id" jdbcType="BIGINT" property="warehouseId"/>
+            <result column="customer_id" jdbcType="BIGINT" property="customerId"/>
+            <result column="product_id" jdbcType="BIGINT" property="productId"/>
+            <result column="warehouse_code" jdbcType="VARCHAR" property="warehouseCode"/>
+            <result column="iv_qty" jdbcType="INTEGER" property="ivQty"/>
+            <result column="mid_bag_qty" jdbcType="INTEGER" property="midBagQty"/>
+            <result column="mid_bag_extra_qty" jdbcType="INTEGER" property="midBagExtraQty"/>
+            <result column="big_bag_qty" jdbcType="INTEGER" property="bigBagQty"/>
+            <result column="big_bag_extra_qty" jdbcType="INTEGER" property="bigBagExtraQty"/>
+            <result column="total_vol" jdbcType="DECIMAL" property="totalVol"/>
+            <result column="total_weight" jdbcType="DECIMAL" property="totalWeight"/>
+            <result column="total_net_weight" jdbcType="DECIMAL" property="totalNetWeight"/>
+            <result column="lc_count" jdbcType="INTEGER" property="lcCount"/>
+		</resultMap>
+
+    <select id="selectByStatistics" resultMap="StatisticsResultMap">
+		SELECT
+			sum( iv_qty ) iv_qty,
+			sum( mid_bag_qty ) mid_bag_qty,
+			sum( mid_bag_extra_qty ) mid_bag_extra_qty,
+			sum( big_bag_qty ) big_bag_qty,
+			sum( big_bag_extra_qty ) big_bag_extra_qty,
+			sum( total_vol ) total_vol,
+			sum( total_weight ) total_weight,
+			sum( total_weight ) total_net_weight,
+			count(distinct lc_code) lcCount,
+			company_id,
+			warehouse_id,
+			warehouse_code,
+			customer_id,
+			product_id
+		FROM
+			(
+			SELECT
+				wis.iv_qty,
+				wis.mid_bag_qty,
+				wis.mid_bag_extra_qty,
+				wis.big_bag_qty,
+				wis.big_bag_extra_qty,
+				wis.company_id,
+				wis.warehouse_id,
+				wis.warehouse_code,
+				wis.customer_id,
+				wis.product_id,
+				wis.iab_id,
+				IFNULL( wia.weight, 0 ) * wis.iv_qty total_weight,
+				IFNULL( wia.vol, 0 ) * wis.iv_qty total_vol ,
+				wi.lc_code
+			FROM
+				wms_iv_snapshot wis
+				LEFT JOIN wms_iv_attributebatch wia ON wis.iab_id = wia.iab_id
+				LEFT JOIN wms_inventory wi ON wi.iv_id = wis.iv_id
+				where wis.ivst_id  = #{ivstId}
+			) a
+		GROUP BY
+			a.company_id,
+			a.warehouse_id,
+			a.warehouse_code,
+			a.customer_id,
+			a.product_id
+    </select>
+
+</mapper>
+

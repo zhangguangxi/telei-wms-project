@@ -1,6 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.telei.wms.datasource.wms.repository.WmsInventoryRepository">
+
+    <select id="doIvSnapshotSchedule" statementType="CALLABLE" resultType="java.lang.Integer">
+		{call copy_wms_inventory_into_snapshot(#{idNumber},#{serverNo},#{snapshotTime},#{snapshotLcTime})}
+	</select >
+
     <select id="selectByLcCodeAndProductId" resultMap="BaseResultMap">
         select
         <include refid="Base_Column_List"/>

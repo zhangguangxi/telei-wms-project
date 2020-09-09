@@ -6,7 +6,7 @@
         <result column="ap_code" jdbcType="VARCHAR" property="apCode"/>
         <result column="warehouse_id" jdbcType="BIGINT" property="warehouseId"/>
         <result column="warehouse_code" jdbcType="VARCHAR" property="warehouseCode"/>
-        <result column="customer_id" jdbcType="VARCHAR" property="customerId"/>
+        <result column="customer_id" jdbcType="BIGINT" property="customerId"/>
         <result column="product_id" jdbcType="BIGINT" property="productId"/>
         <result column="iv_fifo_time" jdbcType="TIMESTAMP" property="ivFifoTime"/>
         <result column="lc_code_from" jdbcType="VARCHAR" property="lcCodeFrom"/>
@@ -31,7 +31,7 @@
 
     <insert id="insert">
         insert into wms_iv_transaction (ivt_id,ap_code,warehouse_id,warehouse_code,customer_id,product_id,iv_fifo_time,lc_code_from,iv_qty_from,lc_code_to,iv_qty_to,ivt_document_code,ivt_document_id,ivt_documentline_id,ivt_change_type,dc_qty,iv_id,iab_id,biz_date,create_time,create_user)
-        values (#{ivtId,jdbcType=BIGINT},#{apCode,jdbcType=VARCHAR},#{warehouseId,jdbcType=BIGINT},#{warehouseCode,jdbcType=VARCHAR},#{customerId,jdbcType=VARCHAR},#{productId,jdbcType=BIGINT},#{ivFifoTime,jdbcType=TIMESTAMP},#{lcCodeFrom,jdbcType=VARCHAR},#{ivQtyFrom,jdbcType=DECIMAL},#{lcCodeTo,jdbcType=VARCHAR},#{ivQtyTo,jdbcType=DECIMAL},#{ivtDocumentCode,jdbcType=VARCHAR},#{ivtDocumentId,jdbcType=BIGINT},#{ivtDocumentlineId,jdbcType=BIGINT},#{ivtChangeType,jdbcType=VARCHAR},#{dcQty,jdbcType=DECIMAL},#{ivId,jdbcType=BIGINT},#{iabId,jdbcType=BIGINT},#{bizDate,jdbcType=TIMESTAMP},#{createTime,jdbcType=TIMESTAMP},#{createUser,jdbcType=VARCHAR})
+        values (#{ivtId,jdbcType=BIGINT},#{apCode,jdbcType=VARCHAR},#{warehouseId,jdbcType=BIGINT},#{warehouseCode,jdbcType=VARCHAR},#{customerId,jdbcType=BIGINT},#{productId,jdbcType=BIGINT},#{ivFifoTime,jdbcType=TIMESTAMP},#{lcCodeFrom,jdbcType=VARCHAR},#{ivQtyFrom,jdbcType=DECIMAL},#{lcCodeTo,jdbcType=VARCHAR},#{ivQtyTo,jdbcType=DECIMAL},#{ivtDocumentCode,jdbcType=VARCHAR},#{ivtDocumentId,jdbcType=BIGINT},#{ivtDocumentlineId,jdbcType=BIGINT},#{ivtChangeType,jdbcType=VARCHAR},#{dcQty,jdbcType=DECIMAL},#{ivId,jdbcType=BIGINT},#{iabId,jdbcType=BIGINT},#{bizDate,jdbcType=TIMESTAMP},#{createTime,jdbcType=TIMESTAMP},#{createUser,jdbcType=VARCHAR})
     </insert>
 
     <insert id="insertSelective">
@@ -115,7 +115,7 @@
                 #{warehouseCode,jdbcType=VARCHAR},
             </if>
             <if test="customerId != null">
-                #{customerId,jdbcType=VARCHAR},
+                #{customerId,jdbcType=BIGINT},
             </if>
             <if test="productId != null">
                 #{productId,jdbcType=BIGINT},
@@ -176,7 +176,7 @@
             #{item.apCode,jdbcType=VARCHAR},
             #{item.warehouseId,jdbcType=BIGINT},
             #{item.warehouseCode,jdbcType=VARCHAR},
-            #{item.customerId,jdbcType=VARCHAR},
+            #{item.customerId,jdbcType=BIGINT},
             #{item.productId,jdbcType=BIGINT},
             #{item.ivFifoTime,jdbcType=TIMESTAMP},
             #{item.lcCodeFrom,jdbcType=VARCHAR},
@@ -215,7 +215,7 @@
             ap_code = #{apCode,jdbcType=VARCHAR},
             warehouse_id = #{warehouseId,jdbcType=BIGINT},
             warehouse_code = #{warehouseCode,jdbcType=VARCHAR},
-            customer_id = #{customerId,jdbcType=VARCHAR},
+            customer_id = #{customerId,jdbcType=BIGINT},
             product_id = #{productId,jdbcType=BIGINT},
             iv_fifo_time = #{ivFifoTime,jdbcType=TIMESTAMP},
             lc_code_from = #{lcCodeFrom,jdbcType=VARCHAR},
@@ -249,7 +249,7 @@
                 warehouse_code = #{warehouseCode,jdbcType=VARCHAR},
             </if>
             <if test="customerId != null">
-                customer_id = #{customerId,jdbcType=VARCHAR},
+                customer_id = #{customerId,jdbcType=BIGINT},
             </if>
             <if test="productId != null">
                 product_id = #{productId,jdbcType=BIGINT},
@@ -317,7 +317,7 @@
                     warehouse_code = #{item.warehouseCode,jdbcType=VARCHAR},
                 </if>
                 <if test="item.customerId != null">
-                    customer_id = #{item.customerId,jdbcType=VARCHAR},
+                    customer_id = #{item.customerId,jdbcType=BIGINT},
                 </if>
                 <if test="item.productId != null">
                     product_id = #{item.productId,jdbcType=BIGINT},
@@ -413,7 +413,7 @@
                 and warehouse_code=#{warehouseCode,jdbcType=VARCHAR}
             </if>
             <if test="customerId != null">
-                and customer_id=#{customerId,jdbcType=VARCHAR}
+                and customer_id=#{customerId,jdbcType=BIGINT}
             </if>
             <if test="productId != null">
                 and product_id=#{productId,jdbcType=BIGINT}

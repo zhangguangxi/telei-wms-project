@@ -1,0 +1,242 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.telei.wms.datasource.wms.repository.WmsIvSnapshotTimeRepository">
+    <resultMap id="BaseResultMap" type="com.telei.wms.datasource.wms.model.WmsIvSnapshotTime">
+        <id column="ivst_id" jdbcType="BIGINT" property="id"/>
+            <result column="server_no" jdbcType="VARCHAR" property="serverNo"/>
+            <result column="snapshot_time" jdbcType="TIMESTAMP" property="snapshotTime"/>
+            <result column="snapshot_lc_time" jdbcType="VARCHAR" property="snapshotLcTime"/>
+            <result column="ivst_end_id" jdbcType="BIGINT" property="ivstEndId"/>
+            <result column="send_over" jdbcType="INTEGER" property="sendOver"/>
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        ivst_id,server_no,snapshot_time,snapshot_lc_time,ivst_end_id,send_over
+    </sql>
+
+        <insert id="insert">
+            insert into wms_iv_snapshot_time (ivst_id,server_no,snapshot_time,snapshot_lc_time,ivst_end_id,send_over)
+            values (#{id,jdbcType=BIGINT},#{serverNo,jdbcType=VARCHAR},#{snapshotTime,jdbcType=TIMESTAMP},#{snapshotLcTime,jdbcType=VARCHAR},#{ivstEndId,jdbcType=BIGINT},#{sendOver,jdbcType=INTEGER})
+        </insert>
+
+        <insert id="insertSelective">
+            insert into wms_iv_snapshot_time
+            <trim prefix="(" suffix=")" suffixOverrides=",">
+                    <if test="id != null">
+                        ivst_id,
+                    </if>
+                    <if test="serverNo != null">
+                        server_no,
+                    </if>
+                    <if test="snapshotTime != null">
+                        snapshot_time,
+                    </if>
+                    <if test="snapshotLcTime != null">
+                        snapshot_lc_time,
+                    </if>
+                    <if test="ivstEndId != null">
+                        ivst_end_id,
+                    </if>
+                    <if test="sendOver != null">
+                        send_over
+                    </if>
+            </trim>
+            <trim prefix="values (" suffix=")" suffixOverrides=",">
+                    <if test="id != null">
+                        #{id,jdbcType=BIGINT},
+                    </if>
+                    <if test="serverNo != null">
+                        #{serverNo,jdbcType=VARCHAR},
+                    </if>
+                    <if test="snapshotTime != null">
+                        #{snapshotTime,jdbcType=TIMESTAMP},
+                    </if>
+                    <if test="snapshotLcTime != null">
+                        #{snapshotLcTime,jdbcType=VARCHAR},
+                    </if>
+                    <if test="ivstEndId != null">
+                        #{ivstEndId,jdbcType=BIGINT},
+                    </if>
+                    <if test="sendOver != null">
+                        #{sendOver,jdbcType=INTEGER}
+                    </if>
+            </trim>
+        </insert>
+
+        <insert id="insertBatch">
+            insert into wms_iv_snapshot_time (ivst_id,server_no,snapshot_time,snapshot_lc_time,ivst_end_id,send_over) values
+            <foreach collection="list" item="item" separator=",">
+                (
+                    #{item.id,jdbcType=BIGINT},
+                    #{item.serverNo,jdbcType=VARCHAR},
+                    #{item.snapshotTime,jdbcType=TIMESTAMP},
+                    #{item.snapshotLcTime,jdbcType=VARCHAR},
+                    #{item.ivstEndId,jdbcType=BIGINT},
+                    #{item.sendOver,jdbcType=INTEGER}
+                )
+            </foreach>
+        </insert>
+
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+        delete from wms_iv_snapshot_time
+        where ivst_id = #{id,jdbcType=BIGINT}
+    </delete>
+
+    <delete id="deleteByPrimaryKeys">
+        delete from wms_iv_snapshot_time where ivst_id in
+        <foreach close=")" collection="list" item="item" open="(" separator=",">
+            #{item}
+        </foreach>
+    </delete>
+
+    <update id="updateByPrimaryKey">
+        update wms_iv_snapshot_time
+        <set>
+                server_no = #{serverNo,jdbcType=VARCHAR},
+                snapshot_time = #{snapshotTime,jdbcType=TIMESTAMP},
+                snapshot_lc_time = #{snapshotLcTime,jdbcType=VARCHAR},
+                ivst_end_id = #{ivstEndId,jdbcType=BIGINT},
+                send_over = #{sendOver,jdbcType=INTEGER}
+        </set>
+        where ivst_id = #{id,jdbcType=BIGINT}
+    </update>
+
+    <update id="updateByPrimaryKeySelective">
+        update wms_iv_snapshot_time
+        <set>
+                <if test="serverNo != null">
+                    server_no = #{serverNo,jdbcType=VARCHAR},
+                </if>
+                <if test="snapshotTime != null">
+                    snapshot_time = #{snapshotTime,jdbcType=TIMESTAMP},
+                </if>
+                <if test="snapshotLcTime != null">
+                    snapshot_lc_time = #{snapshotLcTime,jdbcType=VARCHAR},
+                </if>
+                <if test="ivstEndId != null">
+                    ivst_end_id = #{ivstEndId,jdbcType=BIGINT},
+                </if>
+                <if test="sendOver != null">
+                    send_over = #{sendOver,jdbcType=INTEGER}
+                </if>
+        </set>
+        where ivst_id = #{id,jdbcType=BIGINT}
+    </update>
+
+    <update id="updateBatch">
+        <foreach close="" collection="list" item="item" open="" separator=";">
+            update wms_iv_snapshot_time
+            <set>
+                    <if test="item.serverNo != null">
+                        server_no = #{item.serverNo,jdbcType=VARCHAR},
+                    </if>
+                    <if test="item.snapshotTime != null">
+                        snapshot_time = #{item.snapshotTime,jdbcType=TIMESTAMP},
+                    </if>
+                    <if test="item.snapshotLcTime != null">
+                        snapshot_lc_time = #{item.snapshotLcTime,jdbcType=VARCHAR},
+                    </if>
+                    <if test="item.ivstEndId != null">
+                        ivst_end_id = #{item.ivstEndId,jdbcType=BIGINT},
+                    </if>
+                    <if test="item.sendOver != null">
+                        send_over = #{item.sendOver,jdbcType=INTEGER}
+                    </if>
+            </set>
+            where ivst_id = #{item.id,jdbcType=BIGINT}
+        </foreach>
+    </update>
+
+    <select id="selectByPrimaryKey" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List" />
+        from wms_iv_snapshot_time
+        where ivst_id = #{id,jdbcType=BIGINT}
+    </select>
+
+    <select id="selectByPrimaryKeyWithLock" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List" />
+        from wms_iv_snapshot_time
+        where ivst_id = #{id,jdbcType=BIGINT} for update
+    </select>
+
+    <select id="selectByPrimaryKeys" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List" />
+        from wms_iv_snapshot_time where ivst_id in
+        <foreach close=")" collection="list" item="item" open="(" separator=",">
+            #{item}
+        </foreach>
+    </select>
+
+    <select id="selectByEntity" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from wms_iv_snapshot_time
+        <where>
+                <if test="id != null">
+                    and ivst_id=#{id,jdbcType=BIGINT}
+                </if>
+                <if test="serverNo != null">
+                    and server_no=#{serverNo,jdbcType=VARCHAR}
+                </if>
+                <if test="snapshotTime != null">
+                    and snapshot_time=#{snapshotTime,jdbcType=TIMESTAMP}
+                </if>
+                <if test="snapshotLcTime != null">
+                    and snapshot_lc_time=#{snapshotLcTime,jdbcType=VARCHAR}
+                </if>
+                <if test="ivstEndId != null">
+                    and ivst_end_id=#{ivstEndId,jdbcType=BIGINT}
+                </if>
+                <if test="sendOver != null">
+                    and send_over=#{sendOver,jdbcType=INTEGER}
+                </if>
+        </where>
+    </select>
+
+    <select id="selectByConditions" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from wms_iv_snapshot_time
+        <where>
+                <if test="id != null">
+                    and ivst_id ${id}
+                </if>
+                <if test="serverNo != null">
+                    and server_no ${serverNo}
+                </if>
+                <if test="snapshotTime != null">
+                    and snapshot_time ${snapshotTime}
+                </if>
+                <if test="snapshotLcTime != null">
+                    and snapshot_lc_time ${snapshotLcTime}
+                </if>
+                <if test="ivstEndId != null">
+                    and ivst_end_id ${ivstEndId}
+                </if>
+                <if test="sendOver != null">
+                    and send_over ${sendOver}
+                </if>
+        </where>
+        <if test="orderBy != null">
+            order by ${orderBy}
+        </if>
+    </select>
+
+    <select id="selectAll" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from wms_iv_snapshot_time
+    </select>
+
+    <select id="count" resultType="java.lang.Long">
+        select count(*) from wms_iv_snapshot_time
+    </select>
+
+    <select id="selectByFunction">
+        select ${function}(${column}) from wms_iv_snapshot_time
+    </select>
+
+</mapper>

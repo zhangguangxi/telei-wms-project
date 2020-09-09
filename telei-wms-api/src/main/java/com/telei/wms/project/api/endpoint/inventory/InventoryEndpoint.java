@@ -28,15 +28,15 @@ public class InventoryEndpoint {
 
     @ApiOperation("上架")
     @PostMapping(ServiceId.WMS_INVENTORY_PUT_ON_SHELF)
-    public InventoryAddResponse addInventory(@Valid @RequestBody InventoryAddRequest request){
+    public InventoryAddResponse addInventory(@Valid @RequestBody InventoryAddRequest request) {
         InventoryAddBussinessRequest bussinessRequest = DataConvertUtil.parseDataAsObject(request, InventoryAddBussinessRequest.class);
         InventoryAddBussinessResponse bussinessResponse = inventoryBussiness.addInventory(bussinessRequest);
-        return DataConvertUtil.parseDataAsObject(bussinessResponse,InventoryAddResponse.class);
+        return DataConvertUtil.parseDataAsObject(bussinessResponse, InventoryAddResponse.class);
     }
 
     @ApiOperation("调多")
     @PostMapping(ServiceId.WMS_INVENTORY_ADJUST_INCREASE)
-    public InventoryIncreaseResponse increaseInventory(@Valid @RequestBody InventoryIncreaseRequest request){
+    public InventoryIncreaseResponse increaseInventory(@Valid @RequestBody InventoryIncreaseRequest request) {
         InventoryIncreaseBussinessRequest bussinessRequest = DataConvertUtil.parseDataAsObject(request, InventoryIncreaseBussinessRequest.class);
         InventoryIncreaseBussinessResponse bussinessResponse = inventoryBussiness.increaseInventory(bussinessRequest);
         return DataConvertUtil.parseDataAsObject(bussinessResponse, InventoryIncreaseResponse.class);
@@ -44,27 +44,25 @@ public class InventoryEndpoint {
 
     @ApiOperation("调少")
     @PostMapping(ServiceId.WMS_INVENTORY_ADJUST_REDUCE)
-    public InventoryReduceResponse reduceInventory(@Valid @RequestBody InventoryReduceRequest request){
+    public InventoryReduceResponse reduceInventory(@Valid @RequestBody InventoryReduceRequest request) {
         InventoryReduceBussinessRequest bussinessRequest = DataConvertUtil.parseDataAsObject(request, InventoryReduceBussinessRequest.class);
         InventoryReduceBussinessResponse bussinessResponse = inventoryBussiness.reduceInventory(bussinessRequest);
         return DataConvertUtil.parseDataAsObject(bussinessResponse, InventoryReduceResponse.class);
     }
 
-    @ApiOperation("审核")
-    @PostMapping(ServiceId.WMS_INVENTORY_ADJUST_REVIEW)
-    public InventoryReviewResponse reviewInventory(@Valid @RequestBody InventoryReviewRequest request){
-        InventoryReviewBussinessRequest bussinessRequest = DataConvertUtil.parseDataAsObject(request, InventoryReviewBussinessRequest.class);
-        InventoryReviewBussinessResponse bussinessResponse = inventoryBussiness.reviewInventory(bussinessRequest);
-        return DataConvertUtil.parseDataAsObject(bussinessResponse, InventoryReviewResponse.class);
-    }
-
     @ApiOperation("移位")
     @PostMapping(ServiceId.WMS_INVENTORY_ADJUST_SHIFT)
-    public InventoryShiftResponse reviewInventory(@Valid @RequestBody InventoryShiftRequest request){
+    public InventoryShiftResponse reviewInventory(@Valid @RequestBody InventoryShiftRequest request) {
         InventoryShiftBussinessRequest bussinessRequest = DataConvertUtil.parseDataAsObject(request, InventoryShiftBussinessRequest.class);
         InventoryShiftBussinessResponse bussinessResponse = inventoryBussiness.shiftInventory(bussinessRequest);
         return DataConvertUtil.parseDataAsObject(bussinessResponse, InventoryShiftResponse.class);
     }
 
-
+    @ApiOperation("库存分页")
+    @PostMapping(ServiceId.WMS_INVENTORY_PAGE_QUERY)
+    public InventoryPageQueryResponse reviewInventory(@Valid @RequestBody InventoryPageQueryRequest request){
+        InventoryPageQueryBussinessRequest bussinessRequest = DataConvertUtil.parseDataAsObject(request, InventoryPageQueryBussinessRequest.class);
+        InventoryPageQueryBussinessResponse bussinessResponse = inventoryBussiness.pageQueryInventory(bussinessRequest);
+        return DataConvertUtil.parseDataAsObject(bussinessResponse, InventoryPageQueryResponse.class);
+    }
 }

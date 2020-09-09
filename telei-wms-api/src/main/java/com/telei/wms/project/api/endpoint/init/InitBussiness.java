@@ -225,7 +225,6 @@ public class InitBussiness {
                     wmsInventory.setIvDocumentCode(wmsInitHeader.getIvihCode());
                     wmsInventory.setIvDocumentId(wmsInitHeader.getId());
                     wmsInventory.setIvDocumentlineId(initLine.getId());
-                    wmsInventory.setLastupdateUser(CustomRequestContext.getUserInfo().getAccountId());
                     wmsInventory.setProductDate(initLine.getProductDate());
                     wmsInventory.setIvEffectiveDate(initLine.getIvEffectiveDate());
                     wmsInventory.setBatchNo(initLine.getBatchNo());

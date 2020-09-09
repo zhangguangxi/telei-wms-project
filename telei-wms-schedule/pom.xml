@@ -11,6 +11,7 @@
     <name>telei-wms-schedule</name>
 
     <dependencies>
+
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-web</artifactId>
@@ -63,10 +64,17 @@
         </dependency>
 
         <dependency>
-            <groupId>com.telei</groupId>
-            <artifactId>telei-wms-commons</artifactId>
+            <groupId>com.telei.infrastructure</groupId>
+            <artifactId>telei-infrastructure-starter-idgenerator</artifactId>
             <version>${version}</version>
         </dependency>
+
+        <dependency>
+            <artifactId>telei-wms-commons</artifactId>
+            <groupId>com.telei</groupId>
+            <version>${version}</version>
+        </dependency>
+
     </dependencies>
 
     <build>

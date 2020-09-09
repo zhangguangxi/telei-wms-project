@@ -1,9 +1,10 @@
 package com.telei.wms.datasource.wms.model;
 
 import com.nuochen.framework.autocoding.domain.Entity;
+import lombok.Data;
+
 import java.math.BigDecimal;
 import java.util.Date;
-import lombok.Data;
 
 /**
 * wms_adjt_header 库存调整单头
@@ -28,10 +29,10 @@ public class WmsAdjtHeader implements Entity<Long> {
     private Date bizDate;
     /** 原因 */
     private String reason;
-    /** 库位编码 */
-    private String lcCode;
     /** 产品序列码 */
     private Long productId;
+    /** 库位编码 */
+    private String lcCode;
     /** 库存数量 */
     private BigDecimal ivQty;
     /** 调整库位 */
@@ -46,10 +47,10 @@ public class WmsAdjtHeader implements Entity<Long> {
     private String productBarcode;
     /** UPC码 */
     private String productUpcCode;
-    /** 大包数量-箱规 */
-    private Integer bigBagQty;
-    /** 中包数量-箱规 */
-    private Integer midBagQty;
+    /** 大包转换数 = 产品表大包转换数 */
+    private Integer bigBagRate;
+    /** 中包转换数 = 产品表中包转换数 */
+    private Integer midBagRate;
     /** 创建时间 */
     private Date createTime;
     /** 创建用户 */

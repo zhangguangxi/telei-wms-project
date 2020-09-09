@@ -26,9 +26,6 @@ public class InventoryReduceRequest {
     @Check
     private String reason;
 
-    @ApiModelProperty(value = "库存id",example = "1234123",position = 5)
-    @Check
-    private Long ivId;
 
     @ApiModelProperty(value = "商品id",example = "1234123",position = 6)
     @Check

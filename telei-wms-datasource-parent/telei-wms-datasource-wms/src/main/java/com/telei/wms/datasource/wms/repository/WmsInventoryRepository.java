@@ -2,6 +2,7 @@ package com.telei.wms.datasource.wms.repository;
 
 import com.nuochen.framework.autocoding.domain.mybatis.BaseRepository;
 import com.telei.wms.datasource.wms.model.WmsInventory;
+import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -14,4 +15,7 @@ public interface WmsInventoryRepository extends BaseRepository<WmsInventory,Long
      * @return
      */
     List<WmsInventory> selectByLcCodeAndProductId(WmsInventory wmsInventory);
+
+    int doIvSnapshotSchedule(@Param("idNumber") Long idNumber, @Param("serverNo") String serverNo, @Param("snapshotTime") String snapshotTime, @Param("snapshotLcTime") String snapshotLcTime);
+
 }
