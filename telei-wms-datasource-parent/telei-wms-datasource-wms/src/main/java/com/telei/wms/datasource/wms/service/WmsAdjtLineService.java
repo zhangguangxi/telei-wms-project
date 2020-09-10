@@ -15,13 +15,6 @@ import java.util.Map;
 
 @Service
 public class WmsAdjtLineService extends BaseService<WmsAdjtLineRepository,WmsAdjtLine,Long> {
-    @Autowired
-    private WmsAdjtLineRepository wmsAdjtLineRepository;
 
-    public Pageable selectCustomPage(Pagination page, Map<String, Object> paramMap) {
-        PageInfo<WmsInventoryPageQueryResponseVo> pageInfo = PageHelper.offsetPage(page.getOffset(), page.getPageSize()).doSelectPageInfo(() -> wmsAdjtLineRepository.selectCustomPage(paramMap));
-        page.setTotalRecords(pageInfo.getTotal());
-        page.setContent(pageInfo.getList());
-        return page;
-    }
+
 }

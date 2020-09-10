@@ -1,5 +1,48 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.telei.wms.datasource.wms.repository.WmsAdjtHeaderRepository">
+
+    <sql id="Custom_Base_Column_List">
+        create_time,
+        adjh_code,
+        adjh_type,
+#         product_no,
+        product_name,
+        product_barcode;
+        iv_qty,
+        lc_code,
+        iv_qty_adjt,
+        lc_code_adjt,
+        reason
+    </sql>
+
+
+    <select id="selectCustomPage" resultType="com.telei.wms.datasource.wms.vo.WmsAdjustHeaderPageQueryResponseVo">
+        select
+        <include refid="Custom_Base_Column_List"></include>
+        from wms_adjt_header
+        <where>
+            <if test="lcCode != null">
+                and wi.lc_code ${lcCode}
+            </if>
+            <if test="productNo != null">
+                and wi.product_no ${productNo}
+            </if>
+
+            <if test="productName != null">
+                and cp.product_name ${productName}
+            </if>
+
+            <if test="productBarcode != null">
+                and cp.product_barcode ${productBarcode}
+            </if>
+            <if test="lcType != null">
+                and wi.lc_type ${lcType}
+            </if>
+        </where>
+        <if test="orderBy != null">
+            order by ${orderBy}
+        </if>
+    </select>
 </mapper>
 

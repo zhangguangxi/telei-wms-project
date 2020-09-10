@@ -632,7 +632,7 @@ public class InventoryBussiness {
 
         conditionsBuilder.orderBy("wa.create_time desc");
         Map<String, Object> paramMap = conditionsBuilder.build();
-        Pagination page = (Pagination)wmsAdjtLineService.selectCustomPage(pagination,paramMap);
+        Pagination page = (Pagination)wmsAdjtHeaderService.selectCustomPage(pagination,paramMap);
         InventoryAdjustPageQueryBussinessResponse response = new InventoryAdjustPageQueryBussinessResponse();
         response.setPage(page);
         return response;
