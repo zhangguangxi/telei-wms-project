@@ -42,7 +42,7 @@ public class RooBussiness {
 
     @Autowired
     private Id idGenerator;
-    
+
     @Autowired
     private BusinessNumberFeignClient businessNumberFeignClient;
 
@@ -75,6 +75,9 @@ public class RooBussiness {
         WmsRooHeader wmsRooHeader = DataConvertUtil.parseDataAsObject(request, WmsRooHeader.class);
         // 收货单id
         long rooId = idGenerator.getUnique();
+        String userName = CustomRequestContext.getUserInfo().getUserName();
+        Long companyId = CustomRequestContext.getUserInfo().getCompanyId();
+        Long accountId = CustomRequestContext.getUserInfo().getAccountId();
         // 获取业务单号
         BusinessNumberRequest businessNumberRequest = new BusinessNumberRequest();
         businessNumberRequest.setType("WMS");
@@ -89,7 +92,7 @@ public class RooBussiness {
         wmsRooHeader.setRooCode(businessNumberResponse.getBusinessNumber());
         wmsRooHeader.setOrderType("20");
         wmsRooHeader.setRoStatus("20");
-        wmsRooHeader.setCreateUser(CustomRequestContext.getUserInfo().getUserName());
+        wmsRooHeader.setCreateUser(userName);
         wmsRooHeader.setCreateTime(DateUtils.nowWithUTC());
         BigDecimal receQty = BigDecimal.ZERO;
         List<Long> categoryIds = new ArrayList<>();
@@ -103,7 +106,7 @@ public class RooBussiness {
             //根据产品id列表获取产品列表信息
             ProductDetailRequest productDetailRequest = new ProductDetailRequest();
             productDetailRequest.setIds(productIds);
-            productDetailRequest.setCompanyId(CustomRequestContext.getUserInfo().getCompanyId());
+            productDetailRequest.setCompanyId(companyId);
             ApiResponse detailResponse = productFeignClient.selectProductList(productDetailRequest);
             ProductListResponse response = JSON.parseObject(JSON.toJSONString(detailResponse.getData()), ProductListResponse.class);
             Map<Long, ProductDetailResponse> productDetailResponseMap = new HashMap<>();
@@ -120,9 +123,9 @@ public class RooBussiness {
                 rooLine.setRooId(rooId);
                 rooLine.setRoolStatus("20");
                 rooLine.setRecvTime(DateUtils.nowWithUTC());
-                rooLine.setRecvUser(CustomRequestContext.getUserInfo().getUserName());
+                rooLine.setRecvUser(userName);
                 rooLine.setCreateTime(DateUtils.nowWithUTC());
-                rooLine.setCreateUser(CustomRequestContext.getUserInfo().getUserName());
+                rooLine.setCreateUser(userName);
                 rooLine.setIabId(iabId);
                 receQty = receQty.add(rooLine.getReceQty());
                 // 组装库存批次表
@@ -142,11 +145,12 @@ public class RooBussiness {
                 wmsIvAttributebatch.setIabDocumentId(rooLine.getRoId());
                 wmsIvAttributebatch.setIabDocumentlineId(rooLine.getRolId());
                 wmsIvAttributebatch.setCompanyId(wmsRooHeader.getCompanyId());
-                wmsIvAttributebatch.setCreateUser(CustomRequestContext.getUserInfo().getAccountId());
+                wmsIvAttributebatch.setCreateUser(accountId);
                 wmsIvAttributebatch.setCreateTime(DateUtils.nowWithUTC());
                 // 根据产品id获取产品详情对象
                 ProductDetailResponse productResponse = productDetailResponseMap.get(rooLine.getProductId());
                 if (null != productResponse) {
+                    wmsIvAttributebatch.setProductId(productResponse.getProductId());
                     wmsIvAttributebatch.setProductName(productResponse.getProductName());
                     wmsIvAttributebatch.setProductNameLocal(productResponse.getProductNameLocal());
                     wmsIvAttributebatch.setProductCategoryId(productResponse.getProductCategoryId());
@@ -154,6 +158,7 @@ public class RooBussiness {
                     wmsIvAttributebatch.setProductColor(productResponse.getProductColor());
                     wmsIvAttributebatch.setProductSize(productResponse.getProductSize());
                     wmsIvAttributebatch.setPrice(productResponse.getSellingPriceReference());
+                    wmsIvAttributebatch.setVol(productResponse.getUnitVol());
                     wmsIvAttributebatch.setTexture(productResponse.getTexture());
                     wmsIvAttributebatch.setImagePath(productResponse.getImagePath());
                     wmsIvAttributebatch.setMidBagBarcode(productResponse.getMidBagBarcode());
@@ -181,15 +186,38 @@ public class RooBussiness {
         Object roHeadLockValue = tryLock(roHeadLockKey);
         // 组装入库任务数据
         WmsRoHeader wmsRoHeader = wmsRoHeaderService.selectByPrimaryKey(wmsRooHeader.getRoId());
-        wmsRoHeader.setReceQty(wmsRoHeader.getReceQty().add(receQty));
-        wmsRoHeader.setReceSpeciesQty(wmsRoHeader.getReceSpeciesQty() + categoryIds.size());
+        if (StringUtils.isNotNull(wmsRoHeader.getReceQty())) {
+            wmsRoHeader.setReceQty(wmsRoHeader.getReceQty().add(receQty));
+        } else {
+            wmsRoHeader.setReceQty(receQty);
+        }
+        if (StringUtils.isNotNull(wmsRoHeader.getReceSpeciesQty())) {
+            WmsRooLine wmsRooLine = new WmsRooLine();
+            wmsRooLine.setRoId(wmsRooHeader.getRoId());
+            List<WmsRooLine> rooLineList = wmsRooLineService.selectByEntity(wmsRooLine);
+            if (StringUtils.isNotNull(rooLineList) && !rooLineList.isEmpty()) {
+                List<Long> productIds = rooLineList.stream().map(WmsRooLine::getProductId).collect(Collectors.toList());
+                productIds.addAll(categoryIds);
+                // 产品id去重
+                List<Long> list = productIds.stream().distinct().collect(Collectors.toList());
+                wmsRoHeader.setReceSpeciesQty(list.size());
+            } else {
+                wmsRoHeader.setReceSpeciesQty(categoryIds.size());
+            }
+        } else {
+            wmsRoHeader.setReceSpeciesQty(categoryIds.size());
+        }
         wmsRoHeader.setRecvAllTime(DateUtils.nowWithUTC());
         // 组装入库任务明细数据
         List<WmsRoLine> wmsRoLineList = wmsRoLineService.selectByPrimaryKeys(rolIds);
-        if (StringUtils.isNotEmpty(wmsRoLineList)) {
+        if (StringUtils.isNotNull(wmsRoLineList) && !wmsRoLineList.isEmpty()) {
             for (WmsRoLine wmsRoLine : wmsRoLineList) {
                 BigDecimal rooReceQty = roLineMap.get(wmsRoLine.getId());
-                wmsRoLine.setReceiptsQty(wmsRoLine.getReceiptsQty().add(rooReceQty));
+                if (StringUtils.isNotNull(wmsRoLine.getReceiptsQty())) {
+                    wmsRoLine.setReceiptsQty(wmsRoLine.getReceiptsQty().add(rooReceQty));
+                } else {
+                    wmsRoLine.setReceiptsQty(rooReceQty);
+                }
             }
         }
         if (confirmLock(roHeadLockKey, roHeadLockValue)) {
@@ -354,7 +382,7 @@ public class RooBussiness {
         if (StringUtils.isNotNull(request.getRooCode())) {
             conditionsBuilder.eq("rooCode", request.getRooCode());
         }
-        if(StringUtils.isNotNull(request.getRoStatus())){
+        if (StringUtils.isNotNull(request.getRoStatus())) {
             conditionsBuilder.eq("roStatus", request.getRoStatus());
         }
         Map<String, Object> paramMap = conditionsBuilder.build();

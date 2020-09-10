@@ -46,7 +46,7 @@ public class RoLineDetailResponse {
     /** 采购单价 */
     private BigDecimal unitPrice;
     /** 计划入库数量 */
-    private BigDecimal palnQty;
+    private BigDecimal planQty;
     /** 实收数量 */
     private BigDecimal receiptsQty;
     /** 计量单位 */

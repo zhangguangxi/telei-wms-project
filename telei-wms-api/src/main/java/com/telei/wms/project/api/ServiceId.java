@@ -82,10 +82,14 @@ public class ServiceId {
     public static final String WMS_INVENTORY_ADJUST_INCREASE = "1030502";
     @RightResource(rightSystem = "wms", rightItem = "库存管理", rightFunction = "调少")
     public static final String WMS_INVENTORY_ADJUST_REDUCE = "1030503";
-    @RightResource(rightSystem = "wms", rightItem = "库存管理", rightFunction = "分页")
+    @RightResource(rightSystem = "wms", rightItem = "库存管理", rightFunction = "库存分页")
     public static final String WMS_INVENTORY_PAGE_QUERY = "1030504";
     @RightResource(rightSystem = "wms", rightItem = "库存管理", rightFunction = "移库")
     public static final String WMS_INVENTORY_ADJUST_SHIFT = "1030505";
+    @RightResource(rightSystem = "wms", rightItem = "库存详情", rightFunction = "详情")
+    public static final String WMS_INVENTORY_DETAIL = "1030506";
+    @RightResource(rightSystem = "wms", rightItem = "库存管理", rightFunction = "库存调整分页")
+    public static final String WMS_INVENTORY_ADJUST_PAGE_QUERY = "1030507";
 
 
 

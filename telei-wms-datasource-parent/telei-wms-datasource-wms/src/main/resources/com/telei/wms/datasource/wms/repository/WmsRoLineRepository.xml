@@ -27,7 +27,7 @@
         wrl.cost_reference,
         wrl.cost_reference_currency_id,
         wrl.unit_price,
-        wrl.paln_qty,
+        wrl.plan_qty,
         wrl.receipts_qty,
         wrl.unit_id,
         wrl.amount,

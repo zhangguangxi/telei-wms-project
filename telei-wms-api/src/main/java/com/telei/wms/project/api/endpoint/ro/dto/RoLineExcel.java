@@ -26,5 +26,5 @@ public class RoLineExcel {
     private String brand;
     /** 计划入库数量 */
     @Excel(name = "总数")
-    private BigDecimal palnQty;
+    private BigDecimal planQty;
 }

@@ -27,7 +27,7 @@ public class RooLineAddRequest {
     /** UPC码 */
     private String productUpcCode;
     /** 计划数量 */
-    private BigDecimal palnQty;
+    private BigDecimal planQty;
     /** 收货数量 */
     private BigDecimal receQty;
     /** 计量单位 */

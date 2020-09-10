@@ -1,13 +1,12 @@
 package com.telei.wms.datasource.wms.model;
 
 import com.nuochen.framework.autocoding.domain.Entity;
-import lombok.Data;
-
 import java.math.BigDecimal;
 import java.util.Date;
+import lombok.Data;
 
 /**
- * wms_roo_line 收货操作单
+ * wms_roo_line 收货单明细
  */
 @Data
 public class WmsRooLine implements Entity<Long> {
@@ -19,7 +18,7 @@ public class WmsRooLine implements Entity<Long> {
     private Long roId;
     /** 对应计划明细的id */
     private Long rolId;
-    /** 收货状态 01-制单，20-收货成功，98-关闭 */
+    /** 收货状态 01-制单，20-收货成功，99-撤销 */
     private String roolStatus;
     /** 商品id */
     private Long productId;
@@ -28,7 +27,7 @@ public class WmsRooLine implements Entity<Long> {
     /** UPC码 */
     private String productUpcCode;
     /** 计划数量 */
-    private BigDecimal palnQty;
+    private BigDecimal planQty;
     /** 收货数量 */
     private BigDecimal receQty;
     /** 生成上架单数量 */

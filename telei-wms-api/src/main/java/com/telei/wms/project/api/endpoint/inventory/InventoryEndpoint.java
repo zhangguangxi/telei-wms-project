@@ -52,7 +52,7 @@ public class InventoryEndpoint {
 
     @ApiOperation("移位")
     @PostMapping(ServiceId.WMS_INVENTORY_ADJUST_SHIFT)
-    public InventoryShiftResponse reviewInventory(@Valid @RequestBody InventoryShiftRequest request) {
+    public InventoryShiftResponse shiftInventory(@Valid @RequestBody InventoryShiftRequest request) {
         InventoryShiftBussinessRequest bussinessRequest = DataConvertUtil.parseDataAsObject(request, InventoryShiftBussinessRequest.class);
         InventoryShiftBussinessResponse bussinessResponse = inventoryBussiness.shiftInventory(bussinessRequest);
         return DataConvertUtil.parseDataAsObject(bussinessResponse, InventoryShiftResponse.class);
@@ -60,9 +60,25 @@ public class InventoryEndpoint {
 
     @ApiOperation("库存分页")
     @PostMapping(ServiceId.WMS_INVENTORY_PAGE_QUERY)
-    public InventoryPageQueryResponse reviewInventory(@Valid @RequestBody InventoryPageQueryRequest request){
+    public InventoryPageQueryResponse pageQueryInventory(@Valid @RequestBody InventoryPageQueryRequest request){
         InventoryPageQueryBussinessRequest bussinessRequest = DataConvertUtil.parseDataAsObject(request, InventoryPageQueryBussinessRequest.class);
         InventoryPageQueryBussinessResponse bussinessResponse = inventoryBussiness.pageQueryInventory(bussinessRequest);
         return DataConvertUtil.parseDataAsObject(bussinessResponse, InventoryPageQueryResponse.class);
+    }
+
+    @ApiOperation("库存调整分页")
+    @PostMapping(ServiceId.WMS_INVENTORY_ADJUST_PAGE_QUERY)
+    public InventoryAdjustPageQueryResponse pageQueryInventory(@Valid @RequestBody InventoryAdjustPageQueryRequest request){
+        InventoryAdjustPageQueryBussinessRequest bussinessRequest = DataConvertUtil.parseDataAsObject(request, InventoryAdjustPageQueryBussinessRequest.class);
+        InventoryAdjustPageQueryBussinessResponse bussinessResponse = inventoryBussiness.pageQueryAdjustInventory(bussinessRequest);
+        return DataConvertUtil.parseDataAsObject(bussinessResponse, InventoryAdjustPageQueryResponse.class);
+    }
+
+    @ApiOperation("库存详情")
+    @PostMapping(ServiceId.WMS_INVENTORY_DETAIL)
+    public InventoryDetailResponse detialInventory(@Valid @RequestBody InventoryDetailRequest request){
+        InventoryDetailBussinessRequest bussinessRequest = DataConvertUtil.parseDataAsObject(request, InventoryDetailBussinessRequest.class);
+        InventoryDetailBussinessResponse bussinessResponse = inventoryBussiness.detailInventory(bussinessRequest);
+        return DataConvertUtil.parseDataAsObject(bussinessResponse, InventoryDetailResponse.class);
     }
 }

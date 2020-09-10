@@ -10,8 +10,9 @@
             <result column="product_id" jdbcType="BIGINT" property="productId"/>
             <result column="product_barcode" jdbcType="VARCHAR" property="productBarcode"/>
             <result column="product_upc_code" jdbcType="VARCHAR" property="productUpcCode"/>
-            <result column="paln_qty" jdbcType="DECIMAL" property="palnQty"/>
+            <result column="plan_qty" jdbcType="DECIMAL" property="planQty"/>
             <result column="rece_qty" jdbcType="DECIMAL" property="receQty"/>
+            <result column="tmp_putaway_qty" jdbcType="DECIMAL" property="tmpPutawayQty"/>
             <result column="stock_unit" jdbcType="BIGINT" property="stockUnit"/>
             <result column="spec_type" jdbcType="VARCHAR" property="specType"/>
             <result column="weight" jdbcType="DECIMAL" property="weight"/>
@@ -46,12 +47,12 @@
     </resultMap>
 
     <sql id="Base_Column_List">
-        rool_id,roo_id,ro_id,rol_id,rool_status,product_id,product_barcode,product_upc_code,paln_qty,rece_qty,stock_unit,spec_type,weight,product_length,product_width,product_height,vol,mid_bag_qty,mid_bag_weight,mid_bag_length,mid_bag_width,mid_bag_height,mid_bag_vol,mid_bag_barcode,big_bag_qty,big_bag_weight,big_bag_length,big_bag_width,big_bag_height,big_bag_vol,big_bag_barcode,memo,product_date,effective_date,batch_no,qs_code,recv_time,recv_user,create_user,create_time,iab_id
+        rool_id,roo_id,ro_id,rol_id,rool_status,product_id,product_barcode,product_upc_code,plan_qty,rece_qty,tmp_putaway_qty,stock_unit,spec_type,weight,product_length,product_width,product_height,vol,mid_bag_qty,mid_bag_weight,mid_bag_length,mid_bag_width,mid_bag_height,mid_bag_vol,mid_bag_barcode,big_bag_qty,big_bag_weight,big_bag_length,big_bag_width,big_bag_height,big_bag_vol,big_bag_barcode,memo,product_date,effective_date,batch_no,qs_code,recv_time,recv_user,create_user,create_time,iab_id
     </sql>
 
         <insert id="insert">
-            insert into wms_roo_line (rool_id,roo_id,ro_id,rol_id,rool_status,product_id,product_barcode,product_upc_code,paln_qty,rece_qty,stock_unit,spec_type,weight,product_length,product_width,product_height,vol,mid_bag_qty,mid_bag_weight,mid_bag_length,mid_bag_width,mid_bag_height,mid_bag_vol,mid_bag_barcode,big_bag_qty,big_bag_weight,big_bag_length,big_bag_width,big_bag_height,big_bag_vol,big_bag_barcode,memo,product_date,effective_date,batch_no,qs_code,recv_time,recv_user,create_user,create_time,iab_id)
-            values (#{id,jdbcType=BIGINT},#{rooId,jdbcType=BIGINT},#{roId,jdbcType=BIGINT},#{rolId,jdbcType=BIGINT},#{roolStatus,jdbcType=VARCHAR},#{productId,jdbcType=BIGINT},#{productBarcode,jdbcType=VARCHAR},#{productUpcCode,jdbcType=VARCHAR},#{palnQty,jdbcType=DECIMAL},#{receQty,jdbcType=DECIMAL},#{stockUnit,jdbcType=BIGINT},#{specType,jdbcType=VARCHAR},#{weight,jdbcType=DECIMAL},#{productLength,jdbcType=DECIMAL},#{productWidth,jdbcType=DECIMAL},#{productHeight,jdbcType=DECIMAL},#{vol,jdbcType=DECIMAL},#{midBagQty,jdbcType=INTEGER},#{midBagWeight,jdbcType=DECIMAL},#{midBagLength,jdbcType=DECIMAL},#{midBagWidth,jdbcType=DECIMAL},#{midBagHeight,jdbcType=DECIMAL},#{midBagVol,jdbcType=DECIMAL},#{midBagBarcode,jdbcType=VARCHAR},#{bigBagQty,jdbcType=INTEGER},#{bigBagWeight,jdbcType=DECIMAL},#{bigBagLength,jdbcType=DECIMAL},#{bigBagWidth,jdbcType=DECIMAL},#{bigBagHeight,jdbcType=DECIMAL},#{bigBagVol,jdbcType=DECIMAL},#{bigBagBarcode,jdbcType=VARCHAR},#{memo,jdbcType=VARCHAR},#{productDate,jdbcType=TIMESTAMP},#{effectiveDate,jdbcType=TIMESTAMP},#{batchNo,jdbcType=VARCHAR},#{qsCode,jdbcType=VARCHAR},#{recvTime,jdbcType=TIMESTAMP},#{recvUser,jdbcType=VARCHAR},#{createUser,jdbcType=VARCHAR},#{createTime,jdbcType=TIMESTAMP},#{iabId,jdbcType=BIGINT})
+            insert into wms_roo_line (rool_id,roo_id,ro_id,rol_id,rool_status,product_id,product_barcode,product_upc_code,plan_qty,rece_qty,tmp_putaway_qty,stock_unit,spec_type,weight,product_length,product_width,product_height,vol,mid_bag_qty,mid_bag_weight,mid_bag_length,mid_bag_width,mid_bag_height,mid_bag_vol,mid_bag_barcode,big_bag_qty,big_bag_weight,big_bag_length,big_bag_width,big_bag_height,big_bag_vol,big_bag_barcode,memo,product_date,effective_date,batch_no,qs_code,recv_time,recv_user,create_user,create_time,iab_id)
+            values (#{id,jdbcType=BIGINT},#{rooId,jdbcType=BIGINT},#{roId,jdbcType=BIGINT},#{rolId,jdbcType=BIGINT},#{roolStatus,jdbcType=VARCHAR},#{productId,jdbcType=BIGINT},#{productBarcode,jdbcType=VARCHAR},#{productUpcCode,jdbcType=VARCHAR},#{planQty,jdbcType=DECIMAL},#{receQty,jdbcType=DECIMAL},#{tmpPutawayQty,jdbcType=DECIMAL},#{stockUnit,jdbcType=BIGINT},#{specType,jdbcType=VARCHAR},#{weight,jdbcType=DECIMAL},#{productLength,jdbcType=DECIMAL},#{productWidth,jdbcType=DECIMAL},#{productHeight,jdbcType=DECIMAL},#{vol,jdbcType=DECIMAL},#{midBagQty,jdbcType=INTEGER},#{midBagWeight,jdbcType=DECIMAL},#{midBagLength,jdbcType=DECIMAL},#{midBagWidth,jdbcType=DECIMAL},#{midBagHeight,jdbcType=DECIMAL},#{midBagVol,jdbcType=DECIMAL},#{midBagBarcode,jdbcType=VARCHAR},#{bigBagQty,jdbcType=INTEGER},#{bigBagWeight,jdbcType=DECIMAL},#{bigBagLength,jdbcType=DECIMAL},#{bigBagWidth,jdbcType=DECIMAL},#{bigBagHeight,jdbcType=DECIMAL},#{bigBagVol,jdbcType=DECIMAL},#{bigBagBarcode,jdbcType=VARCHAR},#{memo,jdbcType=VARCHAR},#{productDate,jdbcType=TIMESTAMP},#{effectiveDate,jdbcType=TIMESTAMP},#{batchNo,jdbcType=VARCHAR},#{qsCode,jdbcType=VARCHAR},#{recvTime,jdbcType=TIMESTAMP},#{recvUser,jdbcType=VARCHAR},#{createUser,jdbcType=VARCHAR},#{createTime,jdbcType=TIMESTAMP},#{iabId,jdbcType=BIGINT})
         </insert>
 
         <insert id="insertSelective">
@@ -81,11 +82,14 @@
                     <if test="productUpcCode != null">
                         product_upc_code,
                     </if>
-                    <if test="palnQty != null">
-                        paln_qty,
+                    <if test="planQty != null">
+                        plan_qty,
                     </if>
                     <if test="receQty != null">
                         rece_qty,
+                    </if>
+                    <if test="tmpPutawayQty != null">
+                        tmp_putaway_qty,
                     </if>
                     <if test="stockUnit != null">
                         stock_unit,
@@ -206,11 +210,14 @@
                     <if test="productUpcCode != null">
                         #{productUpcCode,jdbcType=VARCHAR},
                     </if>
-                    <if test="palnQty != null">
-                        #{palnQty,jdbcType=DECIMAL},
+                    <if test="planQty != null">
+                        #{planQty,jdbcType=DECIMAL},
                     </if>
                     <if test="receQty != null">
                         #{receQty,jdbcType=DECIMAL},
+                    </if>
+                    <if test="tmpPutawayQty != null">
+                        #{tmpPutawayQty,jdbcType=DECIMAL},
                     </if>
                     <if test="stockUnit != null">
                         #{stockUnit,jdbcType=BIGINT},
@@ -309,7 +316,7 @@
         </insert>
 
         <insert id="insertBatch">
-            insert into wms_roo_line (rool_id,roo_id,ro_id,rol_id,rool_status,product_id,product_barcode,product_upc_code,paln_qty,rece_qty,stock_unit,spec_type,weight,product_length,product_width,product_height,vol,mid_bag_qty,mid_bag_weight,mid_bag_length,mid_bag_width,mid_bag_height,mid_bag_vol,mid_bag_barcode,big_bag_qty,big_bag_weight,big_bag_length,big_bag_width,big_bag_height,big_bag_vol,big_bag_barcode,memo,product_date,effective_date,batch_no,qs_code,recv_time,recv_user,create_user,create_time,iab_id) values
+            insert into wms_roo_line (rool_id,roo_id,ro_id,rol_id,rool_status,product_id,product_barcode,product_upc_code,plan_qty,rece_qty,tmp_putaway_qty,stock_unit,spec_type,weight,product_length,product_width,product_height,vol,mid_bag_qty,mid_bag_weight,mid_bag_length,mid_bag_width,mid_bag_height,mid_bag_vol,mid_bag_barcode,big_bag_qty,big_bag_weight,big_bag_length,big_bag_width,big_bag_height,big_bag_vol,big_bag_barcode,memo,product_date,effective_date,batch_no,qs_code,recv_time,recv_user,create_user,create_time,iab_id) values
             <foreach collection="list" item="item" separator=",">
                 (
                     #{item.id,jdbcType=BIGINT},
@@ -320,8 +327,9 @@
                     #{item.productId,jdbcType=BIGINT},
                     #{item.productBarcode,jdbcType=VARCHAR},
                     #{item.productUpcCode,jdbcType=VARCHAR},
-                    #{item.palnQty,jdbcType=DECIMAL},
+                    #{item.planQty,jdbcType=DECIMAL},
                     #{item.receQty,jdbcType=DECIMAL},
+                    #{item.tmpPutawayQty,jdbcType=DECIMAL},
                     #{item.stockUnit,jdbcType=BIGINT},
                     #{item.specType,jdbcType=VARCHAR},
                     #{item.weight,jdbcType=DECIMAL},
@@ -379,8 +387,9 @@
                 product_id = #{productId,jdbcType=BIGINT},
                 product_barcode = #{productBarcode,jdbcType=VARCHAR},
                 product_upc_code = #{productUpcCode,jdbcType=VARCHAR},
-                paln_qty = #{palnQty,jdbcType=DECIMAL},
+                plan_qty = #{planQty,jdbcType=DECIMAL},
                 rece_qty = #{receQty,jdbcType=DECIMAL},
+                tmp_putaway_qty = #{tmpPutawayQty,jdbcType=DECIMAL},
                 stock_unit = #{stockUnit,jdbcType=BIGINT},
                 spec_type = #{specType,jdbcType=VARCHAR},
                 weight = #{weight,jdbcType=DECIMAL},
@@ -440,11 +449,14 @@
                 <if test="productUpcCode != null">
                     product_upc_code = #{productUpcCode,jdbcType=VARCHAR},
                 </if>
-                <if test="palnQty != null">
-                    paln_qty = #{palnQty,jdbcType=DECIMAL},
+                <if test="planQty != null">
+                    plan_qty = #{planQty,jdbcType=DECIMAL},
                 </if>
                 <if test="receQty != null">
                     rece_qty = #{receQty,jdbcType=DECIMAL},
+                </if>
+                <if test="tmpPutawayQty != null">
+                    tmp_putaway_qty = #{tmpPutawayQty,jdbcType=DECIMAL},
                 </if>
                 <if test="stockUnit != null">
                     stock_unit = #{stockUnit,jdbcType=BIGINT},
@@ -568,11 +580,14 @@
                     <if test="item.productUpcCode != null">
                         product_upc_code = #{item.productUpcCode,jdbcType=VARCHAR},
                     </if>
-                    <if test="item.palnQty != null">
-                        paln_qty = #{item.palnQty,jdbcType=DECIMAL},
+                    <if test="item.planQty != null">
+                        plan_qty = #{item.planQty,jdbcType=DECIMAL},
                     </if>
                     <if test="item.receQty != null">
                         rece_qty = #{item.receQty,jdbcType=DECIMAL},
+                    </if>
+                    <if test="item.tmpPutawayQty != null">
+                        tmp_putaway_qty = #{item.tmpPutawayQty,jdbcType=DECIMAL},
                     </if>
                     <if test="item.stockUnit != null">
                         stock_unit = #{item.stockUnit,jdbcType=BIGINT},
@@ -724,11 +739,14 @@
                 <if test="productUpcCode != null">
                     and product_upc_code=#{productUpcCode,jdbcType=VARCHAR}
                 </if>
-                <if test="palnQty != null">
-                    and paln_qty=#{palnQty,jdbcType=DECIMAL}
+                <if test="planQty != null">
+                    and plan_qty=#{planQty,jdbcType=DECIMAL}
                 </if>
                 <if test="receQty != null">
                     and rece_qty=#{receQty,jdbcType=DECIMAL}
+                </if>
+                <if test="tmpPutawayQty != null">
+                    and tmp_putaway_qty=#{tmpPutawayQty,jdbcType=DECIMAL}
                 </if>
                 <if test="stockUnit != null">
                     and stock_unit=#{stockUnit,jdbcType=BIGINT}
@@ -855,11 +873,14 @@
                 <if test="productUpcCode != null">
                     and product_upc_code ${productUpcCode}
                 </if>
-                <if test="palnQty != null">
-                    and paln_qty ${palnQty}
+                <if test="planQty != null">
+                    and plan_qty ${planQty}
                 </if>
                 <if test="receQty != null">
                     and rece_qty ${receQty}
+                </if>
+                <if test="tmpPutawayQty != null">
+                    and tmp_putaway_qty ${tmpPutawayQty}
                 </if>
                 <if test="stockUnit != null">
                     and stock_unit ${stockUnit}

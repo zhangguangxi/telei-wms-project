@@ -20,7 +20,7 @@
             <result column="cost_reference" jdbcType="DECIMAL" property="costReference"/>
             <result column="cost_reference_currency_id" jdbcType="INTEGER" property="costReferenceCurrencyId"/>
             <result column="unit_price" jdbcType="DECIMAL" property="unitPrice"/>
-            <result column="paln_qty" jdbcType="DECIMAL" property="palnQty"/>
+            <result column="plan_qty" jdbcType="DECIMAL" property="planQty"/>
             <result column="receipts_qty" jdbcType="DECIMAL" property="receiptsQty"/>
             <result column="unit_id" jdbcType="BIGINT" property="unitId"/>
             <result column="amount" jdbcType="DECIMAL" property="amount"/>
@@ -29,12 +29,12 @@
     </resultMap>
 
     <sql id="Base_Column_List">
-        rol_id,ro_id,rp_id,rpd_id,po_id,pod_id,product_id,media_id,product_no,product_name,product_name_local,product_barcode,product_upc_code,spec_type,brand,cost_reference,cost_reference_currency_id,unit_price,paln_qty,receipts_qty,unit_id,amount,unit_price_currency_id,memo
+        rol_id,ro_id,rp_id,rpd_id,po_id,pod_id,product_id,media_id,product_no,product_name,product_name_local,product_barcode,product_upc_code,spec_type,brand,cost_reference,cost_reference_currency_id,unit_price,plan_qty,receipts_qty,unit_id,amount,unit_price_currency_id,memo
     </sql>
 
         <insert id="insert">
-            insert into wms_ro_line (rol_id,ro_id,rp_id,rpd_id,po_id,pod_id,product_id,media_id,product_no,product_name,product_name_local,product_barcode,product_upc_code,spec_type,brand,cost_reference,cost_reference_currency_id,unit_price,paln_qty,receipts_qty,unit_id,amount,unit_price_currency_id,memo)
-            values (#{id,jdbcType=BIGINT},#{roId,jdbcType=BIGINT},#{rpId,jdbcType=BIGINT},#{rpdId,jdbcType=BIGINT},#{poId,jdbcType=BIGINT},#{podId,jdbcType=BIGINT},#{productId,jdbcType=BIGINT},#{mediaId,jdbcType=VARCHAR},#{productNo,jdbcType=VARCHAR},#{productName,jdbcType=VARCHAR},#{productNameLocal,jdbcType=VARCHAR},#{productBarcode,jdbcType=VARCHAR},#{productUpcCode,jdbcType=VARCHAR},#{specType,jdbcType=VARCHAR},#{brand,jdbcType=VARCHAR},#{costReference,jdbcType=DECIMAL},#{costReferenceCurrencyId,jdbcType=INTEGER},#{unitPrice,jdbcType=DECIMAL},#{palnQty,jdbcType=DECIMAL},#{receiptsQty,jdbcType=DECIMAL},#{unitId,jdbcType=BIGINT},#{amount,jdbcType=DECIMAL},#{unitPriceCurrencyId,jdbcType=INTEGER},#{memo,jdbcType=VARCHAR})
+            insert into wms_ro_line (rol_id,ro_id,rp_id,rpd_id,po_id,pod_id,product_id,media_id,product_no,product_name,product_name_local,product_barcode,product_upc_code,spec_type,brand,cost_reference,cost_reference_currency_id,unit_price,plan_qty,receipts_qty,unit_id,amount,unit_price_currency_id,memo)
+            values (#{id,jdbcType=BIGINT},#{roId,jdbcType=BIGINT},#{rpId,jdbcType=BIGINT},#{rpdId,jdbcType=BIGINT},#{poId,jdbcType=BIGINT},#{podId,jdbcType=BIGINT},#{productId,jdbcType=BIGINT},#{mediaId,jdbcType=VARCHAR},#{productNo,jdbcType=VARCHAR},#{productName,jdbcType=VARCHAR},#{productNameLocal,jdbcType=VARCHAR},#{productBarcode,jdbcType=VARCHAR},#{productUpcCode,jdbcType=VARCHAR},#{specType,jdbcType=VARCHAR},#{brand,jdbcType=VARCHAR},#{costReference,jdbcType=DECIMAL},#{costReferenceCurrencyId,jdbcType=INTEGER},#{unitPrice,jdbcType=DECIMAL},#{planQty,jdbcType=DECIMAL},#{receiptsQty,jdbcType=DECIMAL},#{unitId,jdbcType=BIGINT},#{amount,jdbcType=DECIMAL},#{unitPriceCurrencyId,jdbcType=INTEGER},#{memo,jdbcType=VARCHAR})
         </insert>
 
         <insert id="insertSelective">
@@ -94,8 +94,8 @@
                     <if test="unitPrice != null">
                         unit_price,
                     </if>
-                    <if test="palnQty != null">
-                        paln_qty,
+                    <if test="planQty != null">
+                        plan_qty,
                     </if>
                     <if test="receiptsQty != null">
                         receipts_qty,
@@ -168,8 +168,8 @@
                     <if test="unitPrice != null">
                         #{unitPrice,jdbcType=DECIMAL},
                     </if>
-                    <if test="palnQty != null">
-                        #{palnQty,jdbcType=DECIMAL},
+                    <if test="planQty != null">
+                        #{planQty,jdbcType=DECIMAL},
                     </if>
                     <if test="receiptsQty != null">
                         #{receiptsQty,jdbcType=DECIMAL},
@@ -190,7 +190,7 @@
         </insert>
 
         <insert id="insertBatch">
-            insert into wms_ro_line (rol_id,ro_id,rp_id,rpd_id,po_id,pod_id,product_id,media_id,product_no,product_name,product_name_local,product_barcode,product_upc_code,spec_type,brand,cost_reference,cost_reference_currency_id,unit_price,paln_qty,receipts_qty,unit_id,amount,unit_price_currency_id,memo) values
+            insert into wms_ro_line (rol_id,ro_id,rp_id,rpd_id,po_id,pod_id,product_id,media_id,product_no,product_name,product_name_local,product_barcode,product_upc_code,spec_type,brand,cost_reference,cost_reference_currency_id,unit_price,plan_qty,receipts_qty,unit_id,amount,unit_price_currency_id,memo) values
             <foreach collection="list" item="item" separator=",">
                 (
                     #{item.id,jdbcType=BIGINT},
@@ -211,7 +211,7 @@
                     #{item.costReference,jdbcType=DECIMAL},
                     #{item.costReferenceCurrencyId,jdbcType=INTEGER},
                     #{item.unitPrice,jdbcType=DECIMAL},
-                    #{item.palnQty,jdbcType=DECIMAL},
+                    #{item.planQty,jdbcType=DECIMAL},
                     #{item.receiptsQty,jdbcType=DECIMAL},
                     #{item.unitId,jdbcType=BIGINT},
                     #{item.amount,jdbcType=DECIMAL},
@@ -253,7 +253,7 @@
                 cost_reference = #{costReference,jdbcType=DECIMAL},
                 cost_reference_currency_id = #{costReferenceCurrencyId,jdbcType=INTEGER},
                 unit_price = #{unitPrice,jdbcType=DECIMAL},
-                paln_qty = #{palnQty,jdbcType=DECIMAL},
+                plan_qty = #{planQty,jdbcType=DECIMAL},
                 receipts_qty = #{receiptsQty,jdbcType=DECIMAL},
                 unit_id = #{unitId,jdbcType=BIGINT},
                 amount = #{amount,jdbcType=DECIMAL},
@@ -317,8 +317,8 @@
                 <if test="unitPrice != null">
                     unit_price = #{unitPrice,jdbcType=DECIMAL},
                 </if>
-                <if test="palnQty != null">
-                    paln_qty = #{palnQty,jdbcType=DECIMAL},
+                <if test="planQty != null">
+                    plan_qty = #{planQty,jdbcType=DECIMAL},
                 </if>
                 <if test="receiptsQty != null">
                     receipts_qty = #{receiptsQty,jdbcType=DECIMAL},
@@ -394,8 +394,8 @@
                     <if test="item.unitPrice != null">
                         unit_price = #{item.unitPrice,jdbcType=DECIMAL},
                     </if>
-                    <if test="item.palnQty != null">
-                        paln_qty = #{item.palnQty,jdbcType=DECIMAL},
+                    <if test="item.planQty != null">
+                        plan_qty = #{item.planQty,jdbcType=DECIMAL},
                     </if>
                     <if test="item.receiptsQty != null">
                         receipts_qty = #{item.receiptsQty,jdbcType=DECIMAL},
@@ -499,8 +499,8 @@
                 <if test="unitPrice != null">
                     and unit_price=#{unitPrice,jdbcType=DECIMAL}
                 </if>
-                <if test="palnQty != null">
-                    and paln_qty=#{palnQty,jdbcType=DECIMAL}
+                <if test="planQty != null">
+                    and plan_qty=#{planQty,jdbcType=DECIMAL}
                 </if>
                 <if test="receiptsQty != null">
                     and receipts_qty=#{receiptsQty,jdbcType=DECIMAL}
@@ -579,8 +579,8 @@
                 <if test="unitPrice != null">
                     and unit_price ${unitPrice}
                 </if>
-                <if test="palnQty != null">
-                    and paln_qty ${palnQty}
+                <if test="planQty != null">
+                    and plan_qty ${planQty}
                 </if>
                 <if test="receiptsQty != null">
                     and receipts_qty ${receiptsQty}

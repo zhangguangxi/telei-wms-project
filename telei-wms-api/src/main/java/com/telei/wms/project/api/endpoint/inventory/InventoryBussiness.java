@@ -551,8 +551,91 @@ public class InventoryBussiness {
     public InventoryPageQueryBussinessResponse pageQueryInventory(InventoryPageQueryBussinessRequest request) {
         Pagination pagination = new Pagination(request.getPageCommonRequest().getPageNumber(), request.getPageCommonRequest().getPageSize());
         ConditionsBuilder conditionsBuilder = ConditionsBuilder.create();
+        if(StringUtils.isNoneBlank(request.getInventoryPageQueryCondition().getLcCode())){
+            conditionsBuilder.like("lcCode",request.getInventoryPageQueryCondition().getLcCode());
+        }
+        if(StringUtils.isNoneBlank(request.getInventoryPageQueryCondition().getProductNo())){
+            conditionsBuilder.like("productNo",request.getInventoryPageQueryCondition().getProductNo());
+        }
 
-        return null;
+        if(StringUtils.isNoneBlank(request.getInventoryPageQueryCondition().getProductName())){
+            conditionsBuilder.like("productName",request.getInventoryPageQueryCondition().getProductName());
+        }
+
+        if(StringUtils.isNoneBlank(request.getInventoryPageQueryCondition().getProductBarcode())){
+            conditionsBuilder.like("productBarcode",request.getInventoryPageQueryCondition().getProductBarcode());
+        }
+
+        if(StringUtils.isNoneBlank(request.getInventoryPageQueryCondition().getLcType())){
+            conditionsBuilder.eq("lcType",request.getInventoryPageQueryCondition().getLcType());
+        }
+
+        conditionsBuilder.orderBy("wi.ivid desc");
+        Map<String, Object> paramMap = conditionsBuilder.build();
+        Pagination page = (Pagination)wmsInventoryService.selectCustomPage(pagination,paramMap);
+        InventoryPageQueryBussinessResponse response = new InventoryPageQueryBussinessResponse();
+        response.setPage(page);
+        return response;
+    }
+
+    /**
+     * 库存详情
+     *
+     * @param request
+     * @return
+     */
+    public InventoryDetailBussinessResponse detailInventory(InventoryDetailBussinessRequest request) {
+        WmsInventory wmsInventory = DataConvertUtil.parseDataAsObject(request, WmsInventory.class);
+        List<WmsInventory> wmsInventories = wmsInventoryService.selectByLcCodeAndProductId(wmsInventory);
+        if(Objects.isNull(wmsInventories) || wmsInventories.isEmpty()){
+            ErrorCode.INVENTORY_DETAIL_ERROR_4024.throwError(request.getLcCode(),request.getProductId());
+        }
+        Map<Long, WmsInventory> ivId2EntityMap = wmsInventories.stream().collect(Collectors.toMap(WmsInventory::getIvId, Function.identity()));
+        List<InventoryDetailResponse.InventoryDetailCondition> dataList = DataConvertUtil.parseDataAsArray(wmsInventories, InventoryDetailResponse.InventoryDetailCondition.class);
+        dataList.stream().forEach(item ->{
+            Long ivId = item.getIvId();
+            WmsInventory inventory = ivId2EntityMap.get(ivId);
+            BigDecimal[] bagRet = inventory.getBigBagExtraQty().divideAndRemainder(inventory.getMidBagRate());
+            item.setMidBagQty(bagRet[0]);
+            item.setTinyBagQty(bagRet[1]);
+        });
+        return DataConvertUtil.parseDataAsObject(dataList,InventoryDetailBussinessResponse.class);
+    }
+
+    /**
+     * 库存调整分页
+     *
+     * @param request
+     * @return
+     */
+    public InventoryAdjustPageQueryBussinessResponse pageQueryAdjustInventory(InventoryAdjustPageQueryBussinessRequest request) {
+        Pagination pagination = new Pagination(request.getPageCommonRequest().getPageNumber(), request.getPageCommonRequest().getPageSize());
+        ConditionsBuilder conditionsBuilder = ConditionsBuilder.create();
+        if(StringUtils.isNoneBlank(request.getInventoryPageQueryCondition().getLcCode())){
+            conditionsBuilder.like("lcCode",request.getInventoryPageQueryCondition().getLcCode());
+        }
+        if(StringUtils.isNoneBlank(request.getInventoryPageQueryCondition().getProductNo())){
+            conditionsBuilder.like("productNo",request.getInventoryPageQueryCondition().getProductNo());
+        }
+
+        if(StringUtils.isNoneBlank(request.getInventoryPageQueryCondition().getProductName())){
+            conditionsBuilder.like("productName",request.getInventoryPageQueryCondition().getProductName());
+        }
+
+        if(StringUtils.isNoneBlank(request.getInventoryPageQueryCondition().getProductBarcode())){
+            conditionsBuilder.like("productBarcode",request.getInventoryPageQueryCondition().getProductBarcode());
+        }
+
+        if(StringUtils.isNoneBlank(request.getInventoryPageQueryCondition().getLcType())){
+            conditionsBuilder.eq("lcType",request.getInventoryPageQueryCondition().getLcType());
+        }
+
+        conditionsBuilder.orderBy("wa.create_time desc");
+        Map<String, Object> paramMap = conditionsBuilder.build();
+        Pagination page = (Pagination)wmsAdjtLineService.selectCustomPage(pagination,paramMap);
+        InventoryAdjustPageQueryBussinessResponse response = new InventoryAdjustPageQueryBussinessResponse();
+        response.setPage(page);
+        return response;
     }
 
     /**
