@@ -1,66 +1,71 @@
 package com.telei.wms.datasource.wms.model;
 
 import com.nuochen.framework.autocoding.domain.Entity;
-import lombok.Data;
-
 import java.math.BigDecimal;
 import java.util.Date;
+import lombok.Data;
 
 /**
- * wms_pao_line 上架单明细
- */
+* wms_pao_line ä¸Šæž¶å�•æ˜Žç»†
+*/
 @Data
 public class WmsPaoLine implements Entity<Long> {
     /** id */
-    private Long id;
-    /** 单头id */
+    private Long paolId;
+    /** å�•å¤´id */
     private Long paoId;
-    /** 入库单单头id */
+    /** å…¥åº“å�•å�•å¤´id */
     private Long roId;
-    /** 对应计划明细的id */
+    /** å¯¹åº”è®¡åˆ’æ˜Žç»†çš„id */
     private Long rolId;
-    /** 收货作单头id */
+    /** æ”¶è´§ä½œå�•å¤´id */
     private Long rooId;
-    /** 收货单号 */
+    /** æ”¶è´§å�•å�· */
     private String rooCode;
-    /** 收货单收货明细id */
+    /** æ”¶è´§å�•æ”¶è´§æ˜Žç»†id */
     private Long roolId;
-    /** 产品id */
+    /** äº§å“�id */
     private Long productId;
-    /** 单位毛重(KG) */
+    /** å�•ä½�æ¯›é‡�(KG) */
     private BigDecimal unitGrossWeight;
-    /** 单价 */
-    private BigDecimal unitPrice;
-    /** 单位体积(CBM) */
+    /** å�•ä½�ä½“ç§¯(CBM) */
     private BigDecimal unitVol;
-    /** 备注 */
+    /** å¤‡æ³¨ */
     private String memo;
-    /** 上架数量 */
+    /** ä¸Šæž¶æ•°é‡� */
     private BigDecimal paolQty;
-    /** 计量单位 */
+    /** è®¡é‡�å�•ä½� */
     private Integer stockUnit;
-    /** 明细行总重量(KG) */
+    /** æ˜Žç»†è¡Œæ€»é‡�é‡�(KG) */
     private BigDecimal lineTotalWeight;
-    /** 明细行净重(KG) */
+    /** æ˜Žç»†è¡Œå‡€é‡�(KG) */
     private BigDecimal lineNetWeight;
-    /** 明细行总体积(CBM) */
+    /** æ˜Žç»†è¡Œæ€»ä½“ç§¯(CBM) */
     private BigDecimal lineTotalVol;
-    /** 上架状态  01-制单，20-已上架 */
+    /** ä¸Šæž¶çŠ¶æ€�  01-åˆ¶å�•ï¼Œ20-å·²ä¸Šæž¶ */
     private String paoStatus;
-    /** 创建用户 */
+    /** åˆ›å»ºç”¨æˆ· */
     private String createUser;
-    /** 创建时间 */
+    /** åˆ›å»ºæ—¶é—´ */
     private Date createTime;
-    /** 库存批次id */
-    private Integer iabId;
-    /** 推荐库位 */
+    /** åº“å­˜æ‰¹æ¬¡id */
+    private Long iabId;
+    /** æŽ¨è��åº“ä½� */
     private String prepLcCode;
-    /** 上架库位 */
+    /** ä¸Šæž¶åº“ä½� */
     private String lcCode;
-    /** 先进先出时间 */
+    /** å…ˆè¿›å…ˆå‡ºæ—¶é—´ */
     private Date paolFifoTime;
-    /** 上架时间 */
+    /** ä¸Šæž¶æ—¶é—´ */
     private Date putawayTime;
-    /** 上架用户 */
+    /** ä¸Šæž¶ç”¨æˆ· */
     private String putawayUser;
+    @Override
+    public Long getId() {
+        return paolId;
+    }
+    @Override
+    public void setId(Long id) {
+        this.paolId = id;
+    }
 }

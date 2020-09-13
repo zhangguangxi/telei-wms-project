@@ -5,16 +5,16 @@
         cp.product_no,
         cp.product_name,
         cp.product_barcode,
-        (wi.big_bag_rate / wi.mid_bag_rate) as big_bg_rate ,
+        (wi.big_bag_rate / wi.mid_bag_rate) as big_bag_rate ,
         wi.mid_bag_rate,
         (wi.big_bag_rate * wi.mid_bag_rate) as box_qty,
-        cp.big_bag_bol,
+        cp.big_bag_vol,
         cp.big_bag_weight,
         wi.lc_code,
-        wi.lc_type,
+        wl.lc_type,
         wi.iv_qty as qty,
         cp.cost_reference,
-        (wi.iv_qty * cp.cost_reference) as inventoryAmount,
+        (wi.iv_qty * cp.cost_reference) as inventoryAmount
     </sql>
 
     <select id="doIvSnapshotSchedule" statementType="CALLABLE" resultType="java.lang.Integer">
@@ -36,14 +36,14 @@
         select
         <include refid="Custom_Base_Column_List"></include>
         from wms_inventory wi
-        left join cdm.cdm_product cp
-        on wi.product_id = cp.product_id
+        left join cdm.cdm_product cp on wi.product_id = cp.product_id
+        left join wms_location wl on wi.lc_code = wl.lc_code
         <where>
             <if test="lcCode != null">
                 and wi.lc_code ${lcCode}
             </if>
             <if test="productNo != null">
-                and wi.product_no ${productNo}
+                and cp.product_no ${productNo}
             </if>
             <if test="productName != null">
                 and cp.product_name ${productName}
@@ -52,7 +52,7 @@
                 and cp.product_barcode ${productBarcode}
             </if>
             <if test="lcType != null">
-                and wi.lc_type ${lcType}
+                and wl.lc_type ${lcType}
             </if>
         </where>
         <if test="orderBy != null">

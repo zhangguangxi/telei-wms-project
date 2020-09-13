@@ -1,9 +1,10 @@
 package com.telei.wms.datasource.wms.model;
 
 import com.nuochen.framework.autocoding.domain.Entity;
+import lombok.Data;
+
 import java.math.BigDecimal;
 import java.util.Date;
-import lombok.Data;
 
 /**
  * wms_inventory_history 历史库存表
@@ -72,4 +73,8 @@ public class WmsInventoryHistory implements Entity<Long> {
     private String batchNo;
     /** 原库存id */
     private Long ivIdFrom;
+
+    public Long getIvId(){
+        return getId();
+    }
 }

@@ -2,6 +2,7 @@ package com.telei.wms.customer.product;
 
 import com.nuochen.framework.app.api.ApiResponse;
 import com.telei.wms.customer.product.dto.ProductDetailRequest;
+import com.telei.wms.customer.product.dto.ProductRequest;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.PostMapping;
 
@@ -19,6 +20,14 @@ public interface ProductFeignClient {
      */
     @PostMapping("internal/010208")
     ApiResponse getProductDetailByBarCode(ProductDetailRequest request);
+
+    /**
+     * 根据ids查询
+     * @param request
+     * @return
+     */
+    @PostMapping("internal/010216")
+    ApiResponse getProductList(ProductRequest request);
 
     /**
      * 根据条件查询产品列表

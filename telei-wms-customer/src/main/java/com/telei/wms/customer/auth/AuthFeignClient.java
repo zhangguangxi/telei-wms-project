@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.PostMapping;
  * @Auther: leo
  * @Date: 2020/6/18 10:00
  */
-@FeignClient(value = "AuthFeignClient",url="http://localhost:8815/")
+@FeignClient(value = "AuthFeignClient",url="http://localhost:20010/")
 public interface AuthFeignClient {
     /**
      * 令牌校验

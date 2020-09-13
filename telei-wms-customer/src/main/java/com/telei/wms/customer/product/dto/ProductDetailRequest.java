@@ -13,6 +13,7 @@ import java.util.Collection;
 public class ProductDetailRequest {
     /** 产品id列表 */
     private Collection<Long> ids;
+    private Long id;
     /**商品名称*/
     private String productName;
     /** 产品分类 */

@@ -2,7 +2,7 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.telei.wms.datasource.wms.repository.WmsInventoryHistoryRepository">
     <resultMap id="BaseResultMap" type="com.telei.wms.datasource.wms.model.WmsInventoryHistory">
-        <id column="iv_id" jdbcType="BIGINT" property="ivId"/>
+        <id column="iv_id" jdbcType="BIGINT" property="id"/>
         <result column="company_id" jdbcType="BIGINT" property="companyId"/>
         <result column="warehouse_id" jdbcType="BIGINT" property="warehouseId"/>
         <result column="warehouse_code" jdbcType="VARCHAR" property="warehouseCode"/>

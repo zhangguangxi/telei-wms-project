@@ -4,7 +4,7 @@ server:
 # spring
 spring:
   profiles:
-    active: dev
+    active: local
   application:
     name: telei-wms-api
   # message
@@ -51,8 +51,9 @@ customize:
 ---
 spring:
   profiles: local
+    #rabbitmq配置
   rabbitmq:
-    host: localhost
+    host: 192.168.1.200
     port: 5672
     username: admin
     password: admin1314
@@ -83,17 +84,38 @@ datasource:
     testWhileIdle: true
     timeBetweenEvictionRunsMillis: 60000
     type: com.alibaba.druid.pool.DruidDataSource
-    url: jdbc:mysql://zodiac:13306/wms?characterEncoding=utf8&allowMultiQueries=true&useUnicode=true&useSSL=false
+    url: jdbc:mysql://192.168.1.200:3306/wms?characterEncoding=utf8&allowMultiQueries=true&useUnicode=true&useSSL=false
     username: root
-    password: "@0Ww5fhsYROP%%$I"
+    password: root
     validationQuery:  'x'
 
 id-generator:
   machine-id: 1
 
+#数据同步配置
+id-instantdirective:
+  #当前server名称
+  server-name: HANGHZHOU
+  #当前系统
+  system: WMS
+  #数据埋点配置
+  data-dependencies:
+    WmsRoHeaderService: wms_ro_header
+    WmsRoLineService: wms_ro_line
+
+#当前节点系统之间数据交互配置
+wms-id-instantdirective:
+  #当前系统
+  system: WMS
+  #服务节点
+  nodes:
+    CDM: http://127.0.0.1:8811/internal/012301
+    OMS: http://127.0.0.1:8812/internal/021401
+    WMS: http://127.0.0.1:8813/internal/1030201
+
 upload:
   images:
-    postUri: http://192.168.1.114:20011/internal/980107
+    postUri: http://127.0.0.1:20011/internal/980107
 
 #jetcache
 jetcache:
@@ -107,8 +129,8 @@ jetcache:
     default:
       type: redis.lettuce
       keyConvertor: fastjson
-      uri: redis://127.0.0.1:6379/0
-#      uri: redis://admin1314@192.168.1.114:6379/0
+      #      uri: redis://127.0.0.1:6379/0
+      uri: redis://admin1314@192.168.1.200:6379/0
 
 
 ---

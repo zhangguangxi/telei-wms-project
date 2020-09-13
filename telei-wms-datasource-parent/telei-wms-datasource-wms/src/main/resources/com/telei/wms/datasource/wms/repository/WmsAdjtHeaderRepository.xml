@@ -3,30 +3,32 @@
 <mapper namespace="com.telei.wms.datasource.wms.repository.WmsAdjtHeaderRepository">
 
     <sql id="Custom_Base_Column_List">
-        create_time,
-        adjh_code,
-        adjh_type,
-#         product_no,
-        product_name,
-        product_barcode;
-        iv_qty,
-        lc_code,
-        iv_qty_adjt,
-        lc_code_adjt,
-        reason
+        wa.create_time,
+        wa.adjh_code,
+        wa.adjh_type,
+        cp.product_no,
+        cp.product_name,
+        cp.product_barcode;
+        wa.iv_qty,
+        wa.lc_code,
+        wa.iv_qty_adjt,
+        wa.lc_code_adjt,
+        wa.reason
     </sql>
 
 
     <select id="selectCustomPage" resultType="com.telei.wms.datasource.wms.vo.WmsAdjustHeaderPageQueryResponseVo">
         select
         <include refid="Custom_Base_Column_List"></include>
-        from wms_adjt_header
+        from wms_adjt_header wa
+        left join cdm cdm_product cp
+        on  cp.product_id  = wa.product.id
         <where>
             <if test="lcCode != null">
                 and wi.lc_code ${lcCode}
             </if>
             <if test="productNo != null">
-                and wi.product_no ${productNo}
+                and cp.product_no ${productNo}
             </if>
 
             <if test="productName != null">

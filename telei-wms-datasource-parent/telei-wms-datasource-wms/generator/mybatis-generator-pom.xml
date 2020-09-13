@@ -14,9 +14,12 @@
         <srcdir>${basedir}/../</srcdir>
 
         <driver>com.mysql.jdbc.Driver</driver>
-        <url>jdbc:mysql://192.168.1.114:3306</url>
+<!--        <url>jdbc:mysql://192.168.1.114:3306</url>-->
+<!--        <user>root</user>-->
+<!--        <password>admin1314</password> -->
+        <url>jdbc:mysql://192.168.1.200:3306</url>
         <user>root</user>
-        <password>admin1314</password>
+        <password>root</password>
         <schema>wms</schema>
 
         <companyName>telei</companyName>
@@ -98,8 +101,8 @@
                     <!-- ################# 表名映射 ################# -->
                     <tables>
 <!--                        <table><tableName>goods</tableName></table>-->
-                        <table><tableName>wms_inventory</tableName></table>
-<!--                        <table><tableName>wms_inventory_history</tableName></table>-->
+<!--                        <table><tableName>wms_inventory</tableName></table>-->
+                        <table><tableName>wms_inventory_history</tableName></table>
 <!--                        <table><tableName>wms_iv_transaction</tableName></table>-->
 <!--                        <table><tableName>wms_iv_split</tableName></table>-->
 <!--                        <table><tableName>wms_pao_header</tableName></table>-->

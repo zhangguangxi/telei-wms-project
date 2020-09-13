@@ -24,18 +24,14 @@ public class InventoryAddBussinessRequest {
         private String warehouseCode;
         /**库位编码*/
         private String lcCode;
+        /**计量单位*/
+        private Long stockUnit;
         /** 库存数量 */
         private BigDecimal ivQty;
-        /** 商家编码 */
-        private String customerId;
         /** 产品序列码 */
         private Long productId;
         /** 库存批次id */
         private Long iabId;
-        /** 中包数量 */
-        private BigDecimal midBagQty;
-        /** 大包数量 */
-        private BigDecimal bigBagQty;
         /**上架单单头id*/
         private Long paoId;
         /**上架单明细id*/
@@ -46,11 +42,5 @@ public class InventoryAddBussinessRequest {
         private Long roolId;
         /**入库任务id*/
         private Long roId;
-//        /** 引起库存变动业务单据编号 */
-//        private String ivDocumentCode;
-//        /** 引起库存变动单据id */
-//        private Long ivDocumentId;
-//        /**引起库存变动单据明细id  */
-//        private Long ivDocumentlineId;
     }
 }

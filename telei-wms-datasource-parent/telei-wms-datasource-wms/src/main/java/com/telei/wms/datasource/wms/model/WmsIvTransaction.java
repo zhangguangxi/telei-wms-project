@@ -1,9 +1,10 @@
 package com.telei.wms.datasource.wms.model;
 
 import com.nuochen.framework.autocoding.domain.Entity;
+import lombok.Data;
+
 import java.math.BigDecimal;
 import java.util.Date;
-import lombok.Data;
 
 /**
  * wms_iv_transaction 库存变动记录
@@ -52,4 +53,8 @@ public class WmsIvTransaction implements Entity<Long> {
     private Date createTime;
     /** 创建用户 */
     private String createUser;
+
+    public Long getIvtId(){
+        return getId();
+    }
 }

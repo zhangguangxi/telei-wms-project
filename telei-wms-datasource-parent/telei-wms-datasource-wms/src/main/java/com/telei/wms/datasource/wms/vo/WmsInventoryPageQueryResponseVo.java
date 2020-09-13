@@ -23,7 +23,7 @@ public class WmsInventoryPageQueryResponseVo {
     /**装箱数*/
     private BigDecimal boxQty;
     /**大包体积*/
-    private BigDecimal bigBagBol;
+    private BigDecimal bigBagVol;
     /**大包重量*/
     private BigDecimal bigBagWeight;
     /**库位*/

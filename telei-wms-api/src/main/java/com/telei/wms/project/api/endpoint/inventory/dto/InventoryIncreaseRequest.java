@@ -39,7 +39,6 @@ public class InventoryIncreaseRequest {
     private BigDecimal ivQty;
 
     @ApiModelProperty(value = "调整库位",example = "12314",position = 9)
-    @Check
     private String lcCodeAdjt;
 
     @ApiModelProperty(value = "调整数量",example = "2343",position = 10)
