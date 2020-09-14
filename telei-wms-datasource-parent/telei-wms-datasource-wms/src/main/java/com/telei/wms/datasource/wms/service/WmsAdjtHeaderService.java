@@ -7,9 +7,7 @@ import com.nuochen.framework.autocoding.domain.Pagination;
 import com.nuochen.framework.autocoding.domain.mybatis.BaseService;
 import com.telei.wms.datasource.wms.model.WmsAdjtHeader;
 import com.telei.wms.datasource.wms.repository.WmsAdjtHeaderRepository;
-import com.telei.wms.datasource.wms.repository.WmsAdjtLineRepository;
 import com.telei.wms.datasource.wms.vo.WmsAdjustHeaderPageQueryResponseVo;
-import com.telei.wms.datasource.wms.vo.WmsInventoryPageQueryResponseVo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

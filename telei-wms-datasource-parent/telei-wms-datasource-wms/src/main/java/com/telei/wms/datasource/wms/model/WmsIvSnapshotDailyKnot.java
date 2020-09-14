@@ -12,6 +12,8 @@ import lombok.Data;
 public class WmsIvSnapshotDailyKnot implements Entity<Long> {
     /** id */
     private Long id;
+    /** ivst_id,快照时间id */
+    private Long ivstId;
     /** 公司id */
     private Long companyId;
     /** 仓库id */

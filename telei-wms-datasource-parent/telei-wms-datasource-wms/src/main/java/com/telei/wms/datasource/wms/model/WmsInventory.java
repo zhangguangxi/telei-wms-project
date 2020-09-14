@@ -7,71 +7,71 @@ import java.math.BigDecimal;
 import java.util.Date;
 
 /**
-* wms_inventory åº“å­˜è¡¨
+* wms_inventory 库存表
 */
 @Data
 public class WmsInventory implements Entity<Long> {
     /** id */
     private Long ivId;
-    /** å…¬å�¸id */
+    /** 公司id */
     private Long companyId;
-    /** ä»“åº“id */
+    /** 仓库id */
     private Long warehouseId;
-    /** ä»“åº“code */
+    /** 仓库code */
     private String warehouseCode;
-    /** åº“ä½�ç¼–ç � */
+    /** 库位编码 */
     private String lcCode;
-    /** å®¢æˆ·id */
+    /** 客户id */
     private Long customerId;
-    /** äº§å“�åº�åˆ—ç � */
+    /** 产品序列码 */
     private Long productId;
-    /** åº“å­˜æ‰¹æ¬¡id */
+    /** 库存批次id */
     private Long iabId;
-    /** å®žç‰©ç±»åˆ«ï¼ŒGDå�ˆæ ¼ BKç ´æ�Ÿ MDéœ‰å�˜ WEæ·‹æ¹¿ DFæ®‹æ¬¡ï¼Œæ•°æ�®å­—å…¸COMMON_QS_CODE */
+    /** 实物类别，GD合格 BK破损 MD霉变 WE淋湿 DF残次，数据字典COMMON_QS_CODE */
     private String qsCode;
-    /** å…ˆè¿›å…ˆå‡ºæ—¶é—´ */
+    /** 先进先出时间 */
     private Date ivFifoTime;
-    /** åº“å­˜æ•°é‡� */
+    /** 库存数量 */
     private BigDecimal ivQty;
-    /** è®¡é‡�å�•ä½� */
+    /** 计量单位 */
     private Long stockUnit;
-    /** ä¸­åŒ…æ•°é‡� */
+    /** 中包数量 */
     private BigDecimal midBagQty;
-    /** ä¸­åŒ…è½¬æ�¢æ•° */
+    /** 中包转换数 */
     private BigDecimal midBagRate;
-    /** ä¸­åŒ…å‰©ä½™æ•°é‡� */
+    /** 中包剩余数量 */
     private BigDecimal midBagExtraQty;
-    /** å¤§åŒ…æ•°é‡� */
+    /** 大包数量 */
     private BigDecimal bigBagQty;
-    /** å¤§åŒ…è½¬æ�¢æ•° */
+    /** 大包转换数 */
     private BigDecimal bigBagRate;
-    /** å¤§åŒ…å‰©ä½™æ•°é‡� */
+    /** 大包剩余数量 */
     private BigDecimal bigBagExtraQty;
-    /** åº“å­˜é”�ï¼Œ0å�¯ä»¥å‡ºå‡ºè´§ï¼Œ1ä¸�å�¯ä»¥å‡ºè´§ */
+    /** 库存锁，0可以出出货，1不可以出货 */
     private Integer ivLocksign;
-    /** å†»ç»“é”�ï¼Œ0å�¯ä»¥æ“�ä½œï¼Œ1ä¸�å�¯ä»¥ç§»åº“ã€�æ‹†åˆ†ã€�å‡ºè´§ã€�æ›´æ–° */
+    /** 冻结锁，0可以操作，1不可以移库、拆分、出货、更新 */
     private Integer ivFreezesign;
-    /** ä¸šåŠ¡æ—¥æœŸ */
+    /** 业务日期 */
     private Date bizDate;
-    /** åˆ›å»ºæ—¶é—´ */
+    /** 创建时间 */
     private Date ivCreatetime;
-    /** æœ€è¿‘åº“å­˜æ›´æ–°æ—¶é—´ */
+    /** 最近库存更新时间 */
     private Date ivTranstime;
-    /** åº”ç”¨ç±»åž‹ä»£ç �,å¼•èµ·æœ¬æ¬¡åº“å­˜å�˜åŠ¨çš„æ�¥æº�å�•æ�®çš„åº”ç”¨ç±»åž‹  RECV å…¥åº“å�•æ”¶è´§ DOMT å‡ºåº“è®¢å�• ADJT åº“å­˜è°ƒæ•´å�• ç­‰ */
+    /** 应用类型代码,引起本次库存变动的来源单据的应用类型  RECV 入库单收货 DOMT 出库订单 ADJT 库存调整单 等 */
     private String apCodeDc;
-    /** å¼•èµ·åº“å­˜å�˜åŠ¨ä¸šåŠ¡å�•æ�®ç¼–å�· */
+    /** 引起库存变动业务单据编号 */
     private String ivDocumentCode;
-    /** å¼•èµ·åº“å­˜å�˜åŠ¨å�•æ�®id */
+    /** 引起库存变动单据id */
     private Long ivDocumentId;
-    /** å¼•èµ·åº“å­˜å�˜åŠ¨å�•æ�®æ˜Žç»†id */
+    /** 引起库存变动单据明细id */
     private Long ivDocumentlineId;
-    /** ç”Ÿäº§æ—¥æœŸ */
+    /** 生产日期 */
     private Date productDate;
-    /** æœ‰æ•ˆæ—¥æœŸ */
+    /** 有效日期 */
     private Date ivEffectiveDate;
-    /** å®¢æˆ·æŒ‡å®šæ‰¹æ¬¡å�· */
+    /** 客户指定批次号 */
     private String batchNo;
-    /** åŽŸåº“å­˜id */
+    /** 原库存id */
     private Long ivIdFrom;
     @Override
     public Long getId() {

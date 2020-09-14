@@ -55,5 +55,5 @@ public class PaoLineAddRequest {
     private BigDecimal lineTotalVol;
     /** 库存批次id */
     @ApiModelProperty(value = "库存批次id", example = "1")
-    private Integer iabId;
+    private Long iabId;
 }

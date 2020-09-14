@@ -5,7 +5,7 @@ import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 
 /**
- * 详情request
+ * 详情Request
  */
 @Data
 public class PaoDetailRequest {

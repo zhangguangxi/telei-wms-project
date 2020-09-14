@@ -8,6 +8,7 @@ import org.springframework.stereotype.Component;
 
 /**
  * @author gongrp
+ * 库存快照日结统计任务
  */
 @Slf4j
 @Component
@@ -16,8 +17,7 @@ public class IvSnapshotDailyKnotSchedule {
     @Autowired
     private IvSnapshotDailyKnotScheduleHandler ivSnapshotDailyKnotScheduleHandler;
 
-//    @Scheduled(cron = TaskCron.EVERY_DAY_4)
-    @Scheduled(cron = TaskCron.EVERY_SECONDS_15)
+    @Scheduled(cron = TaskCron.EVERY_DAY_4)
     public void doIvSnapshotDailyKnotSchedule(){
         ivSnapshotDailyKnotScheduleHandler.run();
     }

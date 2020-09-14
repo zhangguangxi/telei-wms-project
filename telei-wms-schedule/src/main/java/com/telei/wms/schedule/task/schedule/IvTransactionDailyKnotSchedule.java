@@ -8,18 +8,18 @@ import org.springframework.stereotype.Component;
 
 /**
  * @author gongrp
- * 库存快照统计任务
+ * 库存变动记录日结
  */
 @Slf4j
 @Component
-public class IvSnapshotSchedule {
+public class IvTransactionDailyKnotSchedule {
 
     @Autowired
-    private IvSnapshotScheduleHandler ivSnapshotScheduleHandler;
+    private IvTransactionDailyKnotScheduleHandler ivTransactionDailyKnotScheduleHandler;
 
-    @Scheduled(cron = TaskCron.EVERY_DAY_1)
-    public void doIvSnapshotSchedule(){
-        ivSnapshotScheduleHandler.run();
+    @Scheduled(cron = TaskCron.EVERY_SECONDS_15)
+    public void doIvTransactionDailyKnotSchedule(){
+        ivTransactionDailyKnotScheduleHandler.run();
     }
 
 }

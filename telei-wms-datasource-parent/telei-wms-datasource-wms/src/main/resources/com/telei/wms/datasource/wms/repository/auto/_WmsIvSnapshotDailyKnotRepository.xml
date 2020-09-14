@@ -3,6 +3,7 @@
 <mapper namespace="com.telei.wms.datasource.wms.repository.WmsIvSnapshotDailyKnotRepository">
     <resultMap id="BaseResultMap" type="com.telei.wms.datasource.wms.model.WmsIvSnapshotDailyKnot">
         <id column="ivsdk_id" jdbcType="BIGINT" property="id"/>
+            <result column="ivst_id" jdbcType="BIGINT" property="ivstId"/>
             <result column="company_id" jdbcType="BIGINT" property="companyId"/>
             <result column="warehouse_id" jdbcType="BIGINT" property="warehouseId"/>
             <result column="warehouse_code" jdbcType="VARCHAR" property="warehouseCode"/>
@@ -25,12 +26,12 @@
     </resultMap>
 
     <sql id="Base_Column_List">
-        ivsdk_id,company_id,warehouse_id,warehouse_code,customer_id,product_id,knot_lc_date,knot_date,snapshot_lc_date,snapshot_date,iv_qty,total_weight,total_net_weight,total_vol,lc_count,big_bag_qty,big_bag_extra_qty,mid_bag_qty,mid_bag_extra_qty,create_time
+        ivsdk_id,ivst_id,company_id,warehouse_id,warehouse_code,customer_id,product_id,knot_lc_date,knot_date,snapshot_lc_date,snapshot_date,iv_qty,total_weight,total_net_weight,total_vol,lc_count,big_bag_qty,big_bag_extra_qty,mid_bag_qty,mid_bag_extra_qty,create_time
     </sql>
 
         <insert id="insert">
-            insert into wms_iv_snapshot_daily_knot (ivsdk_id,company_id,warehouse_id,warehouse_code,customer_id,product_id,knot_lc_date,knot_date,snapshot_lc_date,snapshot_date,iv_qty,total_weight,total_net_weight,total_vol,lc_count,big_bag_qty,big_bag_extra_qty,mid_bag_qty,mid_bag_extra_qty,create_time)
-            values (#{id,jdbcType=BIGINT},#{companyId,jdbcType=BIGINT},#{warehouseId,jdbcType=BIGINT},#{warehouseCode,jdbcType=VARCHAR},#{customerId,jdbcType=BIGINT},#{productId,jdbcType=BIGINT},#{knotLcDate,jdbcType=TIMESTAMP},#{knotDate,jdbcType=TIMESTAMP},#{snapshotLcDate,jdbcType=TIMESTAMP},#{snapshotDate,jdbcType=TIMESTAMP},#{ivQty,jdbcType=DECIMAL},#{totalWeight,jdbcType=DECIMAL},#{totalNetWeight,jdbcType=DECIMAL},#{totalVol,jdbcType=DECIMAL},#{lcCount,jdbcType=DECIMAL},#{bigBagQty,jdbcType=DECIMAL},#{bigBagExtraQty,jdbcType=DECIMAL},#{midBagQty,jdbcType=DECIMAL},#{midBagExtraQty,jdbcType=DECIMAL},#{createTime,jdbcType=TIMESTAMP})
+            insert into wms_iv_snapshot_daily_knot (ivsdk_id,ivst_id,company_id,warehouse_id,warehouse_code,customer_id,product_id,knot_lc_date,knot_date,snapshot_lc_date,snapshot_date,iv_qty,total_weight,total_net_weight,total_vol,lc_count,big_bag_qty,big_bag_extra_qty,mid_bag_qty,mid_bag_extra_qty,create_time)
+            values (#{id,jdbcType=BIGINT},#{ivstId,jdbcType=BIGINT},#{companyId,jdbcType=BIGINT},#{warehouseId,jdbcType=BIGINT},#{warehouseCode,jdbcType=VARCHAR},#{customerId,jdbcType=BIGINT},#{productId,jdbcType=BIGINT},#{knotLcDate,jdbcType=TIMESTAMP},#{knotDate,jdbcType=TIMESTAMP},#{snapshotLcDate,jdbcType=TIMESTAMP},#{snapshotDate,jdbcType=TIMESTAMP},#{ivQty,jdbcType=DECIMAL},#{totalWeight,jdbcType=DECIMAL},#{totalNetWeight,jdbcType=DECIMAL},#{totalVol,jdbcType=DECIMAL},#{lcCount,jdbcType=DECIMAL},#{bigBagQty,jdbcType=DECIMAL},#{bigBagExtraQty,jdbcType=DECIMAL},#{midBagQty,jdbcType=DECIMAL},#{midBagExtraQty,jdbcType=DECIMAL},#{createTime,jdbcType=TIMESTAMP})
         </insert>
 
         <insert id="insertSelective">
@@ -38,6 +39,9 @@
             <trim prefix="(" suffix=")" suffixOverrides=",">
                     <if test="id != null">
                         ivsdk_id,
+                    </if>
+                    <if test="ivstId != null">
+                        ivst_id,
                     </if>
                     <if test="companyId != null">
                         company_id,
@@ -101,6 +105,9 @@
                     <if test="id != null">
                         #{id,jdbcType=BIGINT},
                     </if>
+                    <if test="ivstId != null">
+                        #{ivstId,jdbcType=BIGINT},
+                    </if>
                     <if test="companyId != null">
                         #{companyId,jdbcType=BIGINT},
                     </if>
@@ -162,10 +169,11 @@
         </insert>
 
         <insert id="insertBatch">
-            insert into wms_iv_snapshot_daily_knot (ivsdk_id,company_id,warehouse_id,warehouse_code,customer_id,product_id,knot_lc_date,knot_date,snapshot_lc_date,snapshot_date,iv_qty,total_weight,total_net_weight,total_vol,lc_count,big_bag_qty,big_bag_extra_qty,mid_bag_qty,mid_bag_extra_qty,create_time) values
+            insert into wms_iv_snapshot_daily_knot (ivsdk_id,ivst_id,company_id,warehouse_id,warehouse_code,customer_id,product_id,knot_lc_date,knot_date,snapshot_lc_date,snapshot_date,iv_qty,total_weight,total_net_weight,total_vol,lc_count,big_bag_qty,big_bag_extra_qty,mid_bag_qty,mid_bag_extra_qty,create_time) values
             <foreach collection="list" item="item" separator=",">
                 (
                     #{item.id,jdbcType=BIGINT},
+                    #{item.ivstId,jdbcType=BIGINT},
                     #{item.companyId,jdbcType=BIGINT},
                     #{item.warehouseId,jdbcType=BIGINT},
                     #{item.warehouseCode,jdbcType=VARCHAR},
@@ -204,6 +212,7 @@
     <update id="updateByPrimaryKey">
         update wms_iv_snapshot_daily_knot
         <set>
+                ivst_id = #{ivstId,jdbcType=BIGINT},
                 company_id = #{companyId,jdbcType=BIGINT},
                 warehouse_id = #{warehouseId,jdbcType=BIGINT},
                 warehouse_code = #{warehouseCode,jdbcType=VARCHAR},
@@ -230,6 +239,9 @@
     <update id="updateByPrimaryKeySelective">
         update wms_iv_snapshot_daily_knot
         <set>
+                <if test="ivstId != null">
+                    ivst_id = #{ivstId,jdbcType=BIGINT},
+                </if>
                 <if test="companyId != null">
                     company_id = #{companyId,jdbcType=BIGINT},
                 </if>
@@ -295,6 +307,9 @@
         <foreach close="" collection="list" item="item" open="" separator=";">
             update wms_iv_snapshot_daily_knot
             <set>
+                    <if test="item.ivstId != null">
+                        ivst_id = #{item.ivstId,jdbcType=BIGINT},
+                    </if>
                     <if test="item.companyId != null">
                         company_id = #{item.companyId,jdbcType=BIGINT},
                     </if>
@@ -388,6 +403,9 @@
                 <if test="id != null">
                     and ivsdk_id=#{id,jdbcType=BIGINT}
                 </if>
+                <if test="ivstId != null">
+                    and ivst_id=#{ivstId,jdbcType=BIGINT}
+                </if>
                 <if test="companyId != null">
                     and company_id=#{companyId,jdbcType=BIGINT}
                 </if>
@@ -455,6 +473,9 @@
         <where>
                 <if test="id != null">
                     and ivsdk_id ${id}
+                </if>
+                <if test="ivstId != null">
+                    and ivst_id ${ivstId}
                 </if>
                 <if test="companyId != null">
                     and company_id ${companyId}

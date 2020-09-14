@@ -42,5 +42,16 @@ public class InventoryAddBussinessRequest {
         private Long roolId;
         /**入库任务id*/
         private Long roId;
+
+        /**引起库存变动的单据明细id*/
+        private Long ivDocumentlineId;
+        public Long getIvDocumentlineId(){
+            return this.getPaolId();
+        }
+        /**引起库存变动的单据id*/
+        private Long ivDocumentId;
+        public Long getIvDocumentId(){
+            return this.getPaoId();
+        }
     }
 }

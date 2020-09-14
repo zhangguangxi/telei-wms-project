@@ -4,12 +4,7 @@
 
     <select id="selectNewEntity" resultMap="BaseResultMap">
         select
-            ivst_id,
-            server_no,
-            snapshot_time,
-            snapshot_lc_time,
-            ivst_end_id,
-            send_over
+        <include refid="Base_Column_List" />
         from wms_iv_snapshot_time
         <where>
             <if test="id != null">
@@ -33,6 +28,14 @@
         </where>
         order by snapshot_time DESC
         limit 1
+    </select>
+
+    <select id="selectEntityByTime" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List" />
+        from wms_iv_snapshot_time
+        where date(snapshot_lc_time) between ${leftSnapshotTime} and ${rightSnapshotTime}
+        order by snapshot_time
     </select>
 
 </mapper>

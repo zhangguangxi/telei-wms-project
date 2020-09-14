@@ -14,12 +14,12 @@
         <srcdir>${basedir}/../</srcdir>
 
         <driver>com.mysql.jdbc.Driver</driver>
-<!--        <url>jdbc:mysql://192.168.1.114:3306</url>-->
-<!--        <user>root</user>-->
-<!--        <password>admin1314</password> -->
-        <url>jdbc:mysql://192.168.1.200:3306</url>
+        <url>jdbc:mysql://192.168.1.114:3306</url>
         <user>root</user>
-        <password>root</password>
+        <password>admin1314</password>
+<!--        <url>jdbc:mysql://192.168.1.200:3306</url>-->
+<!--        <user>root</user>-->
+<!--        <password>root</password>-->
         <schema>wms</schema>
 
         <companyName>telei</companyName>
@@ -106,7 +106,7 @@
 <!--                        <table><tableName>wms_iv_transaction</tableName></table>-->
 <!--                        <table><tableName>wms_iv_split</tableName></table>-->
 <!--                        <table><tableName>wms_pao_header</tableName></table>-->
-<!--                        <table><tableName>wms_pao_line</tableName></table>-->
+                        <table><tableName>wms_pao_line</tableName></table>
 <!--                        <table><tableName>wms_adjt_header</tableName></table>-->
 <!--                        <table><tableName>wms_adjt_line</tableName></table>-->
                     </tables>

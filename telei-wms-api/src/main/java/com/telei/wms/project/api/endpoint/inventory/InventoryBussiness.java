@@ -19,7 +19,6 @@ import com.telei.wms.customer.businessNumber.BusinessNumberFeignClient;
 import com.telei.wms.customer.businessNumber.dto.BusinessNumberRequest;
 import com.telei.wms.customer.businessNumber.dto.BusinessNumberResponse;
 import com.telei.wms.customer.product.ProductFeignClient;
-import com.telei.wms.customer.product.dto.ProductDetailRequest;
 import com.telei.wms.customer.product.dto.ProductDetailResponse;
 import com.telei.wms.customer.product.dto.ProductListResponse;
 import com.telei.wms.customer.product.dto.ProductRequest;
@@ -164,8 +163,8 @@ public class InventoryBussiness {
         List<Long> lockKey = Stream.of(requestPaoIdList, requestIabIdList, requestRoIdList, requestRoIdList).flatMap(Collection::stream).collect(Collectors.toList());
         Object lockValue = LockMapUtil.tryLock(lockKey);
         try {
-            Map<String, BigDecimal> requestInventoryMap = requestList.stream().collect(Collectors.groupingBy(item -> item.getLcCode() + "#" + item.getProductId(), CollectorsUtil.summingBigDecimal(InventoryAddBussinessRequest.InventoryAddRequestCondition::getIvQty)));
-//            List<WmsInventory> inventoryList = DataConvertUtil.parseDataAsArray(requestList, WmsInventory.class);
+//            Map<String, BigDecimal> requestInventoryMap = requestList.stream().collect(Collectors.groupingBy(item -> item.getLcCode() + "#" + item.getProductId(), CollectorsUtil.summingBigDecimal(InventoryAddBussinessRequest.InventoryAddRequestCondition::getIvQty)));
+
             //2公用信息提取
             //2.1 UTC时间
             Date nowWithUTC = DateUtils.nowWithUTC();
@@ -174,10 +173,9 @@ public class InventoryBussiness {
 
             //3、预处理
             //3.1 产品(商品)-预处理
-            ProductDetailRequest productDetailRequest = new ProductDetailRequest();
-            productDetailRequest.setIds(requestProductIdList);
-            productDetailRequest.setCompanyId(userInfo.getCompanyId());
-            ApiResponse productListResponse = productFeignClient.selectProductList(productDetailRequest);
+            ProductRequest productDetailRequest = new ProductRequest();
+            productDetailRequest.setProductIds(requestProductIdList);
+            ApiResponse productListResponse = productFeignClient.getProductList(productDetailRequest);
             ProductListResponse response = JSON.parseObject(JSON.toJSONString(productListResponse.getData()), ProductListResponse.class);
             List<ProductDetailResponse> productList = response.getProductList();
             if (Objects.isNull(productList) || productList.isEmpty()) {
@@ -273,40 +271,19 @@ public class InventoryBussiness {
             omsInventoryAddWriteBack.setList(omsInventoryAddWriteBackConditionList);
 
             //2.8 库存记录-预处理
-//            Map<String, InventoryAddBussinessRequest.InventoryAddRequestCondition> reqeustLcCodeWithProductId2EntityMap = requestList.stream().collect(Collectors.toMap(item -> item.getLcCode() + "#" + item.getProductId(), Function.identity()));
-            Map<String, List<InventoryAddBussinessRequest.InventoryAddRequestCondition>> reqeustLcCodeWithProductId2EntityMap = requestList.stream().collect(Collectors.groupingBy(item -> item.getLcCode() + "#" + item.getProductId()));
-
-            List<WmsInventory> inventoryList = Lists.newArrayList();
-            requestInventoryMap.forEach((k,v) ->{
-                List<InventoryAddBussinessRequest.InventoryAddRequestCondition> requestConditionList = reqeustLcCodeWithProductId2EntityMap.get(k);
-                InventoryAddBussinessRequest.InventoryAddRequestCondition requestCondition = requestConditionList.get(0);
-                WmsInventory inventory = new WmsInventory();
-                String[] arr = k.split("#");
-                String lcCode = arr[0];
-                Long productId=Long.valueOf(arr[1]);
-                ProductDetailResponse productDetail = productMap.get(productId);//产品记录
-                WmsIvAttributebatch ivAttributebatchDetail = ivAttributeBatchMap.get(requestCondition.getIabId());//批次记录
-
+           List<WmsInventory> inventoryList = DataConvertUtil.parseDataAsArray(requestList, WmsInventory.class);
+            inventoryList.stream().forEach(inventory ->{
+                WmsIvAttributebatch ivAttributebatchDetail = ivAttributeBatchMap.get(inventory.getIabId());
+                ProductDetailResponse productDetail = productMap.get(inventory.getProductId());
+                BigDecimal ivQty = inventory.getIvQty();
                 BigDecimal bigBagRate = new BigDecimal(ivAttributebatchDetail.getBigBagRate());//大包转转换率(批次表记录)
                 BigDecimal midBagRate = new BigDecimal(ivAttributebatchDetail.getMidBagRate());//中包转化数
-                BigDecimal ivQty = v;//库存数量
-
-
-                inventory.setId(idGenerator.getUnique());//主键id
-                inventory.setCompanyId(requestCondition.getCompanyId());//公司id
-                inventory.setWarehouseId(requestCondition.getWarehouseId());//仓库id
-                inventory.setWarehouseCode(requestCondition.getWarehouseCode());//仓库编码
-                inventory.setLcCode(lcCode);//库位
-                inventory.setProductId(productId);//产品id
+                inventory.setIvId(idGenerator.getUnique());
                 inventory.setProductDate(ivAttributebatchDetail.getProductDate());//生产日期
-                inventory.setIvQty(ivQty);//库存数量
                 inventory.setIabId(ivAttributebatchDetail.getId());//批次id
-                inventory.setIvDocumentlineId(requestCondition.getPaolId());//引起库存变动的单据明细id
-                inventory.setIvDocumentId(requestCondition.getPaoId());//引起库存变动的单据id
-                inventory.setIvDocumentCode(wmsPaoHeader.getPaoCode());//引起库存变动的单据编码
                 inventory.setApCodeDc("RECV");//引起本次变动库存变动的来源单据引用类型
                 inventory.setQsCode("GD");//实物类别
-
+                inventory.setIvDocumentCode(wmsPaoHeader.getPaoCode());//业务单据编码
                 inventory.setIvFifoTime(ivAttributebatchDetail.getCreateTime());//先进先出时间(获取跑批次表的创建时间)
                 inventory.setStockUnit(productDetail.getStockUnit());;//计量单位
                 inventory.setBigBagRate(bigBagRate);//大包转换率  批次表中获取
@@ -318,9 +295,7 @@ public class InventoryBussiness {
                 inventory.setIvTranstime(nowWithUTC);//最近库存更新时间
                 inventory.setIvCreatetime(nowWithUTC);//创建时间
                 inventory.setBizDate(nowWithUTC);//业务日期(与创建时间保持一致)
-                inventoryList.add(inventory);
             });
-
             //3、处理(状态数据变更)
             if (LockMapUtil.confirmLock(lockKey, lockValue)) {
                 inventoryDataProcess(inventoryList, wmsPaoHeader, paoLineList, rooHeaderList, roHeaderList, omsInventoryAddWriteBack,userInfo,nowWithUTC);
@@ -365,6 +340,10 @@ public class InventoryBussiness {
             item.setCreateTime(nowWithUTC);//创建时间
             item.setApCode(inventory.getApCodeDc());//应用类型编码
             item.setIvtChangeType("INCR");//变动类型
+            item.setIvQtyTo(inventory.getIvQty());//调整后数量
+            item.setIvQtyFrom(inventory.getIvQty());//调整前数量
+            item.setLcCodeFrom(inventory.getLcCode());//库位编码
+            item.setLcCodeTo(inventory.getLcCode());//变动后库位编码
             item.setIvtDocumentCode(inventory.getIvDocumentCode());//引起库存变动业务单据号
             item.setIvtDocumentId(inventory.getIvDocumentId());//引起库存变动业务单据id
             item.setIvtDocumentlineId(inventory.getIvDocumentlineId());//引起库存变动业务单据明细id

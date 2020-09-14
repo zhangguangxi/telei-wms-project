@@ -7,9 +7,12 @@ import org.joda.time.format.DateTimeFormat;
 
 import java.lang.management.ManagementFactory;
 import java.text.ParseException;
+import java.text.ParsePosition;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.List;
 
 /**
  * 日期工具类
@@ -188,7 +191,6 @@ public abstract class DateUtils {
     }
 
     /**
-     *
      * 描述:获取上一个月时间.
      *
      * @return
@@ -202,12 +204,32 @@ public abstract class DateUtils {
     }
 
     /**
-     * UTC 时间
+     * 当前UTC 时间
+     *
      * @return
      */
-    public static Date nowWithUTC(){
+    public static Date nowWithUTC() {
         return TimeZoneUtils.nowWithUTC();
     }
+
+    public static Date nowWithDate() {
+        return new Date();
+    }
+
+    /**
+     * 昨天UTC 时间
+     *
+     * @return
+     */
+    public static Date leftWithDate() {
+        Date date = new Date();
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(date);
+        //把日期往后增加一天.整数往后推,负数往前移动
+        calendar.add(Calendar.DATE, -1);
+        return calendar.getTime();
+    }
+
 }
 
 

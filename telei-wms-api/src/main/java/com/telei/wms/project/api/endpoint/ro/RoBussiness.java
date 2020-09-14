@@ -159,11 +159,4 @@ public class RoBussiness {
         RoCudBaseResponse response = new RoCudBaseResponse();
         return response;
     }
-
-    /**
-     * 导出入库任务明细
-     */
-    public void exportRoLine() {
-
-    }
 }

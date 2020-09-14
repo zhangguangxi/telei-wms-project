@@ -21,15 +21,15 @@ public class WmsIvSnapshotDailyKnotVO {
     /** 产品id */
     private Long productId;
     /** 库存数量 */
-    private Integer ivQty;
+    private BigDecimal ivQty;
     /** 大包数量 */
-    private Integer midBagQty;
+    private BigDecimal midBagQty;
     /** 大包剩余数量 */
-    private Integer midBagExtraQty;
+    private BigDecimal midBagExtraQty;
     /** 中包数量 */
-    private Integer bigBagQty;
+    private BigDecimal bigBagQty;
     /** 中包剩余数量 */
-    private Integer bigBagExtraQty;
+    private BigDecimal bigBagExtraQty;
     /** 总体积 */
     private BigDecimal totalVol;
     /** 总重量(KG) */
@@ -37,6 +37,8 @@ public class WmsIvSnapshotDailyKnotVO {
     /** 总净重(KG) */
     private BigDecimal totalNetWeight;
     /** 库位数 */
-    private Integer lcCount;
+    private BigDecimal lcCount;
+    /** 唯一Key */
+    private String uniqueKey;
 
 }

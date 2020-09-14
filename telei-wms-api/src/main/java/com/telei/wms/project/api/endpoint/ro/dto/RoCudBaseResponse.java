@@ -4,7 +4,7 @@ import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 
 /**
- * 增删改基础response
+ * 增删改基础Response
  */
 @Data
 public class RoCudBaseResponse {

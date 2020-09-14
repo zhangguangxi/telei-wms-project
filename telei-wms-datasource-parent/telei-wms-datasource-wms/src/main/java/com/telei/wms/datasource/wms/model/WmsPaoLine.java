@@ -6,59 +6,59 @@ import java.util.Date;
 import lombok.Data;
 
 /**
-* wms_pao_line ä¸Šæž¶å�•æ˜Žç»†
+* wms_pao_line 上架单明细
 */
 @Data
 public class WmsPaoLine implements Entity<Long> {
     /** id */
     private Long paolId;
-    /** å�•å¤´id */
+    /** 单头id */
     private Long paoId;
-    /** å…¥åº“å�•å�•å¤´id */
+    /** 入库单单头id */
     private Long roId;
-    /** å¯¹åº”è®¡åˆ’æ˜Žç»†çš„id */
+    /** 对应计划明细的id */
     private Long rolId;
-    /** æ”¶è´§ä½œå�•å¤´id */
+    /** 收货作单头id */
     private Long rooId;
-    /** æ”¶è´§å�•å�· */
+    /** 收货单号 */
     private String rooCode;
-    /** æ”¶è´§å�•æ”¶è´§æ˜Žç»†id */
+    /** 收货单收货明细id */
     private Long roolId;
-    /** äº§å“�id */
+    /** 产品id */
     private Long productId;
-    /** å�•ä½�æ¯›é‡�(KG) */
+    /** 单位毛重(KG) */
     private BigDecimal unitGrossWeight;
-    /** å�•ä½�ä½“ç§¯(CBM) */
+    /** 单位体积(CBM) */
     private BigDecimal unitVol;
-    /** å¤‡æ³¨ */
+    /** 备注 */
     private String memo;
-    /** ä¸Šæž¶æ•°é‡� */
+    /** 上架数量 */
     private BigDecimal paolQty;
-    /** è®¡é‡�å�•ä½� */
+    /** 计量单位 */
     private Integer stockUnit;
-    /** æ˜Žç»†è¡Œæ€»é‡�é‡�(KG) */
+    /** 明细行总重量(KG) */
     private BigDecimal lineTotalWeight;
-    /** æ˜Žç»†è¡Œå‡€é‡�(KG) */
+    /** 明细行净重(KG) */
     private BigDecimal lineNetWeight;
-    /** æ˜Žç»†è¡Œæ€»ä½“ç§¯(CBM) */
+    /** 明细行总体积(CBM) */
     private BigDecimal lineTotalVol;
-    /** ä¸Šæž¶çŠ¶æ€�  01-åˆ¶å�•ï¼Œ20-å·²ä¸Šæž¶ */
+    /** 上架状态  01-制单，20-已上架 */
     private String paoStatus;
-    /** åˆ›å»ºç”¨æˆ· */
+    /** 创建用户 */
     private String createUser;
-    /** åˆ›å»ºæ—¶é—´ */
+    /** 创建时间 */
     private Date createTime;
-    /** åº“å­˜æ‰¹æ¬¡id */
+    /** 库存批次id */
     private Long iabId;
-    /** æŽ¨è��åº“ä½� */
+    /** 推荐库位 */
     private String prepLcCode;
-    /** ä¸Šæž¶åº“ä½� */
+    /** 上架库位 */
     private String lcCode;
-    /** å…ˆè¿›å…ˆå‡ºæ—¶é—´ */
+    /** 先进先出时间 */
     private Date paolFifoTime;
-    /** ä¸Šæž¶æ—¶é—´ */
+    /** 上架时间 */
     private Date putawayTime;
-    /** ä¸Šæž¶ç”¨æˆ· */
+    /** 上架用户 */
     private String putawayUser;
     @Override
     public Long getId() {

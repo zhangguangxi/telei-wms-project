@@ -18,12 +18,6 @@ import java.util.Objects;
  */
 @Configuration
 public class FeignConfiguration {
-
-    /**
-     * 创建Feign请求拦截器，在发送请求前设置认证的token,各个微服务将token设置到环境变量中来达到通用
-     *
-     * @return
-     */
     @Bean
     public FeignBasicRequestInterceptor basicRequestInterceptor() {
         return new FeignBasicRequestInterceptor();
@@ -31,14 +25,8 @@ public class FeignConfiguration {
     }
 
 
-    /**
-     * Feign请求拦截器
-     *
-     * @author yinjihuan
-     * @create 2017-11-10 17:25
-     **/
-      class FeignBasicRequestInterceptor implements RequestInterceptor {
 
+    public static   class FeignBasicRequestInterceptor implements RequestInterceptor {
         public FeignBasicRequestInterceptor() {
 
         }

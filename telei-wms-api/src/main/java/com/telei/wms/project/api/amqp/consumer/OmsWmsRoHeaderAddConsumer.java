@@ -16,12 +16,12 @@ import org.springframework.stereotype.Component;
  * @Auther: Dean
  * @Date: 2020/8/24 15:35
  */
-//@RabbitListener(
-//    bindings = @QueueBinding(
-//        value = @Queue(OmsWmsRoHeaderAddConsumer.QUEUE_NAME),
-//        exchange = @Exchange("defaultExchange")
-//    )
-//)
+@RabbitListener(
+    bindings = @QueueBinding(
+        value = @Queue(OmsWmsRoHeaderAddConsumer.QUEUE_NAME),
+        exchange = @Exchange("defaultExchange")
+    )
+)
 @Component
 public class OmsWmsRoHeaderAddConsumer extends BaseConsumer {
 

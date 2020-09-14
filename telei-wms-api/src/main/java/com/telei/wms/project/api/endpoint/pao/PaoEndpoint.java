@@ -1,8 +1,10 @@
 package com.telei.wms.project.api.endpoint.pao;
 
 import com.nuochen.framework.app.gateway.GatewayConstants;
+import com.telei.infrastructure.component.idgenerator.IdSecondGenerator;
 import com.telei.wms.project.api.ServiceId;
 import com.telei.wms.project.api.endpoint.pao.dto.*;
+import com.telei.wms.project.api.utils.DataConvertUtil;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,6 +28,9 @@ public class PaoEndpoint {
     @Autowired
     private PaoBussiness paoBussiness;
 
+    @Autowired
+    private IdSecondGenerator idSecondGenerator;
+
     @ApiOperation("新增上架单")
     @PostMapping(ServiceId.WMS_PAO_ADD)
     public PaoCudBaseResponse addPao(@RequestBody @Valid PaoHeaderAddRequest request) {
@@ -35,20 +40,20 @@ public class PaoEndpoint {
     @ApiOperation("分页查询上架单")
     @PostMapping(ServiceId.WMS_PAO_PAGE_QUERY)
     public PaoHeaderPageQueryResponse pageQueryRoHeader(@RequestBody @Valid PaoHeaderPageQueryRequest request) {
-        return paoBussiness.pageQueryRoHeader(request);
+        return DataConvertUtil.parseDataAsObject(paoBussiness.pageQueryRoHeader(request), PaoHeaderPageQueryResponse.class);
     }
 
     @ApiOperation("查询上架单详细")
     @PostMapping(ServiceId.WMS_PAO_DETAIL)
     public PaoHeaderDetailResponse paoDetail(@RequestBody @Valid PaoDetailRequest request) {
-        return paoBussiness.paoDetail(request);
+        return DataConvertUtil.parseDataAsObject(paoBussiness.paoDetail(request), PaoHeaderDetailResponse.class);
     }
 
-    @ApiOperation("修改上架单")
-    @PostMapping(ServiceId.WMS_PAO_UPDATE)
-    public PaoCudBaseResponse updateRoHeader(@RequestBody @Valid PaoHeaderUpdateRequest request) {
-        return paoBussiness.updateRoHeader(request);
-    }
+//    @ApiOperation("修改上架单")
+//    @PostMapping(ServiceId.WMS_PAO_UPDATE)
+//    public PaoCudBaseResponse updateRoHeader(@RequestBody @Valid PaoHeaderUpdateRequest request) {
+//        return paoBussiness.updateRoHeader(request);
+//    }
 
     @ApiOperation("取消上架单")
     @PostMapping(ServiceId.WMS_PAO_CANCEL)

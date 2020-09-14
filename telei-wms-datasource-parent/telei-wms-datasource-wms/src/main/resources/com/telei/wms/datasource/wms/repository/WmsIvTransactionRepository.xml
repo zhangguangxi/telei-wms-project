@@ -1,5 +1,65 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.telei.wms.datasource.wms.repository.WmsIvTransactionRepository">
+
+    <resultMap id="TransactionDailyResultMap" extends="BaseResultMap"
+               type="com.telei.wms.datasource.wms.vo.WmsIvTransactionDailyKnotVO">
+        <result column="company_id" jdbcType="BIGINT" property="companyId"/>
+        <result column="warehouse_id" jdbcType="BIGINT" property="warehouseId"/>
+        <result column="warehouse_code" jdbcType="VARCHAR" property="warehouseCode"/>
+        <result column="customer_id" jdbcType="BIGINT" property="customerId"/>
+        <result column="product_id" jdbcType="BIGINT" property="productId"/>
+        <result column="knot_date" jdbcType="TIMESTAMP" property="knotDate"/>
+        <result column="knot_lc_date" jdbcType="TIMESTAMP" property="knotLcDate"/>
+        <result column="snapshot_date" jdbcType="TIMESTAMP" property="snapshotDate"/>
+        <result column="snapshot_lc_date" jdbcType="TIMESTAMP" property="snapshotLcDate"/>
+        <result column="ivt_id_from" jdbcType="BIGINT" property="ivtIdFrom"/>
+        <result column="ivt_id_end" jdbcType="BIGINT" property="ivtIdEnd"/>
+        <result column="knot_begin_qty" jdbcType="DECIMAL" property="knotBeginQty"/>
+        <result column="ivt_qty_out" jdbcType="DECIMAL" property="ivtQtyOut"/>
+        <result column="big_bag_qty_out" jdbcType="DECIMAL" property="bigBagQtyOut"/>
+        <result column="weight_out" jdbcType="DECIMAL" property="weightOut"/>
+        <result column="net_weight_out" jdbcType="DECIMAL" property="netWeightOut"/>
+        <result column="vol_out" jdbcType="DECIMAL" property="volOut"/>
+        <result column="ivt_qty_in" jdbcType="DECIMAL" property="ivtQtyIn"/>
+        <result column="big_bag_qty_in" jdbcType="DECIMAL" property="bigBagQtyIn"/>
+        <result column="weight_in" jdbcType="DECIMAL" property="weightIn"/>
+        <result column="net_weight_in" jdbcType="DECIMAL" property="netWeightIn"/>
+        <result column="vol_in" jdbcType="DECIMAL" property="volIn"/>
+        <result column="ivt_qty" jdbcType="DECIMAL" property="ivtQty"/>
+        <result column="tray_count_change" jdbcType="DECIMAL" property="trayCountChange"/>
+        <result column="knot_end_qty" jdbcType="DECIMAL" property="knotEndQty"/>
+        <result column="create_time_lc" jdbcType="TIMESTAMP" property="createTimeLc"/>
+        <result column="create_time" jdbcType="TIMESTAMP" property="createTime"/>
+        <result column="big_bag_qty" jdbcType="INTEGER" property="bigBagQty"/>
+        <result column="unit_gross_weight" jdbcType="DECIMAL" property="unitGrossWeight"/>
+        <result column="unit_vol" jdbcType="DECIMAL" property="unitVol"/>
+    </resultMap>
+
+    <select id="selectByTime" resultMap="TransactionDailyResultMap">
+        SELECT
+        a.company_id,
+        a.warehouse_id,
+        a.warehouse_code,
+        a.customer_id,
+        a.product_id,
+        SUM( CASE WHEN a.ivt_change_type = 'INCR' THEN a.dc_qty ELSE 0 END ) ivt_qty_in,
+        SUM( CASE WHEN a.ivt_change_type = 'LESS' THEN a.dc_qty ELSE 0 END ) ivt_qty_out,
+        SUM( a.dc_qty ) ivt_qty,
+        cp.big_bag_qty,
+        cp.unit_gross_weight,
+        cp.unit_vol
+        FROM
+        wms_iv_transaction a
+        INNER JOIN cdm.cdm_product cp ON a.product_id = cp.product_id AND a.company_id = cp.company_id
+        WHERE a.create_time >= ${leftTime} AND a.create_time &lt; ${rightTime}
+        GROUP BY
+        a.product_id,
+        a.company_id,
+        a.warehouse_id,
+        a.warehouse_code,
+        a.customer_id
+    </select>
+
 </mapper>
 

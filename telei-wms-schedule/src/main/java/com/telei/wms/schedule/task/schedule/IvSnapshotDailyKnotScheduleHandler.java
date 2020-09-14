@@ -97,6 +97,7 @@ public class IvSnapshotDailyKnotScheduleHandler extends TaskHandler {
                     try {
                         snapshotDailyKnot.setKnotLcDate(sd.parse(LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd"))));
                         snapshotDailyKnot.setKnotDate(DateUtils.nowWithUTC());
+                        snapshotDailyKnot.setIvstId(wmsIvSnapshotTime.getId());
                         if (!staticTimeExist) {
                             snapshotDailyKnot.setSnapshotDate(wmsIvSnapshotTime.getSnapshotTime());
                             snapshotDailyKnot.setSnapshotLcDate(sd.parse(wmsIvSnapshotTime.getSnapshotLcTime()));
