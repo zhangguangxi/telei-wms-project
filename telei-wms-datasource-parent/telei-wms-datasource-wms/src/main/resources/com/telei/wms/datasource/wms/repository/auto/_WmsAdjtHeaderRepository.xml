@@ -4,7 +4,7 @@
     <resultMap id="BaseResultMap" type="com.telei.wms.datasource.wms.model.WmsAdjtHeader">
         <id column="adjh_id" jdbcType="BIGINT" property="adjhId"/>
         <result column="adjh_code" jdbcType="VARCHAR" property="adjhCode"/>
-        <result column="company_id" jdbcType="VARCHAR" property="companyId"/>
+        <result column="company_id" jdbcType="BIGINT" property="companyId"/>
         <result column="warehouse_id" jdbcType="BIGINT" property="warehouseId"/>
         <result column="warehouse_code" jdbcType="VARCHAR" property="warehouseCode"/>
         <result column="adjh_type" jdbcType="VARCHAR" property="adjhType"/>
@@ -34,7 +34,7 @@
 
     <insert id="insert">
         insert into wms_adjt_header (adjh_id,adjh_code,company_id,warehouse_id,warehouse_code,adjh_type,ivih_status,biz_date,reason,product_id,lc_code,iv_qty,lc_code_adjt,iv_qty_adjt,product_name,product_name_local,product_barcode,product_upc_code,big_bag_rate,mid_bag_rate,create_time,create_user,audit_time,audit_user)
-        values (#{adjhId,jdbcType=BIGINT},#{adjhCode,jdbcType=VARCHAR},#{companyId,jdbcType=VARCHAR},#{warehouseId,jdbcType=BIGINT},#{warehouseCode,jdbcType=VARCHAR},#{adjhType,jdbcType=VARCHAR},#{ivihStatus,jdbcType=VARCHAR},#{bizDate,jdbcType=TIMESTAMP},#{reason,jdbcType=VARCHAR},#{productId,jdbcType=BIGINT},#{lcCode,jdbcType=VARCHAR},#{ivQty,jdbcType=DECIMAL},#{lcCodeAdjt,jdbcType=VARCHAR},#{ivQtyAdjt,jdbcType=DECIMAL},#{productName,jdbcType=VARCHAR},#{productNameLocal,jdbcType=VARCHAR},#{productBarcode,jdbcType=VARCHAR},#{productUpcCode,jdbcType=VARCHAR},#{bigBagRate,jdbcType=INTEGER},#{midBagRate,jdbcType=INTEGER},#{createTime,jdbcType=TIMESTAMP},#{createUser,jdbcType=VARCHAR},#{auditTime,jdbcType=TIMESTAMP},#{auditUser,jdbcType=VARCHAR})
+        values (#{adjhId,jdbcType=BIGINT},#{adjhCode,jdbcType=VARCHAR},#{companyId,jdbcType=BIGINT},#{warehouseId,jdbcType=BIGINT},#{warehouseCode,jdbcType=VARCHAR},#{adjhType,jdbcType=VARCHAR},#{ivihStatus,jdbcType=VARCHAR},#{bizDate,jdbcType=TIMESTAMP},#{reason,jdbcType=VARCHAR},#{productId,jdbcType=BIGINT},#{lcCode,jdbcType=VARCHAR},#{ivQty,jdbcType=DECIMAL},#{lcCodeAdjt,jdbcType=VARCHAR},#{ivQtyAdjt,jdbcType=DECIMAL},#{productName,jdbcType=VARCHAR},#{productNameLocal,jdbcType=VARCHAR},#{productBarcode,jdbcType=VARCHAR},#{productUpcCode,jdbcType=VARCHAR},#{bigBagRate,jdbcType=INTEGER},#{midBagRate,jdbcType=INTEGER},#{createTime,jdbcType=TIMESTAMP},#{createUser,jdbcType=VARCHAR},#{auditTime,jdbcType=TIMESTAMP},#{auditUser,jdbcType=VARCHAR})
     </insert>
 
     <insert id="insertSelective">
@@ -121,7 +121,7 @@
                 #{adjhCode,jdbcType=VARCHAR},
             </if>
             <if test="companyId != null">
-                #{companyId,jdbcType=VARCHAR},
+                #{companyId,jdbcType=BIGINT},
             </if>
             <if test="warehouseId != null">
                 #{warehouseId,jdbcType=BIGINT},
@@ -195,7 +195,7 @@
             (
             #{item.adjhId,jdbcType=BIGINT},
             #{item.adjhCode,jdbcType=VARCHAR},
-            #{item.companyId,jdbcType=VARCHAR},
+            #{item.companyId,jdbcType=BIGINT},
             #{item.warehouseId,jdbcType=BIGINT},
             #{item.warehouseCode,jdbcType=VARCHAR},
             #{item.adjhType,jdbcType=VARCHAR},
@@ -237,7 +237,7 @@
         update wms_adjt_header
         <set>
             adjh_code = #{adjhCode,jdbcType=VARCHAR},
-            company_id = #{companyId,jdbcType=VARCHAR},
+            company_id = #{companyId,jdbcType=BIGINT},
             warehouse_id = #{warehouseId,jdbcType=BIGINT},
             warehouse_code = #{warehouseCode,jdbcType=VARCHAR},
             adjh_type = #{adjhType,jdbcType=VARCHAR},
@@ -270,7 +270,7 @@
                 adjh_code = #{adjhCode,jdbcType=VARCHAR},
             </if>
             <if test="companyId != null">
-                company_id = #{companyId,jdbcType=VARCHAR},
+                company_id = #{companyId,jdbcType=BIGINT},
             </if>
             <if test="warehouseId != null">
                 warehouse_id = #{warehouseId,jdbcType=BIGINT},
@@ -347,7 +347,7 @@
                     adjh_code = #{item.adjhCode,jdbcType=VARCHAR},
                 </if>
                 <if test="item.companyId != null">
-                    company_id = #{item.companyId,jdbcType=VARCHAR},
+                    company_id = #{item.companyId,jdbcType=BIGINT},
                 </if>
                 <if test="item.warehouseId != null">
                     warehouse_id = #{item.warehouseId,jdbcType=BIGINT},
@@ -452,7 +452,7 @@
                 and adjh_code=#{adjhCode,jdbcType=VARCHAR}
             </if>
             <if test="companyId != null">
-                and company_id=#{companyId,jdbcType=VARCHAR}
+                and company_id=#{companyId,jdbcType=BIGINT}
             </if>
             <if test="warehouseId != null">
                 and warehouse_id=#{warehouseId,jdbcType=BIGINT}

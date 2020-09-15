@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.math.BigDecimal;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 import java.util.Objects;
@@ -87,26 +88,40 @@ public class AdjustStrategyFactory {
         return wmsInventoryAdd;
     }
 
-    /***
+    /**
      * 创建库存调整明细
      *
      * @param wmsAdjtHeader
      * @param wmsAdjtLineList
-     * @param wmsInventory
+     * @param wmsInventoryDb
+     * @param wmsInventoryAdd
      * @param adjhType
      * @param ivQtyAdjt
      * @param lcCodeAdjt
      */
-    public  void createAdjtLine(WmsAdjtHeader wmsAdjtHeader, List<WmsAdjtLine> wmsAdjtLineList, WmsInventory wmsInventory, String adjhType,BigDecimal ivQtyAdjt, String lcCodeAdjt) {
+    public  void createAdjtLine(WmsAdjtHeader wmsAdjtHeader, List<WmsAdjtLine> wmsAdjtLineList, WmsInventory wmsInventoryDb, WmsInventory wmsInventoryAdd,String adjhType,BigDecimal ivQtyAdjt, String lcCodeAdjt) {
         WmsAdjtLine wmsAdjtLine = new WmsAdjtLine();
         wmsAdjtLine.setAdjlId(idGenerator.getUnique());
         wmsAdjtLine.setIvAdjhType(adjhType);/**库存调整类型*/
         wmsAdjtLine.setAdjhId(wmsAdjtHeader.getAdjhId());/**库存调整单单头id*/
-        wmsAdjtLine.setIvId(wmsInventory.getIvId());/**库存id*/
-        wmsAdjtLine.setIvQty(wmsInventory.getIvQty());/**库存数量*/
-        wmsAdjtLine.setIvQtyAdjt(ivQtyAdjt);/**库存调整数量*/
+        wmsAdjtLine.setIvId(wmsInventoryDb.getIvId());/**库存id*/
+
+        if(Objects.equals(adjhType,"MOVE") && (wmsInventoryDb.getIvQty().compareTo(ivQtyAdjt) > 0)){
+            wmsAdjtLine.setIvIdAdjt(wmsInventoryAdd.getIvId());//调整后的库存id
+        }else{
+            wmsAdjtLine.setIvIdAdjt(wmsInventoryDb.getIvId());//调整后的库存id
+        }
+
+
+        wmsAdjtLine.setIvQty(wmsInventoryDb.getIvQty());/**库存数量*/
+        if(Arrays.asList("MOVE","LIFTUP","LIFTDOWN").contains(adjhType)){
+            wmsAdjtLine.setIvQtyAdjt(new BigDecimal(0));
+        }else{
+            wmsAdjtLine.setIvQtyAdjt(ivQtyAdjt);
+        }
         wmsAdjtLine.setLcCode(wmsAdjtHeader.getLcCode());/**库位编码*/
         wmsAdjtLine.setLcCodeAdjt(lcCodeAdjt);/**调整库位*/
+
         wmsAdjtLineList.add(wmsAdjtLine);
     }
 

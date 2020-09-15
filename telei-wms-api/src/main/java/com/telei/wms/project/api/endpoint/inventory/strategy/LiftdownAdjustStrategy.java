@@ -43,7 +43,7 @@ public class LiftdownAdjustStrategy implements IAdjustStrategy {
                 wmsInventoryUpdateList.add(inventory);
                 adjustStrategyFactory.createTransactionRecored(inventory, lcCodeAdjt, "MOVE", ivQtyAdjt, userInfo, nowWithUtc);
                 /***库存调整单明细记录*/
-                adjustStrategyFactory.createAdjtLine(wmsAdjtHeader, wmsAdjtLineList, inventory, "LIFTDOWN", ivQtyAdjt, lcCodeAdjt);
+                adjustStrategyFactory.createAdjtLine(wmsAdjtHeader, wmsAdjtLineList, inventory, null,"LIFTDOWN", ivQtyAdjt, lcCodeAdjt);
                 /**库存记录*/
                 WmsInventory inventoryAdd = adjustStrategyFactory.createInventory(wmsInventoryAddList, inventory, ivQtyAdjt, nowWithUtc);
                 /**库存拆分记录*/
@@ -54,20 +54,20 @@ public class LiftdownAdjustStrategy implements IAdjustStrategy {
                 deleteIvidList.add(inventory.getIvId());
                 adjustStrategyFactory.createTransactionRecored(inventory, lcCodeAdjt, "MOVE", ivQtyAdjt, userInfo, nowWithUtc);
                 /**库存记录*/
-                adjustStrategyFactory.createInventory(wmsInventoryAddList, inventory, ivQtyAdjt, nowWithUtc);
+                WmsInventory inventoryAdd = adjustStrategyFactory.createInventory(wmsInventoryAddList, inventory, ivQtyAdjt, nowWithUtc);
                 /***库存调整单明细记录*/
-                adjustStrategyFactory.createAdjtLine(wmsAdjtHeader, wmsAdjtLineList, inventory, "LIFTDOWN", ivQtyAdjt, lcCodeAdjt);
+                adjustStrategyFactory.createAdjtLine(wmsAdjtHeader, wmsAdjtLineList, inventory, inventoryAdd,"LIFTDOWN", ivQtyAdjt, lcCodeAdjt);
                 break;
             } else {
                 /**当前批次库存数 < 调整库存数*/
                 deleteIvidList.add(inventory.getIvId());
                 ivQtyAdjt = ivQtyAdjt.subtract(ivQty);
                 /**库存记录*/
-                adjustStrategyFactory.createInventory(wmsInventoryAddList, inventory, ivQtyAdjt, nowWithUtc);
+                WmsInventory inventoryAdd = adjustStrategyFactory.createInventory(wmsInventoryAddList, inventory, ivQtyAdjt, nowWithUtc);
                 /**库存变更记录*/
                 adjustStrategyFactory.createTransactionRecored(inventory, lcCodeAdjt, "MOVE", ivQtyAdjt, userInfo, nowWithUtc);
                 /***库存调整单明细记录*/
-                adjustStrategyFactory.createAdjtLine(wmsAdjtHeader, wmsAdjtLineList, inventory, "LIFTDOWN", ivQtyAdjt, lcCodeAdjt);
+                adjustStrategyFactory.createAdjtLine(wmsAdjtHeader, wmsAdjtLineList, inventory,inventoryAdd, "LIFTDOWN", ivQtyAdjt, lcCodeAdjt);
             }
         }
         /**新增库存记录(移库对应的数据)*/
