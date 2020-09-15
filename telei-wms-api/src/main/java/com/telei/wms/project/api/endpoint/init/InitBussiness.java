@@ -209,12 +209,12 @@ public class InitBussiness {
                     // 中包转换运算
                     BigDecimal[] mid = initLine.getIvQty().divideAndRemainder(new BigDecimal(productResponse.getMidBagQty()));
                     wmsInventory.setMidBagQty(mid[0]);
-                    wmsInventory.setMidBagRate(new BigDecimal(productResponse.getMidBagQty()));
+                    wmsInventory.setMidBagRate(productResponse.getMidBagQty());
                     wmsInventory.setMidBagExtraQty(mid[1]);
                     // 大包转换运算
                     BigDecimal[] big = initLine.getIvQty().divideAndRemainder(new BigDecimal(productResponse.getBigBagQty()));
                     wmsInventory.setBigBagQty(big[0]);
-                    wmsInventory.setBigBagRate(new BigDecimal(productResponse.getBigBagQty()));
+                    wmsInventory.setBigBagRate(productResponse.getBigBagQty());
                     wmsInventory.setBigBagExtraQty(big[1]);
                     wmsInventory.setIvLocksign(0);
                     wmsInventory.setIvFreezesign(0);

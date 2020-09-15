@@ -29,6 +29,8 @@ public class IncreaseAdjustStrategy implements IAdjustStrategy{
         WmsInventory wmsInventory = WmsInventoryDbList.get(0);
         BigDecimal ivQtyAdjt = wmsAdjtHeader.getIvQtyAdjt();/**库存调整数*/
         String lcCodeAdjt = wmsAdjtHeader.getLcCodeAdjt(); /**调整库位*/
+        wmsAdjtHeader.setBigBagRate(wmsInventory.getBigBagRate());//大包转换率
+        wmsAdjtHeader.setMidBagRate(wmsInventory.getMidBagRate());//中包转换率
 
         /**库存调整明细记录*/
         adjustStrategyFactory.createAdjtLine(wmsAdjtHeader, wmsAdjtLineList, wmsInventory,"INCREASE" ,ivQtyAdjt, lcCodeAdjt);

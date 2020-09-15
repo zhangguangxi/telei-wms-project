@@ -26,22 +26,22 @@ public class InventoryIncreaseRequest {
     @Check
     private String reason;
 
-    @ApiModelProperty(value = "商品id",example = "1234123",position = 6)
+    @ApiModelProperty(value = "商品id",example = "1234123",position = 5)
     @Check
     private Long productId;
 
-    @ApiModelProperty(value = "库位编码",example = "123423",position = 7)
+    @ApiModelProperty(value = "库位编码",example = "123423",position = 6)
     @Check
     private String lcCode;
 
-    @ApiModelProperty(value = "库存数量",example = "10",position = 8)
+    @ApiModelProperty(value = "库存数量",example = "10",position = 7)
     @Check
     private BigDecimal ivQty;
 
-    @ApiModelProperty(value = "调整库位",example = "12314",position = 9)
+    @ApiModelProperty(value = "调整库位",example = "12314",position = 8)
     private String lcCodeAdjt;
 
-    @ApiModelProperty(value = "调整数量",example = "2343",position = 10)
+    @ApiModelProperty(value = "调整数量",example = "2343",position = 9)
     @Check
     private BigDecimal ivQtyAd;
 }

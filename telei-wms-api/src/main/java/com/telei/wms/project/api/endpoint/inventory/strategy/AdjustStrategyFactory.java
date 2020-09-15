@@ -76,9 +76,9 @@ public class AdjustStrategyFactory {
         WmsInventory wmsInventoryAdd = DataConvertUtil.parseDataAsObject(wmsInventory, WmsInventory.class);
         wmsInventoryAdd.setIvId(idGenerator.getUnique());
         wmsInventoryAdd.setIvQty(ivQtyAdjt); /**库存数量(调整数)*/
-        wmsInventoryAdd.setBigBagQty(ivQtyAdjt.multiply(wmsInventoryAdd.getBigBagRate()));/**大包数量*/
-        wmsInventoryAdd.setBigBagExtraQty(ivQtyAdjt.divideAndRemainder(wmsInventoryAdd.getBigBagRate())[1]);/**大包剩余数量*/
-        wmsInventoryAdd.setMidBagQty(ivQtyAdjt.multiply(wmsInventoryAdd.getMidBagRate())); /**中包数量*/
+        wmsInventoryAdd.setBigBagQty(ivQtyAdjt.multiply(new BigDecimal(wmsInventoryAdd.getBigBagRate())));/**大包数量*/
+        wmsInventoryAdd.setBigBagExtraQty(ivQtyAdjt.divideAndRemainder(new BigDecimal(wmsInventoryAdd.getBigBagRate()))[1]);/**大包剩余数量*/
+        wmsInventoryAdd.setMidBagQty(ivQtyAdjt.multiply(new BigDecimal(wmsInventoryAdd.getMidBagRate()))); /**中包数量*/
         wmsInventoryAdd.setMidBagExtraQty(ivQtyAdjt.divideAndRemainder(wmsInventoryAdd.getMidBagExtraQty())[1]);/**中包剩余数量*/
         wmsInventoryAdd.setIvTranstime(nowWithUtc);
         wmsInventoryAdd.setIvCreatetime(nowWithUtc);

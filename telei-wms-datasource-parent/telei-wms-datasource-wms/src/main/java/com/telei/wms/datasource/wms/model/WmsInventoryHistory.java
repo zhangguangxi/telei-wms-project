@@ -20,6 +20,8 @@ public class WmsInventoryHistory implements Entity<Long> {
     private String warehouseCode;
     /** 库位编码 */
     private String lcCode;
+    /** 库位类型，数据字典，S 样品库位、Z 高架库位 等 */
+    private String lcType;
     /** 客户id */
     private Long customerId;
     /** 产品序列码 */
@@ -37,13 +39,13 @@ public class WmsInventoryHistory implements Entity<Long> {
     /** 中包数量 */
     private BigDecimal midBagQty;
     /** 中包转换数 */
-    private BigDecimal midBagRate;
+    private Integer midBagRate;
     /** 中包剩余数量 */
     private BigDecimal midBagExtraQty;
     /** 大包数量 */
     private BigDecimal bigBagQty;
     /** 大包转换数 */
-    private BigDecimal bigBagRate;
+    private Integer bigBagRate;
     /** 大包剩余数量 */
     private BigDecimal bigBagExtraQty;
     /** 库存锁，0可以出出货，1不可以出货 */

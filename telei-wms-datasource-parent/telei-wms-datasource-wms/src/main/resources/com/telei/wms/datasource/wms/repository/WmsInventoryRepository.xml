@@ -17,7 +17,7 @@
         (wi.iv_qty * cp.cost_reference) as inventoryAmount
     </sql>
 
-    <select id="doIvSnapshotSchedule" statementType="CALLABLE" resultType="java.lang.Integer">
+    <select id="doIvSnapshotSchedule" statementType="CALLABLE">
 		{call copy_wms_inventory_into_snapshot(#{idNumber},#{serverNo},#{snapshotTime},#{snapshotLcTime})}
 	</select >
 
@@ -27,7 +27,7 @@
         from wms_inventory
         where  lc_code=#{lcCode}
         and product_id=#{productId}
-        order by iabId
+        order by iab_Id
     </select>
 
 

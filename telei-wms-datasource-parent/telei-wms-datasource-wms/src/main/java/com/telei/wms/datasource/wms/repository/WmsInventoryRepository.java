@@ -18,7 +18,7 @@ public interface WmsInventoryRepository extends BaseRepository<WmsInventory,Long
      */
     List<WmsInventory> selectByLcCodeAndProductId(WmsInventory wmsInventory);
 
-    int doIvSnapshotSchedule(@Param("idNumber") Long idNumber, @Param("serverNo") String serverNo, @Param("snapshotTime") String snapshotTime, @Param("snapshotLcTime") String snapshotLcTime);
+    void doIvSnapshotSchedule(@Param("idNumber") Long idNumber, @Param("serverNo") String serverNo, @Param("snapshotTime") String snapshotTime, @Param("snapshotLcTime") String snapshotLcTime);
 
     /**
      * 库存分页查询

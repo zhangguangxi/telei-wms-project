@@ -286,15 +286,17 @@ public class InventoryBussiness {
                 inventory.setIvDocumentCode(wmsPaoHeader.getPaoCode());//业务单据编码
                 inventory.setIvFifoTime(ivAttributebatchDetail.getCreateTime());//先进先出时间(获取跑批次表的创建时间)
                 inventory.setStockUnit(productDetail.getStockUnit());;//计量单位
-                inventory.setBigBagRate(bigBagRate);//大包转换率  批次表中获取
+                inventory.setBigBagRate(Objects.isNull(bigBagRate)?0:bigBagRate.intValue());//大包转换率  批次表中获取
                 inventory.setBigBagQty(ivQty.divideAndRemainder(bigBagRate)[0]);//大包数量
                 inventory.setBigBagExtraQty(ivQty.divideAndRemainder(bigBagRate)[1]);//大包剩余数量
-                inventory.setMidBagRate(midBagRate); // 中包转化数(批次表记录)
+                inventory.setMidBagRate(Objects.isNull(midBagRate)?0:bigBagRate.intValue()); // 中包转化数(批次表记录)
                 inventory.setMidBagQty(ivQty.divideAndRemainder(midBagRate)[0]);//中包数量
                 inventory.setMidBagExtraQty(ivQty.divideAndRemainder(midBagRate)[1]);//中包剩余数量
                 inventory.setIvTranstime(nowWithUTC);//最近库存更新时间
                 inventory.setIvCreatetime(nowWithUTC);//创建时间
                 inventory.setBizDate(nowWithUTC);//业务日期(与创建时间保持一致)
+                inventory.setIvLocksign(0);//库存锁，可以出货
+                inventory.setIvFreezesign(0);//东解锁，可以操作
             });
             //3、处理(状态数据变更)
             if (LockMapUtil.confirmLock(lockKey, lockValue)) {
@@ -436,13 +438,18 @@ public class InventoryBussiness {
         ProductRequest productRequest = new ProductRequest();
         Long productId = Long.valueOf(String.valueOf(((Map) JSON.toJSON(request)).get("productId")));
         productRequest.setProductIds(Arrays.asList(productId));
+
         ApiResponse apiResponse = productFeignClient.getProductList(productRequest);
-        List<ProductDetailResponse> productDetailResponseList = DataConvertUtil.parseDataAsArray(apiResponse.getData(), ProductDetailResponse.class);
+        List<ProductDetailResponse> productDetailResponseList = DataConvertUtil.parseDataAsArray(((Map)apiResponse.getData()).get("productList"), ProductDetailResponse.class);
         if (Objects.isNull(productDetailResponseList)  || productDetailResponseList.isEmpty()) {
             ErrorCode.ADJT_ERROR_4001.throwError(wmsAdjtHeader.getProductBarcode(), adjhType);
         }
-        wmsAdjtHeader.setProductNameLocal(productDetailResponseList.get(0).getProductNameLocal());//产品本地名称
-        wmsAdjtHeader.setProductUpcCode(productDetailResponseList.get(0).getProductUpcCode());//UPC码
+        ProductDetailResponse productDetail = productDetailResponseList.get(0);
+        wmsAdjtHeader.setProductName(productDetail.getProductName());//产品名称
+        wmsAdjtHeader.setProductBarcode(productDetail.getProductBarcode());//条码
+
+        wmsAdjtHeader.setProductNameLocal(productDetail.getProductNameLocal());//产品本地名称
+        wmsAdjtHeader.setProductUpcCode(productDetail.getProductUpcCode());//UPC码
         wmsAdjtHeader.setAdjhCode(bussinessNumber);//业务单据编码
         wmsAdjtHeader.setId(adjtId);
         wmsAdjtHeader.setBizDate(nowWithUTC);//业务日期
@@ -455,6 +462,7 @@ public class InventoryBussiness {
 
         /**库存调整单明细*/
         WmsInventory wmsInventory = new WmsInventory();
+
         wmsInventory.setLcCode(wmsAdjtHeader.getLcCode());
         wmsInventory.setProductId(wmsAdjtHeader.getProductId());
         //库存明细
@@ -629,7 +637,7 @@ public class InventoryBussiness {
         dataList.stream().forEach(item -> {
             Long ivId = item.getIvId();
             WmsInventory inventory = ivId2EntityMap.get(ivId);
-            BigDecimal[] bagRet = inventory.getBigBagExtraQty().divideAndRemainder(inventory.getMidBagRate());
+            BigDecimal[] bagRet = inventory.getBigBagExtraQty().divideAndRemainder(new BigDecimal(inventory.getMidBagRate()));
             item.setMidBagQty(bagRet[0]);
             item.setTinyBagQty(bagRet[1]);
         });
@@ -699,17 +707,5 @@ public class InventoryBussiness {
         private String name;
         private String type;
         private Integer age;
-    }
-
-    public static void main(String[] args) {
-        List<Person> list = Lists.newArrayList();
-        list.add(new Person("k1","man",1));
-        list.add(new Person("k1","man",2));
-        list.add(new Person("k2","man",2));
-        list.add(new Person("k1","woman",3));
-        list.add(new Person("k2","woman",4));
-
-        Map<String, Integer> result = list.stream().collect(Collectors.groupingBy(item -> item.getName() + "_" + item.getType(), Collectors.summingInt(Person::getAge)));
-        System.out.println(JSON.toJSONString(result,true));
     }
 }

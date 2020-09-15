@@ -2,236 +2,236 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.telei.wms.datasource.wms.repository.WmsPaoLineRepository">
     <resultMap id="BaseResultMap" type="com.telei.wms.datasource.wms.model.WmsPaoLine">
-        <id column="paol_id" jdbcType="BIGINT" property="id"/>
-            <result column="pao_id" jdbcType="BIGINT" property="paoId"/>
-            <result column="ro_id" jdbcType="BIGINT" property="roId"/>
-            <result column="rol_id" jdbcType="BIGINT" property="rolId"/>
-            <result column="roo_id" jdbcType="BIGINT" property="rooId"/>
-            <result column="roo_code" jdbcType="VARCHAR" property="rooCode"/>
-            <result column="rool_id" jdbcType="BIGINT" property="roolId"/>
-            <result column="product_id" jdbcType="BIGINT" property="productId"/>
-            <result column="unit_gross_weight" jdbcType="DECIMAL" property="unitGrossWeight"/>
-            <result column="unit_vol" jdbcType="DECIMAL" property="unitVol"/>
-            <result column="memo" jdbcType="VARCHAR" property="memo"/>
-            <result column="paol_qty" jdbcType="DECIMAL" property="paolQty"/>
-            <result column="stock_unit" jdbcType="INTEGER" property="stockUnit"/>
-            <result column="line_total_weight" jdbcType="DECIMAL" property="lineTotalWeight"/>
-            <result column="line_net_weight" jdbcType="DECIMAL" property="lineNetWeight"/>
-            <result column="line_total_vol" jdbcType="DECIMAL" property="lineTotalVol"/>
-            <result column="pao_status" jdbcType="VARCHAR" property="paoStatus"/>
-            <result column="create_user" jdbcType="VARCHAR" property="createUser"/>
-            <result column="create_time" jdbcType="TIMESTAMP" property="createTime"/>
-            <result column="iab_id" jdbcType="BIGINT" property="iabId"/>
-            <result column="prep_lc_code" jdbcType="VARCHAR" property="prepLcCode"/>
-            <result column="lc_code" jdbcType="VARCHAR" property="lcCode"/>
-            <result column="paol_fifo_time" jdbcType="TIMESTAMP" property="paolFifoTime"/>
-            <result column="putaway_time" jdbcType="TIMESTAMP" property="putawayTime"/>
-            <result column="putaway_user" jdbcType="VARCHAR" property="putawayUser"/>
+        <id column="paol_id" jdbcType="BIGINT" property="paolId"/>
+        <result column="pao_id" jdbcType="BIGINT" property="paoId"/>
+        <result column="ro_id" jdbcType="BIGINT" property="roId"/>
+        <result column="rol_id" jdbcType="BIGINT" property="rolId"/>
+        <result column="roo_id" jdbcType="BIGINT" property="rooId"/>
+        <result column="roo_code" jdbcType="VARCHAR" property="rooCode"/>
+        <result column="rool_id" jdbcType="BIGINT" property="roolId"/>
+        <result column="product_id" jdbcType="BIGINT" property="productId"/>
+        <result column="unit_gross_weight" jdbcType="DECIMAL" property="unitGrossWeight"/>
+        <result column="unit_vol" jdbcType="DECIMAL" property="unitVol"/>
+        <result column="memo" jdbcType="VARCHAR" property="memo"/>
+        <result column="paol_qty" jdbcType="DECIMAL" property="paolQty"/>
+        <result column="stock_unit" jdbcType="INTEGER" property="stockUnit"/>
+        <result column="line_total_weight" jdbcType="DECIMAL" property="lineTotalWeight"/>
+        <result column="line_net_weight" jdbcType="DECIMAL" property="lineNetWeight"/>
+        <result column="line_total_vol" jdbcType="DECIMAL" property="lineTotalVol"/>
+        <result column="pao_status" jdbcType="VARCHAR" property="paoStatus"/>
+        <result column="create_user" jdbcType="VARCHAR" property="createUser"/>
+        <result column="create_time" jdbcType="TIMESTAMP" property="createTime"/>
+        <result column="iab_id" jdbcType="BIGINT" property="iabId"/>
+        <result column="prep_lc_code" jdbcType="VARCHAR" property="prepLcCode"/>
+        <result column="lc_code" jdbcType="VARCHAR" property="lcCode"/>
+        <result column="paol_fifo_time" jdbcType="TIMESTAMP" property="paolFifoTime"/>
+        <result column="putaway_time" jdbcType="TIMESTAMP" property="putawayTime"/>
+        <result column="putaway_user" jdbcType="VARCHAR" property="putawayUser"/>
     </resultMap>
 
     <sql id="Base_Column_List">
         paol_id,pao_id,ro_id,rol_id,roo_id,roo_code,rool_id,product_id,unit_gross_weight,unit_vol,memo,paol_qty,stock_unit,line_total_weight,line_net_weight,line_total_vol,pao_status,create_user,create_time,iab_id,prep_lc_code,lc_code,paol_fifo_time,putaway_time,putaway_user
     </sql>
 
-        <insert id="insert">
-            insert into wms_pao_line (paol_id,pao_id,ro_id,rol_id,roo_id,roo_code,rool_id,product_id,unit_gross_weight,unit_vol,memo,paol_qty,stock_unit,line_total_weight,line_net_weight,line_total_vol,pao_status,create_user,create_time,iab_id,prep_lc_code,lc_code,paol_fifo_time,putaway_time,putaway_user)
-            values (#{id,jdbcType=BIGINT},#{paoId,jdbcType=BIGINT},#{roId,jdbcType=BIGINT},#{rolId,jdbcType=BIGINT},#{rooId,jdbcType=BIGINT},#{rooCode,jdbcType=VARCHAR},#{roolId,jdbcType=BIGINT},#{productId,jdbcType=BIGINT},#{unitGrossWeight,jdbcType=DECIMAL},#{unitVol,jdbcType=DECIMAL},#{memo,jdbcType=VARCHAR},#{paolQty,jdbcType=DECIMAL},#{stockUnit,jdbcType=INTEGER},#{lineTotalWeight,jdbcType=DECIMAL},#{lineNetWeight,jdbcType=DECIMAL},#{lineTotalVol,jdbcType=DECIMAL},#{paoStatus,jdbcType=VARCHAR},#{createUser,jdbcType=VARCHAR},#{createTime,jdbcType=TIMESTAMP},#{iabId,jdbcType=BIGINT},#{prepLcCode,jdbcType=VARCHAR},#{lcCode,jdbcType=VARCHAR},#{paolFifoTime,jdbcType=TIMESTAMP},#{putawayTime,jdbcType=TIMESTAMP},#{putawayUser,jdbcType=VARCHAR})
-        </insert>
+    <insert id="insert">
+        insert into wms_pao_line (paol_id,pao_id,ro_id,rol_id,roo_id,roo_code,rool_id,product_id,unit_gross_weight,unit_vol,memo,paol_qty,stock_unit,line_total_weight,line_net_weight,line_total_vol,pao_status,create_user,create_time,iab_id,prep_lc_code,lc_code,paol_fifo_time,putaway_time,putaway_user)
+        values (#{paolId,jdbcType=BIGINT},#{paoId,jdbcType=BIGINT},#{roId,jdbcType=BIGINT},#{rolId,jdbcType=BIGINT},#{rooId,jdbcType=BIGINT},#{rooCode,jdbcType=VARCHAR},#{roolId,jdbcType=BIGINT},#{productId,jdbcType=BIGINT},#{unitGrossWeight,jdbcType=DECIMAL},#{unitVol,jdbcType=DECIMAL},#{memo,jdbcType=VARCHAR},#{paolQty,jdbcType=DECIMAL},#{stockUnit,jdbcType=INTEGER},#{lineTotalWeight,jdbcType=DECIMAL},#{lineNetWeight,jdbcType=DECIMAL},#{lineTotalVol,jdbcType=DECIMAL},#{paoStatus,jdbcType=VARCHAR},#{createUser,jdbcType=VARCHAR},#{createTime,jdbcType=TIMESTAMP},#{iabId,jdbcType=BIGINT},#{prepLcCode,jdbcType=VARCHAR},#{lcCode,jdbcType=VARCHAR},#{paolFifoTime,jdbcType=TIMESTAMP},#{putawayTime,jdbcType=TIMESTAMP},#{putawayUser,jdbcType=VARCHAR})
+    </insert>
 
-        <insert id="insertSelective">
-            insert into wms_pao_line
-            <trim prefix="(" suffix=")" suffixOverrides=",">
-                    <if test="id != null">
-                        paol_id,
-                    </if>
-                    <if test="paoId != null">
-                        pao_id,
-                    </if>
-                    <if test="roId != null">
-                        ro_id,
-                    </if>
-                    <if test="rolId != null">
-                        rol_id,
-                    </if>
-                    <if test="rooId != null">
-                        roo_id,
-                    </if>
-                    <if test="rooCode != null">
-                        roo_code,
-                    </if>
-                    <if test="roolId != null">
-                        rool_id,
-                    </if>
-                    <if test="productId != null">
-                        product_id,
-                    </if>
-                    <if test="unitGrossWeight != null">
-                        unit_gross_weight,
-                    </if>
-                    <if test="unitVol != null">
-                        unit_vol,
-                    </if>
-                    <if test="memo != null">
-                        memo,
-                    </if>
-                    <if test="paolQty != null">
-                        paol_qty,
-                    </if>
-                    <if test="stockUnit != null">
-                        stock_unit,
-                    </if>
-                    <if test="lineTotalWeight != null">
-                        line_total_weight,
-                    </if>
-                    <if test="lineNetWeight != null">
-                        line_net_weight,
-                    </if>
-                    <if test="lineTotalVol != null">
-                        line_total_vol,
-                    </if>
-                    <if test="paoStatus != null">
-                        pao_status,
-                    </if>
-                    <if test="createUser != null">
-                        create_user,
-                    </if>
-                    <if test="createTime != null">
-                        create_time,
-                    </if>
-                    <if test="iabId != null">
-                        iab_id,
-                    </if>
-                    <if test="prepLcCode != null">
-                        prep_lc_code,
-                    </if>
-                    <if test="lcCode != null">
-                        lc_code,
-                    </if>
-                    <if test="paolFifoTime != null">
-                        paol_fifo_time,
-                    </if>
-                    <if test="putawayTime != null">
-                        putaway_time,
-                    </if>
-                    <if test="putawayUser != null">
-                        putaway_user
-                    </if>
-            </trim>
-            <trim prefix="values (" suffix=")" suffixOverrides=",">
-                    <if test="id != null">
-                        #{id,jdbcType=BIGINT},
-                    </if>
-                    <if test="paoId != null">
-                        #{paoId,jdbcType=BIGINT},
-                    </if>
-                    <if test="roId != null">
-                        #{roId,jdbcType=BIGINT},
-                    </if>
-                    <if test="rolId != null">
-                        #{rolId,jdbcType=BIGINT},
-                    </if>
-                    <if test="rooId != null">
-                        #{rooId,jdbcType=BIGINT},
-                    </if>
-                    <if test="rooCode != null">
-                        #{rooCode,jdbcType=VARCHAR},
-                    </if>
-                    <if test="roolId != null">
-                        #{roolId,jdbcType=BIGINT},
-                    </if>
-                    <if test="productId != null">
-                        #{productId,jdbcType=BIGINT},
-                    </if>
-                    <if test="unitGrossWeight != null">
-                        #{unitGrossWeight,jdbcType=DECIMAL},
-                    </if>
-                    <if test="unitVol != null">
-                        #{unitVol,jdbcType=DECIMAL},
-                    </if>
-                    <if test="memo != null">
-                        #{memo,jdbcType=VARCHAR},
-                    </if>
-                    <if test="paolQty != null">
-                        #{paolQty,jdbcType=DECIMAL},
-                    </if>
-                    <if test="stockUnit != null">
-                        #{stockUnit,jdbcType=INTEGER},
-                    </if>
-                    <if test="lineTotalWeight != null">
-                        #{lineTotalWeight,jdbcType=DECIMAL},
-                    </if>
-                    <if test="lineNetWeight != null">
-                        #{lineNetWeight,jdbcType=DECIMAL},
-                    </if>
-                    <if test="lineTotalVol != null">
-                        #{lineTotalVol,jdbcType=DECIMAL},
-                    </if>
-                    <if test="paoStatus != null">
-                        #{paoStatus,jdbcType=VARCHAR},
-                    </if>
-                    <if test="createUser != null">
-                        #{createUser,jdbcType=VARCHAR},
-                    </if>
-                    <if test="createTime != null">
-                        #{createTime,jdbcType=TIMESTAMP},
-                    </if>
-                    <if test="iabId != null">
-                        #{iabId,jdbcType=BIGINT},
-                    </if>
-                    <if test="prepLcCode != null">
-                        #{prepLcCode,jdbcType=VARCHAR},
-                    </if>
-                    <if test="lcCode != null">
-                        #{lcCode,jdbcType=VARCHAR},
-                    </if>
-                    <if test="paolFifoTime != null">
-                        #{paolFifoTime,jdbcType=TIMESTAMP},
-                    </if>
-                    <if test="putawayTime != null">
-                        #{putawayTime,jdbcType=TIMESTAMP},
-                    </if>
-                    <if test="putawayUser != null">
-                        #{putawayUser,jdbcType=VARCHAR}
-                    </if>
-            </trim>
-        </insert>
+    <insert id="insertSelective">
+        insert into wms_pao_line
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="paolId != null">
+                paol_id,
+            </if>
+            <if test="paoId != null">
+                pao_id,
+            </if>
+            <if test="roId != null">
+                ro_id,
+            </if>
+            <if test="rolId != null">
+                rol_id,
+            </if>
+            <if test="rooId != null">
+                roo_id,
+            </if>
+            <if test="rooCode != null">
+                roo_code,
+            </if>
+            <if test="roolId != null">
+                rool_id,
+            </if>
+            <if test="productId != null">
+                product_id,
+            </if>
+            <if test="unitGrossWeight != null">
+                unit_gross_weight,
+            </if>
+            <if test="unitVol != null">
+                unit_vol,
+            </if>
+            <if test="memo != null">
+                memo,
+            </if>
+            <if test="paolQty != null">
+                paol_qty,
+            </if>
+            <if test="stockUnit != null">
+                stock_unit,
+            </if>
+            <if test="lineTotalWeight != null">
+                line_total_weight,
+            </if>
+            <if test="lineNetWeight != null">
+                line_net_weight,
+            </if>
+            <if test="lineTotalVol != null">
+                line_total_vol,
+            </if>
+            <if test="paoStatus != null">
+                pao_status,
+            </if>
+            <if test="createUser != null">
+                create_user,
+            </if>
+            <if test="createTime != null">
+                create_time,
+            </if>
+            <if test="iabId != null">
+                iab_id,
+            </if>
+            <if test="prepLcCode != null">
+                prep_lc_code,
+            </if>
+            <if test="lcCode != null">
+                lc_code,
+            </if>
+            <if test="paolFifoTime != null">
+                paol_fifo_time,
+            </if>
+            <if test="putawayTime != null">
+                putaway_time,
+            </if>
+            <if test="putawayUser != null">
+                putaway_user
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="paolId != null">
+                #{paolId,jdbcType=BIGINT},
+            </if>
+            <if test="paoId != null">
+                #{paoId,jdbcType=BIGINT},
+            </if>
+            <if test="roId != null">
+                #{roId,jdbcType=BIGINT},
+            </if>
+            <if test="rolId != null">
+                #{rolId,jdbcType=BIGINT},
+            </if>
+            <if test="rooId != null">
+                #{rooId,jdbcType=BIGINT},
+            </if>
+            <if test="rooCode != null">
+                #{rooCode,jdbcType=VARCHAR},
+            </if>
+            <if test="roolId != null">
+                #{roolId,jdbcType=BIGINT},
+            </if>
+            <if test="productId != null">
+                #{productId,jdbcType=BIGINT},
+            </if>
+            <if test="unitGrossWeight != null">
+                #{unitGrossWeight,jdbcType=DECIMAL},
+            </if>
+            <if test="unitVol != null">
+                #{unitVol,jdbcType=DECIMAL},
+            </if>
+            <if test="memo != null">
+                #{memo,jdbcType=VARCHAR},
+            </if>
+            <if test="paolQty != null">
+                #{paolQty,jdbcType=DECIMAL},
+            </if>
+            <if test="stockUnit != null">
+                #{stockUnit,jdbcType=INTEGER},
+            </if>
+            <if test="lineTotalWeight != null">
+                #{lineTotalWeight,jdbcType=DECIMAL},
+            </if>
+            <if test="lineNetWeight != null">
+                #{lineNetWeight,jdbcType=DECIMAL},
+            </if>
+            <if test="lineTotalVol != null">
+                #{lineTotalVol,jdbcType=DECIMAL},
+            </if>
+            <if test="paoStatus != null">
+                #{paoStatus,jdbcType=VARCHAR},
+            </if>
+            <if test="createUser != null">
+                #{createUser,jdbcType=VARCHAR},
+            </if>
+            <if test="createTime != null">
+                #{createTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="iabId != null">
+                #{iabId,jdbcType=BIGINT},
+            </if>
+            <if test="prepLcCode != null">
+                #{prepLcCode,jdbcType=VARCHAR},
+            </if>
+            <if test="lcCode != null">
+                #{lcCode,jdbcType=VARCHAR},
+            </if>
+            <if test="paolFifoTime != null">
+                #{paolFifoTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="putawayTime != null">
+                #{putawayTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="putawayUser != null">
+                #{putawayUser,jdbcType=VARCHAR}
+            </if>
+        </trim>
+    </insert>
 
-        <insert id="insertBatch">
-            insert into wms_pao_line (paol_id,pao_id,ro_id,rol_id,roo_id,roo_code,rool_id,product_id,unit_gross_weight,unit_vol,memo,paol_qty,stock_unit,line_total_weight,line_net_weight,line_total_vol,pao_status,create_user,create_time,iab_id,prep_lc_code,lc_code,paol_fifo_time,putaway_time,putaway_user) values
-            <foreach collection="list" item="item" separator=",">
-                (
-                    #{item.id,jdbcType=BIGINT},
-                    #{item.paoId,jdbcType=BIGINT},
-                    #{item.roId,jdbcType=BIGINT},
-                    #{item.rolId,jdbcType=BIGINT},
-                    #{item.rooId,jdbcType=BIGINT},
-                    #{item.rooCode,jdbcType=VARCHAR},
-                    #{item.roolId,jdbcType=BIGINT},
-                    #{item.productId,jdbcType=BIGINT},
-                    #{item.unitGrossWeight,jdbcType=DECIMAL},
-                    #{item.unitVol,jdbcType=DECIMAL},
-                    #{item.memo,jdbcType=VARCHAR},
-                    #{item.paolQty,jdbcType=DECIMAL},
-                    #{item.stockUnit,jdbcType=INTEGER},
-                    #{item.lineTotalWeight,jdbcType=DECIMAL},
-                    #{item.lineNetWeight,jdbcType=DECIMAL},
-                    #{item.lineTotalVol,jdbcType=DECIMAL},
-                    #{item.paoStatus,jdbcType=VARCHAR},
-                    #{item.createUser,jdbcType=VARCHAR},
-                    #{item.createTime,jdbcType=TIMESTAMP},
-                    #{item.iabId,jdbcType=BIGINT},
-                    #{item.prepLcCode,jdbcType=VARCHAR},
-                    #{item.lcCode,jdbcType=VARCHAR},
-                    #{item.paolFifoTime,jdbcType=TIMESTAMP},
-                    #{item.putawayTime,jdbcType=TIMESTAMP},
-                    #{item.putawayUser,jdbcType=VARCHAR}
-                )
-            </foreach>
-        </insert>
+    <insert id="insertBatch">
+        insert into wms_pao_line (paol_id,pao_id,ro_id,rol_id,roo_id,roo_code,rool_id,product_id,unit_gross_weight,unit_vol,memo,paol_qty,stock_unit,line_total_weight,line_net_weight,line_total_vol,pao_status,create_user,create_time,iab_id,prep_lc_code,lc_code,paol_fifo_time,putaway_time,putaway_user) values
+        <foreach collection="list" item="item" separator=",">
+            (
+            #{item.paolId,jdbcType=BIGINT},
+            #{item.paoId,jdbcType=BIGINT},
+            #{item.roId,jdbcType=BIGINT},
+            #{item.rolId,jdbcType=BIGINT},
+            #{item.rooId,jdbcType=BIGINT},
+            #{item.rooCode,jdbcType=VARCHAR},
+            #{item.roolId,jdbcType=BIGINT},
+            #{item.productId,jdbcType=BIGINT},
+            #{item.unitGrossWeight,jdbcType=DECIMAL},
+            #{item.unitVol,jdbcType=DECIMAL},
+            #{item.memo,jdbcType=VARCHAR},
+            #{item.paolQty,jdbcType=DECIMAL},
+            #{item.stockUnit,jdbcType=INTEGER},
+            #{item.lineTotalWeight,jdbcType=DECIMAL},
+            #{item.lineNetWeight,jdbcType=DECIMAL},
+            #{item.lineTotalVol,jdbcType=DECIMAL},
+            #{item.paoStatus,jdbcType=VARCHAR},
+            #{item.createUser,jdbcType=VARCHAR},
+            #{item.createTime,jdbcType=TIMESTAMP},
+            #{item.iabId,jdbcType=BIGINT},
+            #{item.prepLcCode,jdbcType=VARCHAR},
+            #{item.lcCode,jdbcType=VARCHAR},
+            #{item.paolFifoTime,jdbcType=TIMESTAMP},
+            #{item.putawayTime,jdbcType=TIMESTAMP},
+            #{item.putawayUser,jdbcType=VARCHAR}
+            )
+        </foreach>
+    </insert>
 
     <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
         delete from wms_pao_line
-        where paol_id = #{id,jdbcType=BIGINT}
+        where paol_id = #{paolId,jdbcType=BIGINT}
     </delete>
 
     <delete id="deleteByPrimaryKeys">
@@ -244,191 +244,191 @@
     <update id="updateByPrimaryKey">
         update wms_pao_line
         <set>
-                pao_id = #{paoId,jdbcType=BIGINT},
-                ro_id = #{roId,jdbcType=BIGINT},
-                rol_id = #{rolId,jdbcType=BIGINT},
-                roo_id = #{rooId,jdbcType=BIGINT},
-                roo_code = #{rooCode,jdbcType=VARCHAR},
-                rool_id = #{roolId,jdbcType=BIGINT},
-                product_id = #{productId,jdbcType=BIGINT},
-                unit_gross_weight = #{unitGrossWeight,jdbcType=DECIMAL},
-                unit_vol = #{unitVol,jdbcType=DECIMAL},
-                memo = #{memo,jdbcType=VARCHAR},
-                paol_qty = #{paolQty,jdbcType=DECIMAL},
-                stock_unit = #{stockUnit,jdbcType=INTEGER},
-                line_total_weight = #{lineTotalWeight,jdbcType=DECIMAL},
-                line_net_weight = #{lineNetWeight,jdbcType=DECIMAL},
-                line_total_vol = #{lineTotalVol,jdbcType=DECIMAL},
-                pao_status = #{paoStatus,jdbcType=VARCHAR},
-                create_user = #{createUser,jdbcType=VARCHAR},
-                create_time = #{createTime,jdbcType=TIMESTAMP},
-                iab_id = #{iabId,jdbcType=BIGINT},
-                prep_lc_code = #{prepLcCode,jdbcType=VARCHAR},
-                lc_code = #{lcCode,jdbcType=VARCHAR},
-                paol_fifo_time = #{paolFifoTime,jdbcType=TIMESTAMP},
-                putaway_time = #{putawayTime,jdbcType=TIMESTAMP},
-                putaway_user = #{putawayUser,jdbcType=VARCHAR}
+            pao_id = #{paoId,jdbcType=BIGINT},
+            ro_id = #{roId,jdbcType=BIGINT},
+            rol_id = #{rolId,jdbcType=BIGINT},
+            roo_id = #{rooId,jdbcType=BIGINT},
+            roo_code = #{rooCode,jdbcType=VARCHAR},
+            rool_id = #{roolId,jdbcType=BIGINT},
+            product_id = #{productId,jdbcType=BIGINT},
+            unit_gross_weight = #{unitGrossWeight,jdbcType=DECIMAL},
+            unit_vol = #{unitVol,jdbcType=DECIMAL},
+            memo = #{memo,jdbcType=VARCHAR},
+            paol_qty = #{paolQty,jdbcType=DECIMAL},
+            stock_unit = #{stockUnit,jdbcType=INTEGER},
+            line_total_weight = #{lineTotalWeight,jdbcType=DECIMAL},
+            line_net_weight = #{lineNetWeight,jdbcType=DECIMAL},
+            line_total_vol = #{lineTotalVol,jdbcType=DECIMAL},
+            pao_status = #{paoStatus,jdbcType=VARCHAR},
+            create_user = #{createUser,jdbcType=VARCHAR},
+            create_time = #{createTime,jdbcType=TIMESTAMP},
+            iab_id = #{iabId,jdbcType=BIGINT},
+            prep_lc_code = #{prepLcCode,jdbcType=VARCHAR},
+            lc_code = #{lcCode,jdbcType=VARCHAR},
+            paol_fifo_time = #{paolFifoTime,jdbcType=TIMESTAMP},
+            putaway_time = #{putawayTime,jdbcType=TIMESTAMP},
+            putaway_user = #{putawayUser,jdbcType=VARCHAR}
         </set>
-        where paol_id = #{id,jdbcType=BIGINT}
+        where paol_id = #{paolId,jdbcType=BIGINT}
     </update>
 
     <update id="updateByPrimaryKeySelective">
         update wms_pao_line
         <set>
-                <if test="paoId != null">
-                    pao_id = #{paoId,jdbcType=BIGINT},
-                </if>
-                <if test="roId != null">
-                    ro_id = #{roId,jdbcType=BIGINT},
-                </if>
-                <if test="rolId != null">
-                    rol_id = #{rolId,jdbcType=BIGINT},
-                </if>
-                <if test="rooId != null">
-                    roo_id = #{rooId,jdbcType=BIGINT},
-                </if>
-                <if test="rooCode != null">
-                    roo_code = #{rooCode,jdbcType=VARCHAR},
-                </if>
-                <if test="roolId != null">
-                    rool_id = #{roolId,jdbcType=BIGINT},
-                </if>
-                <if test="productId != null">
-                    product_id = #{productId,jdbcType=BIGINT},
-                </if>
-                <if test="unitGrossWeight != null">
-                    unit_gross_weight = #{unitGrossWeight,jdbcType=DECIMAL},
-                </if>
-                <if test="unitVol != null">
-                    unit_vol = #{unitVol,jdbcType=DECIMAL},
-                </if>
-                <if test="memo != null">
-                    memo = #{memo,jdbcType=VARCHAR},
-                </if>
-                <if test="paolQty != null">
-                    paol_qty = #{paolQty,jdbcType=DECIMAL},
-                </if>
-                <if test="stockUnit != null">
-                    stock_unit = #{stockUnit,jdbcType=INTEGER},
-                </if>
-                <if test="lineTotalWeight != null">
-                    line_total_weight = #{lineTotalWeight,jdbcType=DECIMAL},
-                </if>
-                <if test="lineNetWeight != null">
-                    line_net_weight = #{lineNetWeight,jdbcType=DECIMAL},
-                </if>
-                <if test="lineTotalVol != null">
-                    line_total_vol = #{lineTotalVol,jdbcType=DECIMAL},
-                </if>
-                <if test="paoStatus != null">
-                    pao_status = #{paoStatus,jdbcType=VARCHAR},
-                </if>
-                <if test="createUser != null">
-                    create_user = #{createUser,jdbcType=VARCHAR},
-                </if>
-                <if test="createTime != null">
-                    create_time = #{createTime,jdbcType=TIMESTAMP},
-                </if>
-                <if test="iabId != null">
-                    iab_id = #{iabId,jdbcType=BIGINT},
-                </if>
-                <if test="prepLcCode != null">
-                    prep_lc_code = #{prepLcCode,jdbcType=VARCHAR},
-                </if>
-                <if test="lcCode != null">
-                    lc_code = #{lcCode,jdbcType=VARCHAR},
-                </if>
-                <if test="paolFifoTime != null">
-                    paol_fifo_time = #{paolFifoTime,jdbcType=TIMESTAMP},
-                </if>
-                <if test="putawayTime != null">
-                    putaway_time = #{putawayTime,jdbcType=TIMESTAMP},
-                </if>
-                <if test="putawayUser != null">
-                    putaway_user = #{putawayUser,jdbcType=VARCHAR}
-                </if>
+            <if test="paoId != null">
+                pao_id = #{paoId,jdbcType=BIGINT},
+            </if>
+            <if test="roId != null">
+                ro_id = #{roId,jdbcType=BIGINT},
+            </if>
+            <if test="rolId != null">
+                rol_id = #{rolId,jdbcType=BIGINT},
+            </if>
+            <if test="rooId != null">
+                roo_id = #{rooId,jdbcType=BIGINT},
+            </if>
+            <if test="rooCode != null">
+                roo_code = #{rooCode,jdbcType=VARCHAR},
+            </if>
+            <if test="roolId != null">
+                rool_id = #{roolId,jdbcType=BIGINT},
+            </if>
+            <if test="productId != null">
+                product_id = #{productId,jdbcType=BIGINT},
+            </if>
+            <if test="unitGrossWeight != null">
+                unit_gross_weight = #{unitGrossWeight,jdbcType=DECIMAL},
+            </if>
+            <if test="unitVol != null">
+                unit_vol = #{unitVol,jdbcType=DECIMAL},
+            </if>
+            <if test="memo != null">
+                memo = #{memo,jdbcType=VARCHAR},
+            </if>
+            <if test="paolQty != null">
+                paol_qty = #{paolQty,jdbcType=DECIMAL},
+            </if>
+            <if test="stockUnit != null">
+                stock_unit = #{stockUnit,jdbcType=INTEGER},
+            </if>
+            <if test="lineTotalWeight != null">
+                line_total_weight = #{lineTotalWeight,jdbcType=DECIMAL},
+            </if>
+            <if test="lineNetWeight != null">
+                line_net_weight = #{lineNetWeight,jdbcType=DECIMAL},
+            </if>
+            <if test="lineTotalVol != null">
+                line_total_vol = #{lineTotalVol,jdbcType=DECIMAL},
+            </if>
+            <if test="paoStatus != null">
+                pao_status = #{paoStatus,jdbcType=VARCHAR},
+            </if>
+            <if test="createUser != null">
+                create_user = #{createUser,jdbcType=VARCHAR},
+            </if>
+            <if test="createTime != null">
+                create_time = #{createTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="iabId != null">
+                iab_id = #{iabId,jdbcType=BIGINT},
+            </if>
+            <if test="prepLcCode != null">
+                prep_lc_code = #{prepLcCode,jdbcType=VARCHAR},
+            </if>
+            <if test="lcCode != null">
+                lc_code = #{lcCode,jdbcType=VARCHAR},
+            </if>
+            <if test="paolFifoTime != null">
+                paol_fifo_time = #{paolFifoTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="putawayTime != null">
+                putaway_time = #{putawayTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="putawayUser != null">
+                putaway_user = #{putawayUser,jdbcType=VARCHAR}
+            </if>
         </set>
-        where paol_id = #{id,jdbcType=BIGINT}
+        where paol_id = #{paolId,jdbcType=BIGINT}
     </update>
 
     <update id="updateBatch">
         <foreach close="" collection="list" item="item" open="" separator=";">
             update wms_pao_line
             <set>
-                    <if test="item.paoId != null">
-                        pao_id = #{item.paoId,jdbcType=BIGINT},
-                    </if>
-                    <if test="item.roId != null">
-                        ro_id = #{item.roId,jdbcType=BIGINT},
-                    </if>
-                    <if test="item.rolId != null">
-                        rol_id = #{item.rolId,jdbcType=BIGINT},
-                    </if>
-                    <if test="item.rooId != null">
-                        roo_id = #{item.rooId,jdbcType=BIGINT},
-                    </if>
-                    <if test="item.rooCode != null">
-                        roo_code = #{item.rooCode,jdbcType=VARCHAR},
-                    </if>
-                    <if test="item.roolId != null">
-                        rool_id = #{item.roolId,jdbcType=BIGINT},
-                    </if>
-                    <if test="item.productId != null">
-                        product_id = #{item.productId,jdbcType=BIGINT},
-                    </if>
-                    <if test="item.unitGrossWeight != null">
-                        unit_gross_weight = #{item.unitGrossWeight,jdbcType=DECIMAL},
-                    </if>
-                    <if test="item.unitVol != null">
-                        unit_vol = #{item.unitVol,jdbcType=DECIMAL},
-                    </if>
-                    <if test="item.memo != null">
-                        memo = #{item.memo,jdbcType=VARCHAR},
-                    </if>
-                    <if test="item.paolQty != null">
-                        paol_qty = #{item.paolQty,jdbcType=DECIMAL},
-                    </if>
-                    <if test="item.stockUnit != null">
-                        stock_unit = #{item.stockUnit,jdbcType=INTEGER},
-                    </if>
-                    <if test="item.lineTotalWeight != null">
-                        line_total_weight = #{item.lineTotalWeight,jdbcType=DECIMAL},
-                    </if>
-                    <if test="item.lineNetWeight != null">
-                        line_net_weight = #{item.lineNetWeight,jdbcType=DECIMAL},
-                    </if>
-                    <if test="item.lineTotalVol != null">
-                        line_total_vol = #{item.lineTotalVol,jdbcType=DECIMAL},
-                    </if>
-                    <if test="item.paoStatus != null">
-                        pao_status = #{item.paoStatus,jdbcType=VARCHAR},
-                    </if>
-                    <if test="item.createUser != null">
-                        create_user = #{item.createUser,jdbcType=VARCHAR},
-                    </if>
-                    <if test="item.createTime != null">
-                        create_time = #{item.createTime,jdbcType=TIMESTAMP},
-                    </if>
-                    <if test="item.iabId != null">
-                        iab_id = #{item.iabId,jdbcType=BIGINT},
-                    </if>
-                    <if test="item.prepLcCode != null">
-                        prep_lc_code = #{item.prepLcCode,jdbcType=VARCHAR},
-                    </if>
-                    <if test="item.lcCode != null">
-                        lc_code = #{item.lcCode,jdbcType=VARCHAR},
-                    </if>
-                    <if test="item.paolFifoTime != null">
-                        paol_fifo_time = #{item.paolFifoTime,jdbcType=TIMESTAMP},
-                    </if>
-                    <if test="item.putawayTime != null">
-                        putaway_time = #{item.putawayTime,jdbcType=TIMESTAMP},
-                    </if>
-                    <if test="item.putawayUser != null">
-                        putaway_user = #{item.putawayUser,jdbcType=VARCHAR}
-                    </if>
+                <if test="item.paoId != null">
+                    pao_id = #{item.paoId,jdbcType=BIGINT},
+                </if>
+                <if test="item.roId != null">
+                    ro_id = #{item.roId,jdbcType=BIGINT},
+                </if>
+                <if test="item.rolId != null">
+                    rol_id = #{item.rolId,jdbcType=BIGINT},
+                </if>
+                <if test="item.rooId != null">
+                    roo_id = #{item.rooId,jdbcType=BIGINT},
+                </if>
+                <if test="item.rooCode != null">
+                    roo_code = #{item.rooCode,jdbcType=VARCHAR},
+                </if>
+                <if test="item.roolId != null">
+                    rool_id = #{item.roolId,jdbcType=BIGINT},
+                </if>
+                <if test="item.productId != null">
+                    product_id = #{item.productId,jdbcType=BIGINT},
+                </if>
+                <if test="item.unitGrossWeight != null">
+                    unit_gross_weight = #{item.unitGrossWeight,jdbcType=DECIMAL},
+                </if>
+                <if test="item.unitVol != null">
+                    unit_vol = #{item.unitVol,jdbcType=DECIMAL},
+                </if>
+                <if test="item.memo != null">
+                    memo = #{item.memo,jdbcType=VARCHAR},
+                </if>
+                <if test="item.paolQty != null">
+                    paol_qty = #{item.paolQty,jdbcType=DECIMAL},
+                </if>
+                <if test="item.stockUnit != null">
+                    stock_unit = #{item.stockUnit,jdbcType=INTEGER},
+                </if>
+                <if test="item.lineTotalWeight != null">
+                    line_total_weight = #{item.lineTotalWeight,jdbcType=DECIMAL},
+                </if>
+                <if test="item.lineNetWeight != null">
+                    line_net_weight = #{item.lineNetWeight,jdbcType=DECIMAL},
+                </if>
+                <if test="item.lineTotalVol != null">
+                    line_total_vol = #{item.lineTotalVol,jdbcType=DECIMAL},
+                </if>
+                <if test="item.paoStatus != null">
+                    pao_status = #{item.paoStatus,jdbcType=VARCHAR},
+                </if>
+                <if test="item.createUser != null">
+                    create_user = #{item.createUser,jdbcType=VARCHAR},
+                </if>
+                <if test="item.createTime != null">
+                    create_time = #{item.createTime,jdbcType=TIMESTAMP},
+                </if>
+                <if test="item.iabId != null">
+                    iab_id = #{item.iabId,jdbcType=BIGINT},
+                </if>
+                <if test="item.prepLcCode != null">
+                    prep_lc_code = #{item.prepLcCode,jdbcType=VARCHAR},
+                </if>
+                <if test="item.lcCode != null">
+                    lc_code = #{item.lcCode,jdbcType=VARCHAR},
+                </if>
+                <if test="item.paolFifoTime != null">
+                    paol_fifo_time = #{item.paolFifoTime,jdbcType=TIMESTAMP},
+                </if>
+                <if test="item.putawayTime != null">
+                    putaway_time = #{item.putawayTime,jdbcType=TIMESTAMP},
+                </if>
+                <if test="item.putawayUser != null">
+                    putaway_user = #{item.putawayUser,jdbcType=VARCHAR}
+                </if>
             </set>
-            where paol_id = #{item.id,jdbcType=BIGINT}
+            where paol_id = #{item.paolId,jdbcType=BIGINT}
         </foreach>
     </update>
 
@@ -436,14 +436,14 @@
         select
         <include refid="Base_Column_List" />
         from wms_pao_line
-        where paol_id = #{id,jdbcType=BIGINT}
+        where paol_id = #{paolId,jdbcType=BIGINT}
     </select>
 
     <select id="selectByPrimaryKeyWithLock" resultMap="BaseResultMap">
         select
         <include refid="Base_Column_List" />
         from wms_pao_line
-        where paol_id = #{id,jdbcType=BIGINT} for update
+        where paol_id = #{paolId,jdbcType=BIGINT} for update
     </select>
 
     <select id="selectByPrimaryKeys" resultMap="BaseResultMap">
@@ -460,81 +460,81 @@
         <include refid="Base_Column_List"/>
         from wms_pao_line
         <where>
-                <if test="id != null">
-                    and paol_id=#{id,jdbcType=BIGINT}
-                </if>
-                <if test="paoId != null">
-                    and pao_id=#{paoId,jdbcType=BIGINT}
-                </if>
-                <if test="roId != null">
-                    and ro_id=#{roId,jdbcType=BIGINT}
-                </if>
-                <if test="rolId != null">
-                    and rol_id=#{rolId,jdbcType=BIGINT}
-                </if>
-                <if test="rooId != null">
-                    and roo_id=#{rooId,jdbcType=BIGINT}
-                </if>
-                <if test="rooCode != null">
-                    and roo_code=#{rooCode,jdbcType=VARCHAR}
-                </if>
-                <if test="roolId != null">
-                    and rool_id=#{roolId,jdbcType=BIGINT}
-                </if>
-                <if test="productId != null">
-                    and product_id=#{productId,jdbcType=BIGINT}
-                </if>
-                <if test="unitGrossWeight != null">
-                    and unit_gross_weight=#{unitGrossWeight,jdbcType=DECIMAL}
-                </if>
-                <if test="unitVol != null">
-                    and unit_vol=#{unitVol,jdbcType=DECIMAL}
-                </if>
-                <if test="memo != null">
-                    and memo=#{memo,jdbcType=VARCHAR}
-                </if>
-                <if test="paolQty != null">
-                    and paol_qty=#{paolQty,jdbcType=DECIMAL}
-                </if>
-                <if test="stockUnit != null">
-                    and stock_unit=#{stockUnit,jdbcType=INTEGER}
-                </if>
-                <if test="lineTotalWeight != null">
-                    and line_total_weight=#{lineTotalWeight,jdbcType=DECIMAL}
-                </if>
-                <if test="lineNetWeight != null">
-                    and line_net_weight=#{lineNetWeight,jdbcType=DECIMAL}
-                </if>
-                <if test="lineTotalVol != null">
-                    and line_total_vol=#{lineTotalVol,jdbcType=DECIMAL}
-                </if>
-                <if test="paoStatus != null">
-                    and pao_status=#{paoStatus,jdbcType=VARCHAR}
-                </if>
-                <if test="createUser != null">
-                    and create_user=#{createUser,jdbcType=VARCHAR}
-                </if>
-                <if test="createTime != null">
-                    and create_time=#{createTime,jdbcType=TIMESTAMP}
-                </if>
-                <if test="iabId != null">
-                    and iab_id=#{iabId,jdbcType=BIGINT}
-                </if>
-                <if test="prepLcCode != null">
-                    and prep_lc_code=#{prepLcCode,jdbcType=VARCHAR}
-                </if>
-                <if test="lcCode != null">
-                    and lc_code=#{lcCode,jdbcType=VARCHAR}
-                </if>
-                <if test="paolFifoTime != null">
-                    and paol_fifo_time=#{paolFifoTime,jdbcType=TIMESTAMP}
-                </if>
-                <if test="putawayTime != null">
-                    and putaway_time=#{putawayTime,jdbcType=TIMESTAMP}
-                </if>
-                <if test="putawayUser != null">
-                    and putaway_user=#{putawayUser,jdbcType=VARCHAR}
-                </if>
+            <if test="paolId != null">
+                and paol_id=#{paolId,jdbcType=BIGINT}
+            </if>
+            <if test="paoId != null">
+                and pao_id=#{paoId,jdbcType=BIGINT}
+            </if>
+            <if test="roId != null">
+                and ro_id=#{roId,jdbcType=BIGINT}
+            </if>
+            <if test="rolId != null">
+                and rol_id=#{rolId,jdbcType=BIGINT}
+            </if>
+            <if test="rooId != null">
+                and roo_id=#{rooId,jdbcType=BIGINT}
+            </if>
+            <if test="rooCode != null">
+                and roo_code=#{rooCode,jdbcType=VARCHAR}
+            </if>
+            <if test="roolId != null">
+                and rool_id=#{roolId,jdbcType=BIGINT}
+            </if>
+            <if test="productId != null">
+                and product_id=#{productId,jdbcType=BIGINT}
+            </if>
+            <if test="unitGrossWeight != null">
+                and unit_gross_weight=#{unitGrossWeight,jdbcType=DECIMAL}
+            </if>
+            <if test="unitVol != null">
+                and unit_vol=#{unitVol,jdbcType=DECIMAL}
+            </if>
+            <if test="memo != null">
+                and memo=#{memo,jdbcType=VARCHAR}
+            </if>
+            <if test="paolQty != null">
+                and paol_qty=#{paolQty,jdbcType=DECIMAL}
+            </if>
+            <if test="stockUnit != null">
+                and stock_unit=#{stockUnit,jdbcType=INTEGER}
+            </if>
+            <if test="lineTotalWeight != null">
+                and line_total_weight=#{lineTotalWeight,jdbcType=DECIMAL}
+            </if>
+            <if test="lineNetWeight != null">
+                and line_net_weight=#{lineNetWeight,jdbcType=DECIMAL}
+            </if>
+            <if test="lineTotalVol != null">
+                and line_total_vol=#{lineTotalVol,jdbcType=DECIMAL}
+            </if>
+            <if test="paoStatus != null">
+                and pao_status=#{paoStatus,jdbcType=VARCHAR}
+            </if>
+            <if test="createUser != null">
+                and create_user=#{createUser,jdbcType=VARCHAR}
+            </if>
+            <if test="createTime != null">
+                and create_time=#{createTime,jdbcType=TIMESTAMP}
+            </if>
+            <if test="iabId != null">
+                and iab_id=#{iabId,jdbcType=BIGINT}
+            </if>
+            <if test="prepLcCode != null">
+                and prep_lc_code=#{prepLcCode,jdbcType=VARCHAR}
+            </if>
+            <if test="lcCode != null">
+                and lc_code=#{lcCode,jdbcType=VARCHAR}
+            </if>
+            <if test="paolFifoTime != null">
+                and paol_fifo_time=#{paolFifoTime,jdbcType=TIMESTAMP}
+            </if>
+            <if test="putawayTime != null">
+                and putaway_time=#{putawayTime,jdbcType=TIMESTAMP}
+            </if>
+            <if test="putawayUser != null">
+                and putaway_user=#{putawayUser,jdbcType=VARCHAR}
+            </if>
         </where>
     </select>
 
@@ -543,81 +543,81 @@
         <include refid="Base_Column_List"/>
         from wms_pao_line
         <where>
-                <if test="id != null">
-                    and paol_id ${id}
-                </if>
-                <if test="paoId != null">
-                    and pao_id ${paoId}
-                </if>
-                <if test="roId != null">
-                    and ro_id ${roId}
-                </if>
-                <if test="rolId != null">
-                    and rol_id ${rolId}
-                </if>
-                <if test="rooId != null">
-                    and roo_id ${rooId}
-                </if>
-                <if test="rooCode != null">
-                    and roo_code ${rooCode}
-                </if>
-                <if test="roolId != null">
-                    and rool_id ${roolId}
-                </if>
-                <if test="productId != null">
-                    and product_id ${productId}
-                </if>
-                <if test="unitGrossWeight != null">
-                    and unit_gross_weight ${unitGrossWeight}
-                </if>
-                <if test="unitVol != null">
-                    and unit_vol ${unitVol}
-                </if>
-                <if test="memo != null">
-                    and memo ${memo}
-                </if>
-                <if test="paolQty != null">
-                    and paol_qty ${paolQty}
-                </if>
-                <if test="stockUnit != null">
-                    and stock_unit ${stockUnit}
-                </if>
-                <if test="lineTotalWeight != null">
-                    and line_total_weight ${lineTotalWeight}
-                </if>
-                <if test="lineNetWeight != null">
-                    and line_net_weight ${lineNetWeight}
-                </if>
-                <if test="lineTotalVol != null">
-                    and line_total_vol ${lineTotalVol}
-                </if>
-                <if test="paoStatus != null">
-                    and pao_status ${paoStatus}
-                </if>
-                <if test="createUser != null">
-                    and create_user ${createUser}
-                </if>
-                <if test="createTime != null">
-                    and create_time ${createTime}
-                </if>
-                <if test="iabId != null">
-                    and iab_id ${iabId}
-                </if>
-                <if test="prepLcCode != null">
-                    and prep_lc_code ${prepLcCode}
-                </if>
-                <if test="lcCode != null">
-                    and lc_code ${lcCode}
-                </if>
-                <if test="paolFifoTime != null">
-                    and paol_fifo_time ${paolFifoTime}
-                </if>
-                <if test="putawayTime != null">
-                    and putaway_time ${putawayTime}
-                </if>
-                <if test="putawayUser != null">
-                    and putaway_user ${putawayUser}
-                </if>
+            <if test="paolId != null">
+                and paol_id ${paolId}
+            </if>
+            <if test="paoId != null">
+                and pao_id ${paoId}
+            </if>
+            <if test="roId != null">
+                and ro_id ${roId}
+            </if>
+            <if test="rolId != null">
+                and rol_id ${rolId}
+            </if>
+            <if test="rooId != null">
+                and roo_id ${rooId}
+            </if>
+            <if test="rooCode != null">
+                and roo_code ${rooCode}
+            </if>
+            <if test="roolId != null">
+                and rool_id ${roolId}
+            </if>
+            <if test="productId != null">
+                and product_id ${productId}
+            </if>
+            <if test="unitGrossWeight != null">
+                and unit_gross_weight ${unitGrossWeight}
+            </if>
+            <if test="unitVol != null">
+                and unit_vol ${unitVol}
+            </if>
+            <if test="memo != null">
+                and memo ${memo}
+            </if>
+            <if test="paolQty != null">
+                and paol_qty ${paolQty}
+            </if>
+            <if test="stockUnit != null">
+                and stock_unit ${stockUnit}
+            </if>
+            <if test="lineTotalWeight != null">
+                and line_total_weight ${lineTotalWeight}
+            </if>
+            <if test="lineNetWeight != null">
+                and line_net_weight ${lineNetWeight}
+            </if>
+            <if test="lineTotalVol != null">
+                and line_total_vol ${lineTotalVol}
+            </if>
+            <if test="paoStatus != null">
+                and pao_status ${paoStatus}
+            </if>
+            <if test="createUser != null">
+                and create_user ${createUser}
+            </if>
+            <if test="createTime != null">
+                and create_time ${createTime}
+            </if>
+            <if test="iabId != null">
+                and iab_id ${iabId}
+            </if>
+            <if test="prepLcCode != null">
+                and prep_lc_code ${prepLcCode}
+            </if>
+            <if test="lcCode != null">
+                and lc_code ${lcCode}
+            </if>
+            <if test="paolFifoTime != null">
+                and paol_fifo_time ${paolFifoTime}
+            </if>
+            <if test="putawayTime != null">
+                and putaway_time ${putawayTime}
+            </if>
+            <if test="putawayUser != null">
+                and putaway_user ${putawayUser}
+            </if>
         </where>
         <if test="orderBy != null">
             order by ${orderBy}
