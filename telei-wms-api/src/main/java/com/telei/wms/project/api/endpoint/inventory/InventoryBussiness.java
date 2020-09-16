@@ -5,7 +5,6 @@ import com.google.common.collect.Lists;
 import com.nuochen.framework.app.api.ApiResponse;
 import com.nuochen.framework.autocoding.domain.Pagination;
 import com.nuochen.framework.autocoding.domain.condition.ConditionsBuilder;
-import com.nuochen.framework.component.commons.ExceptionHelper;
 import com.telei.infrastructure.component.commons.CustomRequestContext;
 import com.telei.infrastructure.component.commons.dto.UserInfo;
 import com.telei.infrastructure.component.commons.utils.CollectorsUtil;
@@ -32,8 +31,6 @@ import com.telei.wms.project.api.endpoint.inventory.strategy.AdjustStrategyFacto
 import com.telei.wms.project.api.endpoint.inventory.strategy.IAdjustStrategy;
 import com.telei.wms.project.api.endpoint.wmsIdInstantdirective.WmsIdInstantdirectiveBussiness;
 import com.telei.wms.project.api.utils.DataConvertUtil;
-import lombok.AllArgsConstructor;
-import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -297,6 +294,7 @@ public class InventoryBussiness {
                 inventory.setBizDate(nowWithUTC);//业务日期(与创建时间保持一致)
                 inventory.setIvLocksign(0);//库存锁，可以出货
                 inventory.setIvFreezesign(0);//东解锁，可以操作
+                inventory.setLcType("S");//库位类型,S:样品库位  Z:高架库位
             });
             //3、处理(状态数据变更)
             if (LockMapUtil.confirmLock(lockKey, lockValue)) {
@@ -541,7 +539,7 @@ public class InventoryBussiness {
                     ErrorCode.ADJT_ERROR_4011.throwError(wmsAdjtHeader.getLcCode(), wmsAdjtHeader.getProductId(), adjhType);
                 }
                 /**库存拆分记录*/
-                if (ivSplitsList.isEmpty()) {
+                if (!ivSplitsList.isEmpty()) {
                     int countForSplitAdd = wmsIvSplitService.insertBatch(ivSplitsList);
                     if (countForSplitAdd != ivSplitsList.size()) {
                         ErrorCode.ADJT_ERROR_4012.throwError(wmsAdjtHeader.getLcCode(), wmsAdjtHeader.getProductId(), adjhType);
@@ -555,12 +553,9 @@ public class InventoryBussiness {
                     omsInventoryChangeWriteBack.setList(omsInventoryChangeWriteBackConditions);
                     WmsIdInstantdirective wmsIdInstantdirective = wmsIdInstantdirectiveBussiness.add("PUTON", "", omsInventoryChangeWriteBack);
                     // MQ发送指令
-                    wmsOmsInventoryAddWriteBackProducer.send(wmsIdInstantdirective);
+                    wmsOmsInventoryChangeWriteBackProducer.send(wmsIdInstantdirective);
                 }
             }
-        } catch (Exception e) {
-            log.error(e.getCause().getMessage());
-            ExceptionHelper.rethrowRuntimeException(e);
         } finally {
             LockMapUtil.cancelLock(lockKey, lockValue);
         }
@@ -683,29 +678,26 @@ public class InventoryBussiness {
     }
 
     /**
-     * 调整单类型
+     * 升任务
+     *
+     * @param request
+     * @return
      */
-    private enum AdjustType {
-        INCREASE,
-        LESSS,
-        MOVE;
-
-        public static boolean match(String adjustType) {
-            for (AdjustType value : AdjustType.values()) {
-                if (value.name().equals(adjustType)) {
-                    return true;
-                }
-            }
-            return false;
-        }
+    @Transactional
+    public InventoryLiftUpBussinessResponse liftUpInventory(InventoryLiftUpBussinessRequest request) {
+        adjustInventory(request, "LIFTUP");
+        return new InventoryLiftUpBussinessResponse();
     }
 
-
-    @Data
-    @AllArgsConstructor
-    public static  class Person{
-        private String name;
-        private String type;
-        private Integer age;
+    /**
+     * 降任务
+     *
+     * @param request
+     * @return
+     */
+    @Transactional
+    public InventoryLiftDownBussinessResponse liftDownInventory(InventoryLiftDownBussinessRequest request) {
+        adjustInventory(request, "LIFTDOWN");
+        return new InventoryLiftDownBussinessResponse();
     }
 }

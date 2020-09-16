@@ -1,5 +1,74 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.telei.wms.datasource.wms.repository.WmsRooLineRepository">
+
+    <resultMap id="PageQueryResultMap" extends="BaseResultMap" type="com.telei.wms.datasource.wms.vo.RooLineResponseVo">
+        <result column="product_no" jdbcType="VARCHAR" property="productNo"/>
+        <result column="product_name" jdbcType="VARCHAR" property="productName"/>
+        <result column="brand" jdbcType="VARCHAR" property="brand"/>
+        <result column="image_path" jdbcType="VARCHAR" property="imagePath"/>
+    </resultMap>
+
+    <sql id="Page_Query_Column_List">
+        wrl.rool_id,
+        wrl.roo_id,
+        wrl.ro_id,
+        wrl.rol_id,
+        wrl.rool_status,
+        wrl.product_id,
+        wrl.product_barcode,
+        wrl.product_upc_code,
+        wrl.plan_qty,
+        wrl.rece_qty,
+        wrl.tmp_putaway_qty,
+        wrl.stock_unit,
+        wrl.spec_type,
+        wrl.weight,
+        wrl.product_length,
+        wrl.product_width,
+        wrl.product_height,
+        wrl.vol,
+        wrl.mid_bag_qty,
+        wrl.mid_bag_weight,
+        wrl.mid_bag_length,
+        wrl.mid_bag_width,
+        wrl.mid_bag_height,
+        wrl.mid_bag_vol,
+        wrl.mid_bag_barcode,
+        wrl.big_bag_qty,
+        wrl.big_bag_weight,
+        wrl.big_bag_length,
+        wrl.big_bag_width,
+        wrl.big_bag_height,
+        wrl.big_bag_vol,
+        wrl.big_bag_barcode,
+        wrl.memo,
+        wrl.product_date,
+        wrl.effective_date,
+        wrl.batch_no,
+        wrl.qs_code,
+        wrl.recv_time,
+        wrl.recv_user,
+        wrl.create_user,
+        wrl.create_time,
+        wrl.iab_id,
+        wl.media_id imagePath,
+        wl.product_no,
+        wl.product_name,
+        wl.brand
+    </sql>
+
+    <select id="findAll" resultMap="PageQueryResultMap">
+        SELECT
+        <include refid="Page_Query_Column_List"/>
+        FROM wms_roo_line wrl
+        INNER JOIN wms_ro_line wl ON wl.rol_id = wrl.rol_id
+        <where>
+            <if test="id != null">
+                and wrl.roo_id = #{id}
+            </if>
+        </where>
+    </select>
+
 </mapper>
 

@@ -30,8 +30,8 @@ public class PaoLineAddRequest {
     @ApiModelProperty(value = "单位毛重", example = "1")
     private BigDecimal unitGrossWeight;
     /** 单价 */
-    @ApiModelProperty(value = "单价", example = "1")
-    private BigDecimal unitPrice;
+//    @ApiModelProperty(value = "单价", example = "1")
+//    private BigDecimal unitPrice;
     /** 单位体积(CBM) */
     @ApiModelProperty(value = "单位体积", example = "1")
     private BigDecimal unitVol;

@@ -27,5 +27,5 @@ public class InventoryReduceBussinessRequest {
     /** 调整库位 */
     private String lcCodeAdjt;
     /** 调整数量 */
-    private BigDecimal ivQtyAd;
+    private BigDecimal ivQtyAdjt;
 }

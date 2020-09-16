@@ -24,6 +24,8 @@ public class WmsIvSnapshot implements Entity<Long> {
     private String warehouseCode;
     /** 库位编码 */
     private String lcCode;
+    /** 库位类型，数据字典，S 样品库位、Z 高架库位 等 */
+    private String lcType;
     /** 客户id */
     private Long customerId;
     /** 产品序列码 */

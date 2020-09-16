@@ -87,6 +87,7 @@ public enum ErrorCode {
     ADJT_ERROR_4014,
     ADJT_ERROR_4015,
     ADJT_ERROR_4016,
+    ADJT_ERROR_4017,
 
 
     /**

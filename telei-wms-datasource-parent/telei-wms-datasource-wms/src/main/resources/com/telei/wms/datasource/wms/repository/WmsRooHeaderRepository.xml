@@ -1,5 +1,136 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.telei.wms.datasource.wms.repository.WmsRooHeaderRepository">
+
+    <resultMap id="PageQueryResultMap" extends="BaseResultMap" type="com.telei.wms.datasource.wms.vo.RooHeaderResponseVo">
+        <result column="warehouse_name" jdbcType="VARCHAR" property="warehouseName"/>
+        <result column="customer_name" jdbcType="VARCHAR" property="customerName"/>
+        <result column="supplier_name" jdbcType="VARCHAR" property="supplierName"/>
+    </resultMap>
+
+    <sql id="Page_Query_Column_List">
+        wrh.roo_id,
+        wrh.roo_code,
+        wrh.order_type,
+        wrh.ro_id,
+        wrh.ro_code,
+        wrh.cust_order_no,
+        wrh.company_id,
+        wrh.warehouse_id,
+        wrh.warehouse_code,
+        wrh.supplier_id,
+        wrh.customer_id,
+        wrh.total_qty,
+        wrh.tmp_putaway_qty,
+        wrh.putaway_qty,
+        wrh.ro_status,
+        wrh.memo,
+        wrh.create_user,
+        wrh.create_time,
+        cw.warehouse_name,
+        cc.customer_name
+    </sql>
+
+    <select id="findAll" resultMap="PageQueryResultMap">
+        SELECT
+        <include refid="Page_Query_Column_List"/>
+        FROM wms_roo_header wrh
+        INNER JOIN cdm.cdm_warehouse cw ON cw.warehouse_id = wrh.warehouse_id
+        INNER JOIN cdm.cdm_customer cc ON cc.customer_id = wrh.customer_id
+        <where>
+            <if test="id != null">
+                and wrh.roo_id ${id}
+            </if>
+            <if test="rooCode != null">
+                and wrh.roo_code ${rooCode}
+            </if>
+            <if test="orderType != null">
+                and wrh.order_type ${orderType}
+            </if>
+            <if test="roId != null">
+                and wrh.ro_id ${roId}
+            </if>
+            <if test="roCode != null">
+                and wrh.ro_code ${roCode}
+            </if>
+            <if test="custOrderNo != null">
+                and wrh.cust_order_no ${custOrderNo}
+            </if>
+            <if test="companyId != null">
+                and wrh.company_id ${companyId}
+            </if>
+            <if test="warehouseId != null">
+                and wrh.warehouse_id ${warehouseId}
+            </if>
+            <if test="warehouseCode != null">
+                and wrh.warehouse_code ${warehouseCode}
+            </if>
+            <if test="supplierId != null">
+                and wrh.supplier_id ${supplierId}
+            </if>
+            <if test="customerId != null">
+                and wrh.customer_id ${customerId}
+            </if>
+            <if test="totalQty != null">
+                and wrh.total_qty ${totalQty}
+            </if>
+            <if test="tmpPutawayQty != null">
+                and wrh.tmp_putaway_qty ${tmpPutawayQty}
+            </if>
+            <if test="putawayQty != null">
+                and wrh.putaway_qty ${putawayQty}
+            </if>
+            <if test="roStatus != null">
+                and wrh.ro_status ${roStatus}
+            </if>
+            <if test="memo != null">
+                and wrh.memo ${memo}
+            </if>
+            <if test="createUser != null">
+                and wrh.create_user ${createUser}
+            </if>
+            <if test="createTime != null">
+                and wrh.create_time ${createTime}
+            </if>
+        </where>
+        <if test="orderBy != null">
+            order by ${orderBy}
+        </if>
+    </select>
+
+    <select id="selectRooHeaderDetail" resultMap="PageQueryResultMap">
+        SELECT
+            wrh.roo_id,
+            wrh.roo_code,
+            wrh.order_type,
+            wrh.ro_id,
+            wrh.ro_code,
+            wrh.cust_order_no,
+            wrh.company_id,
+            wrh.warehouse_id,
+            wrh.warehouse_code,
+            wrh.supplier_id,
+            wrh.customer_id,
+            wrh.total_qty,
+            wrh.tmp_putaway_qty,
+            wrh.putaway_qty,
+            wrh.ro_status,
+            wrh.memo,
+            wrh.create_user,
+            wrh.create_time,
+            cw.warehouse_name,
+            cc.customer_name,
+            cs.supplier_name
+        FROM wms_roo_header wrh
+        INNER JOIN cdm.cdm_warehouse cw ON cw.warehouse_id = wrh.warehouse_id
+        INNER JOIN cdm.cdm_customer cc ON cc.customer_id = wrh.customer_id
+        INNER JOIN cdm.cdm_supplier cs ON cs.supplier_id = wrh.supplier_id
+        <where>
+            <if test="id != null">
+                and wrh.roo_id = #{id}
+            </if>
+        </where>
+    </select>
+
 </mapper>
 

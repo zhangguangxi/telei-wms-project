@@ -20,7 +20,6 @@
         wpl.rool_id,
         wpl.product_id,
         wpl.unit_gross_weight,
-        wpl.unit_price,
         wpl.unit_vol,
         wpl.memo,
         wpl.paol_qty,

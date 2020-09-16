@@ -2,292 +2,292 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.telei.wms.datasource.wms.repository.WmsInventoryRepository">
     <resultMap id="BaseResultMap" type="com.telei.wms.datasource.wms.model.WmsInventory">
-        <id column="iv_id" jdbcType="BIGINT" property="ivId"/>
-        <result column="company_id" jdbcType="BIGINT" property="companyId"/>
-        <result column="warehouse_id" jdbcType="BIGINT" property="warehouseId"/>
-        <result column="warehouse_code" jdbcType="VARCHAR" property="warehouseCode"/>
-        <result column="lc_code" jdbcType="VARCHAR" property="lcCode"/>
-        <result column="lc_type" jdbcType="VARCHAR" property="lcType"/>
-        <result column="customer_id" jdbcType="BIGINT" property="customerId"/>
-        <result column="product_id" jdbcType="BIGINT" property="productId"/>
-        <result column="iab_id" jdbcType="BIGINT" property="iabId"/>
-        <result column="qs_code" jdbcType="VARCHAR" property="qsCode"/>
-        <result column="iv_fifo_time" jdbcType="TIMESTAMP" property="ivFifoTime"/>
-        <result column="iv_qty" jdbcType="DECIMAL" property="ivQty"/>
-        <result column="stock_unit" jdbcType="BIGINT" property="stockUnit"/>
-        <result column="mid_bag_qty" jdbcType="DECIMAL" property="midBagQty"/>
-        <result column="mid_bag_rate" jdbcType="INTEGER" property="midBagRate"/>
-        <result column="mid_bag_extra_qty" jdbcType="DECIMAL" property="midBagExtraQty"/>
-        <result column="big_bag_qty" jdbcType="DECIMAL" property="bigBagQty"/>
-        <result column="big_bag_rate" jdbcType="INTEGER" property="bigBagRate"/>
-        <result column="big_bag_extra_qty" jdbcType="DECIMAL" property="bigBagExtraQty"/>
-        <result column="iv_locksign" jdbcType="INTEGER" property="ivLocksign"/>
-        <result column="iv_freezesign" jdbcType="INTEGER" property="ivFreezesign"/>
-        <result column="biz_date" jdbcType="TIMESTAMP" property="bizDate"/>
-        <result column="iv_createtime" jdbcType="TIMESTAMP" property="ivCreatetime"/>
-        <result column="iv_transtime" jdbcType="TIMESTAMP" property="ivTranstime"/>
-        <result column="ap_code_dc" jdbcType="VARCHAR" property="apCodeDc"/>
-        <result column="iv_document_code" jdbcType="VARCHAR" property="ivDocumentCode"/>
-        <result column="iv_document_id" jdbcType="BIGINT" property="ivDocumentId"/>
-        <result column="iv_documentline_id" jdbcType="BIGINT" property="ivDocumentlineId"/>
-        <result column="product_date" jdbcType="TIMESTAMP" property="productDate"/>
-        <result column="iv_effective_date" jdbcType="TIMESTAMP" property="ivEffectiveDate"/>
-        <result column="batch_no" jdbcType="VARCHAR" property="batchNo"/>
-        <result column="iv_id_from" jdbcType="BIGINT" property="ivIdFrom"/>
+        <id column="iv_id" jdbcType="BIGINT" property="id"/>
+            <result column="company_id" jdbcType="BIGINT" property="companyId"/>
+            <result column="warehouse_id" jdbcType="BIGINT" property="warehouseId"/>
+            <result column="warehouse_code" jdbcType="VARCHAR" property="warehouseCode"/>
+            <result column="lc_code" jdbcType="VARCHAR" property="lcCode"/>
+            <result column="lc_type" jdbcType="VARCHAR" property="lcType"/>
+            <result column="customer_id" jdbcType="BIGINT" property="customerId"/>
+            <result column="product_id" jdbcType="BIGINT" property="productId"/>
+            <result column="iab_id" jdbcType="BIGINT" property="iabId"/>
+            <result column="qs_code" jdbcType="VARCHAR" property="qsCode"/>
+            <result column="iv_fifo_time" jdbcType="TIMESTAMP" property="ivFifoTime"/>
+            <result column="iv_qty" jdbcType="DECIMAL" property="ivQty"/>
+            <result column="stock_unit" jdbcType="BIGINT" property="stockUnit"/>
+            <result column="mid_bag_qty" jdbcType="DECIMAL" property="midBagQty"/>
+            <result column="mid_bag_rate" jdbcType="DECIMAL" property="midBagRate"/>
+            <result column="mid_bag_extra_qty" jdbcType="DECIMAL" property="midBagExtraQty"/>
+            <result column="big_bag_qty" jdbcType="DECIMAL" property="bigBagQty"/>
+            <result column="big_bag_rate" jdbcType="DECIMAL" property="bigBagRate"/>
+            <result column="big_bag_extra_qty" jdbcType="DECIMAL" property="bigBagExtraQty"/>
+            <result column="iv_locksign" jdbcType="INTEGER" property="ivLocksign"/>
+            <result column="iv_freezesign" jdbcType="INTEGER" property="ivFreezesign"/>
+            <result column="biz_date" jdbcType="TIMESTAMP" property="bizDate"/>
+            <result column="iv_createtime" jdbcType="TIMESTAMP" property="ivCreatetime"/>
+            <result column="iv_transtime" jdbcType="TIMESTAMP" property="ivTranstime"/>
+            <result column="ap_code_dc" jdbcType="VARCHAR" property="apCodeDc"/>
+            <result column="iv_document_code" jdbcType="VARCHAR" property="ivDocumentCode"/>
+            <result column="iv_document_id" jdbcType="BIGINT" property="ivDocumentId"/>
+            <result column="iv_documentline_id" jdbcType="BIGINT" property="ivDocumentlineId"/>
+            <result column="product_date" jdbcType="TIMESTAMP" property="productDate"/>
+            <result column="iv_effective_date" jdbcType="TIMESTAMP" property="ivEffectiveDate"/>
+            <result column="batch_no" jdbcType="VARCHAR" property="batchNo"/>
+            <result column="iv_id_from" jdbcType="BIGINT" property="ivIdFrom"/>
     </resultMap>
 
     <sql id="Base_Column_List">
         iv_id,company_id,warehouse_id,warehouse_code,lc_code,lc_type,customer_id,product_id,iab_id,qs_code,iv_fifo_time,iv_qty,stock_unit,mid_bag_qty,mid_bag_rate,mid_bag_extra_qty,big_bag_qty,big_bag_rate,big_bag_extra_qty,iv_locksign,iv_freezesign,biz_date,iv_createtime,iv_transtime,ap_code_dc,iv_document_code,iv_document_id,iv_documentline_id,product_date,iv_effective_date,batch_no,iv_id_from
     </sql>
 
-    <insert id="insert">
-        insert into wms_inventory (iv_id,company_id,warehouse_id,warehouse_code,lc_code,lc_type,customer_id,product_id,iab_id,qs_code,iv_fifo_time,iv_qty,stock_unit,mid_bag_qty,mid_bag_rate,mid_bag_extra_qty,big_bag_qty,big_bag_rate,big_bag_extra_qty,iv_locksign,iv_freezesign,biz_date,iv_createtime,iv_transtime,ap_code_dc,iv_document_code,iv_document_id,iv_documentline_id,product_date,iv_effective_date,batch_no,iv_id_from)
-        values (#{ivId,jdbcType=BIGINT},#{companyId,jdbcType=BIGINT},#{warehouseId,jdbcType=BIGINT},#{warehouseCode,jdbcType=VARCHAR},#{lcCode,jdbcType=VARCHAR},#{lcType,jdbcType=VARCHAR},#{customerId,jdbcType=BIGINT},#{productId,jdbcType=BIGINT},#{iabId,jdbcType=BIGINT},#{qsCode,jdbcType=VARCHAR},#{ivFifoTime,jdbcType=TIMESTAMP},#{ivQty,jdbcType=DECIMAL},#{stockUnit,jdbcType=BIGINT},#{midBagQty,jdbcType=DECIMAL},#{midBagRate,jdbcType=INTEGER},#{midBagExtraQty,jdbcType=DECIMAL},#{bigBagQty,jdbcType=DECIMAL},#{bigBagRate,jdbcType=INTEGER},#{bigBagExtraQty,jdbcType=DECIMAL},#{ivLocksign,jdbcType=INTEGER},#{ivFreezesign,jdbcType=INTEGER},#{bizDate,jdbcType=TIMESTAMP},#{ivCreatetime,jdbcType=TIMESTAMP},#{ivTranstime,jdbcType=TIMESTAMP},#{apCodeDc,jdbcType=VARCHAR},#{ivDocumentCode,jdbcType=VARCHAR},#{ivDocumentId,jdbcType=BIGINT},#{ivDocumentlineId,jdbcType=BIGINT},#{productDate,jdbcType=TIMESTAMP},#{ivEffectiveDate,jdbcType=TIMESTAMP},#{batchNo,jdbcType=VARCHAR},#{ivIdFrom,jdbcType=BIGINT})
-    </insert>
+        <insert id="insert">
+            insert into wms_inventory (iv_id,company_id,warehouse_id,warehouse_code,lc_code,lc_type,customer_id,product_id,iab_id,qs_code,iv_fifo_time,iv_qty,stock_unit,mid_bag_qty,mid_bag_rate,mid_bag_extra_qty,big_bag_qty,big_bag_rate,big_bag_extra_qty,iv_locksign,iv_freezesign,biz_date,iv_createtime,iv_transtime,ap_code_dc,iv_document_code,iv_document_id,iv_documentline_id,product_date,iv_effective_date,batch_no,iv_id_from)
+            values (#{id,jdbcType=BIGINT},#{companyId,jdbcType=BIGINT},#{warehouseId,jdbcType=BIGINT},#{warehouseCode,jdbcType=VARCHAR},#{lcCode,jdbcType=VARCHAR},#{lcType,jdbcType=VARCHAR},#{customerId,jdbcType=BIGINT},#{productId,jdbcType=BIGINT},#{iabId,jdbcType=BIGINT},#{qsCode,jdbcType=VARCHAR},#{ivFifoTime,jdbcType=TIMESTAMP},#{ivQty,jdbcType=DECIMAL},#{stockUnit,jdbcType=BIGINT},#{midBagQty,jdbcType=DECIMAL},#{midBagRate,jdbcType=DECIMAL},#{midBagExtraQty,jdbcType=DECIMAL},#{bigBagQty,jdbcType=DECIMAL},#{bigBagRate,jdbcType=DECIMAL},#{bigBagExtraQty,jdbcType=DECIMAL},#{ivLocksign,jdbcType=INTEGER},#{ivFreezesign,jdbcType=INTEGER},#{bizDate,jdbcType=TIMESTAMP},#{ivCreatetime,jdbcType=TIMESTAMP},#{ivTranstime,jdbcType=TIMESTAMP},#{apCodeDc,jdbcType=VARCHAR},#{ivDocumentCode,jdbcType=VARCHAR},#{ivDocumentId,jdbcType=BIGINT},#{ivDocumentlineId,jdbcType=BIGINT},#{productDate,jdbcType=TIMESTAMP},#{ivEffectiveDate,jdbcType=TIMESTAMP},#{batchNo,jdbcType=VARCHAR},#{ivIdFrom,jdbcType=BIGINT})
+        </insert>
 
-    <insert id="insertSelective">
-        insert into wms_inventory
-        <trim prefix="(" suffix=")" suffixOverrides=",">
-            <if test="ivId != null">
-                iv_id,
-            </if>
-            <if test="companyId != null">
-                company_id,
-            </if>
-            <if test="warehouseId != null">
-                warehouse_id,
-            </if>
-            <if test="warehouseCode != null">
-                warehouse_code,
-            </if>
-            <if test="lcCode != null">
-                lc_code,
-            </if>
-            <if test="lcType != null">
-                lc_type,
-            </if>
-            <if test="customerId != null">
-                customer_id,
-            </if>
-            <if test="productId != null">
-                product_id,
-            </if>
-            <if test="iabId != null">
-                iab_id,
-            </if>
-            <if test="qsCode != null">
-                qs_code,
-            </if>
-            <if test="ivFifoTime != null">
-                iv_fifo_time,
-            </if>
-            <if test="ivQty != null">
-                iv_qty,
-            </if>
-            <if test="stockUnit != null">
-                stock_unit,
-            </if>
-            <if test="midBagQty != null">
-                mid_bag_qty,
-            </if>
-            <if test="midBagRate != null">
-                mid_bag_rate,
-            </if>
-            <if test="midBagExtraQty != null">
-                mid_bag_extra_qty,
-            </if>
-            <if test="bigBagQty != null">
-                big_bag_qty,
-            </if>
-            <if test="bigBagRate != null">
-                big_bag_rate,
-            </if>
-            <if test="bigBagExtraQty != null">
-                big_bag_extra_qty,
-            </if>
-            <if test="ivLocksign != null">
-                iv_locksign,
-            </if>
-            <if test="ivFreezesign != null">
-                iv_freezesign,
-            </if>
-            <if test="bizDate != null">
-                biz_date,
-            </if>
-            <if test="ivCreatetime != null">
-                iv_createtime,
-            </if>
-            <if test="ivTranstime != null">
-                iv_transtime,
-            </if>
-            <if test="apCodeDc != null">
-                ap_code_dc,
-            </if>
-            <if test="ivDocumentCode != null">
-                iv_document_code,
-            </if>
-            <if test="ivDocumentId != null">
-                iv_document_id,
-            </if>
-            <if test="ivDocumentlineId != null">
-                iv_documentline_id,
-            </if>
-            <if test="productDate != null">
-                product_date,
-            </if>
-            <if test="ivEffectiveDate != null">
-                iv_effective_date,
-            </if>
-            <if test="batchNo != null">
-                batch_no,
-            </if>
-            <if test="ivIdFrom != null">
-                iv_id_from
-            </if>
-        </trim>
-        <trim prefix="values (" suffix=")" suffixOverrides=",">
-            <if test="ivId != null">
-                #{ivId,jdbcType=BIGINT},
-            </if>
-            <if test="companyId != null">
-                #{companyId,jdbcType=BIGINT},
-            </if>
-            <if test="warehouseId != null">
-                #{warehouseId,jdbcType=BIGINT},
-            </if>
-            <if test="warehouseCode != null">
-                #{warehouseCode,jdbcType=VARCHAR},
-            </if>
-            <if test="lcCode != null">
-                #{lcCode,jdbcType=VARCHAR},
-            </if>
-            <if test="lcType != null">
-                #{lcType,jdbcType=VARCHAR},
-            </if>
-            <if test="customerId != null">
-                #{customerId,jdbcType=BIGINT},
-            </if>
-            <if test="productId != null">
-                #{productId,jdbcType=BIGINT},
-            </if>
-            <if test="iabId != null">
-                #{iabId,jdbcType=BIGINT},
-            </if>
-            <if test="qsCode != null">
-                #{qsCode,jdbcType=VARCHAR},
-            </if>
-            <if test="ivFifoTime != null">
-                #{ivFifoTime,jdbcType=TIMESTAMP},
-            </if>
-            <if test="ivQty != null">
-                #{ivQty,jdbcType=DECIMAL},
-            </if>
-            <if test="stockUnit != null">
-                #{stockUnit,jdbcType=BIGINT},
-            </if>
-            <if test="midBagQty != null">
-                #{midBagQty,jdbcType=DECIMAL},
-            </if>
-            <if test="midBagRate != null">
-                #{midBagRate,jdbcType=INTEGER},
-            </if>
-            <if test="midBagExtraQty != null">
-                #{midBagExtraQty,jdbcType=DECIMAL},
-            </if>
-            <if test="bigBagQty != null">
-                #{bigBagQty,jdbcType=DECIMAL},
-            </if>
-            <if test="bigBagRate != null">
-                #{bigBagRate,jdbcType=INTEGER},
-            </if>
-            <if test="bigBagExtraQty != null">
-                #{bigBagExtraQty,jdbcType=DECIMAL},
-            </if>
-            <if test="ivLocksign != null">
-                #{ivLocksign,jdbcType=INTEGER},
-            </if>
-            <if test="ivFreezesign != null">
-                #{ivFreezesign,jdbcType=INTEGER},
-            </if>
-            <if test="bizDate != null">
-                #{bizDate,jdbcType=TIMESTAMP},
-            </if>
-            <if test="ivCreatetime != null">
-                #{ivCreatetime,jdbcType=TIMESTAMP},
-            </if>
-            <if test="ivTranstime != null">
-                #{ivTranstime,jdbcType=TIMESTAMP},
-            </if>
-            <if test="apCodeDc != null">
-                #{apCodeDc,jdbcType=VARCHAR},
-            </if>
-            <if test="ivDocumentCode != null">
-                #{ivDocumentCode,jdbcType=VARCHAR},
-            </if>
-            <if test="ivDocumentId != null">
-                #{ivDocumentId,jdbcType=BIGINT},
-            </if>
-            <if test="ivDocumentlineId != null">
-                #{ivDocumentlineId,jdbcType=BIGINT},
-            </if>
-            <if test="productDate != null">
-                #{productDate,jdbcType=TIMESTAMP},
-            </if>
-            <if test="ivEffectiveDate != null">
-                #{ivEffectiveDate,jdbcType=TIMESTAMP},
-            </if>
-            <if test="batchNo != null">
-                #{batchNo,jdbcType=VARCHAR},
-            </if>
-            <if test="ivIdFrom != null">
-                #{ivIdFrom,jdbcType=BIGINT}
-            </if>
-        </trim>
-    </insert>
+        <insert id="insertSelective">
+            insert into wms_inventory
+            <trim prefix="(" suffix=")" suffixOverrides=",">
+                    <if test="id != null">
+                        iv_id,
+                    </if>
+                    <if test="companyId != null">
+                        company_id,
+                    </if>
+                    <if test="warehouseId != null">
+                        warehouse_id,
+                    </if>
+                    <if test="warehouseCode != null">
+                        warehouse_code,
+                    </if>
+                    <if test="lcCode != null">
+                        lc_code,
+                    </if>
+                    <if test="lcType != null">
+                        lc_type,
+                    </if>
+                    <if test="customerId != null">
+                        customer_id,
+                    </if>
+                    <if test="productId != null">
+                        product_id,
+                    </if>
+                    <if test="iabId != null">
+                        iab_id,
+                    </if>
+                    <if test="qsCode != null">
+                        qs_code,
+                    </if>
+                    <if test="ivFifoTime != null">
+                        iv_fifo_time,
+                    </if>
+                    <if test="ivQty != null">
+                        iv_qty,
+                    </if>
+                    <if test="stockUnit != null">
+                        stock_unit,
+                    </if>
+                    <if test="midBagQty != null">
+                        mid_bag_qty,
+                    </if>
+                    <if test="midBagRate != null">
+                        mid_bag_rate,
+                    </if>
+                    <if test="midBagExtraQty != null">
+                        mid_bag_extra_qty,
+                    </if>
+                    <if test="bigBagQty != null">
+                        big_bag_qty,
+                    </if>
+                    <if test="bigBagRate != null">
+                        big_bag_rate,
+                    </if>
+                    <if test="bigBagExtraQty != null">
+                        big_bag_extra_qty,
+                    </if>
+                    <if test="ivLocksign != null">
+                        iv_locksign,
+                    </if>
+                    <if test="ivFreezesign != null">
+                        iv_freezesign,
+                    </if>
+                    <if test="bizDate != null">
+                        biz_date,
+                    </if>
+                    <if test="ivCreatetime != null">
+                        iv_createtime,
+                    </if>
+                    <if test="ivTranstime != null">
+                        iv_transtime,
+                    </if>
+                    <if test="apCodeDc != null">
+                        ap_code_dc,
+                    </if>
+                    <if test="ivDocumentCode != null">
+                        iv_document_code,
+                    </if>
+                    <if test="ivDocumentId != null">
+                        iv_document_id,
+                    </if>
+                    <if test="ivDocumentlineId != null">
+                        iv_documentline_id,
+                    </if>
+                    <if test="productDate != null">
+                        product_date,
+                    </if>
+                    <if test="ivEffectiveDate != null">
+                        iv_effective_date,
+                    </if>
+                    <if test="batchNo != null">
+                        batch_no,
+                    </if>
+                    <if test="ivIdFrom != null">
+                        iv_id_from
+                    </if>
+            </trim>
+            <trim prefix="values (" suffix=")" suffixOverrides=",">
+                    <if test="id != null">
+                        #{id,jdbcType=BIGINT},
+                    </if>
+                    <if test="companyId != null">
+                        #{companyId,jdbcType=BIGINT},
+                    </if>
+                    <if test="warehouseId != null">
+                        #{warehouseId,jdbcType=BIGINT},
+                    </if>
+                    <if test="warehouseCode != null">
+                        #{warehouseCode,jdbcType=VARCHAR},
+                    </if>
+                    <if test="lcCode != null">
+                        #{lcCode,jdbcType=VARCHAR},
+                    </if>
+                    <if test="lcType != null">
+                        #{lcType,jdbcType=VARCHAR},
+                    </if>
+                    <if test="customerId != null">
+                        #{customerId,jdbcType=BIGINT},
+                    </if>
+                    <if test="productId != null">
+                        #{productId,jdbcType=BIGINT},
+                    </if>
+                    <if test="iabId != null">
+                        #{iabId,jdbcType=BIGINT},
+                    </if>
+                    <if test="qsCode != null">
+                        #{qsCode,jdbcType=VARCHAR},
+                    </if>
+                    <if test="ivFifoTime != null">
+                        #{ivFifoTime,jdbcType=TIMESTAMP},
+                    </if>
+                    <if test="ivQty != null">
+                        #{ivQty,jdbcType=DECIMAL},
+                    </if>
+                    <if test="stockUnit != null">
+                        #{stockUnit,jdbcType=BIGINT},
+                    </if>
+                    <if test="midBagQty != null">
+                        #{midBagQty,jdbcType=DECIMAL},
+                    </if>
+                    <if test="midBagRate != null">
+                        #{midBagRate,jdbcType=DECIMAL},
+                    </if>
+                    <if test="midBagExtraQty != null">
+                        #{midBagExtraQty,jdbcType=DECIMAL},
+                    </if>
+                    <if test="bigBagQty != null">
+                        #{bigBagQty,jdbcType=DECIMAL},
+                    </if>
+                    <if test="bigBagRate != null">
+                        #{bigBagRate,jdbcType=DECIMAL},
+                    </if>
+                    <if test="bigBagExtraQty != null">
+                        #{bigBagExtraQty,jdbcType=DECIMAL},
+                    </if>
+                    <if test="ivLocksign != null">
+                        #{ivLocksign,jdbcType=INTEGER},
+                    </if>
+                    <if test="ivFreezesign != null">
+                        #{ivFreezesign,jdbcType=INTEGER},
+                    </if>
+                    <if test="bizDate != null">
+                        #{bizDate,jdbcType=TIMESTAMP},
+                    </if>
+                    <if test="ivCreatetime != null">
+                        #{ivCreatetime,jdbcType=TIMESTAMP},
+                    </if>
+                    <if test="ivTranstime != null">
+                        #{ivTranstime,jdbcType=TIMESTAMP},
+                    </if>
+                    <if test="apCodeDc != null">
+                        #{apCodeDc,jdbcType=VARCHAR},
+                    </if>
+                    <if test="ivDocumentCode != null">
+                        #{ivDocumentCode,jdbcType=VARCHAR},
+                    </if>
+                    <if test="ivDocumentId != null">
+                        #{ivDocumentId,jdbcType=BIGINT},
+                    </if>
+                    <if test="ivDocumentlineId != null">
+                        #{ivDocumentlineId,jdbcType=BIGINT},
+                    </if>
+                    <if test="productDate != null">
+                        #{productDate,jdbcType=TIMESTAMP},
+                    </if>
+                    <if test="ivEffectiveDate != null">
+                        #{ivEffectiveDate,jdbcType=TIMESTAMP},
+                    </if>
+                    <if test="batchNo != null">
+                        #{batchNo,jdbcType=VARCHAR},
+                    </if>
+                    <if test="ivIdFrom != null">
+                        #{ivIdFrom,jdbcType=BIGINT}
+                    </if>
+            </trim>
+        </insert>
 
-    <insert id="insertBatch">
-        insert into wms_inventory (iv_id,company_id,warehouse_id,warehouse_code,lc_code,lc_type,customer_id,product_id,iab_id,qs_code,iv_fifo_time,iv_qty,stock_unit,mid_bag_qty,mid_bag_rate,mid_bag_extra_qty,big_bag_qty,big_bag_rate,big_bag_extra_qty,iv_locksign,iv_freezesign,biz_date,iv_createtime,iv_transtime,ap_code_dc,iv_document_code,iv_document_id,iv_documentline_id,product_date,iv_effective_date,batch_no,iv_id_from) values
-        <foreach collection="list" item="item" separator=",">
-            (
-            #{item.ivId,jdbcType=BIGINT},
-            #{item.companyId,jdbcType=BIGINT},
-            #{item.warehouseId,jdbcType=BIGINT},
-            #{item.warehouseCode,jdbcType=VARCHAR},
-            #{item.lcCode,jdbcType=VARCHAR},
-            #{item.lcType,jdbcType=VARCHAR},
-            #{item.customerId,jdbcType=BIGINT},
-            #{item.productId,jdbcType=BIGINT},
-            #{item.iabId,jdbcType=BIGINT},
-            #{item.qsCode,jdbcType=VARCHAR},
-            #{item.ivFifoTime,jdbcType=TIMESTAMP},
-            #{item.ivQty,jdbcType=DECIMAL},
-            #{item.stockUnit,jdbcType=BIGINT},
-            #{item.midBagQty,jdbcType=DECIMAL},
-            #{item.midBagRate,jdbcType=INTEGER},
-            #{item.midBagExtraQty,jdbcType=DECIMAL},
-            #{item.bigBagQty,jdbcType=DECIMAL},
-            #{item.bigBagRate,jdbcType=INTEGER},
-            #{item.bigBagExtraQty,jdbcType=DECIMAL},
-            #{item.ivLocksign,jdbcType=INTEGER},
-            #{item.ivFreezesign,jdbcType=INTEGER},
-            #{item.bizDate,jdbcType=TIMESTAMP},
-            #{item.ivCreatetime,jdbcType=TIMESTAMP},
-            #{item.ivTranstime,jdbcType=TIMESTAMP},
-            #{item.apCodeDc,jdbcType=VARCHAR},
-            #{item.ivDocumentCode,jdbcType=VARCHAR},
-            #{item.ivDocumentId,jdbcType=BIGINT},
-            #{item.ivDocumentlineId,jdbcType=BIGINT},
-            #{item.productDate,jdbcType=TIMESTAMP},
-            #{item.ivEffectiveDate,jdbcType=TIMESTAMP},
-            #{item.batchNo,jdbcType=VARCHAR},
-            #{item.ivIdFrom,jdbcType=BIGINT}
-            )
-        </foreach>
-    </insert>
+        <insert id="insertBatch">
+            insert into wms_inventory (iv_id,company_id,warehouse_id,warehouse_code,lc_code,lc_type,customer_id,product_id,iab_id,qs_code,iv_fifo_time,iv_qty,stock_unit,mid_bag_qty,mid_bag_rate,mid_bag_extra_qty,big_bag_qty,big_bag_rate,big_bag_extra_qty,iv_locksign,iv_freezesign,biz_date,iv_createtime,iv_transtime,ap_code_dc,iv_document_code,iv_document_id,iv_documentline_id,product_date,iv_effective_date,batch_no,iv_id_from) values
+            <foreach collection="list" item="item" separator=",">
+                (
+                    #{item.id,jdbcType=BIGINT},
+                    #{item.companyId,jdbcType=BIGINT},
+                    #{item.warehouseId,jdbcType=BIGINT},
+                    #{item.warehouseCode,jdbcType=VARCHAR},
+                    #{item.lcCode,jdbcType=VARCHAR},
+                    #{item.lcType,jdbcType=VARCHAR},
+                    #{item.customerId,jdbcType=BIGINT},
+                    #{item.productId,jdbcType=BIGINT},
+                    #{item.iabId,jdbcType=BIGINT},
+                    #{item.qsCode,jdbcType=VARCHAR},
+                    #{item.ivFifoTime,jdbcType=TIMESTAMP},
+                    #{item.ivQty,jdbcType=DECIMAL},
+                    #{item.stockUnit,jdbcType=BIGINT},
+                    #{item.midBagQty,jdbcType=DECIMAL},
+                    #{item.midBagRate,jdbcType=DECIMAL},
+                    #{item.midBagExtraQty,jdbcType=DECIMAL},
+                    #{item.bigBagQty,jdbcType=DECIMAL},
+                    #{item.bigBagRate,jdbcType=DECIMAL},
+                    #{item.bigBagExtraQty,jdbcType=DECIMAL},
+                    #{item.ivLocksign,jdbcType=INTEGER},
+                    #{item.ivFreezesign,jdbcType=INTEGER},
+                    #{item.bizDate,jdbcType=TIMESTAMP},
+                    #{item.ivCreatetime,jdbcType=TIMESTAMP},
+                    #{item.ivTranstime,jdbcType=TIMESTAMP},
+                    #{item.apCodeDc,jdbcType=VARCHAR},
+                    #{item.ivDocumentCode,jdbcType=VARCHAR},
+                    #{item.ivDocumentId,jdbcType=BIGINT},
+                    #{item.ivDocumentlineId,jdbcType=BIGINT},
+                    #{item.productDate,jdbcType=TIMESTAMP},
+                    #{item.ivEffectiveDate,jdbcType=TIMESTAMP},
+                    #{item.batchNo,jdbcType=VARCHAR},
+                    #{item.ivIdFrom,jdbcType=BIGINT}
+                )
+            </foreach>
+        </insert>
 
     <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
         delete from wms_inventory
-        where iv_id = #{ivId,jdbcType=BIGINT}
+        where iv_id = #{id,jdbcType=BIGINT}
     </delete>
 
     <delete id="deleteByPrimaryKeys">
@@ -300,240 +300,240 @@
     <update id="updateByPrimaryKey">
         update wms_inventory
         <set>
-            company_id = #{companyId,jdbcType=BIGINT},
-            warehouse_id = #{warehouseId,jdbcType=BIGINT},
-            warehouse_code = #{warehouseCode,jdbcType=VARCHAR},
-            lc_code = #{lcCode,jdbcType=VARCHAR},
-            lc_type = #{lcType,jdbcType=VARCHAR},
-            customer_id = #{customerId,jdbcType=BIGINT},
-            product_id = #{productId,jdbcType=BIGINT},
-            iab_id = #{iabId,jdbcType=BIGINT},
-            qs_code = #{qsCode,jdbcType=VARCHAR},
-            iv_fifo_time = #{ivFifoTime,jdbcType=TIMESTAMP},
-            iv_qty = #{ivQty,jdbcType=DECIMAL},
-            stock_unit = #{stockUnit,jdbcType=BIGINT},
-            mid_bag_qty = #{midBagQty,jdbcType=DECIMAL},
-            mid_bag_rate = #{midBagRate,jdbcType=INTEGER},
-            mid_bag_extra_qty = #{midBagExtraQty,jdbcType=DECIMAL},
-            big_bag_qty = #{bigBagQty,jdbcType=DECIMAL},
-            big_bag_rate = #{bigBagRate,jdbcType=INTEGER},
-            big_bag_extra_qty = #{bigBagExtraQty,jdbcType=DECIMAL},
-            iv_locksign = #{ivLocksign,jdbcType=INTEGER},
-            iv_freezesign = #{ivFreezesign,jdbcType=INTEGER},
-            biz_date = #{bizDate,jdbcType=TIMESTAMP},
-            iv_createtime = #{ivCreatetime,jdbcType=TIMESTAMP},
-            iv_transtime = #{ivTranstime,jdbcType=TIMESTAMP},
-            ap_code_dc = #{apCodeDc,jdbcType=VARCHAR},
-            iv_document_code = #{ivDocumentCode,jdbcType=VARCHAR},
-            iv_document_id = #{ivDocumentId,jdbcType=BIGINT},
-            iv_documentline_id = #{ivDocumentlineId,jdbcType=BIGINT},
-            product_date = #{productDate,jdbcType=TIMESTAMP},
-            iv_effective_date = #{ivEffectiveDate,jdbcType=TIMESTAMP},
-            batch_no = #{batchNo,jdbcType=VARCHAR},
-            iv_id_from = #{ivIdFrom,jdbcType=BIGINT}
+                company_id = #{companyId,jdbcType=BIGINT},
+                warehouse_id = #{warehouseId,jdbcType=BIGINT},
+                warehouse_code = #{warehouseCode,jdbcType=VARCHAR},
+                lc_code = #{lcCode,jdbcType=VARCHAR},
+                lc_type = #{lcType,jdbcType=VARCHAR},
+                customer_id = #{customerId,jdbcType=BIGINT},
+                product_id = #{productId,jdbcType=BIGINT},
+                iab_id = #{iabId,jdbcType=BIGINT},
+                qs_code = #{qsCode,jdbcType=VARCHAR},
+                iv_fifo_time = #{ivFifoTime,jdbcType=TIMESTAMP},
+                iv_qty = #{ivQty,jdbcType=DECIMAL},
+                stock_unit = #{stockUnit,jdbcType=BIGINT},
+                mid_bag_qty = #{midBagQty,jdbcType=DECIMAL},
+                mid_bag_rate = #{midBagRate,jdbcType=DECIMAL},
+                mid_bag_extra_qty = #{midBagExtraQty,jdbcType=DECIMAL},
+                big_bag_qty = #{bigBagQty,jdbcType=DECIMAL},
+                big_bag_rate = #{bigBagRate,jdbcType=DECIMAL},
+                big_bag_extra_qty = #{bigBagExtraQty,jdbcType=DECIMAL},
+                iv_locksign = #{ivLocksign,jdbcType=INTEGER},
+                iv_freezesign = #{ivFreezesign,jdbcType=INTEGER},
+                biz_date = #{bizDate,jdbcType=TIMESTAMP},
+                iv_createtime = #{ivCreatetime,jdbcType=TIMESTAMP},
+                iv_transtime = #{ivTranstime,jdbcType=TIMESTAMP},
+                ap_code_dc = #{apCodeDc,jdbcType=VARCHAR},
+                iv_document_code = #{ivDocumentCode,jdbcType=VARCHAR},
+                iv_document_id = #{ivDocumentId,jdbcType=BIGINT},
+                iv_documentline_id = #{ivDocumentlineId,jdbcType=BIGINT},
+                product_date = #{productDate,jdbcType=TIMESTAMP},
+                iv_effective_date = #{ivEffectiveDate,jdbcType=TIMESTAMP},
+                batch_no = #{batchNo,jdbcType=VARCHAR},
+                iv_id_from = #{ivIdFrom,jdbcType=BIGINT}
         </set>
-        where iv_id = #{ivId,jdbcType=BIGINT}
+        where iv_id = #{id,jdbcType=BIGINT}
     </update>
 
     <update id="updateByPrimaryKeySelective">
         update wms_inventory
         <set>
-            <if test="companyId != null">
-                company_id = #{companyId,jdbcType=BIGINT},
-            </if>
-            <if test="warehouseId != null">
-                warehouse_id = #{warehouseId,jdbcType=BIGINT},
-            </if>
-            <if test="warehouseCode != null">
-                warehouse_code = #{warehouseCode,jdbcType=VARCHAR},
-            </if>
-            <if test="lcCode != null">
-                lc_code = #{lcCode,jdbcType=VARCHAR},
-            </if>
-            <if test="lcType != null">
-                lc_type = #{lcType,jdbcType=VARCHAR},
-            </if>
-            <if test="customerId != null">
-                customer_id = #{customerId,jdbcType=BIGINT},
-            </if>
-            <if test="productId != null">
-                product_id = #{productId,jdbcType=BIGINT},
-            </if>
-            <if test="iabId != null">
-                iab_id = #{iabId,jdbcType=BIGINT},
-            </if>
-            <if test="qsCode != null">
-                qs_code = #{qsCode,jdbcType=VARCHAR},
-            </if>
-            <if test="ivFifoTime != null">
-                iv_fifo_time = #{ivFifoTime,jdbcType=TIMESTAMP},
-            </if>
-            <if test="ivQty != null">
-                iv_qty = #{ivQty,jdbcType=DECIMAL},
-            </if>
-            <if test="stockUnit != null">
-                stock_unit = #{stockUnit,jdbcType=BIGINT},
-            </if>
-            <if test="midBagQty != null">
-                mid_bag_qty = #{midBagQty,jdbcType=DECIMAL},
-            </if>
-            <if test="midBagRate != null">
-                mid_bag_rate = #{midBagRate,jdbcType=INTEGER},
-            </if>
-            <if test="midBagExtraQty != null">
-                mid_bag_extra_qty = #{midBagExtraQty,jdbcType=DECIMAL},
-            </if>
-            <if test="bigBagQty != null">
-                big_bag_qty = #{bigBagQty,jdbcType=DECIMAL},
-            </if>
-            <if test="bigBagRate != null">
-                big_bag_rate = #{bigBagRate,jdbcType=INTEGER},
-            </if>
-            <if test="bigBagExtraQty != null">
-                big_bag_extra_qty = #{bigBagExtraQty,jdbcType=DECIMAL},
-            </if>
-            <if test="ivLocksign != null">
-                iv_locksign = #{ivLocksign,jdbcType=INTEGER},
-            </if>
-            <if test="ivFreezesign != null">
-                iv_freezesign = #{ivFreezesign,jdbcType=INTEGER},
-            </if>
-            <if test="bizDate != null">
-                biz_date = #{bizDate,jdbcType=TIMESTAMP},
-            </if>
-            <if test="ivCreatetime != null">
-                iv_createtime = #{ivCreatetime,jdbcType=TIMESTAMP},
-            </if>
-            <if test="ivTranstime != null">
-                iv_transtime = #{ivTranstime,jdbcType=TIMESTAMP},
-            </if>
-            <if test="apCodeDc != null">
-                ap_code_dc = #{apCodeDc,jdbcType=VARCHAR},
-            </if>
-            <if test="ivDocumentCode != null">
-                iv_document_code = #{ivDocumentCode,jdbcType=VARCHAR},
-            </if>
-            <if test="ivDocumentId != null">
-                iv_document_id = #{ivDocumentId,jdbcType=BIGINT},
-            </if>
-            <if test="ivDocumentlineId != null">
-                iv_documentline_id = #{ivDocumentlineId,jdbcType=BIGINT},
-            </if>
-            <if test="productDate != null">
-                product_date = #{productDate,jdbcType=TIMESTAMP},
-            </if>
-            <if test="ivEffectiveDate != null">
-                iv_effective_date = #{ivEffectiveDate,jdbcType=TIMESTAMP},
-            </if>
-            <if test="batchNo != null">
-                batch_no = #{batchNo,jdbcType=VARCHAR},
-            </if>
-            <if test="ivIdFrom != null">
-                iv_id_from = #{ivIdFrom,jdbcType=BIGINT}
-            </if>
+                <if test="companyId != null">
+                    company_id = #{companyId,jdbcType=BIGINT},
+                </if>
+                <if test="warehouseId != null">
+                    warehouse_id = #{warehouseId,jdbcType=BIGINT},
+                </if>
+                <if test="warehouseCode != null">
+                    warehouse_code = #{warehouseCode,jdbcType=VARCHAR},
+                </if>
+                <if test="lcCode != null">
+                    lc_code = #{lcCode,jdbcType=VARCHAR},
+                </if>
+                <if test="lcType != null">
+                    lc_type = #{lcType,jdbcType=VARCHAR},
+                </if>
+                <if test="customerId != null">
+                    customer_id = #{customerId,jdbcType=BIGINT},
+                </if>
+                <if test="productId != null">
+                    product_id = #{productId,jdbcType=BIGINT},
+                </if>
+                <if test="iabId != null">
+                    iab_id = #{iabId,jdbcType=BIGINT},
+                </if>
+                <if test="qsCode != null">
+                    qs_code = #{qsCode,jdbcType=VARCHAR},
+                </if>
+                <if test="ivFifoTime != null">
+                    iv_fifo_time = #{ivFifoTime,jdbcType=TIMESTAMP},
+                </if>
+                <if test="ivQty != null">
+                    iv_qty = #{ivQty,jdbcType=DECIMAL},
+                </if>
+                <if test="stockUnit != null">
+                    stock_unit = #{stockUnit,jdbcType=BIGINT},
+                </if>
+                <if test="midBagQty != null">
+                    mid_bag_qty = #{midBagQty,jdbcType=DECIMAL},
+                </if>
+                <if test="midBagRate != null">
+                    mid_bag_rate = #{midBagRate,jdbcType=DECIMAL},
+                </if>
+                <if test="midBagExtraQty != null">
+                    mid_bag_extra_qty = #{midBagExtraQty,jdbcType=DECIMAL},
+                </if>
+                <if test="bigBagQty != null">
+                    big_bag_qty = #{bigBagQty,jdbcType=DECIMAL},
+                </if>
+                <if test="bigBagRate != null">
+                    big_bag_rate = #{bigBagRate,jdbcType=DECIMAL},
+                </if>
+                <if test="bigBagExtraQty != null">
+                    big_bag_extra_qty = #{bigBagExtraQty,jdbcType=DECIMAL},
+                </if>
+                <if test="ivLocksign != null">
+                    iv_locksign = #{ivLocksign,jdbcType=INTEGER},
+                </if>
+                <if test="ivFreezesign != null">
+                    iv_freezesign = #{ivFreezesign,jdbcType=INTEGER},
+                </if>
+                <if test="bizDate != null">
+                    biz_date = #{bizDate,jdbcType=TIMESTAMP},
+                </if>
+                <if test="ivCreatetime != null">
+                    iv_createtime = #{ivCreatetime,jdbcType=TIMESTAMP},
+                </if>
+                <if test="ivTranstime != null">
+                    iv_transtime = #{ivTranstime,jdbcType=TIMESTAMP},
+                </if>
+                <if test="apCodeDc != null">
+                    ap_code_dc = #{apCodeDc,jdbcType=VARCHAR},
+                </if>
+                <if test="ivDocumentCode != null">
+                    iv_document_code = #{ivDocumentCode,jdbcType=VARCHAR},
+                </if>
+                <if test="ivDocumentId != null">
+                    iv_document_id = #{ivDocumentId,jdbcType=BIGINT},
+                </if>
+                <if test="ivDocumentlineId != null">
+                    iv_documentline_id = #{ivDocumentlineId,jdbcType=BIGINT},
+                </if>
+                <if test="productDate != null">
+                    product_date = #{productDate,jdbcType=TIMESTAMP},
+                </if>
+                <if test="ivEffectiveDate != null">
+                    iv_effective_date = #{ivEffectiveDate,jdbcType=TIMESTAMP},
+                </if>
+                <if test="batchNo != null">
+                    batch_no = #{batchNo,jdbcType=VARCHAR},
+                </if>
+                <if test="ivIdFrom != null">
+                    iv_id_from = #{ivIdFrom,jdbcType=BIGINT}
+                </if>
         </set>
-        where iv_id = #{ivId,jdbcType=BIGINT}
+        where iv_id = #{id,jdbcType=BIGINT}
     </update>
 
     <update id="updateBatch">
         <foreach close="" collection="list" item="item" open="" separator=";">
             update wms_inventory
             <set>
-                <if test="item.companyId != null">
-                    company_id = #{item.companyId,jdbcType=BIGINT},
-                </if>
-                <if test="item.warehouseId != null">
-                    warehouse_id = #{item.warehouseId,jdbcType=BIGINT},
-                </if>
-                <if test="item.warehouseCode != null">
-                    warehouse_code = #{item.warehouseCode,jdbcType=VARCHAR},
-                </if>
-                <if test="item.lcCode != null">
-                    lc_code = #{item.lcCode,jdbcType=VARCHAR},
-                </if>
-                <if test="item.lcType != null">
-                    lc_type = #{item.lcType,jdbcType=VARCHAR},
-                </if>
-                <if test="item.customerId != null">
-                    customer_id = #{item.customerId,jdbcType=BIGINT},
-                </if>
-                <if test="item.productId != null">
-                    product_id = #{item.productId,jdbcType=BIGINT},
-                </if>
-                <if test="item.iabId != null">
-                    iab_id = #{item.iabId,jdbcType=BIGINT},
-                </if>
-                <if test="item.qsCode != null">
-                    qs_code = #{item.qsCode,jdbcType=VARCHAR},
-                </if>
-                <if test="item.ivFifoTime != null">
-                    iv_fifo_time = #{item.ivFifoTime,jdbcType=TIMESTAMP},
-                </if>
-                <if test="item.ivQty != null">
-                    iv_qty = #{item.ivQty,jdbcType=DECIMAL},
-                </if>
-                <if test="item.stockUnit != null">
-                    stock_unit = #{item.stockUnit,jdbcType=BIGINT},
-                </if>
-                <if test="item.midBagQty != null">
-                    mid_bag_qty = #{item.midBagQty,jdbcType=DECIMAL},
-                </if>
-                <if test="item.midBagRate != null">
-                    mid_bag_rate = #{item.midBagRate,jdbcType=INTEGER},
-                </if>
-                <if test="item.midBagExtraQty != null">
-                    mid_bag_extra_qty = #{item.midBagExtraQty,jdbcType=DECIMAL},
-                </if>
-                <if test="item.bigBagQty != null">
-                    big_bag_qty = #{item.bigBagQty,jdbcType=DECIMAL},
-                </if>
-                <if test="item.bigBagRate != null">
-                    big_bag_rate = #{item.bigBagRate,jdbcType=INTEGER},
-                </if>
-                <if test="item.bigBagExtraQty != null">
-                    big_bag_extra_qty = #{item.bigBagExtraQty,jdbcType=DECIMAL},
-                </if>
-                <if test="item.ivLocksign != null">
-                    iv_locksign = #{item.ivLocksign,jdbcType=INTEGER},
-                </if>
-                <if test="item.ivFreezesign != null">
-                    iv_freezesign = #{item.ivFreezesign,jdbcType=INTEGER},
-                </if>
-                <if test="item.bizDate != null">
-                    biz_date = #{item.bizDate,jdbcType=TIMESTAMP},
-                </if>
-                <if test="item.ivCreatetime != null">
-                    iv_createtime = #{item.ivCreatetime,jdbcType=TIMESTAMP},
-                </if>
-                <if test="item.ivTranstime != null">
-                    iv_transtime = #{item.ivTranstime,jdbcType=TIMESTAMP},
-                </if>
-                <if test="item.apCodeDc != null">
-                    ap_code_dc = #{item.apCodeDc,jdbcType=VARCHAR},
-                </if>
-                <if test="item.ivDocumentCode != null">
-                    iv_document_code = #{item.ivDocumentCode,jdbcType=VARCHAR},
-                </if>
-                <if test="item.ivDocumentId != null">
-                    iv_document_id = #{item.ivDocumentId,jdbcType=BIGINT},
-                </if>
-                <if test="item.ivDocumentlineId != null">
-                    iv_documentline_id = #{item.ivDocumentlineId,jdbcType=BIGINT},
-                </if>
-                <if test="item.productDate != null">
-                    product_date = #{item.productDate,jdbcType=TIMESTAMP},
-                </if>
-                <if test="item.ivEffectiveDate != null">
-                    iv_effective_date = #{item.ivEffectiveDate,jdbcType=TIMESTAMP},
-                </if>
-                <if test="item.batchNo != null">
-                    batch_no = #{item.batchNo,jdbcType=VARCHAR},
-                </if>
-                <if test="item.ivIdFrom != null">
-                    iv_id_from = #{item.ivIdFrom,jdbcType=BIGINT}
-                </if>
+                    <if test="item.companyId != null">
+                        company_id = #{item.companyId,jdbcType=BIGINT},
+                    </if>
+                    <if test="item.warehouseId != null">
+                        warehouse_id = #{item.warehouseId,jdbcType=BIGINT},
+                    </if>
+                    <if test="item.warehouseCode != null">
+                        warehouse_code = #{item.warehouseCode,jdbcType=VARCHAR},
+                    </if>
+                    <if test="item.lcCode != null">
+                        lc_code = #{item.lcCode,jdbcType=VARCHAR},
+                    </if>
+                    <if test="item.lcType != null">
+                        lc_type = #{item.lcType,jdbcType=VARCHAR},
+                    </if>
+                    <if test="item.customerId != null">
+                        customer_id = #{item.customerId,jdbcType=BIGINT},
+                    </if>
+                    <if test="item.productId != null">
+                        product_id = #{item.productId,jdbcType=BIGINT},
+                    </if>
+                    <if test="item.iabId != null">
+                        iab_id = #{item.iabId,jdbcType=BIGINT},
+                    </if>
+                    <if test="item.qsCode != null">
+                        qs_code = #{item.qsCode,jdbcType=VARCHAR},
+                    </if>
+                    <if test="item.ivFifoTime != null">
+                        iv_fifo_time = #{item.ivFifoTime,jdbcType=TIMESTAMP},
+                    </if>
+                    <if test="item.ivQty != null">
+                        iv_qty = #{item.ivQty,jdbcType=DECIMAL},
+                    </if>
+                    <if test="item.stockUnit != null">
+                        stock_unit = #{item.stockUnit,jdbcType=BIGINT},
+                    </if>
+                    <if test="item.midBagQty != null">
+                        mid_bag_qty = #{item.midBagQty,jdbcType=DECIMAL},
+                    </if>
+                    <if test="item.midBagRate != null">
+                        mid_bag_rate = #{item.midBagRate,jdbcType=DECIMAL},
+                    </if>
+                    <if test="item.midBagExtraQty != null">
+                        mid_bag_extra_qty = #{item.midBagExtraQty,jdbcType=DECIMAL},
+                    </if>
+                    <if test="item.bigBagQty != null">
+                        big_bag_qty = #{item.bigBagQty,jdbcType=DECIMAL},
+                    </if>
+                    <if test="item.bigBagRate != null">
+                        big_bag_rate = #{item.bigBagRate,jdbcType=DECIMAL},
+                    </if>
+                    <if test="item.bigBagExtraQty != null">
+                        big_bag_extra_qty = #{item.bigBagExtraQty,jdbcType=DECIMAL},
+                    </if>
+                    <if test="item.ivLocksign != null">
+                        iv_locksign = #{item.ivLocksign,jdbcType=INTEGER},
+                    </if>
+                    <if test="item.ivFreezesign != null">
+                        iv_freezesign = #{item.ivFreezesign,jdbcType=INTEGER},
+                    </if>
+                    <if test="item.bizDate != null">
+                        biz_date = #{item.bizDate,jdbcType=TIMESTAMP},
+                    </if>
+                    <if test="item.ivCreatetime != null">
+                        iv_createtime = #{item.ivCreatetime,jdbcType=TIMESTAMP},
+                    </if>
+                    <if test="item.ivTranstime != null">
+                        iv_transtime = #{item.ivTranstime,jdbcType=TIMESTAMP},
+                    </if>
+                    <if test="item.apCodeDc != null">
+                        ap_code_dc = #{item.apCodeDc,jdbcType=VARCHAR},
+                    </if>
+                    <if test="item.ivDocumentCode != null">
+                        iv_document_code = #{item.ivDocumentCode,jdbcType=VARCHAR},
+                    </if>
+                    <if test="item.ivDocumentId != null">
+                        iv_document_id = #{item.ivDocumentId,jdbcType=BIGINT},
+                    </if>
+                    <if test="item.ivDocumentlineId != null">
+                        iv_documentline_id = #{item.ivDocumentlineId,jdbcType=BIGINT},
+                    </if>
+                    <if test="item.productDate != null">
+                        product_date = #{item.productDate,jdbcType=TIMESTAMP},
+                    </if>
+                    <if test="item.ivEffectiveDate != null">
+                        iv_effective_date = #{item.ivEffectiveDate,jdbcType=TIMESTAMP},
+                    </if>
+                    <if test="item.batchNo != null">
+                        batch_no = #{item.batchNo,jdbcType=VARCHAR},
+                    </if>
+                    <if test="item.ivIdFrom != null">
+                        iv_id_from = #{item.ivIdFrom,jdbcType=BIGINT}
+                    </if>
             </set>
-            where iv_id = #{item.ivId,jdbcType=BIGINT}
+            where iv_id = #{item.id,jdbcType=BIGINT}
         </foreach>
     </update>
 
@@ -541,14 +541,14 @@
         select
         <include refid="Base_Column_List" />
         from wms_inventory
-        where iv_id = #{ivId,jdbcType=BIGINT}
+        where iv_id = #{id,jdbcType=BIGINT}
     </select>
 
     <select id="selectByPrimaryKeyWithLock" resultMap="BaseResultMap">
         select
         <include refid="Base_Column_List" />
         from wms_inventory
-        where iv_id = #{ivId,jdbcType=BIGINT} for update
+        where iv_id = #{id,jdbcType=BIGINT} for update
     </select>
 
     <select id="selectByPrimaryKeys" resultMap="BaseResultMap">
@@ -565,102 +565,102 @@
         <include refid="Base_Column_List"/>
         from wms_inventory
         <where>
-            <if test="ivId != null">
-                and iv_id=#{ivId,jdbcType=BIGINT}
-            </if>
-            <if test="companyId != null">
-                and company_id=#{companyId,jdbcType=BIGINT}
-            </if>
-            <if test="warehouseId != null">
-                and warehouse_id=#{warehouseId,jdbcType=BIGINT}
-            </if>
-            <if test="warehouseCode != null">
-                and warehouse_code=#{warehouseCode,jdbcType=VARCHAR}
-            </if>
-            <if test="lcCode != null">
-                and lc_code=#{lcCode,jdbcType=VARCHAR}
-            </if>
-            <if test="lcType != null">
-                and lc_type=#{lcType,jdbcType=VARCHAR}
-            </if>
-            <if test="customerId != null">
-                and customer_id=#{customerId,jdbcType=BIGINT}
-            </if>
-            <if test="productId != null">
-                and product_id=#{productId,jdbcType=BIGINT}
-            </if>
-            <if test="iabId != null">
-                and iab_id=#{iabId,jdbcType=BIGINT}
-            </if>
-            <if test="qsCode != null">
-                and qs_code=#{qsCode,jdbcType=VARCHAR}
-            </if>
-            <if test="ivFifoTime != null">
-                and iv_fifo_time=#{ivFifoTime,jdbcType=TIMESTAMP}
-            </if>
-            <if test="ivQty != null">
-                and iv_qty=#{ivQty,jdbcType=DECIMAL}
-            </if>
-            <if test="stockUnit != null">
-                and stock_unit=#{stockUnit,jdbcType=BIGINT}
-            </if>
-            <if test="midBagQty != null">
-                and mid_bag_qty=#{midBagQty,jdbcType=DECIMAL}
-            </if>
-            <if test="midBagRate != null">
-                and mid_bag_rate=#{midBagRate,jdbcType=INTEGER}
-            </if>
-            <if test="midBagExtraQty != null">
-                and mid_bag_extra_qty=#{midBagExtraQty,jdbcType=DECIMAL}
-            </if>
-            <if test="bigBagQty != null">
-                and big_bag_qty=#{bigBagQty,jdbcType=DECIMAL}
-            </if>
-            <if test="bigBagRate != null">
-                and big_bag_rate=#{bigBagRate,jdbcType=INTEGER}
-            </if>
-            <if test="bigBagExtraQty != null">
-                and big_bag_extra_qty=#{bigBagExtraQty,jdbcType=DECIMAL}
-            </if>
-            <if test="ivLocksign != null">
-                and iv_locksign=#{ivLocksign,jdbcType=INTEGER}
-            </if>
-            <if test="ivFreezesign != null">
-                and iv_freezesign=#{ivFreezesign,jdbcType=INTEGER}
-            </if>
-            <if test="bizDate != null">
-                and biz_date=#{bizDate,jdbcType=TIMESTAMP}
-            </if>
-            <if test="ivCreatetime != null">
-                and iv_createtime=#{ivCreatetime,jdbcType=TIMESTAMP}
-            </if>
-            <if test="ivTranstime != null">
-                and iv_transtime=#{ivTranstime,jdbcType=TIMESTAMP}
-            </if>
-            <if test="apCodeDc != null">
-                and ap_code_dc=#{apCodeDc,jdbcType=VARCHAR}
-            </if>
-            <if test="ivDocumentCode != null">
-                and iv_document_code=#{ivDocumentCode,jdbcType=VARCHAR}
-            </if>
-            <if test="ivDocumentId != null">
-                and iv_document_id=#{ivDocumentId,jdbcType=BIGINT}
-            </if>
-            <if test="ivDocumentlineId != null">
-                and iv_documentline_id=#{ivDocumentlineId,jdbcType=BIGINT}
-            </if>
-            <if test="productDate != null">
-                and product_date=#{productDate,jdbcType=TIMESTAMP}
-            </if>
-            <if test="ivEffectiveDate != null">
-                and iv_effective_date=#{ivEffectiveDate,jdbcType=TIMESTAMP}
-            </if>
-            <if test="batchNo != null">
-                and batch_no=#{batchNo,jdbcType=VARCHAR}
-            </if>
-            <if test="ivIdFrom != null">
-                and iv_id_from=#{ivIdFrom,jdbcType=BIGINT}
-            </if>
+                <if test="id != null">
+                    and iv_id=#{id,jdbcType=BIGINT}
+                </if>
+                <if test="companyId != null">
+                    and company_id=#{companyId,jdbcType=BIGINT}
+                </if>
+                <if test="warehouseId != null">
+                    and warehouse_id=#{warehouseId,jdbcType=BIGINT}
+                </if>
+                <if test="warehouseCode != null">
+                    and warehouse_code=#{warehouseCode,jdbcType=VARCHAR}
+                </if>
+                <if test="lcCode != null">
+                    and lc_code=#{lcCode,jdbcType=VARCHAR}
+                </if>
+                <if test="lcType != null">
+                    and lc_type=#{lcType,jdbcType=VARCHAR}
+                </if>
+                <if test="customerId != null">
+                    and customer_id=#{customerId,jdbcType=BIGINT}
+                </if>
+                <if test="productId != null">
+                    and product_id=#{productId,jdbcType=BIGINT}
+                </if>
+                <if test="iabId != null">
+                    and iab_id=#{iabId,jdbcType=BIGINT}
+                </if>
+                <if test="qsCode != null">
+                    and qs_code=#{qsCode,jdbcType=VARCHAR}
+                </if>
+                <if test="ivFifoTime != null">
+                    and iv_fifo_time=#{ivFifoTime,jdbcType=TIMESTAMP}
+                </if>
+                <if test="ivQty != null">
+                    and iv_qty=#{ivQty,jdbcType=DECIMAL}
+                </if>
+                <if test="stockUnit != null">
+                    and stock_unit=#{stockUnit,jdbcType=BIGINT}
+                </if>
+                <if test="midBagQty != null">
+                    and mid_bag_qty=#{midBagQty,jdbcType=DECIMAL}
+                </if>
+                <if test="midBagRate != null">
+                    and mid_bag_rate=#{midBagRate,jdbcType=DECIMAL}
+                </if>
+                <if test="midBagExtraQty != null">
+                    and mid_bag_extra_qty=#{midBagExtraQty,jdbcType=DECIMAL}
+                </if>
+                <if test="bigBagQty != null">
+                    and big_bag_qty=#{bigBagQty,jdbcType=DECIMAL}
+                </if>
+                <if test="bigBagRate != null">
+                    and big_bag_rate=#{bigBagRate,jdbcType=DECIMAL}
+                </if>
+                <if test="bigBagExtraQty != null">
+                    and big_bag_extra_qty=#{bigBagExtraQty,jdbcType=DECIMAL}
+                </if>
+                <if test="ivLocksign != null">
+                    and iv_locksign=#{ivLocksign,jdbcType=INTEGER}
+                </if>
+                <if test="ivFreezesign != null">
+                    and iv_freezesign=#{ivFreezesign,jdbcType=INTEGER}
+                </if>
+                <if test="bizDate != null">
+                    and biz_date=#{bizDate,jdbcType=TIMESTAMP}
+                </if>
+                <if test="ivCreatetime != null">
+                    and iv_createtime=#{ivCreatetime,jdbcType=TIMESTAMP}
+                </if>
+                <if test="ivTranstime != null">
+                    and iv_transtime=#{ivTranstime,jdbcType=TIMESTAMP}
+                </if>
+                <if test="apCodeDc != null">
+                    and ap_code_dc=#{apCodeDc,jdbcType=VARCHAR}
+                </if>
+                <if test="ivDocumentCode != null">
+                    and iv_document_code=#{ivDocumentCode,jdbcType=VARCHAR}
+                </if>
+                <if test="ivDocumentId != null">
+                    and iv_document_id=#{ivDocumentId,jdbcType=BIGINT}
+                </if>
+                <if test="ivDocumentlineId != null">
+                    and iv_documentline_id=#{ivDocumentlineId,jdbcType=BIGINT}
+                </if>
+                <if test="productDate != null">
+                    and product_date=#{productDate,jdbcType=TIMESTAMP}
+                </if>
+                <if test="ivEffectiveDate != null">
+                    and iv_effective_date=#{ivEffectiveDate,jdbcType=TIMESTAMP}
+                </if>
+                <if test="batchNo != null">
+                    and batch_no=#{batchNo,jdbcType=VARCHAR}
+                </if>
+                <if test="ivIdFrom != null">
+                    and iv_id_from=#{ivIdFrom,jdbcType=BIGINT}
+                </if>
         </where>
     </select>
 
@@ -669,102 +669,102 @@
         <include refid="Base_Column_List"/>
         from wms_inventory
         <where>
-            <if test="ivId != null">
-                and iv_id ${ivId}
-            </if>
-            <if test="companyId != null">
-                and company_id ${companyId}
-            </if>
-            <if test="warehouseId != null">
-                and warehouse_id ${warehouseId}
-            </if>
-            <if test="warehouseCode != null">
-                and warehouse_code ${warehouseCode}
-            </if>
-            <if test="lcCode != null">
-                and lc_code ${lcCode}
-            </if>
-            <if test="lcType != null">
-                and lc_type ${lcType}
-            </if>
-            <if test="customerId != null">
-                and customer_id ${customerId}
-            </if>
-            <if test="productId != null">
-                and product_id ${productId}
-            </if>
-            <if test="iabId != null">
-                and iab_id ${iabId}
-            </if>
-            <if test="qsCode != null">
-                and qs_code ${qsCode}
-            </if>
-            <if test="ivFifoTime != null">
-                and iv_fifo_time ${ivFifoTime}
-            </if>
-            <if test="ivQty != null">
-                and iv_qty ${ivQty}
-            </if>
-            <if test="stockUnit != null">
-                and stock_unit ${stockUnit}
-            </if>
-            <if test="midBagQty != null">
-                and mid_bag_qty ${midBagQty}
-            </if>
-            <if test="midBagRate != null">
-                and mid_bag_rate ${midBagRate}
-            </if>
-            <if test="midBagExtraQty != null">
-                and mid_bag_extra_qty ${midBagExtraQty}
-            </if>
-            <if test="bigBagQty != null">
-                and big_bag_qty ${bigBagQty}
-            </if>
-            <if test="bigBagRate != null">
-                and big_bag_rate ${bigBagRate}
-            </if>
-            <if test="bigBagExtraQty != null">
-                and big_bag_extra_qty ${bigBagExtraQty}
-            </if>
-            <if test="ivLocksign != null">
-                and iv_locksign ${ivLocksign}
-            </if>
-            <if test="ivFreezesign != null">
-                and iv_freezesign ${ivFreezesign}
-            </if>
-            <if test="bizDate != null">
-                and biz_date ${bizDate}
-            </if>
-            <if test="ivCreatetime != null">
-                and iv_createtime ${ivCreatetime}
-            </if>
-            <if test="ivTranstime != null">
-                and iv_transtime ${ivTranstime}
-            </if>
-            <if test="apCodeDc != null">
-                and ap_code_dc ${apCodeDc}
-            </if>
-            <if test="ivDocumentCode != null">
-                and iv_document_code ${ivDocumentCode}
-            </if>
-            <if test="ivDocumentId != null">
-                and iv_document_id ${ivDocumentId}
-            </if>
-            <if test="ivDocumentlineId != null">
-                and iv_documentline_id ${ivDocumentlineId}
-            </if>
-            <if test="productDate != null">
-                and product_date ${productDate}
-            </if>
-            <if test="ivEffectiveDate != null">
-                and iv_effective_date ${ivEffectiveDate}
-            </if>
-            <if test="batchNo != null">
-                and batch_no ${batchNo}
-            </if>
-            <if test="ivIdFrom != null">
-                and iv_id_from ${ivIdFrom}
-            </if>
+                <if test="id != null">
+                    and iv_id ${id}
+                </if>
+                <if test="companyId != null">
+                    and company_id ${companyId}
+                </if>
+                <if test="warehouseId != null">
+                    and warehouse_id ${warehouseId}
+                </if>
+                <if test="warehouseCode != null">
+                    and warehouse_code ${warehouseCode}
+                </if>
+                <if test="lcCode != null">
+                    and lc_code ${lcCode}
+                </if>
+                <if test="lcType != null">
+                    and lc_type ${lcType}
+                </if>
+                <if test="customerId != null">
+                    and customer_id ${customerId}
+                </if>
+                <if test="productId != null">
+                    and product_id ${productId}
+                </if>
+                <if test="iabId != null">
+                    and iab_id ${iabId}
+                </if>
+                <if test="qsCode != null">
+                    and qs_code ${qsCode}
+                </if>
+                <if test="ivFifoTime != null">
+                    and iv_fifo_time ${ivFifoTime}
+                </if>
+                <if test="ivQty != null">
+                    and iv_qty ${ivQty}
+                </if>
+                <if test="stockUnit != null">
+                    and stock_unit ${stockUnit}
+                </if>
+                <if test="midBagQty != null">
+                    and mid_bag_qty ${midBagQty}
+                </if>
+                <if test="midBagRate != null">
+                    and mid_bag_rate ${midBagRate}
+                </if>
+                <if test="midBagExtraQty != null">
+                    and mid_bag_extra_qty ${midBagExtraQty}
+                </if>
+                <if test="bigBagQty != null">
+                    and big_bag_qty ${bigBagQty}
+                </if>
+                <if test="bigBagRate != null">
+                    and big_bag_rate ${bigBagRate}
+                </if>
+                <if test="bigBagExtraQty != null">
+                    and big_bag_extra_qty ${bigBagExtraQty}
+                </if>
+                <if test="ivLocksign != null">
+                    and iv_locksign ${ivLocksign}
+                </if>
+                <if test="ivFreezesign != null">
+                    and iv_freezesign ${ivFreezesign}
+                </if>
+                <if test="bizDate != null">
+                    and biz_date ${bizDate}
+                </if>
+                <if test="ivCreatetime != null">
+                    and iv_createtime ${ivCreatetime}
+                </if>
+                <if test="ivTranstime != null">
+                    and iv_transtime ${ivTranstime}
+                </if>
+                <if test="apCodeDc != null">
+                    and ap_code_dc ${apCodeDc}
+                </if>
+                <if test="ivDocumentCode != null">
+                    and iv_document_code ${ivDocumentCode}
+                </if>
+                <if test="ivDocumentId != null">
+                    and iv_document_id ${ivDocumentId}
+                </if>
+                <if test="ivDocumentlineId != null">
+                    and iv_documentline_id ${ivDocumentlineId}
+                </if>
+                <if test="productDate != null">
+                    and product_date ${productDate}
+                </if>
+                <if test="ivEffectiveDate != null">
+                    and iv_effective_date ${ivEffectiveDate}
+                </if>
+                <if test="batchNo != null">
+                    and batch_no ${batchNo}
+                </if>
+                <if test="ivIdFrom != null">
+                    and iv_id_from ${ivIdFrom}
+                </if>
         </where>
         <if test="orderBy != null">
             order by ${orderBy}

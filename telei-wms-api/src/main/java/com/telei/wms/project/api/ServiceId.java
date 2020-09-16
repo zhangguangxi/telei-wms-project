@@ -90,6 +90,10 @@ public class ServiceId {
     public static final String WMS_INVENTORY_DETAIL = "1030506";
     @RightResource(rightSystem = "wms", rightItem = "库存管理", rightFunction = "库存调整分页")
     public static final String WMS_INVENTORY_ADJUST_PAGE_QUERY = "1030507";
+    @RightResource(rightSystem = "wms", rightItem = "升任务", rightFunction = "库存调整分页")
+    public static final String WMS_INVENTORY_ADJUST_LIFT_UP = "1030508";
+    @RightResource(rightSystem = "wms", rightItem = "降任务", rightFunction = "库存调整分页")
+    public static final String WMS_INVENTORY_ADJUST_LIFT_DOWN = "1030509";
 
 
 

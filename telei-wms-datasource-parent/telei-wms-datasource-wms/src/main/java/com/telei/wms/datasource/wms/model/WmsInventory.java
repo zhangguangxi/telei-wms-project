@@ -7,8 +7,8 @@ import java.math.BigDecimal;
 import java.util.Date;
 
 /**
-* wms_inventory 库存表
-*/
+ * wms_inventory 库存表
+ */
 @Data
 public class WmsInventory implements Entity<Long> {
     /** id */

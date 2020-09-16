@@ -46,7 +46,7 @@ public class PaoLineDetailResponse {
     /** 创建时间 */
     private Date createTime;
     /** 库存批次id */
-    private Integer iabId;
+    private Long iabId;
     /** 推荐库位 */
     private String prepLcCode;
     /** 上架库位 */

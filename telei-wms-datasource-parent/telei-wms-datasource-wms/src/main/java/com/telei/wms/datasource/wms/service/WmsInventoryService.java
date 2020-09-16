@@ -24,7 +24,7 @@ public class WmsInventoryService extends BaseService<WmsInventoryRepository,WmsI
     }
 
     public Pageable selectCustomPage(Pagination page, Map<String, Object> paramMap) {
-        PageInfo<WmsInventoryPageQueryResponseVo>  pageInfo = PageHelper.offsetPage(page.getOffset(), page.getPageSize()).doSelectPageInfo(() -> wmsInventoryRepository.selectCustomPage(paramMap));
+        PageInfo<WmsInventoryPageQueryResponseVo> pageInfo = PageHelper.offsetPage(page.getOffset(), page.getPageSize()).doSelectPageInfo(() -> wmsInventoryRepository.selectCustomPage(paramMap));
         page.setTotalRecords(pageInfo.getTotal());
         page.setContent(pageInfo.getList());
         return page;

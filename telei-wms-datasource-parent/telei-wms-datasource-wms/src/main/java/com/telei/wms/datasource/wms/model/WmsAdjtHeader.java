@@ -15,7 +15,7 @@ public class WmsAdjtHeader implements Entity<Long> {
     private Long adjhId;
     /** 业务单据编号-按单据编码规则生成 */
     private String adjhCode;
-    /** 公司id */
+    /** 公司编码 */
     private Long companyId;
     /** 仓库id */
     private Long warehouseId;

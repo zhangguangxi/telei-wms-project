@@ -1,8 +1,6 @@
 package com.telei.wms.project.api.endpoint.roo.dto;
 
 
-import com.fasterxml.jackson.annotation.JsonFormat;
-import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 
 /**
@@ -41,6 +39,9 @@ public class RooHeaderBusinessPageQueryRequest {
      * 所属人
      */
     private String ownerUser;
+
+    /** 公司id */
+    private Long companyId;
 
     /**
      * 当前页

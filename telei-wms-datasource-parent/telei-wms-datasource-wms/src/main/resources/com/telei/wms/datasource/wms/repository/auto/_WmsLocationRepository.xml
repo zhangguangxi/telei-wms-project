@@ -1,0 +1,452 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.telei.wms.datasource.wms.repository.WmsLocationRepository">
+    <resultMap id="BaseResultMap" type="com.telei.wms.datasource.wms.model.WmsLocation">
+        <id column="location_id" jdbcType="BIGINT" property="locationId"/>
+        <result column="lc_code" jdbcType="VARCHAR" property="lcCode"/>
+        <result column="warehouse_id" jdbcType="BIGINT" property="warehouseId"/>
+        <result column="warehouse_code" jdbcType="VARCHAR" property="warehouseCode"/>
+        <result column="lc_aisle" jdbcType="VARCHAR" property="lcAisle"/>
+        <result column="lc_x" jdbcType="VARCHAR" property="lcX"/>
+        <result column="lc_y" jdbcType="VARCHAR" property="lcY"/>
+        <result column="lc_z" jdbcType="VARCHAR" property="lcZ"/>
+        <result column="lc_type" jdbcType="VARCHAR" property="lcType"/>
+        <result column="lc_length" jdbcType="DECIMAL" property="lcLength"/>
+        <result column="lc_width" jdbcType="DECIMAL" property="lcWidth"/>
+        <result column="lc_height" jdbcType="DECIMAL" property="lcHeight"/>
+        <result column="lc_sustainweight" jdbcType="INTEGER" property="lcSustainweight"/>
+        <result column="lc_putawaylock" jdbcType="VARCHAR" property="lcPutawaylock"/>
+        <result column="lc_pickinglock" jdbcType="VARCHAR" property="lcPickinglock"/>
+        <result column="memo" jdbcType="VARCHAR" property="memo"/>
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        location_id,lc_code,warehouse_id,warehouse_code,lc_aisle,lc_x,lc_y,lc_z,lc_type,lc_length,lc_width,lc_height,lc_sustainweight,lc_putawaylock,lc_pickinglock,memo
+    </sql>
+
+    <insert id="insert">
+        insert into wms_location (location_id,lc_code,warehouse_id,warehouse_code,lc_aisle,lc_x,lc_y,lc_z,lc_type,lc_length,lc_width,lc_height,lc_sustainweight,lc_putawaylock,lc_pickinglock,memo)
+        values (#{locationId,jdbcType=BIGINT},#{lcCode,jdbcType=VARCHAR},#{warehouseId,jdbcType=BIGINT},#{warehouseCode,jdbcType=VARCHAR},#{lcAisle,jdbcType=VARCHAR},#{lcX,jdbcType=VARCHAR},#{lcY,jdbcType=VARCHAR},#{lcZ,jdbcType=VARCHAR},#{lcType,jdbcType=VARCHAR},#{lcLength,jdbcType=DECIMAL},#{lcWidth,jdbcType=DECIMAL},#{lcHeight,jdbcType=DECIMAL},#{lcSustainweight,jdbcType=INTEGER},#{lcPutawaylock,jdbcType=VARCHAR},#{lcPickinglock,jdbcType=VARCHAR},#{memo,jdbcType=VARCHAR})
+    </insert>
+
+    <insert id="insertSelective">
+        insert into wms_location
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="locationId != null">
+                location_id,
+            </if>
+            <if test="lcCode != null">
+                lc_code,
+            </if>
+            <if test="warehouseId != null">
+                warehouse_id,
+            </if>
+            <if test="warehouseCode != null">
+                warehouse_code,
+            </if>
+            <if test="lcAisle != null">
+                lc_aisle,
+            </if>
+            <if test="lcX != null">
+                lc_x,
+            </if>
+            <if test="lcY != null">
+                lc_y,
+            </if>
+            <if test="lcZ != null">
+                lc_z,
+            </if>
+            <if test="lcType != null">
+                lc_type,
+            </if>
+            <if test="lcLength != null">
+                lc_length,
+            </if>
+            <if test="lcWidth != null">
+                lc_width,
+            </if>
+            <if test="lcHeight != null">
+                lc_height,
+            </if>
+            <if test="lcSustainweight != null">
+                lc_sustainweight,
+            </if>
+            <if test="lcPutawaylock != null">
+                lc_putawaylock,
+            </if>
+            <if test="lcPickinglock != null">
+                lc_pickinglock,
+            </if>
+            <if test="memo != null">
+                memo
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="locationId != null">
+                #{locationId,jdbcType=BIGINT},
+            </if>
+            <if test="lcCode != null">
+                #{lcCode,jdbcType=VARCHAR},
+            </if>
+            <if test="warehouseId != null">
+                #{warehouseId,jdbcType=BIGINT},
+            </if>
+            <if test="warehouseCode != null">
+                #{warehouseCode,jdbcType=VARCHAR},
+            </if>
+            <if test="lcAisle != null">
+                #{lcAisle,jdbcType=VARCHAR},
+            </if>
+            <if test="lcX != null">
+                #{lcX,jdbcType=VARCHAR},
+            </if>
+            <if test="lcY != null">
+                #{lcY,jdbcType=VARCHAR},
+            </if>
+            <if test="lcZ != null">
+                #{lcZ,jdbcType=VARCHAR},
+            </if>
+            <if test="lcType != null">
+                #{lcType,jdbcType=VARCHAR},
+            </if>
+            <if test="lcLength != null">
+                #{lcLength,jdbcType=DECIMAL},
+            </if>
+            <if test="lcWidth != null">
+                #{lcWidth,jdbcType=DECIMAL},
+            </if>
+            <if test="lcHeight != null">
+                #{lcHeight,jdbcType=DECIMAL},
+            </if>
+            <if test="lcSustainweight != null">
+                #{lcSustainweight,jdbcType=INTEGER},
+            </if>
+            <if test="lcPutawaylock != null">
+                #{lcPutawaylock,jdbcType=VARCHAR},
+            </if>
+            <if test="lcPickinglock != null">
+                #{lcPickinglock,jdbcType=VARCHAR},
+            </if>
+            <if test="memo != null">
+                #{memo,jdbcType=VARCHAR}
+            </if>
+        </trim>
+    </insert>
+
+    <insert id="insertBatch">
+        insert into wms_location (location_id,lc_code,warehouse_id,warehouse_code,lc_aisle,lc_x,lc_y,lc_z,lc_type,lc_length,lc_width,lc_height,lc_sustainweight,lc_putawaylock,lc_pickinglock,memo) values
+        <foreach collection="list" item="item" separator=",">
+            (
+            #{item.locationId,jdbcType=BIGINT},
+            #{item.lcCode,jdbcType=VARCHAR},
+            #{item.warehouseId,jdbcType=BIGINT},
+            #{item.warehouseCode,jdbcType=VARCHAR},
+            #{item.lcAisle,jdbcType=VARCHAR},
+            #{item.lcX,jdbcType=VARCHAR},
+            #{item.lcY,jdbcType=VARCHAR},
+            #{item.lcZ,jdbcType=VARCHAR},
+            #{item.lcType,jdbcType=VARCHAR},
+            #{item.lcLength,jdbcType=DECIMAL},
+            #{item.lcWidth,jdbcType=DECIMAL},
+            #{item.lcHeight,jdbcType=DECIMAL},
+            #{item.lcSustainweight,jdbcType=INTEGER},
+            #{item.lcPutawaylock,jdbcType=VARCHAR},
+            #{item.lcPickinglock,jdbcType=VARCHAR},
+            #{item.memo,jdbcType=VARCHAR}
+            )
+        </foreach>
+    </insert>
+
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+        delete from wms_location
+        where location_id = #{locationId,jdbcType=BIGINT}
+    </delete>
+
+    <delete id="deleteByPrimaryKeys">
+        delete from wms_location where location_id in
+        <foreach close=")" collection="list" item="item" open="(" separator=",">
+            #{item}
+        </foreach>
+    </delete>
+
+    <update id="updateByPrimaryKey">
+        update wms_location
+        <set>
+            lc_code = #{lcCode,jdbcType=VARCHAR},
+            warehouse_id = #{warehouseId,jdbcType=BIGINT},
+            warehouse_code = #{warehouseCode,jdbcType=VARCHAR},
+            lc_aisle = #{lcAisle,jdbcType=VARCHAR},
+            lc_x = #{lcX,jdbcType=VARCHAR},
+            lc_y = #{lcY,jdbcType=VARCHAR},
+            lc_z = #{lcZ,jdbcType=VARCHAR},
+            lc_type = #{lcType,jdbcType=VARCHAR},
+            lc_length = #{lcLength,jdbcType=DECIMAL},
+            lc_width = #{lcWidth,jdbcType=DECIMAL},
+            lc_height = #{lcHeight,jdbcType=DECIMAL},
+            lc_sustainweight = #{lcSustainweight,jdbcType=INTEGER},
+            lc_putawaylock = #{lcPutawaylock,jdbcType=VARCHAR},
+            lc_pickinglock = #{lcPickinglock,jdbcType=VARCHAR},
+            memo = #{memo,jdbcType=VARCHAR}
+        </set>
+        where location_id = #{locationId,jdbcType=BIGINT}
+    </update>
+
+    <update id="updateByPrimaryKeySelective">
+        update wms_location
+        <set>
+            <if test="lcCode != null">
+                lc_code = #{lcCode,jdbcType=VARCHAR},
+            </if>
+            <if test="warehouseId != null">
+                warehouse_id = #{warehouseId,jdbcType=BIGINT},
+            </if>
+            <if test="warehouseCode != null">
+                warehouse_code = #{warehouseCode,jdbcType=VARCHAR},
+            </if>
+            <if test="lcAisle != null">
+                lc_aisle = #{lcAisle,jdbcType=VARCHAR},
+            </if>
+            <if test="lcX != null">
+                lc_x = #{lcX,jdbcType=VARCHAR},
+            </if>
+            <if test="lcY != null">
+                lc_y = #{lcY,jdbcType=VARCHAR},
+            </if>
+            <if test="lcZ != null">
+                lc_z = #{lcZ,jdbcType=VARCHAR},
+            </if>
+            <if test="lcType != null">
+                lc_type = #{lcType,jdbcType=VARCHAR},
+            </if>
+            <if test="lcLength != null">
+                lc_length = #{lcLength,jdbcType=DECIMAL},
+            </if>
+            <if test="lcWidth != null">
+                lc_width = #{lcWidth,jdbcType=DECIMAL},
+            </if>
+            <if test="lcHeight != null">
+                lc_height = #{lcHeight,jdbcType=DECIMAL},
+            </if>
+            <if test="lcSustainweight != null">
+                lc_sustainweight = #{lcSustainweight,jdbcType=INTEGER},
+            </if>
+            <if test="lcPutawaylock != null">
+                lc_putawaylock = #{lcPutawaylock,jdbcType=VARCHAR},
+            </if>
+            <if test="lcPickinglock != null">
+                lc_pickinglock = #{lcPickinglock,jdbcType=VARCHAR},
+            </if>
+            <if test="memo != null">
+                memo = #{memo,jdbcType=VARCHAR}
+            </if>
+        </set>
+        where location_id = #{locationId,jdbcType=BIGINT}
+    </update>
+
+    <update id="updateBatch">
+        <foreach close="" collection="list" item="item" open="" separator=";">
+            update wms_location
+            <set>
+                <if test="item.lcCode != null">
+                    lc_code = #{item.lcCode,jdbcType=VARCHAR},
+                </if>
+                <if test="item.warehouseId != null">
+                    warehouse_id = #{item.warehouseId,jdbcType=BIGINT},
+                </if>
+                <if test="item.warehouseCode != null">
+                    warehouse_code = #{item.warehouseCode,jdbcType=VARCHAR},
+                </if>
+                <if test="item.lcAisle != null">
+                    lc_aisle = #{item.lcAisle,jdbcType=VARCHAR},
+                </if>
+                <if test="item.lcX != null">
+                    lc_x = #{item.lcX,jdbcType=VARCHAR},
+                </if>
+                <if test="item.lcY != null">
+                    lc_y = #{item.lcY,jdbcType=VARCHAR},
+                </if>
+                <if test="item.lcZ != null">
+                    lc_z = #{item.lcZ,jdbcType=VARCHAR},
+                </if>
+                <if test="item.lcType != null">
+                    lc_type = #{item.lcType,jdbcType=VARCHAR},
+                </if>
+                <if test="item.lcLength != null">
+                    lc_length = #{item.lcLength,jdbcType=DECIMAL},
+                </if>
+                <if test="item.lcWidth != null">
+                    lc_width = #{item.lcWidth,jdbcType=DECIMAL},
+                </if>
+                <if test="item.lcHeight != null">
+                    lc_height = #{item.lcHeight,jdbcType=DECIMAL},
+                </if>
+                <if test="item.lcSustainweight != null">
+                    lc_sustainweight = #{item.lcSustainweight,jdbcType=INTEGER},
+                </if>
+                <if test="item.lcPutawaylock != null">
+                    lc_putawaylock = #{item.lcPutawaylock,jdbcType=VARCHAR},
+                </if>
+                <if test="item.lcPickinglock != null">
+                    lc_pickinglock = #{item.lcPickinglock,jdbcType=VARCHAR},
+                </if>
+                <if test="item.memo != null">
+                    memo = #{item.memo,jdbcType=VARCHAR}
+                </if>
+            </set>
+            where location_id = #{item.locationId,jdbcType=BIGINT}
+        </foreach>
+    </update>
+
+    <select id="selectByPrimaryKey" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List" />
+        from wms_location
+        where location_id = #{locationId,jdbcType=BIGINT}
+    </select>
+
+    <select id="selectByPrimaryKeyWithLock" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List" />
+        from wms_location
+        where location_id = #{locationId,jdbcType=BIGINT} for update
+    </select>
+
+    <select id="selectByPrimaryKeys" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List" />
+        from wms_location where location_id in
+        <foreach close=")" collection="list" item="item" open="(" separator=",">
+            #{item}
+        </foreach>
+    </select>
+
+    <select id="selectByEntity" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from wms_location
+        <where>
+            <if test="locationId != null">
+                and location_id=#{locationId,jdbcType=BIGINT}
+            </if>
+            <if test="lcCode != null">
+                and lc_code=#{lcCode,jdbcType=VARCHAR}
+            </if>
+            <if test="warehouseId != null">
+                and warehouse_id=#{warehouseId,jdbcType=BIGINT}
+            </if>
+            <if test="warehouseCode != null">
+                and warehouse_code=#{warehouseCode,jdbcType=VARCHAR}
+            </if>
+            <if test="lcAisle != null">
+                and lc_aisle=#{lcAisle,jdbcType=VARCHAR}
+            </if>
+            <if test="lcX != null">
+                and lc_x=#{lcX,jdbcType=VARCHAR}
+            </if>
+            <if test="lcY != null">
+                and lc_y=#{lcY,jdbcType=VARCHAR}
+            </if>
+            <if test="lcZ != null">
+                and lc_z=#{lcZ,jdbcType=VARCHAR}
+            </if>
+            <if test="lcType != null">
+                and lc_type=#{lcType,jdbcType=VARCHAR}
+            </if>
+            <if test="lcLength != null">
+                and lc_length=#{lcLength,jdbcType=DECIMAL}
+            </if>
+            <if test="lcWidth != null">
+                and lc_width=#{lcWidth,jdbcType=DECIMAL}
+            </if>
+            <if test="lcHeight != null">
+                and lc_height=#{lcHeight,jdbcType=DECIMAL}
+            </if>
+            <if test="lcSustainweight != null">
+                and lc_sustainweight=#{lcSustainweight,jdbcType=INTEGER}
+            </if>
+            <if test="lcPutawaylock != null">
+                and lc_putawaylock=#{lcPutawaylock,jdbcType=VARCHAR}
+            </if>
+            <if test="lcPickinglock != null">
+                and lc_pickinglock=#{lcPickinglock,jdbcType=VARCHAR}
+            </if>
+            <if test="memo != null">
+                and memo=#{memo,jdbcType=VARCHAR}
+            </if>
+        </where>
+    </select>
+
+    <select id="selectByConditions" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from wms_location
+        <where>
+            <if test="locationId != null">
+                and location_id ${locationId}
+            </if>
+            <if test="lcCode != null">
+                and lc_code ${lcCode}
+            </if>
+            <if test="warehouseId != null">
+                and warehouse_id ${warehouseId}
+            </if>
+            <if test="warehouseCode != null">
+                and warehouse_code ${warehouseCode}
+            </if>
+            <if test="lcAisle != null">
+                and lc_aisle ${lcAisle}
+            </if>
+            <if test="lcX != null">
+                and lc_x ${lcX}
+            </if>
+            <if test="lcY != null">
+                and lc_y ${lcY}
+            </if>
+            <if test="lcZ != null">
+                and lc_z ${lcZ}
+            </if>
+            <if test="lcType != null">
+                and lc_type ${lcType}
+            </if>
+            <if test="lcLength != null">
+                and lc_length ${lcLength}
+            </if>
+            <if test="lcWidth != null">
+                and lc_width ${lcWidth}
+            </if>
+            <if test="lcHeight != null">
+                and lc_height ${lcHeight}
+            </if>
+            <if test="lcSustainweight != null">
+                and lc_sustainweight ${lcSustainweight}
+            </if>
+            <if test="lcPutawaylock != null">
+                and lc_putawaylock ${lcPutawaylock}
+            </if>
+            <if test="lcPickinglock != null">
+                and lc_pickinglock ${lcPickinglock}
+            </if>
+            <if test="memo != null">
+                and memo ${memo}
+            </if>
+        </where>
+        <if test="orderBy != null">
+            order by ${orderBy}
+        </if>
+    </select>
+
+    <select id="selectAll" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from wms_location
+    </select>
+
+    <select id="count" resultType="java.lang.Long">
+        select count(*) from wms_location
+    </select>
+
+    <select id="selectByFunction">
+        select ${function}(${column}) from wms_location
+    </select>
+
+</mapper>

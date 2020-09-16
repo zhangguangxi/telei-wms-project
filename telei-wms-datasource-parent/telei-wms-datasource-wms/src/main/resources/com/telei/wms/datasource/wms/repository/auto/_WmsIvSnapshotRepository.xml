@@ -9,6 +9,7 @@
             <result column="warehouse_id" jdbcType="BIGINT" property="warehouseId"/>
             <result column="warehouse_code" jdbcType="VARCHAR" property="warehouseCode"/>
             <result column="lc_code" jdbcType="VARCHAR" property="lcCode"/>
+            <result column="lc_type" jdbcType="VARCHAR" property="lcType"/>
             <result column="customer_id" jdbcType="BIGINT" property="customerId"/>
             <result column="product_id" jdbcType="BIGINT" property="productId"/>
             <result column="iab_id" jdbcType="BIGINT" property="iabId"/>
@@ -38,12 +39,12 @@
     </resultMap>
 
     <sql id="Base_Column_List">
-        ivs_id,ivst_id,iv_id,company_id,warehouse_id,warehouse_code,lc_code,customer_id,product_id,iab_id,qs_code,iv_fifo_time,iv_qty,stock_unit,mid_bag_qty,mid_bag_rate,mid_bag_extra_qty,big_bag_qty,big_bag_rate,big_bag_extra_qty,iv_locksign,iv_freezesign,biz_date,iv_createtime,iv_transtime,ap_code_dc,iv_document_code,iv_document_id,iv_documentline_id,product_date,iv_effective_date,batch_no,iv_id_from
+        ivs_id,ivst_id,iv_id,company_id,warehouse_id,warehouse_code,lc_code,lc_type,customer_id,product_id,iab_id,qs_code,iv_fifo_time,iv_qty,stock_unit,mid_bag_qty,mid_bag_rate,mid_bag_extra_qty,big_bag_qty,big_bag_rate,big_bag_extra_qty,iv_locksign,iv_freezesign,biz_date,iv_createtime,iv_transtime,ap_code_dc,iv_document_code,iv_document_id,iv_documentline_id,product_date,iv_effective_date,batch_no,iv_id_from
     </sql>
 
         <insert id="insert">
-            insert into wms_iv_snapshot (ivs_id,ivst_id,iv_id,company_id,warehouse_id,warehouse_code,lc_code,customer_id,product_id,iab_id,qs_code,iv_fifo_time,iv_qty,stock_unit,mid_bag_qty,mid_bag_rate,mid_bag_extra_qty,big_bag_qty,big_bag_rate,big_bag_extra_qty,iv_locksign,iv_freezesign,biz_date,iv_createtime,iv_transtime,ap_code_dc,iv_document_code,iv_document_id,iv_documentline_id,product_date,iv_effective_date,batch_no,iv_id_from)
-            values (#{id,jdbcType=BIGINT},#{ivstId,jdbcType=BIGINT},#{ivId,jdbcType=BIGINT},#{companyId,jdbcType=BIGINT},#{warehouseId,jdbcType=BIGINT},#{warehouseCode,jdbcType=VARCHAR},#{lcCode,jdbcType=VARCHAR},#{customerId,jdbcType=BIGINT},#{productId,jdbcType=BIGINT},#{iabId,jdbcType=BIGINT},#{qsCode,jdbcType=VARCHAR},#{ivFifoTime,jdbcType=TIMESTAMP},#{ivQty,jdbcType=DECIMAL},#{stockUnit,jdbcType=INTEGER},#{midBagQty,jdbcType=DECIMAL},#{midBagRate,jdbcType=DECIMAL},#{midBagExtraQty,jdbcType=DECIMAL},#{bigBagQty,jdbcType=DECIMAL},#{bigBagRate,jdbcType=DECIMAL},#{bigBagExtraQty,jdbcType=DECIMAL},#{ivLocksign,jdbcType=INTEGER},#{ivFreezesign,jdbcType=INTEGER},#{bizDate,jdbcType=TIMESTAMP},#{ivCreatetime,jdbcType=TIMESTAMP},#{ivTranstime,jdbcType=TIMESTAMP},#{apCodeDc,jdbcType=VARCHAR},#{ivDocumentCode,jdbcType=VARCHAR},#{ivDocumentId,jdbcType=BIGINT},#{ivDocumentlineId,jdbcType=BIGINT},#{productDate,jdbcType=TIMESTAMP},#{ivEffectiveDate,jdbcType=TIMESTAMP},#{batchNo,jdbcType=VARCHAR},#{ivIdFrom,jdbcType=BIGINT})
+            insert into wms_iv_snapshot (ivs_id,ivst_id,iv_id,company_id,warehouse_id,warehouse_code,lc_code,lc_type,customer_id,product_id,iab_id,qs_code,iv_fifo_time,iv_qty,stock_unit,mid_bag_qty,mid_bag_rate,mid_bag_extra_qty,big_bag_qty,big_bag_rate,big_bag_extra_qty,iv_locksign,iv_freezesign,biz_date,iv_createtime,iv_transtime,ap_code_dc,iv_document_code,iv_document_id,iv_documentline_id,product_date,iv_effective_date,batch_no,iv_id_from)
+            values (#{id,jdbcType=BIGINT},#{ivstId,jdbcType=BIGINT},#{ivId,jdbcType=BIGINT},#{companyId,jdbcType=BIGINT},#{warehouseId,jdbcType=BIGINT},#{warehouseCode,jdbcType=VARCHAR},#{lcCode,jdbcType=VARCHAR},#{lcType,jdbcType=VARCHAR},#{customerId,jdbcType=BIGINT},#{productId,jdbcType=BIGINT},#{iabId,jdbcType=BIGINT},#{qsCode,jdbcType=VARCHAR},#{ivFifoTime,jdbcType=TIMESTAMP},#{ivQty,jdbcType=DECIMAL},#{stockUnit,jdbcType=INTEGER},#{midBagQty,jdbcType=DECIMAL},#{midBagRate,jdbcType=DECIMAL},#{midBagExtraQty,jdbcType=DECIMAL},#{bigBagQty,jdbcType=DECIMAL},#{bigBagRate,jdbcType=DECIMAL},#{bigBagExtraQty,jdbcType=DECIMAL},#{ivLocksign,jdbcType=INTEGER},#{ivFreezesign,jdbcType=INTEGER},#{bizDate,jdbcType=TIMESTAMP},#{ivCreatetime,jdbcType=TIMESTAMP},#{ivTranstime,jdbcType=TIMESTAMP},#{apCodeDc,jdbcType=VARCHAR},#{ivDocumentCode,jdbcType=VARCHAR},#{ivDocumentId,jdbcType=BIGINT},#{ivDocumentlineId,jdbcType=BIGINT},#{productDate,jdbcType=TIMESTAMP},#{ivEffectiveDate,jdbcType=TIMESTAMP},#{batchNo,jdbcType=VARCHAR},#{ivIdFrom,jdbcType=BIGINT})
         </insert>
 
         <insert id="insertSelective">
@@ -69,6 +70,9 @@
                     </if>
                     <if test="lcCode != null">
                         lc_code,
+                    </if>
+                    <if test="lcType != null">
+                        lc_type,
                     </if>
                     <if test="customerId != null">
                         customer_id,
@@ -171,6 +175,9 @@
                     <if test="lcCode != null">
                         #{lcCode,jdbcType=VARCHAR},
                     </if>
+                    <if test="lcType != null">
+                        #{lcType,jdbcType=VARCHAR},
+                    </if>
                     <if test="customerId != null">
                         #{customerId,jdbcType=BIGINT},
                     </if>
@@ -253,7 +260,7 @@
         </insert>
 
         <insert id="insertBatch">
-            insert into wms_iv_snapshot (ivs_id,ivst_id,iv_id,company_id,warehouse_id,warehouse_code,lc_code,customer_id,product_id,iab_id,qs_code,iv_fifo_time,iv_qty,stock_unit,mid_bag_qty,mid_bag_rate,mid_bag_extra_qty,big_bag_qty,big_bag_rate,big_bag_extra_qty,iv_locksign,iv_freezesign,biz_date,iv_createtime,iv_transtime,ap_code_dc,iv_document_code,iv_document_id,iv_documentline_id,product_date,iv_effective_date,batch_no,iv_id_from) values
+            insert into wms_iv_snapshot (ivs_id,ivst_id,iv_id,company_id,warehouse_id,warehouse_code,lc_code,lc_type,customer_id,product_id,iab_id,qs_code,iv_fifo_time,iv_qty,stock_unit,mid_bag_qty,mid_bag_rate,mid_bag_extra_qty,big_bag_qty,big_bag_rate,big_bag_extra_qty,iv_locksign,iv_freezesign,biz_date,iv_createtime,iv_transtime,ap_code_dc,iv_document_code,iv_document_id,iv_documentline_id,product_date,iv_effective_date,batch_no,iv_id_from) values
             <foreach collection="list" item="item" separator=",">
                 (
                     #{item.id,jdbcType=BIGINT},
@@ -263,6 +270,7 @@
                     #{item.warehouseId,jdbcType=BIGINT},
                     #{item.warehouseCode,jdbcType=VARCHAR},
                     #{item.lcCode,jdbcType=VARCHAR},
+                    #{item.lcType,jdbcType=VARCHAR},
                     #{item.customerId,jdbcType=BIGINT},
                     #{item.productId,jdbcType=BIGINT},
                     #{item.iabId,jdbcType=BIGINT},
@@ -314,6 +322,7 @@
                 warehouse_id = #{warehouseId,jdbcType=BIGINT},
                 warehouse_code = #{warehouseCode,jdbcType=VARCHAR},
                 lc_code = #{lcCode,jdbcType=VARCHAR},
+                lc_type = #{lcType,jdbcType=VARCHAR},
                 customer_id = #{customerId,jdbcType=BIGINT},
                 product_id = #{productId,jdbcType=BIGINT},
                 iab_id = #{iabId,jdbcType=BIGINT},
@@ -364,6 +373,9 @@
                 </if>
                 <if test="lcCode != null">
                     lc_code = #{lcCode,jdbcType=VARCHAR},
+                </if>
+                <if test="lcType != null">
+                    lc_type = #{lcType,jdbcType=VARCHAR},
                 </if>
                 <if test="customerId != null">
                     customer_id = #{customerId,jdbcType=BIGINT},
@@ -468,6 +480,9 @@
                     </if>
                     <if test="item.lcCode != null">
                         lc_code = #{item.lcCode,jdbcType=VARCHAR},
+                    </if>
+                    <if test="item.lcType != null">
+                        lc_type = #{item.lcType,jdbcType=VARCHAR},
                     </if>
                     <if test="item.customerId != null">
                         customer_id = #{item.customerId,jdbcType=BIGINT},
@@ -601,6 +616,9 @@
                 <if test="lcCode != null">
                     and lc_code=#{lcCode,jdbcType=VARCHAR}
                 </if>
+                <if test="lcType != null">
+                    and lc_type=#{lcType,jdbcType=VARCHAR}
+                </if>
                 <if test="customerId != null">
                     and customer_id=#{customerId,jdbcType=BIGINT}
                 </if>
@@ -707,6 +725,9 @@
                 </if>
                 <if test="lcCode != null">
                     and lc_code ${lcCode}
+                </if>
+                <if test="lcType != null">
+                    and lc_type ${lcType}
                 </if>
                 <if test="customerId != null">
                     and customer_id ${customerId}

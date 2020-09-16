@@ -17,7 +17,7 @@ public class IvTransactionDailyKnotSchedule {
     @Autowired
     private IvTransactionDailyKnotScheduleHandler ivTransactionDailyKnotScheduleHandler;
 
-    @Scheduled(cron = TaskCron.EVERY_SECONDS_15)
+    @Scheduled(cron = TaskCron.EVERY_DAY_6)
     public void doIvTransactionDailyKnotSchedule(){
         ivTransactionDailyKnotScheduleHandler.run();
     }

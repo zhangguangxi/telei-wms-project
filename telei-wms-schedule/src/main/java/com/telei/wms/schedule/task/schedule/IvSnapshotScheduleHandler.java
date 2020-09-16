@@ -37,8 +37,8 @@ public class IvSnapshotScheduleHandler extends TaskHandler {
         super("库存快照");
     }
 
-    @Transactional(rollbackFor = Exception.class)
     @Override
+    @Transactional(rollbackFor = Exception.class)
     protected void handle(TaskContext context) {
         Long idNumber = idSecondGenerator.getUnique();
         String serverNo = idInstantdirectiveConfig.getServerName();
@@ -47,4 +47,5 @@ public class IvSnapshotScheduleHandler extends TaskHandler {
         String snapshotLcTime = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
         wmsInventoryRepository.doIvSnapshotSchedule(idNumber, serverNo, snapshotTime, snapshotLcTime);
     }
+
 }

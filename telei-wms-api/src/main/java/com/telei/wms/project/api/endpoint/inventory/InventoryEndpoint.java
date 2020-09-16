@@ -50,12 +50,28 @@ public class InventoryEndpoint {
         return DataConvertUtil.parseDataAsObject(bussinessResponse, InventoryReduceResponse.class);
     }
 
-    @ApiOperation("移位")
+    @ApiOperation("移库")
     @PostMapping(ServiceId.WMS_INVENTORY_ADJUST_SHIFT)
     public InventoryShiftResponse shiftInventory(@Valid @RequestBody InventoryShiftRequest request) {
         InventoryShiftBussinessRequest bussinessRequest = DataConvertUtil.parseDataAsObject(request, InventoryShiftBussinessRequest.class);
         InventoryShiftBussinessResponse bussinessResponse = inventoryBussiness.shiftInventory(bussinessRequest);
         return DataConvertUtil.parseDataAsObject(bussinessResponse, InventoryShiftResponse.class);
+    }
+
+    @ApiOperation("升任务")
+    @PostMapping(ServiceId.WMS_INVENTORY_ADJUST_LIFT_UP)
+    public InventoryLiftUpResponse liftUpInventory(@Valid @RequestBody InventoryLiftUpRequest request) {
+        InventoryLiftUpBussinessRequest bussinessRequest = DataConvertUtil.parseDataAsObject(request, InventoryLiftUpBussinessRequest.class);
+        InventoryLiftUpBussinessResponse bussinessResponse = inventoryBussiness.liftUpInventory(bussinessRequest);
+        return DataConvertUtil.parseDataAsObject(bussinessResponse, InventoryLiftUpResponse.class);
+    }
+
+    @ApiOperation("降任务")
+    @PostMapping(ServiceId.WMS_INVENTORY_ADJUST_LIFT_DOWN)
+    public InventoryLiftDownResponse liftDownInventory(@Valid @RequestBody InventoryLiftDownRequest request) {
+        InventoryLiftDownBussinessRequest bussinessRequest = DataConvertUtil.parseDataAsObject(request, InventoryLiftDownBussinessRequest.class);
+        InventoryLiftDownBussinessResponse bussinessResponse = inventoryBussiness.liftDownInventory(bussinessRequest);
+        return DataConvertUtil.parseDataAsObject(bussinessResponse, InventoryLiftDownResponse.class);
     }
 
     @ApiOperation("库存分页")

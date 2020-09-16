@@ -1,5 +1,6 @@
 package com.telei.wms.project.api.endpoint.roo.dto;
 
+import com.telei.wms.datasource.wms.vo.RooLineResponseVo;
 import lombok.Data;
 
 import java.math.BigDecimal;
@@ -48,5 +49,12 @@ public class RooHeaderDetailResponse {
     /** 创建时间 */
     private Date createTime;
 
-    private List<RooLineDetailResponse> roLines;
+    /** 仓库名称 */
+    private String warehouseName;
+    /** 客户名称 */
+    private String customerName;
+    /** 供应商名称 */
+    private String supplierName;
+
+    private List<RooLineResponseVo> rooLines;
 }

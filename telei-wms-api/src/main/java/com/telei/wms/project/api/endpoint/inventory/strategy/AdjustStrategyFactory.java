@@ -49,9 +49,13 @@ public class AdjustStrategyFactory {
      * @param nowWithUtc
      * @return
      */
-    public  WmsIvTransaction createTransactionRecored(WmsInventory inventory,String lcCodeTo,  String ivChangeType ,BigDecimal curIvIdQtyAdjt, UserInfo userInfo, Date nowWithUtc) {
+    public  WmsIvTransaction createTransactionRecored(List<WmsIvTransaction> wmsIvTransactionList,WmsInventory inventory,String lcCodeTo,  String ivChangeType ,BigDecimal curIvIdQtyAdjt, UserInfo userInfo, Date nowWithUtc) {
         WmsIvTransaction wmsIvTransaction = DataConvertUtil.parseDataAsObject(inventory,WmsIvTransaction.class);
+        wmsIvTransaction.setId(idGenerator.getUnique());
         wmsIvTransaction.setApCode("ADJT");/**应用类型*/
+        wmsIvTransaction.setIvtDocumentCode(inventory.getIvDocumentCode());/**引起库存变动业务单据编码*/
+        wmsIvTransaction.setIvtDocumentId(inventory.getIvDocumentId());/**引起库存变动的单据id*/
+        wmsIvTransaction.setIvtDocumentlineId(inventory.getIvDocumentlineId());/**引起库存变动的单据明细id*/
         wmsIvTransaction.setIvtChangeType(ivChangeType);/**库存变动类型*/
         wmsIvTransaction.setLcCodeFrom(inventory.getLcCode());/**原库位编码*/
         wmsIvTransaction.setLcCodeTo(lcCodeTo);/**目标库位编码*/
@@ -60,6 +64,7 @@ public class AdjustStrategyFactory {
         wmsIvTransaction.setDcQty(curIvIdQtyAdjt);/**调整数量*/
         wmsIvTransaction.setCreateTime(nowWithUtc);
         wmsIvTransaction.setCreateUser(userInfo.getUserName());
+        wmsIvTransactionList.add(wmsIvTransaction);
         return wmsIvTransaction;
     }
 
@@ -80,7 +85,7 @@ public class AdjustStrategyFactory {
         wmsInventoryAdd.setBigBagQty(ivQtyAdjt.multiply(new BigDecimal(wmsInventoryAdd.getBigBagRate())));/**大包数量*/
         wmsInventoryAdd.setBigBagExtraQty(ivQtyAdjt.divideAndRemainder(new BigDecimal(wmsInventoryAdd.getBigBagRate()))[1]);/**大包剩余数量*/
         wmsInventoryAdd.setMidBagQty(ivQtyAdjt.multiply(new BigDecimal(wmsInventoryAdd.getMidBagRate()))); /**中包数量*/
-        wmsInventoryAdd.setMidBagExtraQty(ivQtyAdjt.divideAndRemainder(wmsInventoryAdd.getMidBagExtraQty())[1]);/**中包剩余数量*/
+        wmsInventoryAdd.setMidBagExtraQty(ivQtyAdjt.divideAndRemainder(new BigDecimal(wmsInventoryAdd.getMidBagRate()))[1]);/**中包剩余数量*/
         wmsInventoryAdd.setIvTranstime(nowWithUtc);
         wmsInventoryAdd.setIvCreatetime(nowWithUtc);
         wmsInventoryAdd.setBizDate(nowWithUtc);
@@ -153,7 +158,7 @@ public class AdjustStrategyFactory {
         wmsIvSplit.setIvspId(idGenerator.getUnique());
         wmsIvSplit.setIvId(inventory.getIvId());/**原库存id*/
         wmsIvSplit.setIvIdTo(inventoryAdd.getIvId());/**新库存id*/
-        wmsIvSplit.setIvQty(inventory.getIvQty());/**原库存数量*/
+        wmsIvSplit.setIvQty(ivQtyAdjt.add(inventory.getIvQty()));/**原库存数量*/
         wmsIvSplit.setIvQtyTo(ivQtyAdjt);/**拆分库存数量*/
         wmsIvSplit.setIvQtyAfter(ivQtyAfter);/**拆后库存数量*/
         wmsIvSplitList.add(wmsIvSplit);

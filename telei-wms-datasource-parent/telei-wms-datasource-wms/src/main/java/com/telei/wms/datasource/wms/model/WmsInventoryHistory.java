@@ -6,8 +6,8 @@ import java.util.Date;
 import lombok.Data;
 
 /**
-* wms_inventory_history 历史库存表
-*/
+ * wms_inventory_history 历史库存表
+ */
 @Data
 public class WmsInventoryHistory implements Entity<Long> {
     /** id */

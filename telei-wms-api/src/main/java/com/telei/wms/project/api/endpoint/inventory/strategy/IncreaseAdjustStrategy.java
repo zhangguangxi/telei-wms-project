@@ -33,7 +33,6 @@ public class IncreaseAdjustStrategy implements IAdjustStrategy{
         wmsAdjtHeader.setMidBagRate(wmsInventory.getMidBagRate());//中包转换率
 
 
-
         /**新增库存记录*/
         WmsInventory wmsInventoryAdd = adjustStrategyFactory.createInventory(wmsInventoryAddList, wmsInventory, ivQtyAdjt, nowWithUtc);
 
@@ -41,8 +40,8 @@ public class IncreaseAdjustStrategy implements IAdjustStrategy{
         adjustStrategyFactory.createAdjtLine(wmsAdjtHeader ,wmsAdjtLineList, wmsInventory,wmsInventoryAdd,"INCREASE" ,ivQtyAdjt, lcCodeAdjt);
 
         /**库存变更记录*/
-        WmsIvTransaction wmsIvTransaction = adjustStrategyFactory.createTransactionRecored(wmsInventoryAddList.get(0), lcCodeAdjt, "INCR", ivQtyAdjt, userInfo, nowWithUtc);
-        wmsIvTransactionList.add(wmsIvTransaction);
+        adjustStrategyFactory.createTransactionRecored(wmsIvTransactionList,wmsInventoryAddList.get(0), lcCodeAdjt, "INCR", ivQtyAdjt, userInfo, nowWithUtc);
+
 
         /**OMS库存同步*/
         List<OmsInventoryChangeWriteBack.OmsInventoryChangeWriteBackCondition> list = Lists.newArrayList();

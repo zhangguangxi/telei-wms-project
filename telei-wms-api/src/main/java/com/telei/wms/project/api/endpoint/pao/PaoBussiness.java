@@ -114,6 +114,7 @@ public class PaoBussiness {
             WmsRooHeader wmsRooHeader = wmsRooHeaderService.selectByPrimaryKey(request.getRooId());
             WmsRooHeader updateWmsRooHeader = new WmsRooHeader();
             updateWmsRooHeader.setId(wmsRooHeader.getId());
+            updateWmsRooHeader.setRoStatus("40");
             updateWmsRooHeader.setTmpPutawayQty(wmsRooHeader.getTmpPutawayQty().add(totalQty));
             if (updateWmsRooHeader.getTmpPutawayQty().compareTo(wmsRooHeader.getTotalQty()) == 1) {
                 //上架数大于收货数

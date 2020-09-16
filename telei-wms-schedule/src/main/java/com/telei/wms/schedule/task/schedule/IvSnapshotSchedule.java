@@ -17,7 +17,7 @@ public class IvSnapshotSchedule {
     @Autowired
     private IvSnapshotScheduleHandler ivSnapshotScheduleHandler;
 
-    @Scheduled(cron = TaskCron.EVERY_SECONDS_1)
+    @Scheduled(cron = TaskCron.EVERY_MINUTES_1)
     public void doIvSnapshotSchedule(){
         ivSnapshotScheduleHandler.run();
     }

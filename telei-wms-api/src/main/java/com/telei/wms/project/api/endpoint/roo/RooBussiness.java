@@ -18,6 +18,8 @@ import com.telei.wms.customer.product.dto.ProductDetailResponse;
 import com.telei.wms.customer.product.dto.ProductListResponse;
 import com.telei.wms.datasource.wms.model.*;
 import com.telei.wms.datasource.wms.service.*;
+import com.telei.wms.datasource.wms.vo.RooHeaderResponseVo;
+import com.telei.wms.datasource.wms.vo.RooLineResponseVo;
 import com.telei.wms.project.api.ErrorCode;
 import com.telei.wms.project.api.endpoint.roo.dto.*;
 import com.telei.wms.project.api.utils.DataConvertUtil;
@@ -272,7 +274,7 @@ public class RooBussiness {
         wmsRooHeader.setRoStatus("99");
         // 组装收货单明细
         List<WmsRooLine> wmsRooLines = wmsRooLineService.selectByPrimaryKeys(request.getRoolIds());
-        if (!wmsRooLines.isEmpty() && wmsRooLines.size() == request.getRoolIds().size()) {
+        if (wmsRooLines.isEmpty() || wmsRooLines.size() != request.getRoolIds().size()) {
             ErrorCode.ROO_LINE_NOT_EXIST_4004.throwError();
         }
         BigDecimal receQty = BigDecimal.ZERO;
@@ -346,17 +348,14 @@ public class RooBussiness {
      * @return
      */
     public RooHeaderDetailResponse rooHeaderDetail(RooHeaderDetailRequest request) {
-        WmsRooHeader wmsRooHeader = wmsRooHeaderService.selectByPrimaryKey(request.getId());
-        if (Objects.isNull(wmsRooHeader)) {
+        RooHeaderResponseVo rooHeaderResponseVo = wmsRooHeaderService.selectRooHeaderDetail(request.getId());
+        if (Objects.isNull(rooHeaderResponseVo)) {
             ErrorCode.ROO_NOT_EXIST_4001.throwError();
         }
-        RooHeaderDetailResponse response = DataConvertUtil.parseDataAsObject(wmsRooHeader, RooHeaderDetailResponse.class);
-        WmsRooLine wmsRooLine = new WmsRooLine();
-        wmsRooLine.setRooId(request.getId());
-        List<WmsRooLine> wmsRooLines = wmsRooLineService.selectByEntity(wmsRooLine);
-        if (!wmsRooLines.isEmpty()) {
-            List<RooLineDetailResponse> rooLineDetailResponses = DataConvertUtil.parseDataAsArray(wmsRooLines, RooLineDetailResponse.class);
-            response.setRoLines(rooLineDetailResponses);
+        RooHeaderDetailResponse response = DataConvertUtil.parseDataAsObject(rooHeaderResponseVo, RooHeaderDetailResponse.class);
+        List<RooLineResponseVo> wmsRooLines = wmsRooLineService.findAll(request.getId());
+        if (StringUtils.isNotNull(wmsRooLines) && !wmsRooLines.isEmpty()) {
+            response.setRooLines(wmsRooLines);
         }
         return response;
     }
@@ -384,9 +383,17 @@ public class RooBussiness {
         }
         if (StringUtils.isNotNull(request.getRoStatus())) {
             conditionsBuilder.eq("roStatus", request.getRoStatus());
+        }else{
+            conditionsBuilder.ne("roStatus", 99);
+        }
+        if (StringUtils.isNotNull(request.getCompanyId())) {
+            conditionsBuilder.eq("companyId", request.getCompanyId());
+        } else {
+            conditionsBuilder.eq("companyId", CustomRequestContext.getUserInfo().getCompanyId());
         }
         Map<String, Object> paramMap = conditionsBuilder.build();
-        Pagination page = (Pagination) wmsRooHeaderService.selectPage(pagination, paramMap);
+        paramMap.put("orderBy", " wrh.roo_id DESC");
+        Pagination page = (Pagination) wmsRooHeaderService.findAll(pagination, paramMap);
         RooHeaderBusinessPageQueryResponse response = new RooHeaderBusinessPageQueryResponse();
         response.setPage(page);
         return response;

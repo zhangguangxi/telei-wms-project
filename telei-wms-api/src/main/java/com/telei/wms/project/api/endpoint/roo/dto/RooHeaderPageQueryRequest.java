@@ -30,6 +30,9 @@ public class RooHeaderPageQueryRequest {
     @ApiModelProperty(value = "所属人", example = "2525345353")
     private String ownerUser;
 
+    @ApiModelProperty(value = "公司id[可不传]", example = "2525345353")
+    private Long companyId;
+
     @ApiModelProperty(value = "当前页", example = "1", required = true)
     private Integer pageNumber;
 
