@@ -15,22 +15,15 @@ public class InventoryDetailBussinessResponse {
 
     @Data
     public static  class InventoryDetailCondition{
-        /**库存ID*/
-        private Long ivId;
-
-        /**库存批次*/
+        /**批次*/
         private Long iabId;
-
-        /**库存数*/
-        private BigDecimal ivQty;
-
-        /**打包数*/
-        private  BigDecimal bigBagQty;
-
-        /**中包数(库存数/大包转化率的余数)*/
-        private  BigDecimal midBagQty;
-
-        /**小包数(库存数/中包转换率的余数)*/
-        private  BigDecimal tinyBagQty;
+        /**数量*/
+        private BigDecimal qty;
+        /**大包数量*/
+        private BigDecimal bigBagQty;
+        /**中包数量*/
+        private BigDecimal midBagQty;
+        /**小包数量*/
+        private BigDecimal tinyBagQty;
     }
 }

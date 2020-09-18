@@ -16,6 +16,13 @@ public enum ErrorCode {
      * 入库任务
      */
     RO_NOT_EXIST_4001,
+    RO_ENFORCEMENT_ERROR_4002,
+    RO_ENFORCEMENT_ERROR_4003,
+
+    /**
+     * 出库任务
+     */
+    DO_NOT_EXIST_4001,
 
     /**
      * 业务单据
@@ -96,6 +103,18 @@ public enum ErrorCode {
     PAO_NOT_EXIST_4001,
     PAO_ADD_ERROR_4002,
     PAO_CANCEL_ERROR_4003,
+
+    /**
+     * 拣货单
+     */
+    PLO_NOT_EXIST_4001,
+    PLO_NOT_EXIST_4002,
+    PLO_ADD_ERROR_4003,
+    PLO_ADD_ERROR_4004,
+    PLO_ADD_DETAIL_ERROR_4005,
+    PLO_FINISH_ERROR_4006,
+    PLO_FINISH_ERROR_4007,
+    PLO_FINISH_ERROR_4008,
     ;
 
     private  String code;

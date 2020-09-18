@@ -1,0 +1,515 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.telei.wms.datasource.wms.repository.WmsPloDetailRepository">
+    <resultMap id="BaseResultMap" type="com.telei.wms.datasource.wms.model.WmsPloDetail">
+        <id column="plod_id" jdbcType="BIGINT" property="id"/>
+            <result column="plo_id" jdbcType="BIGINT" property="ploId"/>
+            <result column="plo_code" jdbcType="VARCHAR" property="ploCode"/>
+            <result column="plol_id" jdbcType="BIGINT" property="plolId"/>
+            <result column="dol_id" jdbcType="BIGINT" property="dolId"/>
+            <result column="product_id" jdbcType="BIGINT" property="productId"/>
+            <result column="product_barcode" jdbcType="VARCHAR" property="productBarcode"/>
+            <result column="spec_type" jdbcType="VARCHAR" property="specType"/>
+            <result column="media_id" jdbcType="VARCHAR" property="mediaId"/>
+            <result column="product_no" jdbcType="VARCHAR" property="productNo"/>
+            <result column="product_name" jdbcType="VARCHAR" property="productName"/>
+            <result column="product_name_local" jdbcType="VARCHAR" property="productNameLocal"/>
+            <result column="product_upc_code" jdbcType="VARCHAR" property="productUpcCode"/>
+            <result column="brand" jdbcType="VARCHAR" property="brand"/>
+            <result column="pick_qty" jdbcType="DECIMAL" property="pickQty"/>
+            <result column="pick_weight" jdbcType="DECIMAL" property="pickWeight"/>
+            <result column="pick_vol" jdbcType="DECIMAL" property="pickVol"/>
+            <result column="create_user" jdbcType="VARCHAR" property="createUser"/>
+            <result column="create_time" jdbcType="TIMESTAMP" property="createTime"/>
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        plod_id,plo_id,plo_code,plol_id,dol_id,product_id,product_barcode,spec_type,media_id,product_no,product_name,product_name_local,product_upc_code,brand,pick_qty,pick_weight,pick_vol,create_user,create_time
+    </sql>
+
+        <insert id="insert">
+            insert into wms_plo_detail (plod_id,plo_id,plo_code,plol_id,dol_id,product_id,product_barcode,spec_type,media_id,product_no,product_name,product_name_local,product_upc_code,brand,pick_qty,pick_weight,pick_vol,create_user,create_time)
+            values (#{id,jdbcType=BIGINT},#{ploId,jdbcType=BIGINT},#{ploCode,jdbcType=VARCHAR},#{plolId,jdbcType=BIGINT},#{dolId,jdbcType=BIGINT},#{productId,jdbcType=BIGINT},#{productBarcode,jdbcType=VARCHAR},#{specType,jdbcType=VARCHAR},#{mediaId,jdbcType=VARCHAR},#{productNo,jdbcType=VARCHAR},#{productName,jdbcType=VARCHAR},#{productNameLocal,jdbcType=VARCHAR},#{productUpcCode,jdbcType=VARCHAR},#{brand,jdbcType=VARCHAR},#{pickQty,jdbcType=DECIMAL},#{pickWeight,jdbcType=DECIMAL},#{pickVol,jdbcType=DECIMAL},#{createUser,jdbcType=VARCHAR},#{createTime,jdbcType=TIMESTAMP})
+        </insert>
+
+        <insert id="insertSelective">
+            insert into wms_plo_detail
+            <trim prefix="(" suffix=")" suffixOverrides=",">
+                    <if test="id != null">
+                        plod_id,
+                    </if>
+                    <if test="ploId != null">
+                        plo_id,
+                    </if>
+                    <if test="ploCode != null">
+                        plo_code,
+                    </if>
+                    <if test="plolId != null">
+                        plol_id,
+                    </if>
+                    <if test="dolId != null">
+                        dol_id,
+                    </if>
+                    <if test="productId != null">
+                        product_id,
+                    </if>
+                    <if test="productBarcode != null">
+                        product_barcode,
+                    </if>
+                    <if test="specType != null">
+                        spec_type,
+                    </if>
+                    <if test="mediaId != null">
+                        media_id,
+                    </if>
+                    <if test="productNo != null">
+                        product_no,
+                    </if>
+                    <if test="productName != null">
+                        product_name,
+                    </if>
+                    <if test="productNameLocal != null">
+                        product_name_local,
+                    </if>
+                    <if test="productUpcCode != null">
+                        product_upc_code,
+                    </if>
+                    <if test="brand != null">
+                        brand,
+                    </if>
+                    <if test="pickQty != null">
+                        pick_qty,
+                    </if>
+                    <if test="pickWeight != null">
+                        pick_weight,
+                    </if>
+                    <if test="pickVol != null">
+                        pick_vol,
+                    </if>
+                    <if test="createUser != null">
+                        create_user,
+                    </if>
+                    <if test="createTime != null">
+                        create_time
+                    </if>
+            </trim>
+            <trim prefix="values (" suffix=")" suffixOverrides=",">
+                    <if test="id != null">
+                        #{id,jdbcType=BIGINT},
+                    </if>
+                    <if test="ploId != null">
+                        #{ploId,jdbcType=BIGINT},
+                    </if>
+                    <if test="ploCode != null">
+                        #{ploCode,jdbcType=VARCHAR},
+                    </if>
+                    <if test="plolId != null">
+                        #{plolId,jdbcType=BIGINT},
+                    </if>
+                    <if test="dolId != null">
+                        #{dolId,jdbcType=BIGINT},
+                    </if>
+                    <if test="productId != null">
+                        #{productId,jdbcType=BIGINT},
+                    </if>
+                    <if test="productBarcode != null">
+                        #{productBarcode,jdbcType=VARCHAR},
+                    </if>
+                    <if test="specType != null">
+                        #{specType,jdbcType=VARCHAR},
+                    </if>
+                    <if test="mediaId != null">
+                        #{mediaId,jdbcType=VARCHAR},
+                    </if>
+                    <if test="productNo != null">
+                        #{productNo,jdbcType=VARCHAR},
+                    </if>
+                    <if test="productName != null">
+                        #{productName,jdbcType=VARCHAR},
+                    </if>
+                    <if test="productNameLocal != null">
+                        #{productNameLocal,jdbcType=VARCHAR},
+                    </if>
+                    <if test="productUpcCode != null">
+                        #{productUpcCode,jdbcType=VARCHAR},
+                    </if>
+                    <if test="brand != null">
+                        #{brand,jdbcType=VARCHAR},
+                    </if>
+                    <if test="pickQty != null">
+                        #{pickQty,jdbcType=DECIMAL},
+                    </if>
+                    <if test="pickWeight != null">
+                        #{pickWeight,jdbcType=DECIMAL},
+                    </if>
+                    <if test="pickVol != null">
+                        #{pickVol,jdbcType=DECIMAL},
+                    </if>
+                    <if test="createUser != null">
+                        #{createUser,jdbcType=VARCHAR},
+                    </if>
+                    <if test="createTime != null">
+                        #{createTime,jdbcType=TIMESTAMP}
+                    </if>
+            </trim>
+        </insert>
+
+        <insert id="insertBatch">
+            insert into wms_plo_detail (plod_id,plo_id,plo_code,plol_id,dol_id,product_id,product_barcode,spec_type,media_id,product_no,product_name,product_name_local,product_upc_code,brand,pick_qty,pick_weight,pick_vol,create_user,create_time) values
+            <foreach collection="list" item="item" separator=",">
+                (
+                    #{item.id,jdbcType=BIGINT},
+                    #{item.ploId,jdbcType=BIGINT},
+                    #{item.ploCode,jdbcType=VARCHAR},
+                    #{item.plolId,jdbcType=BIGINT},
+                    #{item.dolId,jdbcType=BIGINT},
+                    #{item.productId,jdbcType=BIGINT},
+                    #{item.productBarcode,jdbcType=VARCHAR},
+                    #{item.specType,jdbcType=VARCHAR},
+                    #{item.mediaId,jdbcType=VARCHAR},
+                    #{item.productNo,jdbcType=VARCHAR},
+                    #{item.productName,jdbcType=VARCHAR},
+                    #{item.productNameLocal,jdbcType=VARCHAR},
+                    #{item.productUpcCode,jdbcType=VARCHAR},
+                    #{item.brand,jdbcType=VARCHAR},
+                    #{item.pickQty,jdbcType=DECIMAL},
+                    #{item.pickWeight,jdbcType=DECIMAL},
+                    #{item.pickVol,jdbcType=DECIMAL},
+                    #{item.createUser,jdbcType=VARCHAR},
+                    #{item.createTime,jdbcType=TIMESTAMP}
+                )
+            </foreach>
+        </insert>
+
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+        delete from wms_plo_detail
+        where plod_id = #{id,jdbcType=BIGINT}
+    </delete>
+
+    <delete id="deleteByPrimaryKeys">
+        delete from wms_plo_detail where plod_id in
+        <foreach close=")" collection="list" item="item" open="(" separator=",">
+            #{item}
+        </foreach>
+    </delete>
+
+    <update id="updateByPrimaryKey">
+        update wms_plo_detail
+        <set>
+                plo_id = #{ploId,jdbcType=BIGINT},
+                plo_code = #{ploCode,jdbcType=VARCHAR},
+                plol_id = #{plolId,jdbcType=BIGINT},
+                dol_id = #{dolId,jdbcType=BIGINT},
+                product_id = #{productId,jdbcType=BIGINT},
+                product_barcode = #{productBarcode,jdbcType=VARCHAR},
+                spec_type = #{specType,jdbcType=VARCHAR},
+                media_id = #{mediaId,jdbcType=VARCHAR},
+                product_no = #{productNo,jdbcType=VARCHAR},
+                product_name = #{productName,jdbcType=VARCHAR},
+                product_name_local = #{productNameLocal,jdbcType=VARCHAR},
+                product_upc_code = #{productUpcCode,jdbcType=VARCHAR},
+                brand = #{brand,jdbcType=VARCHAR},
+                pick_qty = #{pickQty,jdbcType=DECIMAL},
+                pick_weight = #{pickWeight,jdbcType=DECIMAL},
+                pick_vol = #{pickVol,jdbcType=DECIMAL},
+                create_user = #{createUser,jdbcType=VARCHAR},
+                create_time = #{createTime,jdbcType=TIMESTAMP}
+        </set>
+        where plod_id = #{id,jdbcType=BIGINT}
+    </update>
+
+    <update id="updateByPrimaryKeySelective">
+        update wms_plo_detail
+        <set>
+                <if test="ploId != null">
+                    plo_id = #{ploId,jdbcType=BIGINT},
+                </if>
+                <if test="ploCode != null">
+                    plo_code = #{ploCode,jdbcType=VARCHAR},
+                </if>
+                <if test="plolId != null">
+                    plol_id = #{plolId,jdbcType=BIGINT},
+                </if>
+                <if test="dolId != null">
+                    dol_id = #{dolId,jdbcType=BIGINT},
+                </if>
+                <if test="productId != null">
+                    product_id = #{productId,jdbcType=BIGINT},
+                </if>
+                <if test="productBarcode != null">
+                    product_barcode = #{productBarcode,jdbcType=VARCHAR},
+                </if>
+                <if test="specType != null">
+                    spec_type = #{specType,jdbcType=VARCHAR},
+                </if>
+                <if test="mediaId != null">
+                    media_id = #{mediaId,jdbcType=VARCHAR},
+                </if>
+                <if test="productNo != null">
+                    product_no = #{productNo,jdbcType=VARCHAR},
+                </if>
+                <if test="productName != null">
+                    product_name = #{productName,jdbcType=VARCHAR},
+                </if>
+                <if test="productNameLocal != null">
+                    product_name_local = #{productNameLocal,jdbcType=VARCHAR},
+                </if>
+                <if test="productUpcCode != null">
+                    product_upc_code = #{productUpcCode,jdbcType=VARCHAR},
+                </if>
+                <if test="brand != null">
+                    brand = #{brand,jdbcType=VARCHAR},
+                </if>
+                <if test="pickQty != null">
+                    pick_qty = #{pickQty,jdbcType=DECIMAL},
+                </if>
+                <if test="pickWeight != null">
+                    pick_weight = #{pickWeight,jdbcType=DECIMAL},
+                </if>
+                <if test="pickVol != null">
+                    pick_vol = #{pickVol,jdbcType=DECIMAL},
+                </if>
+                <if test="createUser != null">
+                    create_user = #{createUser,jdbcType=VARCHAR},
+                </if>
+                <if test="createTime != null">
+                    create_time = #{createTime,jdbcType=TIMESTAMP}
+                </if>
+        </set>
+        where plod_id = #{id,jdbcType=BIGINT}
+    </update>
+
+    <update id="updateBatch">
+        <foreach close="" collection="list" item="item" open="" separator=";">
+            update wms_plo_detail
+            <set>
+                    <if test="item.ploId != null">
+                        plo_id = #{item.ploId,jdbcType=BIGINT},
+                    </if>
+                    <if test="item.ploCode != null">
+                        plo_code = #{item.ploCode,jdbcType=VARCHAR},
+                    </if>
+                    <if test="item.plolId != null">
+                        plol_id = #{item.plolId,jdbcType=BIGINT},
+                    </if>
+                    <if test="item.dolId != null">
+                        dol_id = #{item.dolId,jdbcType=BIGINT},
+                    </if>
+                    <if test="item.productId != null">
+                        product_id = #{item.productId,jdbcType=BIGINT},
+                    </if>
+                    <if test="item.productBarcode != null">
+                        product_barcode = #{item.productBarcode,jdbcType=VARCHAR},
+                    </if>
+                    <if test="item.specType != null">
+                        spec_type = #{item.specType,jdbcType=VARCHAR},
+                    </if>
+                    <if test="item.mediaId != null">
+                        media_id = #{item.mediaId,jdbcType=VARCHAR},
+                    </if>
+                    <if test="item.productNo != null">
+                        product_no = #{item.productNo,jdbcType=VARCHAR},
+                    </if>
+                    <if test="item.productName != null">
+                        product_name = #{item.productName,jdbcType=VARCHAR},
+                    </if>
+                    <if test="item.productNameLocal != null">
+                        product_name_local = #{item.productNameLocal,jdbcType=VARCHAR},
+                    </if>
+                    <if test="item.productUpcCode != null">
+                        product_upc_code = #{item.productUpcCode,jdbcType=VARCHAR},
+                    </if>
+                    <if test="item.brand != null">
+                        brand = #{item.brand,jdbcType=VARCHAR},
+                    </if>
+                    <if test="item.pickQty != null">
+                        pick_qty = #{item.pickQty,jdbcType=DECIMAL},
+                    </if>
+                    <if test="item.pickWeight != null">
+                        pick_weight = #{item.pickWeight,jdbcType=DECIMAL},
+                    </if>
+                    <if test="item.pickVol != null">
+                        pick_vol = #{item.pickVol,jdbcType=DECIMAL},
+                    </if>
+                    <if test="item.createUser != null">
+                        create_user = #{item.createUser,jdbcType=VARCHAR},
+                    </if>
+                    <if test="item.createTime != null">
+                        create_time = #{item.createTime,jdbcType=TIMESTAMP}
+                    </if>
+            </set>
+            where plod_id = #{item.id,jdbcType=BIGINT}
+        </foreach>
+    </update>
+
+    <select id="selectByPrimaryKey" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List" />
+        from wms_plo_detail
+        where plod_id = #{id,jdbcType=BIGINT}
+    </select>
+
+    <select id="selectByPrimaryKeyWithLock" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List" />
+        from wms_plo_detail
+        where plod_id = #{id,jdbcType=BIGINT} for update
+    </select>
+
+    <select id="selectByPrimaryKeys" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List" />
+        from wms_plo_detail where plod_id in
+        <foreach close=")" collection="list" item="item" open="(" separator=",">
+            #{item}
+        </foreach>
+    </select>
+
+    <select id="selectByEntity" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from wms_plo_detail
+        <where>
+                <if test="id != null">
+                    and plod_id=#{id,jdbcType=BIGINT}
+                </if>
+                <if test="ploId != null">
+                    and plo_id=#{ploId,jdbcType=BIGINT}
+                </if>
+                <if test="ploCode != null">
+                    and plo_code=#{ploCode,jdbcType=VARCHAR}
+                </if>
+                <if test="plolId != null">
+                    and plol_id=#{plolId,jdbcType=BIGINT}
+                </if>
+                <if test="dolId != null">
+                    and dol_id=#{dolId,jdbcType=BIGINT}
+                </if>
+                <if test="productId != null">
+                    and product_id=#{productId,jdbcType=BIGINT}
+                </if>
+                <if test="productBarcode != null">
+                    and product_barcode=#{productBarcode,jdbcType=VARCHAR}
+                </if>
+                <if test="specType != null">
+                    and spec_type=#{specType,jdbcType=VARCHAR}
+                </if>
+                <if test="mediaId != null">
+                    and media_id=#{mediaId,jdbcType=VARCHAR}
+                </if>
+                <if test="productNo != null">
+                    and product_no=#{productNo,jdbcType=VARCHAR}
+                </if>
+                <if test="productName != null">
+                    and product_name=#{productName,jdbcType=VARCHAR}
+                </if>
+                <if test="productNameLocal != null">
+                    and product_name_local=#{productNameLocal,jdbcType=VARCHAR}
+                </if>
+                <if test="productUpcCode != null">
+                    and product_upc_code=#{productUpcCode,jdbcType=VARCHAR}
+                </if>
+                <if test="brand != null">
+                    and brand=#{brand,jdbcType=VARCHAR}
+                </if>
+                <if test="pickQty != null">
+                    and pick_qty=#{pickQty,jdbcType=DECIMAL}
+                </if>
+                <if test="pickWeight != null">
+                    and pick_weight=#{pickWeight,jdbcType=DECIMAL}
+                </if>
+                <if test="pickVol != null">
+                    and pick_vol=#{pickVol,jdbcType=DECIMAL}
+                </if>
+                <if test="createUser != null">
+                    and create_user=#{createUser,jdbcType=VARCHAR}
+                </if>
+                <if test="createTime != null">
+                    and create_time=#{createTime,jdbcType=TIMESTAMP}
+                </if>
+        </where>
+    </select>
+
+    <select id="selectByConditions" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from wms_plo_detail
+        <where>
+                <if test="id != null">
+                    and plod_id ${id}
+                </if>
+                <if test="ploId != null">
+                    and plo_id ${ploId}
+                </if>
+                <if test="ploCode != null">
+                    and plo_code ${ploCode}
+                </if>
+                <if test="plolId != null">
+                    and plol_id ${plolId}
+                </if>
+                <if test="dolId != null">
+                    and dol_id ${dolId}
+                </if>
+                <if test="productId != null">
+                    and product_id ${productId}
+                </if>
+                <if test="productBarcode != null">
+                    and product_barcode ${productBarcode}
+                </if>
+                <if test="specType != null">
+                    and spec_type ${specType}
+                </if>
+                <if test="mediaId != null">
+                    and media_id ${mediaId}
+                </if>
+                <if test="productNo != null">
+                    and product_no ${productNo}
+                </if>
+                <if test="productName != null">
+                    and product_name ${productName}
+                </if>
+                <if test="productNameLocal != null">
+                    and product_name_local ${productNameLocal}
+                </if>
+                <if test="productUpcCode != null">
+                    and product_upc_code ${productUpcCode}
+                </if>
+                <if test="brand != null">
+                    and brand ${brand}
+                </if>
+                <if test="pickQty != null">
+                    and pick_qty ${pickQty}
+                </if>
+                <if test="pickWeight != null">
+                    and pick_weight ${pickWeight}
+                </if>
+                <if test="pickVol != null">
+                    and pick_vol ${pickVol}
+                </if>
+                <if test="createUser != null">
+                    and create_user ${createUser}
+                </if>
+                <if test="createTime != null">
+                    and create_time ${createTime}
+                </if>
+        </where>
+        <if test="orderBy != null">
+            order by ${orderBy}
+        </if>
+    </select>
+
+    <select id="selectAll" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from wms_plo_detail
+    </select>
+
+    <select id="count" resultType="java.lang.Long">
+        select count(*) from wms_plo_detail
+    </select>
+
+    <select id="selectByFunction">
+        select ${function}(${column}) from wms_plo_detail
+    </select>
+
+</mapper>

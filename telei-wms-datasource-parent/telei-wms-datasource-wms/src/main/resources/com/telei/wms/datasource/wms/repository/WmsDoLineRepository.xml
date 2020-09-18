@@ -1,5 +1,50 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.telei.wms.datasource.wms.repository.WmsDoLineRepository">
+
+    <sql id="Page_Query_Column_List">
+        wdl.dol_id,
+        wdl.doh_id,
+        wdl.spd_id,
+        wdl.sp_id,
+        wdl.so_id,
+        wdl.sod_id,
+        wdl.product_id,
+        wdl.product_barcode,
+        wdl.spec_type,
+        wdl.media_id,
+        wdl.product_no,
+        wdl.product_name,
+        wdl.product_name_local,
+        wdl.product_upc_code,
+        wdl.brand,
+        wdl.stock_unit,
+        wdl.unit_gross_weight,
+        wdl.unit_vol,
+        wdl.qty,
+        wdl.weight,
+        wdl.vol,
+        wdl.big_bag_qty,
+        wdl.big_bag_rate,
+        wdl.mid_bag_qty,
+        wdl.mid_bag_rate,
+        wdl.small_bag_qty,
+        wdl.ship_qty,
+        wdl.ship_weight,
+        wdl.ship_vol,
+        wdl.memo,
+        wdl.cost_reference,
+        wdl.unit_price,
+        wdl.amount
+    </sql>
+
+    <select id="findAll" resultMap="BaseResultMap">
+        SELECT
+        <include refid="Page_Query_Column_List"/>
+        FROM wms_do_line wdl
+        WHERE wrl.doh_id = #{dohId,jdbcType=BIGINT}
+        ORDER BY wrl.dol_id DESC
+    </select>
+
 </mapper>
 

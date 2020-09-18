@@ -27,7 +27,7 @@ public class InventoryPageQueryRequest {
         @ApiModelProperty(value = "商品条码",example = "12345678",position = 4)
         private String productBarcode;
 
-        @ApiModelProperty(value = "库位类型",example = "库位类型，数据字典，S 样品库位、E 高架库位 等",position = 5)
+        @ApiModelProperty(value = "库位类型",example = "S",position = 5)
         private String lcType;
     }
 }

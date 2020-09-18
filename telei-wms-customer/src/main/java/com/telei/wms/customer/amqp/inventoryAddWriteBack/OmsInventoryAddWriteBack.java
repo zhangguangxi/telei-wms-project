@@ -15,6 +15,10 @@ public class OmsInventoryAddWriteBack {
 
     @Data
     public static class OmsInventoryAddWriteBackCondition {
+        /**公司id */
+        private Long companyId;
+        /**仓库id*/
+        private Long warehouseId;
         /** 入库计划id */
         private Long rpId;
         /** 入库计划单明细id */
@@ -23,6 +27,8 @@ public class OmsInventoryAddWriteBack {
         private Long poId;
         /** 采购单明细id */
         private Long podId;
+        /**产品ID*/
+        private Long productId;
         /**上架(入库)数量*/
         private BigDecimal ivQty;
     }

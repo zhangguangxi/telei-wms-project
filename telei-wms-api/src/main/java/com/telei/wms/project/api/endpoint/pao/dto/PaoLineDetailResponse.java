@@ -57,4 +57,16 @@ public class PaoLineDetailResponse {
     private Date putawayTime;
     /** 上架用户 */
     private String putawayUser;
+    /** 产品编码-客户输入 */
+    private String productNo;
+    /** 产品名称 */
+    private String productName;
+    /** 条码 */
+    private String productBarcode;
+    /** 品牌 */
+    private String brand;
+    /** 产地 */
+    private String placeOfOrigin;
+    /** 规格型号 */
+    private String specType;
 }

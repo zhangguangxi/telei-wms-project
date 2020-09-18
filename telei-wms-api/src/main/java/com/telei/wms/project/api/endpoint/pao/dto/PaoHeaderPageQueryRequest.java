@@ -1,6 +1,5 @@
 package com.telei.wms.project.api.endpoint.pao.dto;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
 import com.nuochen.framework.component.validation.Check;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
@@ -12,11 +11,9 @@ import lombok.Data;
 public class PaoHeaderPageQueryRequest {
 
     @ApiModelProperty(value = "开始时间", example = "2020-07-01 10:00:00")
-    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private String startTime;
 
     @ApiModelProperty(value = "结束时间", example = "2020-07-02 10:00:00")
-    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private String endTime;
 
     @ApiModelProperty(value = "业务单据编号", example = "2525345353")

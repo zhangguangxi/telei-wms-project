@@ -1,12 +1,7 @@
 package com.telei.wms.project.api.endpoint.ro.dto;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
-
-import java.math.BigDecimal;
-import java.util.Date;
-import java.util.List;
 
 /**
  * 入库任务分页查询Request
@@ -15,11 +10,9 @@ import java.util.List;
 public class RoHeaderPageQueryRequest {
 
     @ApiModelProperty(value = "开始时间", example = "2020-07-01 10:00:00")
-    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private String startTime;
 
     @ApiModelProperty(value = "结束时间", example = "2020-07-02 10:00:00")
-    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private String endTime;
 
     @ApiModelProperty(value = "业务单据编号", example = "2525345353")

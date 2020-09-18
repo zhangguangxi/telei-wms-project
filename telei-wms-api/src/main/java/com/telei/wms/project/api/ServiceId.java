@@ -56,6 +56,12 @@ public class ServiceId {
     @RightResource(rightSystem = "wms", rightItem = "入库任务", rightFunction = "入库任务修改主单")
     public static final String WMS_RO_HEADER_UPDATE = "1030303";
 
+    @RightResource(rightSystem = "wms", rightItem = "入库任务", rightFunction = "更新强制收货")
+    public static final String WMS_RO_HEADER_UPDATE_ENFORCEMENT = "1030304";
+
+    @RightResource(rightSystem = "wms", rightItem = "入库任务", rightFunction = "获取强制收货状态")
+    public static final String WMS_RO_HEADER_GET_ENFORCEMENT = "1030305";
+
     /**
      * 收货
      * 04
@@ -86,15 +92,14 @@ public class ServiceId {
     public static final String WMS_INVENTORY_PAGE_QUERY = "1030504";
     @RightResource(rightSystem = "wms", rightItem = "库存管理", rightFunction = "移库")
     public static final String WMS_INVENTORY_ADJUST_SHIFT = "1030505";
-    @RightResource(rightSystem = "wms", rightItem = "库存详情", rightFunction = "详情")
+    @RightResource(rightSystem = "wms", rightItem = "库存管理", rightFunction = "详情")
     public static final String WMS_INVENTORY_DETAIL = "1030506";
     @RightResource(rightSystem = "wms", rightItem = "库存管理", rightFunction = "库存调整分页")
     public static final String WMS_INVENTORY_ADJUST_PAGE_QUERY = "1030507";
-    @RightResource(rightSystem = "wms", rightItem = "升任务", rightFunction = "库存调整分页")
+    @RightResource(rightSystem = "wms", rightItem = "库存管理", rightFunction = "升任务")
     public static final String WMS_INVENTORY_ADJUST_LIFT_UP = "1030508";
-    @RightResource(rightSystem = "wms", rightItem = "降任务", rightFunction = "库存调整分页")
+    @RightResource(rightSystem = "wms", rightItem = "库存管理", rightFunction = "降任务")
     public static final String WMS_INVENTORY_ADJUST_LIFT_DOWN = "1030509";
-
 
 
     /**
@@ -131,4 +136,43 @@ public class ServiceId {
 
     @RightResource(rightSystem = "wms", rightItem = "上架单", rightFunction = "取消上架单")
     public static final String WMS_PAO_CANCEL = "1030705";
+
+    /**
+     * 拣货单
+     * 08
+     */
+    @RightResource(rightSystem = "wms", rightItem = "拣货单", rightFunction = "新增拣货单")
+    public static final String WMS_PLO_ADD = "1030801";
+
+    @RightResource(rightSystem = "wms", rightItem = "拣货单", rightFunction = "拣货单分页查询")
+    public static final String WMS_PLO_HEADER_PAGE_QUERY = "1030802";
+
+    @RightResource(rightSystem = "wms", rightItem = "拣货单", rightFunction = "拣货单详细")
+    public static final String WMS_PLO_HEADER_DETAIL = "1030803";
+
+    @RightResource(rightSystem = "wms", rightItem = "拣货单", rightFunction = "新增拣货单详情")
+    public static final String WMS_PLO_ADD_DETAIL = "1030804";
+
+    @RightResource(rightSystem = "wms", rightItem = "拣货单", rightFunction = "分页查询拣货单详情")
+    public static final String WMS_PLO_DETAIL_PAGE_QUERY = "1030805";
+
+    @RightResource(rightSystem = "wms", rightItem = "拣货单", rightFunction = "拣货完成")
+    public static final String WMS_PLO_FINISH = "1030806";
+
+    /**
+     * 出库任务
+     * 09
+     */
+    @RightResource(rightSystem = "wms", rightItem = "出库任务", rightFunction = "出库任务详细")
+    public static final String WMS_DO_DETAIL = "1030901";
+
+    @RightResource(rightSystem = "wms", rightItem = "出库任务", rightFunction = "出库任务主单分页查询")
+    public static final String WMS_DO_HEADER_PAGE_QUERY = "1030902";
+
+    @RightResource(rightSystem = "wms", rightItem = "出库任务", rightFunction = "核验出库任务")
+    public static final String WMS_DO_VERIFICATION = "1030903";
+
+    @RightResource(rightSystem = "wms", rightItem = "出库任务", rightFunction = "出库")
+    public static final String WMS_DO_SHIP = "1030904";
+
 }

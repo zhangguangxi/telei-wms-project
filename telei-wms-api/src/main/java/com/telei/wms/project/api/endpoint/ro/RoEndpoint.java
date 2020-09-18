@@ -3,6 +3,7 @@ package com.telei.wms.project.api.endpoint.ro;
 import com.nuochen.framework.app.gateway.GatewayConstants;
 import com.telei.wms.project.api.ServiceId;
 import com.telei.wms.project.api.endpoint.ro.dto.*;
+import com.telei.wms.project.api.utils.DataConvertUtil;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,18 +29,30 @@ public class RoEndpoint {
     @ApiOperation("分页查询入库任务")
     @PostMapping(ServiceId.WMS_RO_HEADER_PAGE_QUERY)
     public RoHeaderPageQueryResponse pageQueryRoHeader(@RequestBody @Valid RoHeaderPageQueryRequest request) {
-        return roBussiness.pageQueryRoHeader(request);
+        return DataConvertUtil.parseDataAsObject(roBussiness.pageQueryRoHeader(request), RoHeaderPageQueryResponse.class);
     }
 
     @ApiOperation("查询入库任务详细")
     @PostMapping(ServiceId.WMS_RO_DETAIL)
     public RoHeaderDetailResponse roDetail(@RequestBody @Valid RoDetailRequest request) {
-        return roBussiness.roDetail(request);
+        return DataConvertUtil.parseDataAsObject(roBussiness.roDetail(request), RoHeaderDetailResponse.class);
     }
 
     @ApiOperation("修改入库任务主单")
     @PostMapping(ServiceId.WMS_RO_HEADER_UPDATE)
     public RoCudBaseResponse updateRoHeader(@RequestBody @Valid RoHeaderUpdateRequest request) {
         return roBussiness.updateRoHeader(request);
+    }
+
+    @ApiOperation("更新强制收货")
+    @PostMapping(ServiceId.WMS_RO_HEADER_UPDATE_ENFORCEMENT)
+    public RoCudBaseResponse updateRoHeaderEnforcement(@RequestBody @Valid RoHeaderUpdateEnforcementRequest request) {
+        return roBussiness.updateRoHeaderEnforcement(request);
+    }
+
+    @ApiOperation("获取强制收货状态")
+    @PostMapping(ServiceId.WMS_RO_HEADER_GET_ENFORCEMENT)
+    public RoCudBaseResponse getRoHeaderEnforcement(@RequestBody @Valid RoHeaderGetEnforcementRequest request) {
+        return roBussiness.getRoHeaderEnforcement(request);
     }
 }

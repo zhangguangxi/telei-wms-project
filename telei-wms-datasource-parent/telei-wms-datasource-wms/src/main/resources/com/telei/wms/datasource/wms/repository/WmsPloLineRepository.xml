@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.telei.wms.datasource.wms.repository.WmsPloLineRepository">
+
+    <resultMap id="PageQueryResultMap" extends="BaseResultMap" type="com.telei.wms.datasource.wms.vo.PloLinePageQueryResponseVo">
+        <result column="pl_user" jdbcType="VARCHAR" property="plUser"/>
+    </resultMap>
+
+    <sql id="Page_Query_Column_List">
+        wpl.plol_id,
+        wpl.plo_id,
+        wpl.plo_code,
+        wpl.dol_id,
+        wpl.product_id,
+        wpl.product_barcode,
+        wpl.spec_type,
+        wpl.media_id,
+        wpl.product_no,
+        wpl.product_name,
+        wpl.product_name_local,
+        wpl.product_upc_code,
+        wpl.brand,
+        wpl.unit_gross_weight,
+        wpl.unit_vol,
+        wpl.qty,
+        wpl.weight,
+        wpl.vol,
+        wpl.big_bag_qty,
+        wpl.big_bag_rate,
+        wpl.mid_bag_qty,
+        wpl.mid_bag_rate,
+        wpl.small_bag_qty,
+        wpl.picked_qty,
+        wpl.picked_weight,
+        wpl.picked_vol,
+        wpl.lc_code,
+        wpl.lc_aisle,
+        wpl.lc_x,
+        wpl.lc_y,
+        wpl.lc_z,
+        wpl.memo,
+        group_concat(wpd.create_user) pl_user
+    </sql>
+
+    <select id="findAll" resultMap="PageQueryResultMap">
+        SELECT
+        <include refid="Page_Query_Column_List"/>
+        FROM wms_plo_line wpl
+        LEFT JOIN wms_plo_detail wpd ON wpl.plol_id = wpd.plol_id
+        WHERE wpl.plo_id = #{ploId,jdbcType=BIGINT}
+        GROUP BY wpl.plol_id
+        ORDER BY wpl.plol_id DESC
+    </select>
+
+    <resultMap id="LocationResultMap" type="com.telei.wms.datasource.wms.vo.PloLineLocationResponseVo">
+        <result column="product_id" jdbcType="VARCHAR" property="productId"/>
+        <result column="lc_code" jdbcType="VARCHAR" property="lcCode"/>
+        <result column="lc_aisle" jdbcType="VARCHAR" property="lcAisle"/>
+        <result column="lc_x" jdbcType="VARCHAR" property="lcX"/>
+        <result column="lc_y" jdbcType="VARCHAR" property="lcY"/>
+        <result column="lc_z" jdbcType="VARCHAR" property="lcZ"/>
+    </resultMap>
+
+    <select id="findLocationAll" resultMap="LocationResultMap">
+        SELECT
+            wi.iv_id,
+            wi.product_id,
+            wi.lc_code,
+            wi.iv_qty,
+            wl.lc_aisle,
+            wl.lc_x,
+            wl.lc_y,
+            wl.lc_z
+        FROM
+            wms_inventory wi
+        INNER JOIN wms_location wl ON wl.lc_code = wi.lc_code
+        INNER JOIN (
+            SELECT
+                product_id,
+                max(iv_qty) iv_qty
+            FROM
+                wms_inventory
+            WHERE
+                warehouse_id=#{warehouseId,jdbcType=BIGINT}
+            AND product_id IN
+            <foreach close=")" collection="productIds" item="item" open="(" separator=",">
+                #{item}
+            </foreach>
+            GROUP BY
+                product_id
+            ORDER BY
+                iv_qty DESC
+        ) max_wi ON wi.product_id = max_wi.product_id
+        AND wi.iv_qty = max_wi.iv_qty
+        WHERE
+        wi.warehouse_id=#{warehouseId,jdbcType=BIGINT}
+        AND wi.lc_type='S'
+    </select>
+
+</mapper>
+

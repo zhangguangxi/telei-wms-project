@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.telei.wms.datasource.wms.repository.WmsPloHeaderRepository">
+
+    <resultMap id="PageQueryResultMap" extends="BaseResultMap" type="com.telei.wms.datasource.wms.vo.PloHeaderPageQueryResponseVo">
+        <result column="warehouse_name" jdbcType="VARCHAR" property="warehouseName"/>
+        <result column="supplier_name" jdbcType="VARCHAR" property="supplierName"/>
+        <result column="pl_user" jdbcType="VARCHAR" property="plUser"/>
+    </resultMap>
+
+    <sql id="Page_Query_Column_List">
+        wph.plo_id,
+        wph.plo_code,
+        wph.doh_id,
+        wph.doh_code,
+        wph.company_id,
+        wph.warehouse_id,
+        wph.warehouse_code,
+        wph.cust_order_no,
+        wph.supplier_id,
+        wph.customer_id,
+        wph.order_status,
+        wph.is_freezing,
+        wph.total_qty,
+        wph.total_weight,
+        wph.total_vol,
+        wph.detailed_species_qty,
+        wph.picked_qty,
+        wph.picking_weight,
+        wph.picking_vol,
+        wph.mobile_picking,
+        wph.memo,
+        wph.create_user,
+        wph.create_time,
+        wph.last_update_user,
+        wph.last_update_time,
+        cw.warehouse_name,
+        cs.supplier_name,
+        group_concat(wpd.create_user) pl_user
+    </sql>
+
+    <select id="findAll" resultMap="PageQueryResultMap">
+        SELECT
+        <include refid="Page_Query_Column_List"/>
+        FROM wms_plo_header wph
+        INNER JOIN cdm.cdm_warehouse cw ON cw.warehouse_id = wph.warehouse_id
+        INNER JOIN cdm.cdm_supplier cs ON cs.supplier_id = wph.supplier_id
+        LEFT JOIN wms_plo_detail wpd ON wph.plo_id = wpd.plo_id
+        <where>
+            <if test="ploCode != null and ploCode != ''">
+                wph.plo_code LIKE concat('%',#{ploCode},'%')
+            </if>
+            <if test="startTime != null and endTime != null and startTime != '' and endTime != ''">
+                AND wph.create_time&gt;=#{startTime} AND wph.create_time&lt;=#{endTime}
+            </if>
+            <if test="warehouseId != null and warehouseId != ''">
+                AND wph.warehouse_id=#{warehouseId}
+            </if>
+            <if test="orderStatus != null and orderStatus != ''">
+                AND wph.order_status=#{orderStatus}
+            </if>
+            AND wph.order_status!='99'
+        </where>
+        GROUP BY wph.plo_id
+        ORDER BY wph.plo_id DESC
+    </select>
+
+</mapper>
+

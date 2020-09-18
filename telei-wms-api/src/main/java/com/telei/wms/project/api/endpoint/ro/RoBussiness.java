@@ -1,6 +1,7 @@
 package com.telei.wms.project.api.endpoint.ro;
 
 import com.nuochen.framework.autocoding.domain.Pagination;
+import com.telei.infrastructure.component.commons.CustomRequestContext;
 import com.telei.infrastructure.component.idgenerator.contract.Id;
 import com.telei.wms.commons.utils.DateUtils;
 import com.telei.wms.customer.amqp.recovicePlan.OmsRecovicePlan;
@@ -35,6 +36,10 @@ public class RoBussiness {
 
     //删除
     private static final String DELETE_STATUS = "99";
+    //部分入库
+    private static final String PART_INVENTORY_STATUS = "40";
+    //关闭
+    private static final String CLOSE_STATUS = "98";
 
     @Autowired
     private Id idGenerator;
@@ -110,6 +115,8 @@ public class RoBussiness {
             ErrorCode.RO_NOT_EXIST_4001.throwError();
         }
         WmsRoHeader wmsRoHeader = DataConvertUtil.parseDataAsObject(request, WmsRoHeader.class);
+        wmsRoHeader.setLastUpdateUser(CustomRequestContext.getUserInfo().getUserName());
+        wmsRoHeader.setLastUpdateTime(DateUtils.nowWithUTC());
         int updateResult = wmsRoHeaderService.updateByPrimaryKeySelective(wmsRoHeader);
         RoCudBaseResponse response = new RoCudBaseResponse();
         response.setIsSuccess(updateResult > 0);
@@ -126,37 +133,101 @@ public class RoBussiness {
         WmsRoHeader wmsRoHeaderEntity = DataConvertUtil.parseDataAsObject(request, WmsRoHeader.class);
         OmsRecovicePlan omsRecovicePlan = new OmsRecovicePlan();
         omsRecovicePlan.setId(request.getRpId());
-        //默认审核状态
-        omsRecovicePlan.setOrderStatus("10");
+        //默认撤销失败状态
+        omsRecovicePlan.setOrderStatus("92");
         //获取锁标识
         String lockKey = String.valueOf(request.getRpId());
         Object lockValue = tryLock(lockKey);
-        WmsRoHeader wmsRoHeader = wmsRoHeaderService.selectOneByEntity(wmsRoHeaderEntity);
-        if (Objects.isNull(wmsRoHeader)) {
-            //待同步状态
-            omsRecovicePlan.setOrderStatus("90");
-        } else if (DELETE_STATUS.equals(wmsRoHeader.getOrderStatus())) {
-            //已撤销状态
-            omsRecovicePlan.setOrderStatus("91");
-        } else if (wmsRoHeader.getReceQty().intValue() <= 0) {
-            //确认锁
-            if (confirmLock(lockKey, lockValue)) {
-                //取消入库任务
-                WmsRoHeader updateWmsRoHeader = new WmsRoHeader();
-                updateWmsRoHeader.setId(wmsRoHeader.getId());
-                updateWmsRoHeader.setOrderStatus(DELETE_STATUS);
-                wmsRoHeaderService.updateByPrimaryKey(updateWmsRoHeader);
+        try {
+            WmsRoHeader wmsRoHeader = wmsRoHeaderService.selectOneByEntity(wmsRoHeaderEntity);
+            if (Objects.isNull(wmsRoHeader)) {
+                //待同步状态
+                omsRecovicePlan.setOrderStatus("90");
+            } else if (DELETE_STATUS.equals(wmsRoHeader.getOrderStatus())) {
                 //已撤销状态
                 omsRecovicePlan.setOrderStatus("91");
+            } else if (wmsRoHeader.getReceQty().intValue() <= 0) {
+                //确认锁
+                if (confirmLock(lockKey, lockValue)) {
+                    //取消入库任务
+                    WmsRoHeader updateWmsRoHeader = new WmsRoHeader();
+                    updateWmsRoHeader.setId(wmsRoHeader.getId());
+                    updateWmsRoHeader.setOrderStatus(DELETE_STATUS);
+                    wmsRoHeaderService.updateByPrimaryKey(updateWmsRoHeader);
+                    //已撤销状态
+                    omsRecovicePlan.setOrderStatus("91");
+                }
             }
+        } finally {
+            //释放锁
+            cancelLock(lockKey, lockValue);
         }
-        //释放锁
-        cancelLock(lockKey, lockValue);
         //添加数据交互指令
         WmsIdInstantdirective wmsIdInstantdirective = wmsIdInstantdirectiveBussiness.add("PUTON", "", omsRecovicePlan);
         //发送消息到队列
         wmsOmsRecovicePlanCancelCallbackProducer.send(wmsIdInstantdirective);
         RoCudBaseResponse response = new RoCudBaseResponse();
+        return response;
+    }
+
+    /**
+     * 获取强制收货状态
+     * @param request
+     * @return
+     */
+    public RoCudBaseResponse getRoHeaderEnforcement(RoHeaderGetEnforcementRequest request) {
+        WmsRoHeader wmsRoHeaderEntity = DataConvertUtil.parseDataAsObject(request, WmsRoHeader.class);
+        WmsRoHeader wmsRoHeader = wmsRoHeaderService.selectOneByEntity(wmsRoHeaderEntity);
+        if (Objects.isNull(wmsRoHeader)) {
+            ErrorCode.RO_NOT_EXIST_4001.throwError();
+        }
+        RoCudBaseResponse response = new RoCudBaseResponse();
+        response.setIsSuccess(wmsRoHeader.getEnforcement() == 1);
+        return response;
+    }
+
+    /**
+     * 更新强制收货
+     * @param request
+     * @return
+     */
+    @Transactional(rollbackFor = Exception.class)
+    public RoCudBaseResponse updateRoHeaderEnforcement(RoHeaderUpdateEnforcementRequest request) {
+        WmsRoHeader wmsRoHeaderEntity = DataConvertUtil.parseDataAsObject(request, WmsRoHeader.class);
+        RoCudBaseResponse response = new RoCudBaseResponse();
+        //获取锁标识
+        String lockKey = String.valueOf(request.getRpId());
+        Object lockValue = tryLock(lockKey);
+        try {
+            WmsRoHeader wmsRoHeader = wmsRoHeaderService.selectOneByEntity(wmsRoHeaderEntity);
+            if (Objects.isNull(wmsRoHeader)) {
+                ErrorCode.RO_NOT_EXIST_4001.throwError();
+            }
+            if (! PART_INVENTORY_STATUS.equals(wmsRoHeader.getOrderStatus())) {
+                //强制收货状态不正确
+                ErrorCode.RO_ENFORCEMENT_ERROR_4002.throwError();
+            }
+            if (wmsRoHeader.getReceQty().compareTo(wmsRoHeader.getPutawayQty()) != 0) {
+                //收货数和上架数不相等不能强制收货
+                ErrorCode.RO_ENFORCEMENT_ERROR_4003.throwError();
+            }
+            WmsRoHeader updateWmsRoHeader = new WmsRoHeader();
+            updateWmsRoHeader.setId(wmsRoHeader.getId());
+            updateWmsRoHeader.setOrderStatus(CLOSE_STATUS);
+            updateWmsRoHeader.setEnforcement(1);
+            wmsRoHeader.setLastUpdateUser(CustomRequestContext.getUserInfo().getUserName());
+            wmsRoHeader.setLastUpdateTime(DateUtils.nowWithUTC());
+            //确认锁
+            if (confirmLock(lockKey, lockValue)) {
+                int updateResult = wmsRoHeaderService.updateByPrimaryKeySelective(updateWmsRoHeader);
+                response.setIsSuccess(updateResult > 0);
+            } else {
+                response.setIsSuccess(false);
+            }
+        } finally {
+            //释放锁
+            cancelLock(lockKey, lockValue);
+        }
         return response;
     }
 }

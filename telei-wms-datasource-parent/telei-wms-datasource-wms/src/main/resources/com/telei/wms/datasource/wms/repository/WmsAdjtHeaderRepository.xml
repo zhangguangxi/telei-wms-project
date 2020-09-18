@@ -8,7 +8,7 @@
         wa.adjh_type,
         cp.product_no,
         cp.product_name,
-        cp.product_barcode;
+        cp.product_barcode,
         wa.iv_qty,
         wa.lc_code,
         wa.iv_qty_adjt,
@@ -16,17 +16,16 @@
         wa.reason
     </sql>
 
-
     <select id="selectCustomPage" resultType="com.telei.wms.datasource.wms.vo.WmsAdjustHeaderPageQueryResponseVo">
         select
-        <include refid="Custom_Base_Column_List"></include>
+        <include refid="Custom_Base_Column_List"/>
         from wms_adjt_header wa
-        left join cdm cdm_product cp
-        on  cp.product_id  = wa.product.id
+        left join cdm.cdm_product cp on  cp.product_id = wa.product_id
         <where>
             <if test="lcCode != null">
-                and wi.lc_code ${lcCode}
+                and wa.lc_code ${lcCode}
             </if>
+
             <if test="productNo != null">
                 and cp.product_no ${productNo}
             </if>
@@ -38,8 +37,18 @@
             <if test="productBarcode != null">
                 and cp.product_barcode ${productBarcode}
             </if>
+
             <if test="lcType != null">
-                and wi.lc_type ${lcType}
+                and wa.lc_type ${lcType}
+            </if>
+
+            <if test="warehouseId != null">
+                and wa.warehouse_id ${warehouseId}
+            </if>
+
+            <if test="companyId != null">
+                and wa.company_id ${companyId}
+                and wa.company_id = cp.company_id
             </if>
         </where>
         <if test="orderBy != null">

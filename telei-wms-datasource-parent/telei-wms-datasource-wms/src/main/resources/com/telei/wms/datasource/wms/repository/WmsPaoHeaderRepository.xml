@@ -14,10 +14,10 @@
                 wph.create_time&gt;=#{startTime} AND wph.create_time&lt;=#{endTime}
             </if>
             <if test="rooCode != null and rooCode != ''">
-                AND wph.roo_code=#{rooCode}
+                AND wph.roo_code LIKE concat('%',#{rooCode},'%')
             </if>
             <if test="paoCode != null and paoCode != ''">
-                AND wph.pao_code=#{paoCode}
+                AND wph.pao_code LIKE concat('%',#{paoCode},'%')
             </if>
             <if test="putawayUser != null and putawayUser != ''">
                 AND wph.putaway_user=#{putawayUser}

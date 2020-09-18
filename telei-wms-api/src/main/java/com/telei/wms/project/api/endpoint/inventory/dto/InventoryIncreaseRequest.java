@@ -12,7 +12,7 @@ import java.math.BigDecimal;
  */
 @Data
 public class InventoryIncreaseRequest {
-    @ApiModelProperty(value = "公司编码",example = "1234123",position = 1)
+    @ApiModelProperty(value = "公司编码",example = "12342123",position = 1)
     @Check
     private String companyId;
     @ApiModelProperty(value = "仓库id",example = "123412342",position = 2)

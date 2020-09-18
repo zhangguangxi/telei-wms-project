@@ -1,0 +1,788 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.telei.wms.datasource.wms.repository.WmsPloLineRepository">
+    <resultMap id="BaseResultMap" type="com.telei.wms.datasource.wms.model.WmsPloLine">
+        <id column="plol_id" jdbcType="BIGINT" property="id"/>
+            <result column="plo_id" jdbcType="BIGINT" property="ploId"/>
+            <result column="plo_code" jdbcType="VARCHAR" property="ploCode"/>
+            <result column="dol_id" jdbcType="BIGINT" property="dolId"/>
+            <result column="product_id" jdbcType="BIGINT" property="productId"/>
+            <result column="product_barcode" jdbcType="VARCHAR" property="productBarcode"/>
+            <result column="spec_type" jdbcType="VARCHAR" property="specType"/>
+            <result column="media_id" jdbcType="VARCHAR" property="mediaId"/>
+            <result column="product_no" jdbcType="VARCHAR" property="productNo"/>
+            <result column="product_name" jdbcType="VARCHAR" property="productName"/>
+            <result column="product_name_local" jdbcType="VARCHAR" property="productNameLocal"/>
+            <result column="product_upc_code" jdbcType="VARCHAR" property="productUpcCode"/>
+            <result column="brand" jdbcType="VARCHAR" property="brand"/>
+            <result column="unit_gross_weight" jdbcType="DECIMAL" property="unitGrossWeight"/>
+            <result column="unit_vol" jdbcType="DECIMAL" property="unitVol"/>
+            <result column="qty" jdbcType="DECIMAL" property="qty"/>
+            <result column="weight" jdbcType="DECIMAL" property="weight"/>
+            <result column="vol" jdbcType="DECIMAL" property="vol"/>
+            <result column="big_bag_qty" jdbcType="DECIMAL" property="bigBagQty"/>
+            <result column="big_bag_rate" jdbcType="DECIMAL" property="bigBagRate"/>
+            <result column="mid_bag_qty" jdbcType="DECIMAL" property="midBagQty"/>
+            <result column="mid_bag_rate" jdbcType="DECIMAL" property="midBagRate"/>
+            <result column="small_bag_qty" jdbcType="DECIMAL" property="smallBagQty"/>
+            <result column="picked_qty" jdbcType="DECIMAL" property="pickedQty"/>
+            <result column="picked_weight" jdbcType="DECIMAL" property="pickedWeight"/>
+            <result column="picked_vol" jdbcType="DECIMAL" property="pickedVol"/>
+            <result column="lc_code" jdbcType="VARCHAR" property="lcCode"/>
+            <result column="lc_aisle" jdbcType="VARCHAR" property="lcAisle"/>
+            <result column="lc_x" jdbcType="VARCHAR" property="lcX"/>
+            <result column="lc_y" jdbcType="VARCHAR" property="lcY"/>
+            <result column="lc_z" jdbcType="VARCHAR" property="lcZ"/>
+            <result column="memo" jdbcType="VARCHAR" property="memo"/>
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        plol_id,plo_id,plo_code,dol_id,product_id,product_barcode,spec_type,media_id,product_no,product_name,product_name_local,product_upc_code,brand,unit_gross_weight,unit_vol,qty,weight,vol,big_bag_qty,big_bag_rate,mid_bag_qty,mid_bag_rate,small_bag_qty,picked_qty,picked_weight,picked_vol,lc_code,lc_aisle,lc_x,lc_y,lc_z,memo
+    </sql>
+
+        <insert id="insert">
+            insert into wms_plo_line (plol_id,plo_id,plo_code,dol_id,product_id,product_barcode,spec_type,media_id,product_no,product_name,product_name_local,product_upc_code,brand,unit_gross_weight,unit_vol,qty,weight,vol,big_bag_qty,big_bag_rate,mid_bag_qty,mid_bag_rate,small_bag_qty,picked_qty,picked_weight,picked_vol,lc_code,lc_aisle,lc_x,lc_y,lc_z,memo)
+            values (#{id,jdbcType=BIGINT},#{ploId,jdbcType=BIGINT},#{ploCode,jdbcType=VARCHAR},#{dolId,jdbcType=BIGINT},#{productId,jdbcType=BIGINT},#{productBarcode,jdbcType=VARCHAR},#{specType,jdbcType=VARCHAR},#{mediaId,jdbcType=VARCHAR},#{productNo,jdbcType=VARCHAR},#{productName,jdbcType=VARCHAR},#{productNameLocal,jdbcType=VARCHAR},#{productUpcCode,jdbcType=VARCHAR},#{brand,jdbcType=VARCHAR},#{unitGrossWeight,jdbcType=DECIMAL},#{unitVol,jdbcType=DECIMAL},#{qty,jdbcType=DECIMAL},#{weight,jdbcType=DECIMAL},#{vol,jdbcType=DECIMAL},#{bigBagQty,jdbcType=DECIMAL},#{bigBagRate,jdbcType=DECIMAL},#{midBagQty,jdbcType=DECIMAL},#{midBagRate,jdbcType=DECIMAL},#{smallBagQty,jdbcType=DECIMAL},#{pickedQty,jdbcType=DECIMAL},#{pickedWeight,jdbcType=DECIMAL},#{pickedVol,jdbcType=DECIMAL},#{lcCode,jdbcType=VARCHAR},#{lcAisle,jdbcType=VARCHAR},#{lcX,jdbcType=VARCHAR},#{lcY,jdbcType=VARCHAR},#{lcZ,jdbcType=VARCHAR},#{memo,jdbcType=VARCHAR})
+        </insert>
+
+        <insert id="insertSelective">
+            insert into wms_plo_line
+            <trim prefix="(" suffix=")" suffixOverrides=",">
+                    <if test="id != null">
+                        plol_id,
+                    </if>
+                    <if test="ploId != null">
+                        plo_id,
+                    </if>
+                    <if test="ploCode != null">
+                        plo_code,
+                    </if>
+                    <if test="dolId != null">
+                        dol_id,
+                    </if>
+                    <if test="productId != null">
+                        product_id,
+                    </if>
+                    <if test="productBarcode != null">
+                        product_barcode,
+                    </if>
+                    <if test="specType != null">
+                        spec_type,
+                    </if>
+                    <if test="mediaId != null">
+                        media_id,
+                    </if>
+                    <if test="productNo != null">
+                        product_no,
+                    </if>
+                    <if test="productName != null">
+                        product_name,
+                    </if>
+                    <if test="productNameLocal != null">
+                        product_name_local,
+                    </if>
+                    <if test="productUpcCode != null">
+                        product_upc_code,
+                    </if>
+                    <if test="brand != null">
+                        brand,
+                    </if>
+                    <if test="unitGrossWeight != null">
+                        unit_gross_weight,
+                    </if>
+                    <if test="unitVol != null">
+                        unit_vol,
+                    </if>
+                    <if test="qty != null">
+                        qty,
+                    </if>
+                    <if test="weight != null">
+                        weight,
+                    </if>
+                    <if test="vol != null">
+                        vol,
+                    </if>
+                    <if test="bigBagQty != null">
+                        big_bag_qty,
+                    </if>
+                    <if test="bigBagRate != null">
+                        big_bag_rate,
+                    </if>
+                    <if test="midBagQty != null">
+                        mid_bag_qty,
+                    </if>
+                    <if test="midBagRate != null">
+                        mid_bag_rate,
+                    </if>
+                    <if test="smallBagQty != null">
+                        small_bag_qty,
+                    </if>
+                    <if test="pickedQty != null">
+                        picked_qty,
+                    </if>
+                    <if test="pickedWeight != null">
+                        picked_weight,
+                    </if>
+                    <if test="pickedVol != null">
+                        picked_vol,
+                    </if>
+                    <if test="lcCode != null">
+                        lc_code,
+                    </if>
+                    <if test="lcAisle != null">
+                        lc_aisle,
+                    </if>
+                    <if test="lcX != null">
+                        lc_x,
+                    </if>
+                    <if test="lcY != null">
+                        lc_y,
+                    </if>
+                    <if test="lcZ != null">
+                        lc_z,
+                    </if>
+                    <if test="memo != null">
+                        memo
+                    </if>
+            </trim>
+            <trim prefix="values (" suffix=")" suffixOverrides=",">
+                    <if test="id != null">
+                        #{id,jdbcType=BIGINT},
+                    </if>
+                    <if test="ploId != null">
+                        #{ploId,jdbcType=BIGINT},
+                    </if>
+                    <if test="ploCode != null">
+                        #{ploCode,jdbcType=VARCHAR},
+                    </if>
+                    <if test="dolId != null">
+                        #{dolId,jdbcType=BIGINT},
+                    </if>
+                    <if test="productId != null">
+                        #{productId,jdbcType=BIGINT},
+                    </if>
+                    <if test="productBarcode != null">
+                        #{productBarcode,jdbcType=VARCHAR},
+                    </if>
+                    <if test="specType != null">
+                        #{specType,jdbcType=VARCHAR},
+                    </if>
+                    <if test="mediaId != null">
+                        #{mediaId,jdbcType=VARCHAR},
+                    </if>
+                    <if test="productNo != null">
+                        #{productNo,jdbcType=VARCHAR},
+                    </if>
+                    <if test="productName != null">
+                        #{productName,jdbcType=VARCHAR},
+                    </if>
+                    <if test="productNameLocal != null">
+                        #{productNameLocal,jdbcType=VARCHAR},
+                    </if>
+                    <if test="productUpcCode != null">
+                        #{productUpcCode,jdbcType=VARCHAR},
+                    </if>
+                    <if test="brand != null">
+                        #{brand,jdbcType=VARCHAR},
+                    </if>
+                    <if test="unitGrossWeight != null">
+                        #{unitGrossWeight,jdbcType=DECIMAL},
+                    </if>
+                    <if test="unitVol != null">
+                        #{unitVol,jdbcType=DECIMAL},
+                    </if>
+                    <if test="qty != null">
+                        #{qty,jdbcType=DECIMAL},
+                    </if>
+                    <if test="weight != null">
+                        #{weight,jdbcType=DECIMAL},
+                    </if>
+                    <if test="vol != null">
+                        #{vol,jdbcType=DECIMAL},
+                    </if>
+                    <if test="bigBagQty != null">
+                        #{bigBagQty,jdbcType=DECIMAL},
+                    </if>
+                    <if test="bigBagRate != null">
+                        #{bigBagRate,jdbcType=DECIMAL},
+                    </if>
+                    <if test="midBagQty != null">
+                        #{midBagQty,jdbcType=DECIMAL},
+                    </if>
+                    <if test="midBagRate != null">
+                        #{midBagRate,jdbcType=DECIMAL},
+                    </if>
+                    <if test="smallBagQty != null">
+                        #{smallBagQty,jdbcType=DECIMAL},
+                    </if>
+                    <if test="pickedQty != null">
+                        #{pickedQty,jdbcType=DECIMAL},
+                    </if>
+                    <if test="pickedWeight != null">
+                        #{pickedWeight,jdbcType=DECIMAL},
+                    </if>
+                    <if test="pickedVol != null">
+                        #{pickedVol,jdbcType=DECIMAL},
+                    </if>
+                    <if test="lcCode != null">
+                        #{lcCode,jdbcType=VARCHAR},
+                    </if>
+                    <if test="lcAisle != null">
+                        #{lcAisle,jdbcType=VARCHAR},
+                    </if>
+                    <if test="lcX != null">
+                        #{lcX,jdbcType=VARCHAR},
+                    </if>
+                    <if test="lcY != null">
+                        #{lcY,jdbcType=VARCHAR},
+                    </if>
+                    <if test="lcZ != null">
+                        #{lcZ,jdbcType=VARCHAR},
+                    </if>
+                    <if test="memo != null">
+                        #{memo,jdbcType=VARCHAR}
+                    </if>
+            </trim>
+        </insert>
+
+        <insert id="insertBatch">
+            insert into wms_plo_line (plol_id,plo_id,plo_code,dol_id,product_id,product_barcode,spec_type,media_id,product_no,product_name,product_name_local,product_upc_code,brand,unit_gross_weight,unit_vol,qty,weight,vol,big_bag_qty,big_bag_rate,mid_bag_qty,mid_bag_rate,small_bag_qty,picked_qty,picked_weight,picked_vol,lc_code,lc_aisle,lc_x,lc_y,lc_z,memo) values
+            <foreach collection="list" item="item" separator=",">
+                (
+                    #{item.id,jdbcType=BIGINT},
+                    #{item.ploId,jdbcType=BIGINT},
+                    #{item.ploCode,jdbcType=VARCHAR},
+                    #{item.dolId,jdbcType=BIGINT},
+                    #{item.productId,jdbcType=BIGINT},
+                    #{item.productBarcode,jdbcType=VARCHAR},
+                    #{item.specType,jdbcType=VARCHAR},
+                    #{item.mediaId,jdbcType=VARCHAR},
+                    #{item.productNo,jdbcType=VARCHAR},
+                    #{item.productName,jdbcType=VARCHAR},
+                    #{item.productNameLocal,jdbcType=VARCHAR},
+                    #{item.productUpcCode,jdbcType=VARCHAR},
+                    #{item.brand,jdbcType=VARCHAR},
+                    #{item.unitGrossWeight,jdbcType=DECIMAL},
+                    #{item.unitVol,jdbcType=DECIMAL},
+                    #{item.qty,jdbcType=DECIMAL},
+                    #{item.weight,jdbcType=DECIMAL},
+                    #{item.vol,jdbcType=DECIMAL},
+                    #{item.bigBagQty,jdbcType=DECIMAL},
+                    #{item.bigBagRate,jdbcType=DECIMAL},
+                    #{item.midBagQty,jdbcType=DECIMAL},
+                    #{item.midBagRate,jdbcType=DECIMAL},
+                    #{item.smallBagQty,jdbcType=DECIMAL},
+                    #{item.pickedQty,jdbcType=DECIMAL},
+                    #{item.pickedWeight,jdbcType=DECIMAL},
+                    #{item.pickedVol,jdbcType=DECIMAL},
+                    #{item.lcCode,jdbcType=VARCHAR},
+                    #{item.lcAisle,jdbcType=VARCHAR},
+                    #{item.lcX,jdbcType=VARCHAR},
+                    #{item.lcY,jdbcType=VARCHAR},
+                    #{item.lcZ,jdbcType=VARCHAR},
+                    #{item.memo,jdbcType=VARCHAR}
+                )
+            </foreach>
+        </insert>
+
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+        delete from wms_plo_line
+        where plol_id = #{id,jdbcType=BIGINT}
+    </delete>
+
+    <delete id="deleteByPrimaryKeys">
+        delete from wms_plo_line where plol_id in
+        <foreach close=")" collection="list" item="item" open="(" separator=",">
+            #{item}
+        </foreach>
+    </delete>
+
+    <update id="updateByPrimaryKey">
+        update wms_plo_line
+        <set>
+                plo_id = #{ploId,jdbcType=BIGINT},
+                plo_code = #{ploCode,jdbcType=VARCHAR},
+                dol_id = #{dolId,jdbcType=BIGINT},
+                product_id = #{productId,jdbcType=BIGINT},
+                product_barcode = #{productBarcode,jdbcType=VARCHAR},
+                spec_type = #{specType,jdbcType=VARCHAR},
+                media_id = #{mediaId,jdbcType=VARCHAR},
+                product_no = #{productNo,jdbcType=VARCHAR},
+                product_name = #{productName,jdbcType=VARCHAR},
+                product_name_local = #{productNameLocal,jdbcType=VARCHAR},
+                product_upc_code = #{productUpcCode,jdbcType=VARCHAR},
+                brand = #{brand,jdbcType=VARCHAR},
+                unit_gross_weight = #{unitGrossWeight,jdbcType=DECIMAL},
+                unit_vol = #{unitVol,jdbcType=DECIMAL},
+                qty = #{qty,jdbcType=DECIMAL},
+                weight = #{weight,jdbcType=DECIMAL},
+                vol = #{vol,jdbcType=DECIMAL},
+                big_bag_qty = #{bigBagQty,jdbcType=DECIMAL},
+                big_bag_rate = #{bigBagRate,jdbcType=DECIMAL},
+                mid_bag_qty = #{midBagQty,jdbcType=DECIMAL},
+                mid_bag_rate = #{midBagRate,jdbcType=DECIMAL},
+                small_bag_qty = #{smallBagQty,jdbcType=DECIMAL},
+                picked_qty = #{pickedQty,jdbcType=DECIMAL},
+                picked_weight = #{pickedWeight,jdbcType=DECIMAL},
+                picked_vol = #{pickedVol,jdbcType=DECIMAL},
+                lc_code = #{lcCode,jdbcType=VARCHAR},
+                lc_aisle = #{lcAisle,jdbcType=VARCHAR},
+                lc_x = #{lcX,jdbcType=VARCHAR},
+                lc_y = #{lcY,jdbcType=VARCHAR},
+                lc_z = #{lcZ,jdbcType=VARCHAR},
+                memo = #{memo,jdbcType=VARCHAR}
+        </set>
+        where plol_id = #{id,jdbcType=BIGINT}
+    </update>
+
+    <update id="updateByPrimaryKeySelective">
+        update wms_plo_line
+        <set>
+                <if test="ploId != null">
+                    plo_id = #{ploId,jdbcType=BIGINT},
+                </if>
+                <if test="ploCode != null">
+                    plo_code = #{ploCode,jdbcType=VARCHAR},
+                </if>
+                <if test="dolId != null">
+                    dol_id = #{dolId,jdbcType=BIGINT},
+                </if>
+                <if test="productId != null">
+                    product_id = #{productId,jdbcType=BIGINT},
+                </if>
+                <if test="productBarcode != null">
+                    product_barcode = #{productBarcode,jdbcType=VARCHAR},
+                </if>
+                <if test="specType != null">
+                    spec_type = #{specType,jdbcType=VARCHAR},
+                </if>
+                <if test="mediaId != null">
+                    media_id = #{mediaId,jdbcType=VARCHAR},
+                </if>
+                <if test="productNo != null">
+                    product_no = #{productNo,jdbcType=VARCHAR},
+                </if>
+                <if test="productName != null">
+                    product_name = #{productName,jdbcType=VARCHAR},
+                </if>
+                <if test="productNameLocal != null">
+                    product_name_local = #{productNameLocal,jdbcType=VARCHAR},
+                </if>
+                <if test="productUpcCode != null">
+                    product_upc_code = #{productUpcCode,jdbcType=VARCHAR},
+                </if>
+                <if test="brand != null">
+                    brand = #{brand,jdbcType=VARCHAR},
+                </if>
+                <if test="unitGrossWeight != null">
+                    unit_gross_weight = #{unitGrossWeight,jdbcType=DECIMAL},
+                </if>
+                <if test="unitVol != null">
+                    unit_vol = #{unitVol,jdbcType=DECIMAL},
+                </if>
+                <if test="qty != null">
+                    qty = #{qty,jdbcType=DECIMAL},
+                </if>
+                <if test="weight != null">
+                    weight = #{weight,jdbcType=DECIMAL},
+                </if>
+                <if test="vol != null">
+                    vol = #{vol,jdbcType=DECIMAL},
+                </if>
+                <if test="bigBagQty != null">
+                    big_bag_qty = #{bigBagQty,jdbcType=DECIMAL},
+                </if>
+                <if test="bigBagRate != null">
+                    big_bag_rate = #{bigBagRate,jdbcType=DECIMAL},
+                </if>
+                <if test="midBagQty != null">
+                    mid_bag_qty = #{midBagQty,jdbcType=DECIMAL},
+                </if>
+                <if test="midBagRate != null">
+                    mid_bag_rate = #{midBagRate,jdbcType=DECIMAL},
+                </if>
+                <if test="smallBagQty != null">
+                    small_bag_qty = #{smallBagQty,jdbcType=DECIMAL},
+                </if>
+                <if test="pickedQty != null">
+                    picked_qty = #{pickedQty,jdbcType=DECIMAL},
+                </if>
+                <if test="pickedWeight != null">
+                    picked_weight = #{pickedWeight,jdbcType=DECIMAL},
+                </if>
+                <if test="pickedVol != null">
+                    picked_vol = #{pickedVol,jdbcType=DECIMAL},
+                </if>
+                <if test="lcCode != null">
+                    lc_code = #{lcCode,jdbcType=VARCHAR},
+                </if>
+                <if test="lcAisle != null">
+                    lc_aisle = #{lcAisle,jdbcType=VARCHAR},
+                </if>
+                <if test="lcX != null">
+                    lc_x = #{lcX,jdbcType=VARCHAR},
+                </if>
+                <if test="lcY != null">
+                    lc_y = #{lcY,jdbcType=VARCHAR},
+                </if>
+                <if test="lcZ != null">
+                    lc_z = #{lcZ,jdbcType=VARCHAR},
+                </if>
+                <if test="memo != null">
+                    memo = #{memo,jdbcType=VARCHAR}
+                </if>
+        </set>
+        where plol_id = #{id,jdbcType=BIGINT}
+    </update>
+
+    <update id="updateBatch">
+        <foreach close="" collection="list" item="item" open="" separator=";">
+            update wms_plo_line
+            <set>
+                    <if test="item.ploId != null">
+                        plo_id = #{item.ploId,jdbcType=BIGINT},
+                    </if>
+                    <if test="item.ploCode != null">
+                        plo_code = #{item.ploCode,jdbcType=VARCHAR},
+                    </if>
+                    <if test="item.dolId != null">
+                        dol_id = #{item.dolId,jdbcType=BIGINT},
+                    </if>
+                    <if test="item.productId != null">
+                        product_id = #{item.productId,jdbcType=BIGINT},
+                    </if>
+                    <if test="item.productBarcode != null">
+                        product_barcode = #{item.productBarcode,jdbcType=VARCHAR},
+                    </if>
+                    <if test="item.specType != null">
+                        spec_type = #{item.specType,jdbcType=VARCHAR},
+                    </if>
+                    <if test="item.mediaId != null">
+                        media_id = #{item.mediaId,jdbcType=VARCHAR},
+                    </if>
+                    <if test="item.productNo != null">
+                        product_no = #{item.productNo,jdbcType=VARCHAR},
+                    </if>
+                    <if test="item.productName != null">
+                        product_name = #{item.productName,jdbcType=VARCHAR},
+                    </if>
+                    <if test="item.productNameLocal != null">
+                        product_name_local = #{item.productNameLocal,jdbcType=VARCHAR},
+                    </if>
+                    <if test="item.productUpcCode != null">
+                        product_upc_code = #{item.productUpcCode,jdbcType=VARCHAR},
+                    </if>
+                    <if test="item.brand != null">
+                        brand = #{item.brand,jdbcType=VARCHAR},
+                    </if>
+                    <if test="item.unitGrossWeight != null">
+                        unit_gross_weight = #{item.unitGrossWeight,jdbcType=DECIMAL},
+                    </if>
+                    <if test="item.unitVol != null">
+                        unit_vol = #{item.unitVol,jdbcType=DECIMAL},
+                    </if>
+                    <if test="item.qty != null">
+                        qty = #{item.qty,jdbcType=DECIMAL},
+                    </if>
+                    <if test="item.weight != null">
+                        weight = #{item.weight,jdbcType=DECIMAL},
+                    </if>
+                    <if test="item.vol != null">
+                        vol = #{item.vol,jdbcType=DECIMAL},
+                    </if>
+                    <if test="item.bigBagQty != null">
+                        big_bag_qty = #{item.bigBagQty,jdbcType=DECIMAL},
+                    </if>
+                    <if test="item.bigBagRate != null">
+                        big_bag_rate = #{item.bigBagRate,jdbcType=DECIMAL},
+                    </if>
+                    <if test="item.midBagQty != null">
+                        mid_bag_qty = #{item.midBagQty,jdbcType=DECIMAL},
+                    </if>
+                    <if test="item.midBagRate != null">
+                        mid_bag_rate = #{item.midBagRate,jdbcType=DECIMAL},
+                    </if>
+                    <if test="item.smallBagQty != null">
+                        small_bag_qty = #{item.smallBagQty,jdbcType=DECIMAL},
+                    </if>
+                    <if test="item.pickedQty != null">
+                        picked_qty = #{item.pickedQty,jdbcType=DECIMAL},
+                    </if>
+                    <if test="item.pickedWeight != null">
+                        picked_weight = #{item.pickedWeight,jdbcType=DECIMAL},
+                    </if>
+                    <if test="item.pickedVol != null">
+                        picked_vol = #{item.pickedVol,jdbcType=DECIMAL},
+                    </if>
+                    <if test="item.lcCode != null">
+                        lc_code = #{item.lcCode,jdbcType=VARCHAR},
+                    </if>
+                    <if test="item.lcAisle != null">
+                        lc_aisle = #{item.lcAisle,jdbcType=VARCHAR},
+                    </if>
+                    <if test="item.lcX != null">
+                        lc_x = #{item.lcX,jdbcType=VARCHAR},
+                    </if>
+                    <if test="item.lcY != null">
+                        lc_y = #{item.lcY,jdbcType=VARCHAR},
+                    </if>
+                    <if test="item.lcZ != null">
+                        lc_z = #{item.lcZ,jdbcType=VARCHAR},
+                    </if>
+                    <if test="item.memo != null">
+                        memo = #{item.memo,jdbcType=VARCHAR}
+                    </if>
+            </set>
+            where plol_id = #{item.id,jdbcType=BIGINT}
+        </foreach>
+    </update>
+
+    <select id="selectByPrimaryKey" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List" />
+        from wms_plo_line
+        where plol_id = #{id,jdbcType=BIGINT}
+    </select>
+
+    <select id="selectByPrimaryKeyWithLock" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List" />
+        from wms_plo_line
+        where plol_id = #{id,jdbcType=BIGINT} for update
+    </select>
+
+    <select id="selectByPrimaryKeys" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List" />
+        from wms_plo_line where plol_id in
+        <foreach close=")" collection="list" item="item" open="(" separator=",">
+            #{item}
+        </foreach>
+    </select>
+
+    <select id="selectByEntity" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from wms_plo_line
+        <where>
+                <if test="id != null">
+                    and plol_id=#{id,jdbcType=BIGINT}
+                </if>
+                <if test="ploId != null">
+                    and plo_id=#{ploId,jdbcType=BIGINT}
+                </if>
+                <if test="ploCode != null">
+                    and plo_code=#{ploCode,jdbcType=VARCHAR}
+                </if>
+                <if test="dolId != null">
+                    and dol_id=#{dolId,jdbcType=BIGINT}
+                </if>
+                <if test="productId != null">
+                    and product_id=#{productId,jdbcType=BIGINT}
+                </if>
+                <if test="productBarcode != null">
+                    and product_barcode=#{productBarcode,jdbcType=VARCHAR}
+                </if>
+                <if test="specType != null">
+                    and spec_type=#{specType,jdbcType=VARCHAR}
+                </if>
+                <if test="mediaId != null">
+                    and media_id=#{mediaId,jdbcType=VARCHAR}
+                </if>
+                <if test="productNo != null">
+                    and product_no=#{productNo,jdbcType=VARCHAR}
+                </if>
+                <if test="productName != null">
+                    and product_name=#{productName,jdbcType=VARCHAR}
+                </if>
+                <if test="productNameLocal != null">
+                    and product_name_local=#{productNameLocal,jdbcType=VARCHAR}
+                </if>
+                <if test="productUpcCode != null">
+                    and product_upc_code=#{productUpcCode,jdbcType=VARCHAR}
+                </if>
+                <if test="brand != null">
+                    and brand=#{brand,jdbcType=VARCHAR}
+                </if>
+                <if test="unitGrossWeight != null">
+                    and unit_gross_weight=#{unitGrossWeight,jdbcType=DECIMAL}
+                </if>
+                <if test="unitVol != null">
+                    and unit_vol=#{unitVol,jdbcType=DECIMAL}
+                </if>
+                <if test="qty != null">
+                    and qty=#{qty,jdbcType=DECIMAL}
+                </if>
+                <if test="weight != null">
+                    and weight=#{weight,jdbcType=DECIMAL}
+                </if>
+                <if test="vol != null">
+                    and vol=#{vol,jdbcType=DECIMAL}
+                </if>
+                <if test="bigBagQty != null">
+                    and big_bag_qty=#{bigBagQty,jdbcType=DECIMAL}
+                </if>
+                <if test="bigBagRate != null">
+                    and big_bag_rate=#{bigBagRate,jdbcType=DECIMAL}
+                </if>
+                <if test="midBagQty != null">
+                    and mid_bag_qty=#{midBagQty,jdbcType=DECIMAL}
+                </if>
+                <if test="midBagRate != null">
+                    and mid_bag_rate=#{midBagRate,jdbcType=DECIMAL}
+                </if>
+                <if test="smallBagQty != null">
+                    and small_bag_qty=#{smallBagQty,jdbcType=DECIMAL}
+                </if>
+                <if test="pickedQty != null">
+                    and picked_qty=#{pickedQty,jdbcType=DECIMAL}
+                </if>
+                <if test="pickedWeight != null">
+                    and picked_weight=#{pickedWeight,jdbcType=DECIMAL}
+                </if>
+                <if test="pickedVol != null">
+                    and picked_vol=#{pickedVol,jdbcType=DECIMAL}
+                </if>
+                <if test="lcCode != null">
+                    and lc_code=#{lcCode,jdbcType=VARCHAR}
+                </if>
+                <if test="lcAisle != null">
+                    and lc_aisle=#{lcAisle,jdbcType=VARCHAR}
+                </if>
+                <if test="lcX != null">
+                    and lc_x=#{lcX,jdbcType=VARCHAR}
+                </if>
+                <if test="lcY != null">
+                    and lc_y=#{lcY,jdbcType=VARCHAR}
+                </if>
+                <if test="lcZ != null">
+                    and lc_z=#{lcZ,jdbcType=VARCHAR}
+                </if>
+                <if test="memo != null">
+                    and memo=#{memo,jdbcType=VARCHAR}
+                </if>
+        </where>
+    </select>
+
+    <select id="selectByConditions" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from wms_plo_line
+        <where>
+                <if test="id != null">
+                    and plol_id ${id}
+                </if>
+                <if test="ploId != null">
+                    and plo_id ${ploId}
+                </if>
+                <if test="ploCode != null">
+                    and plo_code ${ploCode}
+                </if>
+                <if test="dolId != null">
+                    and dol_id ${dolId}
+                </if>
+                <if test="productId != null">
+                    and product_id ${productId}
+                </if>
+                <if test="productBarcode != null">
+                    and product_barcode ${productBarcode}
+                </if>
+                <if test="specType != null">
+                    and spec_type ${specType}
+                </if>
+                <if test="mediaId != null">
+                    and media_id ${mediaId}
+                </if>
+                <if test="productNo != null">
+                    and product_no ${productNo}
+                </if>
+                <if test="productName != null">
+                    and product_name ${productName}
+                </if>
+                <if test="productNameLocal != null">
+                    and product_name_local ${productNameLocal}
+                </if>
+                <if test="productUpcCode != null">
+                    and product_upc_code ${productUpcCode}
+                </if>
+                <if test="brand != null">
+                    and brand ${brand}
+                </if>
+                <if test="unitGrossWeight != null">
+                    and unit_gross_weight ${unitGrossWeight}
+                </if>
+                <if test="unitVol != null">
+                    and unit_vol ${unitVol}
+                </if>
+                <if test="qty != null">
+                    and qty ${qty}
+                </if>
+                <if test="weight != null">
+                    and weight ${weight}
+                </if>
+                <if test="vol != null">
+                    and vol ${vol}
+                </if>
+                <if test="bigBagQty != null">
+                    and big_bag_qty ${bigBagQty}
+                </if>
+                <if test="bigBagRate != null">
+                    and big_bag_rate ${bigBagRate}
+                </if>
+                <if test="midBagQty != null">
+                    and mid_bag_qty ${midBagQty}
+                </if>
+                <if test="midBagRate != null">
+                    and mid_bag_rate ${midBagRate}
+                </if>
+                <if test="smallBagQty != null">
+                    and small_bag_qty ${smallBagQty}
+                </if>
+                <if test="pickedQty != null">
+                    and picked_qty ${pickedQty}
+                </if>
+                <if test="pickedWeight != null">
+                    and picked_weight ${pickedWeight}
+                </if>
+                <if test="pickedVol != null">
+                    and picked_vol ${pickedVol}
+                </if>
+                <if test="lcCode != null">
+                    and lc_code ${lcCode}
+                </if>
+                <if test="lcAisle != null">
+                    and lc_aisle ${lcAisle}
+                </if>
+                <if test="lcX != null">
+                    and lc_x ${lcX}
+                </if>
+                <if test="lcY != null">
+                    and lc_y ${lcY}
+                </if>
+                <if test="lcZ != null">
+                    and lc_z ${lcZ}
+                </if>
+                <if test="memo != null">
+                    and memo ${memo}
+                </if>
+        </where>
+        <if test="orderBy != null">
+            order by ${orderBy}
+        </if>
+    </select>
+
+    <select id="selectAll" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from wms_plo_line
+    </select>
+
+    <select id="count" resultType="java.lang.Long">
+        select count(*) from wms_plo_line
+    </select>
+
+    <select id="selectByFunction">
+        select ${function}(${column}) from wms_plo_line
+    </select>
+
+</mapper>

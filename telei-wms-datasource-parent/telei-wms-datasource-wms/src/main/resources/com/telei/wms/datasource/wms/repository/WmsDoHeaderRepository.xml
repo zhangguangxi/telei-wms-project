@@ -1,5 +1,102 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.telei.wms.datasource.wms.repository.WmsDoHeaderRepository">
+
+    <resultMap id="PageQueryResultMap" extends="BaseResultMap" type="com.telei.wms.datasource.wms.vo.DoHeaderResponseVo">
+        <result column="warehouse_name" jdbcType="VARCHAR" property="warehouseName"/>
+        <result column="customer_name" jdbcType="VARCHAR" property="customerName"/>
+        <result column="supplier_name" jdbcType="VARCHAR" property="supplierName"/>
+    </resultMap>
+
+    <sql id="Page_Query_Column_List">
+        do.roo_id,
+        do.roo_code,
+        do.order_type,
+        do.ro_id,
+        do.ro_code,
+        do.cust_order_no,
+        do.company_id,
+        do.warehouse_id,
+        do.warehouse_code,
+        do.supplier_id,
+        do.customer_id,
+        do.total_qty,
+        do.tmp_putaway_qty,
+        do.putaway_qty,
+        do.ro_status,
+        do.memo,
+        do.create_user,
+        do.create_time,
+        cw.warehouse_name,
+        cc.customer_name
+    </sql>
+
+    <select id="findAll" resultMap="PageQueryResultMap">
+        SELECT
+        <include refid="Page_Query_Column_List"/>
+        FROM wms_do_header do
+        INNER JOIN cdm.cdm_warehouse cw ON cw.warehouse_id = do.warehouse_id
+        INNER JOIN cdm.cdm_customer cc ON cc.customer_id = do.customer_id
+        <where>
+            <if test="id != null">
+                and do.roo_id ${id}
+            </if>
+            <if test="rooCode != null">
+                and do.roo_code ${rooCode}
+            </if>
+            <if test="orderType != null">
+                and do.order_type ${orderType}
+            </if>
+            <if test="roId != null">
+                and do.ro_id ${roId}
+            </if>
+            <if test="roCode != null">
+                and do.ro_code ${roCode}
+            </if>
+            <if test="custOrderNo != null">
+                and do.cust_order_no ${custOrderNo}
+            </if>
+            <if test="companyId != null">
+                and do.company_id ${companyId}
+            </if>
+            <if test="warehouseId != null">
+                and do.warehouse_id ${warehouseId}
+            </if>
+            <if test="warehouseCode != null">
+                and do.warehouse_code ${warehouseCode}
+            </if>
+            <if test="supplierId != null">
+                and do.supplier_id ${supplierId}
+            </if>
+            <if test="customerId != null">
+                and do.customer_id ${customerId}
+            </if>
+            <if test="totalQty != null">
+                and do.total_qty ${totalQty}
+            </if>
+            <if test="tmpPutawayQty != null">
+                and do.tmp_putaway_qty ${tmpPutawayQty}
+            </if>
+            <if test="putawayQty != null">
+                and do.putaway_qty ${putawayQty}
+            </if>
+            <if test="roStatus != null">
+                and do.ro_status ${roStatus}
+            </if>
+            <if test="memo != null">
+                and do.memo ${memo}
+            </if>
+            <if test="createUser != null">
+                and do.create_user ${createUser}
+            </if>
+            <if test="createTime != null">
+                and do.create_time ${createTime}
+            </if>
+        </where>
+        <if test="orderBy != null">
+            order by ${orderBy}
+        </if>
+    </select>
+
 </mapper>
 

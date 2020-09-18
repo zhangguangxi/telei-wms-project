@@ -10,6 +10,16 @@ import java.math.BigDecimal;
  */
 @Data
 public class WmsInventoryPageQueryResponseVo {
+    /**公司id*/
+    private Long companyId;
+    /**仓库id*/
+    private Long warehouseId;
+    /**仓库编码*/
+    private String warehouseCode;
+    /**库位编码*/
+    private String lcCode;
+    /**商品id*/
+    private Long productId;
     /**商品码*/
     private String productNo;
     /**商品名称*/
@@ -26,8 +36,6 @@ public class WmsInventoryPageQueryResponseVo {
     private BigDecimal bigBagVol;
     /**大包重量*/
     private BigDecimal bigBagWeight;
-    /**库位*/
-    private String lcCode;
     /**库位类型*/
     private String  lcType;
     /**数量*/

@@ -1,0 +1,641 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.telei.wms.datasource.wms.repository.WmsPloHeaderRepository">
+    <resultMap id="BaseResultMap" type="com.telei.wms.datasource.wms.model.WmsPloHeader">
+        <id column="plo_id" jdbcType="BIGINT" property="id"/>
+            <result column="plo_code" jdbcType="VARCHAR" property="ploCode"/>
+            <result column="doh_id" jdbcType="BIGINT" property="dohId"/>
+            <result column="doh_code" jdbcType="VARCHAR" property="dohCode"/>
+            <result column="company_id" jdbcType="VARCHAR" property="companyId"/>
+            <result column="warehouse_id" jdbcType="BIGINT" property="warehouseId"/>
+            <result column="warehouse_code" jdbcType="VARCHAR" property="warehouseCode"/>
+            <result column="cust_order_no" jdbcType="VARCHAR" property="custOrderNo"/>
+            <result column="supplier_id" jdbcType="BIGINT" property="supplierId"/>
+            <result column="customer_id" jdbcType="BIGINT" property="customerId"/>
+            <result column="order_status" jdbcType="VARCHAR" property="orderStatus"/>
+            <result column="is_freezing" jdbcType="INTEGER" property="isFreezing"/>
+            <result column="total_qty" jdbcType="DECIMAL" property="totalQty"/>
+            <result column="total_weight" jdbcType="DECIMAL" property="totalWeight"/>
+            <result column="total_vol" jdbcType="DECIMAL" property="totalVol"/>
+            <result column="detailed_species_qty" jdbcType="INTEGER" property="detailedSpeciesQty"/>
+            <result column="picked_qty" jdbcType="DECIMAL" property="pickedQty"/>
+            <result column="picking_weight" jdbcType="DECIMAL" property="pickingWeight"/>
+            <result column="picking_vol" jdbcType="DECIMAL" property="pickingVol"/>
+            <result column="mobile_picking" jdbcType="VARCHAR" property="mobilePicking"/>
+            <result column="memo" jdbcType="VARCHAR" property="memo"/>
+            <result column="create_user" jdbcType="VARCHAR" property="createUser"/>
+            <result column="create_time" jdbcType="TIMESTAMP" property="createTime"/>
+            <result column="last_update_user" jdbcType="VARCHAR" property="lastUpdateUser"/>
+            <result column="last_update_time" jdbcType="TIMESTAMP" property="lastUpdateTime"/>
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        plo_id,plo_code,doh_id,doh_code,company_id,warehouse_id,warehouse_code,cust_order_no,supplier_id,customer_id,order_status,is_freezing,total_qty,total_weight,total_vol,detailed_species_qty,picked_qty,picking_weight,picking_vol,mobile_picking,memo,create_user,create_time,last_update_user,last_update_time
+    </sql>
+
+        <insert id="insert">
+            insert into wms_plo_header (plo_id,plo_code,doh_id,doh_code,company_id,warehouse_id,warehouse_code,cust_order_no,supplier_id,customer_id,order_status,is_freezing,total_qty,total_weight,total_vol,detailed_species_qty,picked_qty,picking_weight,picking_vol,mobile_picking,memo,create_user,create_time,last_update_user,last_update_time)
+            values (#{id,jdbcType=BIGINT},#{ploCode,jdbcType=VARCHAR},#{dohId,jdbcType=BIGINT},#{dohCode,jdbcType=VARCHAR},#{companyId,jdbcType=VARCHAR},#{warehouseId,jdbcType=BIGINT},#{warehouseCode,jdbcType=VARCHAR},#{custOrderNo,jdbcType=VARCHAR},#{supplierId,jdbcType=BIGINT},#{customerId,jdbcType=BIGINT},#{orderStatus,jdbcType=VARCHAR},#{isFreezing,jdbcType=INTEGER},#{totalQty,jdbcType=DECIMAL},#{totalWeight,jdbcType=DECIMAL},#{totalVol,jdbcType=DECIMAL},#{detailedSpeciesQty,jdbcType=INTEGER},#{pickedQty,jdbcType=DECIMAL},#{pickingWeight,jdbcType=DECIMAL},#{pickingVol,jdbcType=DECIMAL},#{mobilePicking,jdbcType=VARCHAR},#{memo,jdbcType=VARCHAR},#{createUser,jdbcType=VARCHAR},#{createTime,jdbcType=TIMESTAMP},#{lastUpdateUser,jdbcType=VARCHAR},#{lastUpdateTime,jdbcType=TIMESTAMP})
+        </insert>
+
+        <insert id="insertSelective">
+            insert into wms_plo_header
+            <trim prefix="(" suffix=")" suffixOverrides=",">
+                    <if test="id != null">
+                        plo_id,
+                    </if>
+                    <if test="ploCode != null">
+                        plo_code,
+                    </if>
+                    <if test="dohId != null">
+                        doh_id,
+                    </if>
+                    <if test="dohCode != null">
+                        doh_code,
+                    </if>
+                    <if test="companyId != null">
+                        company_id,
+                    </if>
+                    <if test="warehouseId != null">
+                        warehouse_id,
+                    </if>
+                    <if test="warehouseCode != null">
+                        warehouse_code,
+                    </if>
+                    <if test="custOrderNo != null">
+                        cust_order_no,
+                    </if>
+                    <if test="supplierId != null">
+                        supplier_id,
+                    </if>
+                    <if test="customerId != null">
+                        customer_id,
+                    </if>
+                    <if test="orderStatus != null">
+                        order_status,
+                    </if>
+                    <if test="isFreezing != null">
+                        is_freezing,
+                    </if>
+                    <if test="totalQty != null">
+                        total_qty,
+                    </if>
+                    <if test="totalWeight != null">
+                        total_weight,
+                    </if>
+                    <if test="totalVol != null">
+                        total_vol,
+                    </if>
+                    <if test="detailedSpeciesQty != null">
+                        detailed_species_qty,
+                    </if>
+                    <if test="pickedQty != null">
+                        picked_qty,
+                    </if>
+                    <if test="pickingWeight != null">
+                        picking_weight,
+                    </if>
+                    <if test="pickingVol != null">
+                        picking_vol,
+                    </if>
+                    <if test="mobilePicking != null">
+                        mobile_picking,
+                    </if>
+                    <if test="memo != null">
+                        memo,
+                    </if>
+                    <if test="createUser != null">
+                        create_user,
+                    </if>
+                    <if test="createTime != null">
+                        create_time,
+                    </if>
+                    <if test="lastUpdateUser != null">
+                        last_update_user,
+                    </if>
+                    <if test="lastUpdateTime != null">
+                        last_update_time
+                    </if>
+            </trim>
+            <trim prefix="values (" suffix=")" suffixOverrides=",">
+                    <if test="id != null">
+                        #{id,jdbcType=BIGINT},
+                    </if>
+                    <if test="ploCode != null">
+                        #{ploCode,jdbcType=VARCHAR},
+                    </if>
+                    <if test="dohId != null">
+                        #{dohId,jdbcType=BIGINT},
+                    </if>
+                    <if test="dohCode != null">
+                        #{dohCode,jdbcType=VARCHAR},
+                    </if>
+                    <if test="companyId != null">
+                        #{companyId,jdbcType=VARCHAR},
+                    </if>
+                    <if test="warehouseId != null">
+                        #{warehouseId,jdbcType=BIGINT},
+                    </if>
+                    <if test="warehouseCode != null">
+                        #{warehouseCode,jdbcType=VARCHAR},
+                    </if>
+                    <if test="custOrderNo != null">
+                        #{custOrderNo,jdbcType=VARCHAR},
+                    </if>
+                    <if test="supplierId != null">
+                        #{supplierId,jdbcType=BIGINT},
+                    </if>
+                    <if test="customerId != null">
+                        #{customerId,jdbcType=BIGINT},
+                    </if>
+                    <if test="orderStatus != null">
+                        #{orderStatus,jdbcType=VARCHAR},
+                    </if>
+                    <if test="isFreezing != null">
+                        #{isFreezing,jdbcType=INTEGER},
+                    </if>
+                    <if test="totalQty != null">
+                        #{totalQty,jdbcType=DECIMAL},
+                    </if>
+                    <if test="totalWeight != null">
+                        #{totalWeight,jdbcType=DECIMAL},
+                    </if>
+                    <if test="totalVol != null">
+                        #{totalVol,jdbcType=DECIMAL},
+                    </if>
+                    <if test="detailedSpeciesQty != null">
+                        #{detailedSpeciesQty,jdbcType=INTEGER},
+                    </if>
+                    <if test="pickedQty != null">
+                        #{pickedQty,jdbcType=DECIMAL},
+                    </if>
+                    <if test="pickingWeight != null">
+                        #{pickingWeight,jdbcType=DECIMAL},
+                    </if>
+                    <if test="pickingVol != null">
+                        #{pickingVol,jdbcType=DECIMAL},
+                    </if>
+                    <if test="mobilePicking != null">
+                        #{mobilePicking,jdbcType=VARCHAR},
+                    </if>
+                    <if test="memo != null">
+                        #{memo,jdbcType=VARCHAR},
+                    </if>
+                    <if test="createUser != null">
+                        #{createUser,jdbcType=VARCHAR},
+                    </if>
+                    <if test="createTime != null">
+                        #{createTime,jdbcType=TIMESTAMP},
+                    </if>
+                    <if test="lastUpdateUser != null">
+                        #{lastUpdateUser,jdbcType=VARCHAR},
+                    </if>
+                    <if test="lastUpdateTime != null">
+                        #{lastUpdateTime,jdbcType=TIMESTAMP}
+                    </if>
+            </trim>
+        </insert>
+
+        <insert id="insertBatch">
+            insert into wms_plo_header (plo_id,plo_code,doh_id,doh_code,company_id,warehouse_id,warehouse_code,cust_order_no,supplier_id,customer_id,order_status,is_freezing,total_qty,total_weight,total_vol,detailed_species_qty,picked_qty,picking_weight,picking_vol,mobile_picking,memo,create_user,create_time,last_update_user,last_update_time) values
+            <foreach collection="list" item="item" separator=",">
+                (
+                    #{item.id,jdbcType=BIGINT},
+                    #{item.ploCode,jdbcType=VARCHAR},
+                    #{item.dohId,jdbcType=BIGINT},
+                    #{item.dohCode,jdbcType=VARCHAR},
+                    #{item.companyId,jdbcType=VARCHAR},
+                    #{item.warehouseId,jdbcType=BIGINT},
+                    #{item.warehouseCode,jdbcType=VARCHAR},
+                    #{item.custOrderNo,jdbcType=VARCHAR},
+                    #{item.supplierId,jdbcType=BIGINT},
+                    #{item.customerId,jdbcType=BIGINT},
+                    #{item.orderStatus,jdbcType=VARCHAR},
+                    #{item.isFreezing,jdbcType=INTEGER},
+                    #{item.totalQty,jdbcType=DECIMAL},
+                    #{item.totalWeight,jdbcType=DECIMAL},
+                    #{item.totalVol,jdbcType=DECIMAL},
+                    #{item.detailedSpeciesQty,jdbcType=INTEGER},
+                    #{item.pickedQty,jdbcType=DECIMAL},
+                    #{item.pickingWeight,jdbcType=DECIMAL},
+                    #{item.pickingVol,jdbcType=DECIMAL},
+                    #{item.mobilePicking,jdbcType=VARCHAR},
+                    #{item.memo,jdbcType=VARCHAR},
+                    #{item.createUser,jdbcType=VARCHAR},
+                    #{item.createTime,jdbcType=TIMESTAMP},
+                    #{item.lastUpdateUser,jdbcType=VARCHAR},
+                    #{item.lastUpdateTime,jdbcType=TIMESTAMP}
+                )
+            </foreach>
+        </insert>
+
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+        delete from wms_plo_header
+        where plo_id = #{id,jdbcType=BIGINT}
+    </delete>
+
+    <delete id="deleteByPrimaryKeys">
+        delete from wms_plo_header where plo_id in
+        <foreach close=")" collection="list" item="item" open="(" separator=",">
+            #{item}
+        </foreach>
+    </delete>
+
+    <update id="updateByPrimaryKey">
+        update wms_plo_header
+        <set>
+                plo_code = #{ploCode,jdbcType=VARCHAR},
+                doh_id = #{dohId,jdbcType=BIGINT},
+                doh_code = #{dohCode,jdbcType=VARCHAR},
+                company_id = #{companyId,jdbcType=VARCHAR},
+                warehouse_id = #{warehouseId,jdbcType=BIGINT},
+                warehouse_code = #{warehouseCode,jdbcType=VARCHAR},
+                cust_order_no = #{custOrderNo,jdbcType=VARCHAR},
+                supplier_id = #{supplierId,jdbcType=BIGINT},
+                customer_id = #{customerId,jdbcType=BIGINT},
+                order_status = #{orderStatus,jdbcType=VARCHAR},
+                is_freezing = #{isFreezing,jdbcType=INTEGER},
+                total_qty = #{totalQty,jdbcType=DECIMAL},
+                total_weight = #{totalWeight,jdbcType=DECIMAL},
+                total_vol = #{totalVol,jdbcType=DECIMAL},
+                detailed_species_qty = #{detailedSpeciesQty,jdbcType=INTEGER},
+                picked_qty = #{pickedQty,jdbcType=DECIMAL},
+                picking_weight = #{pickingWeight,jdbcType=DECIMAL},
+                picking_vol = #{pickingVol,jdbcType=DECIMAL},
+                mobile_picking = #{mobilePicking,jdbcType=VARCHAR},
+                memo = #{memo,jdbcType=VARCHAR},
+                create_user = #{createUser,jdbcType=VARCHAR},
+                create_time = #{createTime,jdbcType=TIMESTAMP},
+                last_update_user = #{lastUpdateUser,jdbcType=VARCHAR},
+                last_update_time = #{lastUpdateTime,jdbcType=TIMESTAMP}
+        </set>
+        where plo_id = #{id,jdbcType=BIGINT}
+    </update>
+
+    <update id="updateByPrimaryKeySelective">
+        update wms_plo_header
+        <set>
+                <if test="ploCode != null">
+                    plo_code = #{ploCode,jdbcType=VARCHAR},
+                </if>
+                <if test="dohId != null">
+                    doh_id = #{dohId,jdbcType=BIGINT},
+                </if>
+                <if test="dohCode != null">
+                    doh_code = #{dohCode,jdbcType=VARCHAR},
+                </if>
+                <if test="companyId != null">
+                    company_id = #{companyId,jdbcType=VARCHAR},
+                </if>
+                <if test="warehouseId != null">
+                    warehouse_id = #{warehouseId,jdbcType=BIGINT},
+                </if>
+                <if test="warehouseCode != null">
+                    warehouse_code = #{warehouseCode,jdbcType=VARCHAR},
+                </if>
+                <if test="custOrderNo != null">
+                    cust_order_no = #{custOrderNo,jdbcType=VARCHAR},
+                </if>
+                <if test="supplierId != null">
+                    supplier_id = #{supplierId,jdbcType=BIGINT},
+                </if>
+                <if test="customerId != null">
+                    customer_id = #{customerId,jdbcType=BIGINT},
+                </if>
+                <if test="orderStatus != null">
+                    order_status = #{orderStatus,jdbcType=VARCHAR},
+                </if>
+                <if test="isFreezing != null">
+                    is_freezing = #{isFreezing,jdbcType=INTEGER},
+                </if>
+                <if test="totalQty != null">
+                    total_qty = #{totalQty,jdbcType=DECIMAL},
+                </if>
+                <if test="totalWeight != null">
+                    total_weight = #{totalWeight,jdbcType=DECIMAL},
+                </if>
+                <if test="totalVol != null">
+                    total_vol = #{totalVol,jdbcType=DECIMAL},
+                </if>
+                <if test="detailedSpeciesQty != null">
+                    detailed_species_qty = #{detailedSpeciesQty,jdbcType=INTEGER},
+                </if>
+                <if test="pickedQty != null">
+                    picked_qty = #{pickedQty,jdbcType=DECIMAL},
+                </if>
+                <if test="pickingWeight != null">
+                    picking_weight = #{pickingWeight,jdbcType=DECIMAL},
+                </if>
+                <if test="pickingVol != null">
+                    picking_vol = #{pickingVol,jdbcType=DECIMAL},
+                </if>
+                <if test="mobilePicking != null">
+                    mobile_picking = #{mobilePicking,jdbcType=VARCHAR},
+                </if>
+                <if test="memo != null">
+                    memo = #{memo,jdbcType=VARCHAR},
+                </if>
+                <if test="createUser != null">
+                    create_user = #{createUser,jdbcType=VARCHAR},
+                </if>
+                <if test="createTime != null">
+                    create_time = #{createTime,jdbcType=TIMESTAMP},
+                </if>
+                <if test="lastUpdateUser != null">
+                    last_update_user = #{lastUpdateUser,jdbcType=VARCHAR},
+                </if>
+                <if test="lastUpdateTime != null">
+                    last_update_time = #{lastUpdateTime,jdbcType=TIMESTAMP}
+                </if>
+        </set>
+        where plo_id = #{id,jdbcType=BIGINT}
+    </update>
+
+    <update id="updateBatch">
+        <foreach close="" collection="list" item="item" open="" separator=";">
+            update wms_plo_header
+            <set>
+                    <if test="item.ploCode != null">
+                        plo_code = #{item.ploCode,jdbcType=VARCHAR},
+                    </if>
+                    <if test="item.dohId != null">
+                        doh_id = #{item.dohId,jdbcType=BIGINT},
+                    </if>
+                    <if test="item.dohCode != null">
+                        doh_code = #{item.dohCode,jdbcType=VARCHAR},
+                    </if>
+                    <if test="item.companyId != null">
+                        company_id = #{item.companyId,jdbcType=VARCHAR},
+                    </if>
+                    <if test="item.warehouseId != null">
+                        warehouse_id = #{item.warehouseId,jdbcType=BIGINT},
+                    </if>
+                    <if test="item.warehouseCode != null">
+                        warehouse_code = #{item.warehouseCode,jdbcType=VARCHAR},
+                    </if>
+                    <if test="item.custOrderNo != null">
+                        cust_order_no = #{item.custOrderNo,jdbcType=VARCHAR},
+                    </if>
+                    <if test="item.supplierId != null">
+                        supplier_id = #{item.supplierId,jdbcType=BIGINT},
+                    </if>
+                    <if test="item.customerId != null">
+                        customer_id = #{item.customerId,jdbcType=BIGINT},
+                    </if>
+                    <if test="item.orderStatus != null">
+                        order_status = #{item.orderStatus,jdbcType=VARCHAR},
+                    </if>
+                    <if test="item.isFreezing != null">
+                        is_freezing = #{item.isFreezing,jdbcType=INTEGER},
+                    </if>
+                    <if test="item.totalQty != null">
+                        total_qty = #{item.totalQty,jdbcType=DECIMAL},
+                    </if>
+                    <if test="item.totalWeight != null">
+                        total_weight = #{item.totalWeight,jdbcType=DECIMAL},
+                    </if>
+                    <if test="item.totalVol != null">
+                        total_vol = #{item.totalVol,jdbcType=DECIMAL},
+                    </if>
+                    <if test="item.detailedSpeciesQty != null">
+                        detailed_species_qty = #{item.detailedSpeciesQty,jdbcType=INTEGER},
+                    </if>
+                    <if test="item.pickedQty != null">
+                        picked_qty = #{item.pickedQty,jdbcType=DECIMAL},
+                    </if>
+                    <if test="item.pickingWeight != null">
+                        picking_weight = #{item.pickingWeight,jdbcType=DECIMAL},
+                    </if>
+                    <if test="item.pickingVol != null">
+                        picking_vol = #{item.pickingVol,jdbcType=DECIMAL},
+                    </if>
+                    <if test="item.mobilePicking != null">
+                        mobile_picking = #{item.mobilePicking,jdbcType=VARCHAR},
+                    </if>
+                    <if test="item.memo != null">
+                        memo = #{item.memo,jdbcType=VARCHAR},
+                    </if>
+                    <if test="item.createUser != null">
+                        create_user = #{item.createUser,jdbcType=VARCHAR},
+                    </if>
+                    <if test="item.createTime != null">
+                        create_time = #{item.createTime,jdbcType=TIMESTAMP},
+                    </if>
+                    <if test="item.lastUpdateUser != null">
+                        last_update_user = #{item.lastUpdateUser,jdbcType=VARCHAR},
+                    </if>
+                    <if test="item.lastUpdateTime != null">
+                        last_update_time = #{item.lastUpdateTime,jdbcType=TIMESTAMP}
+                    </if>
+            </set>
+            where plo_id = #{item.id,jdbcType=BIGINT}
+        </foreach>
+    </update>
+
+    <select id="selectByPrimaryKey" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List" />
+        from wms_plo_header
+        where plo_id = #{id,jdbcType=BIGINT}
+    </select>
+
+    <select id="selectByPrimaryKeyWithLock" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List" />
+        from wms_plo_header
+        where plo_id = #{id,jdbcType=BIGINT} for update
+    </select>
+
+    <select id="selectByPrimaryKeys" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List" />
+        from wms_plo_header where plo_id in
+        <foreach close=")" collection="list" item="item" open="(" separator=",">
+            #{item}
+        </foreach>
+    </select>
+
+    <select id="selectByEntity" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from wms_plo_header
+        <where>
+                <if test="id != null">
+                    and plo_id=#{id,jdbcType=BIGINT}
+                </if>
+                <if test="ploCode != null">
+                    and plo_code=#{ploCode,jdbcType=VARCHAR}
+                </if>
+                <if test="dohId != null">
+                    and doh_id=#{dohId,jdbcType=BIGINT}
+                </if>
+                <if test="dohCode != null">
+                    and doh_code=#{dohCode,jdbcType=VARCHAR}
+                </if>
+                <if test="companyId != null">
+                    and company_id=#{companyId,jdbcType=VARCHAR}
+                </if>
+                <if test="warehouseId != null">
+                    and warehouse_id=#{warehouseId,jdbcType=BIGINT}
+                </if>
+                <if test="warehouseCode != null">
+                    and warehouse_code=#{warehouseCode,jdbcType=VARCHAR}
+                </if>
+                <if test="custOrderNo != null">
+                    and cust_order_no=#{custOrderNo,jdbcType=VARCHAR}
+                </if>
+                <if test="supplierId != null">
+                    and supplier_id=#{supplierId,jdbcType=BIGINT}
+                </if>
+                <if test="customerId != null">
+                    and customer_id=#{customerId,jdbcType=BIGINT}
+                </if>
+                <if test="orderStatus != null">
+                    and order_status=#{orderStatus,jdbcType=VARCHAR}
+                </if>
+                <if test="isFreezing != null">
+                    and is_freezing=#{isFreezing,jdbcType=INTEGER}
+                </if>
+                <if test="totalQty != null">
+                    and total_qty=#{totalQty,jdbcType=DECIMAL}
+                </if>
+                <if test="totalWeight != null">
+                    and total_weight=#{totalWeight,jdbcType=DECIMAL}
+                </if>
+                <if test="totalVol != null">
+                    and total_vol=#{totalVol,jdbcType=DECIMAL}
+                </if>
+                <if test="detailedSpeciesQty != null">
+                    and detailed_species_qty=#{detailedSpeciesQty,jdbcType=INTEGER}
+                </if>
+                <if test="pickedQty != null">
+                    and picked_qty=#{pickedQty,jdbcType=DECIMAL}
+                </if>
+                <if test="pickingWeight != null">
+                    and picking_weight=#{pickingWeight,jdbcType=DECIMAL}
+                </if>
+                <if test="pickingVol != null">
+                    and picking_vol=#{pickingVol,jdbcType=DECIMAL}
+                </if>
+                <if test="mobilePicking != null">
+                    and mobile_picking=#{mobilePicking,jdbcType=VARCHAR}
+                </if>
+                <if test="memo != null">
+                    and memo=#{memo,jdbcType=VARCHAR}
+                </if>
+                <if test="createUser != null">
+                    and create_user=#{createUser,jdbcType=VARCHAR}
+                </if>
+                <if test="createTime != null">
+                    and create_time=#{createTime,jdbcType=TIMESTAMP}
+                </if>
+                <if test="lastUpdateUser != null">
+                    and last_update_user=#{lastUpdateUser,jdbcType=VARCHAR}
+                </if>
+                <if test="lastUpdateTime != null">
+                    and last_update_time=#{lastUpdateTime,jdbcType=TIMESTAMP}
+                </if>
+        </where>
+    </select>
+
+    <select id="selectByConditions" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from wms_plo_header
+        <where>
+                <if test="id != null">
+                    and plo_id ${id}
+                </if>
+                <if test="ploCode != null">
+                    and plo_code ${ploCode}
+                </if>
+                <if test="dohId != null">
+                    and doh_id ${dohId}
+                </if>
+                <if test="dohCode != null">
+                    and doh_code ${dohCode}
+                </if>
+                <if test="companyId != null">
+                    and company_id ${companyId}
+                </if>
+                <if test="warehouseId != null">
+                    and warehouse_id ${warehouseId}
+                </if>
+                <if test="warehouseCode != null">
+                    and warehouse_code ${warehouseCode}
+                </if>
+                <if test="custOrderNo != null">
+                    and cust_order_no ${custOrderNo}
+                </if>
+                <if test="supplierId != null">
+                    and supplier_id ${supplierId}
+                </if>
+                <if test="customerId != null">
+                    and customer_id ${customerId}
+                </if>
+                <if test="orderStatus != null">
+                    and order_status ${orderStatus}
+                </if>
+                <if test="isFreezing != null">
+                    and is_freezing ${isFreezing}
+                </if>
+                <if test="totalQty != null">
+                    and total_qty ${totalQty}
+                </if>
+                <if test="totalWeight != null">
+                    and total_weight ${totalWeight}
+                </if>
+                <if test="totalVol != null">
+                    and total_vol ${totalVol}
+                </if>
+                <if test="detailedSpeciesQty != null">
+                    and detailed_species_qty ${detailedSpeciesQty}
+                </if>
+                <if test="pickedQty != null">
+                    and picked_qty ${pickedQty}
+                </if>
+                <if test="pickingWeight != null">
+                    and picking_weight ${pickingWeight}
+                </if>
+                <if test="pickingVol != null">
+                    and picking_vol ${pickingVol}
+                </if>
+                <if test="mobilePicking != null">
+                    and mobile_picking ${mobilePicking}
+                </if>
+                <if test="memo != null">
+                    and memo ${memo}
+                </if>
+                <if test="createUser != null">
+                    and create_user ${createUser}
+                </if>
+                <if test="createTime != null">
+                    and create_time ${createTime}
+                </if>
+                <if test="lastUpdateUser != null">
+                    and last_update_user ${lastUpdateUser}
+                </if>
+                <if test="lastUpdateTime != null">
+                    and last_update_time ${lastUpdateTime}
+                </if>
+        </where>
+        <if test="orderBy != null">
+            order by ${orderBy}
+        </if>
+    </select>
+
+    <select id="selectAll" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from wms_plo_header
+    </select>
+
+    <select id="count" resultType="java.lang.Long">
+        select count(*) from wms_plo_header
+    </select>
+
+    <select id="selectByFunction">
+        select ${function}(${column}) from wms_plo_header
+    </select>
+
+</mapper>

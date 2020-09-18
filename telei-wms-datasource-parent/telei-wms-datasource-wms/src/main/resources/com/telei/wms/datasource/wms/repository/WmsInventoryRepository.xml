@@ -2,18 +2,22 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.telei.wms.datasource.wms.repository.WmsInventoryRepository">
     <sql id="Custom_Base_Column_List">
+        wi.company_id,
+        wi.warehouse_id,
+        wi.warehouse_code,
+        wi.lc_code,
+        wi.product_id,
+        wi.lc_type,
         cp.product_no,
         cp.product_name,
         cp.product_barcode,
-        (wi.big_bag_rate / wi.mid_bag_rate) as big_bag_rate ,
+        (wi.big_bag_rate / wi.mid_bag_rate) as big_bag_rate,
         wi.mid_bag_rate,
-        (wi.big_bag_rate * wi.mid_bag_rate) as box_qty,
+        wi.big_bag_rate  as box_qty,
         cp.big_bag_vol,
         cp.big_bag_weight,
-        wi.lc_code,
-        wl.lc_type,
         wi.iv_qty as qty,
-        cp.cost_reference,
+        cp.cost_reference as costReference,
         (wi.iv_qty * cp.cost_reference) as inventoryAmount
     </sql>
 
@@ -31,30 +35,42 @@
     </select>
 
 
-
     <select id="selectCustomPage" resultType="com.telei.wms.datasource.wms.vo.WmsInventoryPageQueryResponseVo">
         select
         <include refid="Custom_Base_Column_List"></include>
         from wms_inventory wi
         left join cdm.cdm_product cp on wi.product_id = cp.product_id
-        left join wms_location wl on wi.lc_code = wl.lc_code
         <where>
             <if test="lcCode != null">
                 and wi.lc_code ${lcCode}
             </if>
+
             <if test="productNo != null">
                 and cp.product_no ${productNo}
             </if>
+
             <if test="productName != null">
                 and cp.product_name ${productName}
             </if>
+
             <if test="productBarcode != null">
                 and cp.product_barcode ${productBarcode}
             </if>
+
             <if test="lcType != null">
-                and wl.lc_type ${lcType}
+                and wi.lc_type ${lcType}
+            </if>
+
+            <if test="warehouseId != null">
+                 and wi.warehouse_id ${warehouseId}
+            </if>
+
+            <if test="companyId != null">
+                and wi.company_id ${companyId}
+                and wi.company_id = cp.company_id
             </if>
         </where>
+
         <if test="orderBy != null">
             order by ${orderBy}
         </if>

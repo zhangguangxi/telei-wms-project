@@ -58,7 +58,7 @@
         INNER JOIN cdm.cdm_supplier cs ON cs.supplier_id = wrh.supplier_id
         <where>
             <if test="roCode != null and roCode != ''">
-                wrh.ro_code=#{roCode}
+                wrh.ro_code LIKE concat('%',#{roCode},'%')
             </if>
             <if test="startTime != null and endTime != null and startTime != '' and endTime != ''">
                 AND wrh.create_time&gt;=#{startTime} AND wrh.create_time&lt;=#{endTime}

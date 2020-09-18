@@ -73,7 +73,7 @@
                 INNER JOIN wms_location l ON l.lc_code = ih.lc_code
                 AND l.lc_type = 'S'
                 WHERE
-                    ih.warehouse_id = #{warehouseId,jdbcType=BIGINT}
+                    ih.warehouse_id=#{warehouseId,jdbcType=BIGINT}
                 AND ih.product_id IN
                 <foreach close=")" collection="productIds" item="item" open="(" separator=",">
                     #{item}
