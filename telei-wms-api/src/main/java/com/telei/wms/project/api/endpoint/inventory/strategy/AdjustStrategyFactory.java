@@ -1,11 +1,14 @@
 package com.telei.wms.project.api.endpoint.inventory.strategy;
 
+import com.alibaba.fastjson.JSON;
 import com.nuochen.framework.component.commons.spring.SpringApplicationContext;
 import com.telei.infrastructure.component.commons.dto.UserInfo;
 import com.telei.infrastructure.component.idgenerator.contract.Id;
 import com.telei.wms.customer.amqp.inventoryChangeWriteBack.OmsInventoryChangeWriteBack;
 import com.telei.wms.datasource.wms.model.*;
 import com.telei.wms.project.api.utils.DataConvertUtil;
+import lombok.extern.slf4j.Slf4j;
+import org.checkerframework.checker.index.qual.SameLen;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -19,6 +22,7 @@ import java.util.Objects;
  * @author: leo
  * @date: 2020/9/8 16:24
  */
+@Slf4j
 @Component("adjustStrategyFactory")
 public class AdjustStrategyFactory {
     @Autowired
@@ -65,6 +69,7 @@ public class AdjustStrategyFactory {
         wmsIvTransaction.setCreateTime(nowWithUtc);
         wmsIvTransaction.setCreateUser(userInfo.getUserName());
         wmsIvTransactionList.add(wmsIvTransaction);
+        log.info("\n +++++++++++++++++++++ 库存调整::创建库存变动记录 -> {} ++++++++++++++++++++ \n ", JSON.toJSONString(wmsIvTransaction));
         return wmsIvTransaction;
     }
 
@@ -89,6 +94,7 @@ public class AdjustStrategyFactory {
         wmsInventoryAdd.setIvTranstime(nowWithUtc);
         wmsInventoryAdd.setIvCreatetime(nowWithUtc);
         wmsInventoryAdd.setBizDate(nowWithUtc);
+        log.info("\n +++++++++++++++++++++ 库存调整::创建库存记录 -> {} ++++++++++++++++++++ \n ", JSON.toJSONString(wmsInventoryAdd));
         wmsInventoryAddList.add(wmsInventoryAdd);
         return wmsInventoryAdd;
     }
@@ -117,7 +123,6 @@ public class AdjustStrategyFactory {
             wmsAdjtLine.setIvIdAdjt(wmsInventoryDb.getIvId());//调整后的库存id
         }
 
-
         wmsAdjtLine.setIvQty(wmsInventoryDb.getIvQty());/**库存数量*/
         if(Arrays.asList("MOVE","LIFTUP","LIFTDOWN").contains(adjhType)){
             wmsAdjtLine.setIvQtyAdjt(new BigDecimal(0));
@@ -126,7 +131,7 @@ public class AdjustStrategyFactory {
         }
         wmsAdjtLine.setLcCode(wmsAdjtHeader.getLcCode());/**库位编码*/
         wmsAdjtLine.setLcCodeAdjt(lcCodeAdjt);/**调整库位*/
-
+        log.info("\n +++++++++++++++++++++ 库存调整::创建库存调整明细 -> {} ++++++++++++++++++++ \n ",JSON.toJSONString(wmsAdjtLine));
         wmsAdjtLineList.add(wmsAdjtLine);
     }
 
@@ -141,6 +146,7 @@ public class AdjustStrategyFactory {
         OmsInventoryChangeWriteBack.OmsInventoryChangeWriteBackCondition omsInventoryChangeWriteBackCondition = DataConvertUtil.parseDataAsObject(inventory, OmsInventoryChangeWriteBack.OmsInventoryChangeWriteBackCondition.class);
         omsInventoryChangeWriteBackCondition.setType(type);
         omsInventoryChangeWriteBackCondition.setQty(ivQtyAdjt);
+        log.info("\n +++++++++++++++++++++ 库存调整::创建回写oms库存记录 -> {} ++++++++++++++++++++ \n ",JSON.toJSONString(omsInventoryChangeWriteBackCondition));
         list.add(omsInventoryChangeWriteBackCondition);
     }
 
@@ -161,6 +167,7 @@ public class AdjustStrategyFactory {
         wmsIvSplit.setIvQty(ivQtyAdjt.add(inventory.getIvQty()));/**原库存数量*/
         wmsIvSplit.setIvQtyTo(ivQtyAdjt);/**拆分库存数量*/
         wmsIvSplit.setIvQtyAfter(ivQtyAfter);/**拆后库存数量*/
+        log.info("\n +++++++++++++++++++++ 库存调整::创建库存拆分记录 -> {} ++++++++++++++++++++ \n ",JSON.toJSONString(wmsIvSplit));
         wmsIvSplitList.add(wmsIvSplit);
     }
 }

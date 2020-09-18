@@ -25,11 +25,14 @@
 		{call copy_wms_inventory_into_snapshot(#{idNumber},#{serverNo},#{snapshotTime},#{snapshotLcTime})}
 	</select >
 
-    <select id="selectByLcCodeAndProductId" resultMap="BaseResultMap">
+    <select id="selectByCustomEntity" resultMap="BaseResultMap">
         select
         <include refid="Base_Column_List"/>
         from wms_inventory
-        where  lc_code=#{lcCode}
+        where
+        company_id = #{companyId}
+        and warehouse_id=#{warehouseId}
+        and lc_code=#{lcCode}
         and product_id=#{productId}
         order by iab_Id
     </select>

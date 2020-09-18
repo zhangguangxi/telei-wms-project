@@ -19,8 +19,8 @@ public class WmsInventoryService extends BaseService<WmsInventoryRepository,WmsI
     @Autowired
     private WmsInventoryRepository wmsInventoryRepository;
 
-    public List<WmsInventory> selectByLcCodeAndProductId(WmsInventory wmsInventory) {
-        return wmsInventoryRepository.selectByLcCodeAndProductId(wmsInventory);
+    public List<WmsInventory> selectByCustomEntity(WmsInventory wmsInventory) {
+        return wmsInventoryRepository.selectByCustomEntity(wmsInventory);
     }
 
     public Pageable selectCustomPage(Pagination page, Map<String, Object> paramMap) {

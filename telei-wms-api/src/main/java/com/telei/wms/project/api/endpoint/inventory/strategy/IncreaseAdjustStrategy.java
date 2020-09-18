@@ -42,7 +42,6 @@ public class IncreaseAdjustStrategy implements IAdjustStrategy{
         /**库存变更记录*/
         adjustStrategyFactory.createTransactionRecored(wmsIvTransactionList,wmsInventoryAddList.get(0), lcCodeAdjt, "INCR", ivQtyAdjt, userInfo, nowWithUtc);
 
-
         /**OMS库存同步*/
         List<OmsInventoryChangeWriteBack.OmsInventoryChangeWriteBackCondition> list = Lists.newArrayList();
         adjustStrategyFactory.createOmsInventoryChangeWriteBackCondition(ivQtyAdjt, list, wmsInventory,1);

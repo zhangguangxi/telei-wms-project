@@ -1,7 +1,7 @@
 package com.telei.wms.project.api.endpoint.inventory.dto;
 
-import com.nuochen.framework.autocoding.domain.Pagination;
-import lombok.Data;
+        import com.nuochen.framework.autocoding.domain.Pagination;
+        import lombok.Data;
 
 /**
  * @author: leo
