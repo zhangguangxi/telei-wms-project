@@ -70,10 +70,9 @@
                     max(iv_id)
                 FROM
                     wms_inventory ih
-                INNER JOIN wms_location l ON l.lc_code = ih.lc_code
-                AND l.lc_type = 'S'
                 WHERE
                     ih.warehouse_id=#{warehouseId,jdbcType=BIGINT}
+                AND ih.lc_type='S'
                 AND ih.product_id IN
                 <foreach close=")" collection="productIds" item="item" open="(" separator=",">
                     #{item}

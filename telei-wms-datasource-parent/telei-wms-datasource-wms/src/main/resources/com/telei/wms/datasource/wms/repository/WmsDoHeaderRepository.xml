@@ -9,24 +9,41 @@
     </resultMap>
 
     <sql id="Page_Query_Column_List">
-        do.roo_id,
-        do.roo_code,
-        do.order_type,
-        do.ro_id,
-        do.ro_code,
-        do.cust_order_no,
+        do.doh_id,
+        do.doh_code,
+        do.sp_id,
+        do.so_id,
         do.company_id,
         do.warehouse_id,
         do.warehouse_code,
+        do.cust_order_no,
         do.supplier_id,
         do.customer_id,
-        do.total_qty,
-        do.tmp_putaway_qty,
-        do.putaway_qty,
-        do.ro_status,
+        do.customer_contact_name,
+        do.customer_contact_mobile,
+        do.customer_contact_address,
         do.memo,
-        do.create_user,
+        do.total_qty,
+        do.total_weight,
+        do.total_vol,
+        do.detailed_species_qty,
+        do.ship_qty,
+        do.ship_weight,
+        do.ship_vol,
+        do.ship_detailed_species_qty,
+        do.order_type,
+        do.ie_type,
+        do.order_status,
+        do.check_time,
+        do.check_user,
+        do.has_plo,
+        do.had_print_check,
+        do.had_check,
+        do.had_print_load_list,
+        do.old_date,
         do.create_time,
+        do.lastupdate_time,
+        do.shipping_time,
         cw.warehouse_name,
         cc.customer_name
     </sql>
@@ -34,27 +51,21 @@
     <select id="findAll" resultMap="PageQueryResultMap">
         SELECT
         <include refid="Page_Query_Column_List"/>
-        FROM wms_do_header do
-        INNER JOIN cdm.cdm_warehouse cw ON cw.warehouse_id = do.warehouse_id
-        INNER JOIN cdm.cdm_customer cc ON cc.customer_id = do.customer_id
+        FROM wms_do_header as do
+        LEFT JOIN cdm.cdm_warehouse cw ON cw.warehouse_id = do.warehouse_id
+        LEFT JOIN cdm.cdm_customer cc ON cc.customer_id = do.customer_id
         <where>
             <if test="id != null">
-                and do.roo_id ${id}
+                and do.doh_id ${id}
             </if>
-            <if test="rooCode != null">
-                and do.roo_code ${rooCode}
+            <if test="dohCode != null">
+                and do.doh_code ${dohCode}
             </if>
-            <if test="orderType != null">
-                and do.order_type ${orderType}
+            <if test="spId != null">
+                and do.sp_id ${spId}
             </if>
-            <if test="roId != null">
-                and do.ro_id ${roId}
-            </if>
-            <if test="roCode != null">
-                and do.ro_code ${roCode}
-            </if>
-            <if test="custOrderNo != null">
-                and do.cust_order_no ${custOrderNo}
+            <if test="soId != null">
+                and do.so_id ${soId}
             </if>
             <if test="companyId != null">
                 and do.company_id ${companyId}
@@ -65,32 +76,89 @@
             <if test="warehouseCode != null">
                 and do.warehouse_code ${warehouseCode}
             </if>
+            <if test="custOrderNo != null">
+                and do.cust_order_no ${custOrderNo}
+            </if>
             <if test="supplierId != null">
                 and do.supplier_id ${supplierId}
             </if>
             <if test="customerId != null">
                 and do.customer_id ${customerId}
             </if>
-            <if test="totalQty != null">
-                and do.total_qty ${totalQty}
+            <if test="customerContactName != null">
+                and do.customer_contact_name ${customerContactName}
             </if>
-            <if test="tmpPutawayQty != null">
-                and do.tmp_putaway_qty ${tmpPutawayQty}
+            <if test="customerContactMobile != null">
+                and do.customer_contact_mobile ${customerContactMobile}
             </if>
-            <if test="putawayQty != null">
-                and do.putaway_qty ${putawayQty}
-            </if>
-            <if test="roStatus != null">
-                and do.ro_status ${roStatus}
+            <if test="customerContactAddress != null">
+                and do.customer_contact_address ${customerContactAddress}
             </if>
             <if test="memo != null">
                 and do.memo ${memo}
             </if>
-            <if test="createUser != null">
-                and do.create_user ${createUser}
+            <if test="totalQty != null">
+                and do.total_qty ${totalQty}
+            </if>
+            <if test="totalWeight != null">
+                and do.total_weight ${totalWeight}
+            </if>
+            <if test="totalVol != null">
+                and do.total_vol ${totalVol}
+            </if>
+            <if test="detailedSpeciesQty != null">
+                and do.detailed_species_qty ${detailedSpeciesQty}
+            </if>
+            <if test="shipQty != null">
+                and do.ship_qty ${shipQty}
+            </if>
+            <if test="shipWeight != null">
+                and do.ship_weight ${shipWeight}
+            </if>
+            <if test="shipVol != null">
+                and do.ship_vol ${shipVol}
+            </if>
+            <if test="shipDetailedSpeciesQty != null">
+                and do.ship_detailed_species_qty ${shipDetailedSpeciesQty}
+            </if>
+            <if test="orderType != null">
+                and do.order_type ${orderType}
+            </if>
+            <if test="ieType != null">
+                and do.ie_type ${ieType}
+            </if>
+            <if test="orderStatus != null">
+                and do.order_status ${orderStatus}
+            </if>
+            <if test="checkTime != null">
+                and do.check_time ${checkTime}
+            </if>
+            <if test="checkUser != null">
+                and do.check_user ${checkUser}
+            </if>
+            <if test="hasPlo != null">
+                and do.has_plo ${hasPlo}
+            </if>
+            <if test="hadPrintCheck != null">
+                and do.had_print_check ${hadPrintCheck}
+            </if>
+            <if test="hadCheck != null">
+                and do.had_check ${hadCheck}
+            </if>
+            <if test="hadPrintLoadList != null">
+                and do.had_print_load_list ${hadPrintLoadList}
+            </if>
+            <if test="oldDate != null">
+                and do.old_date ${oldDate}
             </if>
             <if test="createTime != null">
                 and do.create_time ${createTime}
+            </if>
+            <if test="lastupdateTime != null">
+                and do.lastupdate_time ${lastupdateTime}
+            </if>
+            <if test="shippingTime != null">
+                and do.shipping_time ${shippingTime}
             </if>
         </where>
         <if test="orderBy != null">

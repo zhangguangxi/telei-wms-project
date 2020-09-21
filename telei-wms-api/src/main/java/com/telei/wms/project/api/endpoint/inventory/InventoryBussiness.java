@@ -107,6 +107,20 @@ public class InventoryBussiness {
     @Autowired
     private AdjustStrategyFactory adjustStrategyFactory;
 
+    @Autowired
+    private WmsDoHeaderService wmsDoHeaderService;
+
+    @Autowired
+    private WmsDoLineService wmsDoLineService;
+
+    @Autowired
+    private WmsPloHeaderService wmsPloHeaderService;
+
+    @Autowired
+    private WmsPloDetailService wmsPloDetailService;
+
+
+
 
     /**
      * 入库(上架)
@@ -789,4 +803,16 @@ public class InventoryBussiness {
         return new InventoryLiftDownBussinessResponse();
     }
 
+    /**
+     * 扣减库存
+     * @param request
+     * @return
+     */
+    @Transactional
+    public InventoryDeductBussinessResponse deductInventory(InventoryDeductBussinessRequest request) {
+        Long dohId = request.getDohId();//出库任务id(订单id)
+        //根据订单id查询wms_iv_out(带出库存)明细集合
+
+        return null;
+    }
 }

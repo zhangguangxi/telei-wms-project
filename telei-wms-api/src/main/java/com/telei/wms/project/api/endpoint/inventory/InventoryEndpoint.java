@@ -97,4 +97,12 @@ public class InventoryEndpoint {
         InventoryDetailBussinessResponse bussinessResponse = inventoryBussiness.detailInventory(bussinessRequest);
         return DataConvertUtil.parseDataAsObject(bussinessResponse, InventoryDetailResponse.class);
     }
+
+    @ApiOperation("库存扣减")
+    @PostMapping(ServiceId.WMS_INVENTORY_DEDUCT)
+    public InventoryDeductResponse deductInventory(@Valid @RequestBody InventoryDeductRequest request){
+        InventoryDeductBussinessRequest bussinessRequest = DataConvertUtil.parseDataAsObject(request, InventoryDeductBussinessRequest.class);
+        InventoryDeductBussinessResponse bussinessResponse = inventoryBussiness.deductInventory(bussinessRequest);
+        return DataConvertUtil.parseDataAsObject(bussinessResponse, InventoryDeductResponse.class);
+    }
 }

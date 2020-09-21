@@ -1,0 +1,347 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.telei.wms.datasource.wms.repository.WmsIvOutConfirmRepository">
+    <resultMap id="BaseResultMap" type="com.telei.wms.datasource.wms.model.WmsIvOutConfirm">
+        <id column="ivoc_id" jdbcType="BIGINT" property="ivocId"/>
+        <result column="ivo_id" jdbcType="BIGINT" property="ivoId"/>
+        <result column="iv_id" jdbcType="BIGINT" property="ivId"/>
+        <result column="iv_id_index" jdbcType="INTEGER" property="ivIdIndex"/>
+        <result column="ivoc_qty" jdbcType="DECIMAL" property="ivocQty"/>
+        <result column="ap_code_dc" jdbcType="VARCHAR" property="apCodeDc"/>
+        <result column="iv_document_code" jdbcType="VARCHAR" property="ivDocumentCode"/>
+        <result column="iv_document_id" jdbcType="BIGINT" property="ivDocumentId"/>
+        <result column="iv_documentline_id" jdbcType="BIGINT" property="ivDocumentlineId"/>
+        <result column="lc_code" jdbcType="VARCHAR" property="lcCode"/>
+        <result column="confirm_time" jdbcType="TIMESTAMP" property="confirmTime"/>
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        ivoc_id,ivo_id,iv_id,iv_id_index,ivoc_qty,ap_code_dc,iv_document_code,iv_document_id,iv_documentline_id,lc_code,confirm_time
+    </sql>
+
+    <insert id="insert">
+        insert into wms_iv_out_confirm (ivoc_id,ivo_id,iv_id,iv_id_index,ivoc_qty,ap_code_dc,iv_document_code,iv_document_id,iv_documentline_id,lc_code,confirm_time)
+        values (#{ivocId,jdbcType=BIGINT},#{ivoId,jdbcType=BIGINT},#{ivId,jdbcType=BIGINT},#{ivIdIndex,jdbcType=INTEGER},#{ivocQty,jdbcType=DECIMAL},#{apCodeDc,jdbcType=VARCHAR},#{ivDocumentCode,jdbcType=VARCHAR},#{ivDocumentId,jdbcType=BIGINT},#{ivDocumentlineId,jdbcType=BIGINT},#{lcCode,jdbcType=VARCHAR},#{confirmTime,jdbcType=TIMESTAMP})
+    </insert>
+
+    <insert id="insertSelective">
+        insert into wms_iv_out_confirm
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="ivocId != null">
+                ivoc_id,
+            </if>
+            <if test="ivoId != null">
+                ivo_id,
+            </if>
+            <if test="ivId != null">
+                iv_id,
+            </if>
+            <if test="ivIdIndex != null">
+                iv_id_index,
+            </if>
+            <if test="ivocQty != null">
+                ivoc_qty,
+            </if>
+            <if test="apCodeDc != null">
+                ap_code_dc,
+            </if>
+            <if test="ivDocumentCode != null">
+                iv_document_code,
+            </if>
+            <if test="ivDocumentId != null">
+                iv_document_id,
+            </if>
+            <if test="ivDocumentlineId != null">
+                iv_documentline_id,
+            </if>
+            <if test="lcCode != null">
+                lc_code,
+            </if>
+            <if test="confirmTime != null">
+                confirm_time
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="ivocId != null">
+                #{ivocId,jdbcType=BIGINT},
+            </if>
+            <if test="ivoId != null">
+                #{ivoId,jdbcType=BIGINT},
+            </if>
+            <if test="ivId != null">
+                #{ivId,jdbcType=BIGINT},
+            </if>
+            <if test="ivIdIndex != null">
+                #{ivIdIndex,jdbcType=INTEGER},
+            </if>
+            <if test="ivocQty != null">
+                #{ivocQty,jdbcType=DECIMAL},
+            </if>
+            <if test="apCodeDc != null">
+                #{apCodeDc,jdbcType=VARCHAR},
+            </if>
+            <if test="ivDocumentCode != null">
+                #{ivDocumentCode,jdbcType=VARCHAR},
+            </if>
+            <if test="ivDocumentId != null">
+                #{ivDocumentId,jdbcType=BIGINT},
+            </if>
+            <if test="ivDocumentlineId != null">
+                #{ivDocumentlineId,jdbcType=BIGINT},
+            </if>
+            <if test="lcCode != null">
+                #{lcCode,jdbcType=VARCHAR},
+            </if>
+            <if test="confirmTime != null">
+                #{confirmTime,jdbcType=TIMESTAMP}
+            </if>
+        </trim>
+    </insert>
+
+    <insert id="insertBatch">
+        insert into wms_iv_out_confirm (ivoc_id,ivo_id,iv_id,iv_id_index,ivoc_qty,ap_code_dc,iv_document_code,iv_document_id,iv_documentline_id,lc_code,confirm_time) values
+        <foreach collection="list" item="item" separator=",">
+            (
+            #{item.ivocId,jdbcType=BIGINT},
+            #{item.ivoId,jdbcType=BIGINT},
+            #{item.ivId,jdbcType=BIGINT},
+            #{item.ivIdIndex,jdbcType=INTEGER},
+            #{item.ivocQty,jdbcType=DECIMAL},
+            #{item.apCodeDc,jdbcType=VARCHAR},
+            #{item.ivDocumentCode,jdbcType=VARCHAR},
+            #{item.ivDocumentId,jdbcType=BIGINT},
+            #{item.ivDocumentlineId,jdbcType=BIGINT},
+            #{item.lcCode,jdbcType=VARCHAR},
+            #{item.confirmTime,jdbcType=TIMESTAMP}
+            )
+        </foreach>
+    </insert>
+
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+        delete from wms_iv_out_confirm
+        where ivoc_id = #{ivocId,jdbcType=BIGINT}
+    </delete>
+
+    <delete id="deleteByPrimaryKeys">
+        delete from wms_iv_out_confirm where ivoc_id in
+        <foreach close=")" collection="list" item="item" open="(" separator=",">
+            #{item}
+        </foreach>
+    </delete>
+
+    <update id="updateByPrimaryKey">
+        update wms_iv_out_confirm
+        <set>
+            ivo_id = #{ivoId,jdbcType=BIGINT},
+            iv_id = #{ivId,jdbcType=BIGINT},
+            iv_id_index = #{ivIdIndex,jdbcType=INTEGER},
+            ivoc_qty = #{ivocQty,jdbcType=DECIMAL},
+            ap_code_dc = #{apCodeDc,jdbcType=VARCHAR},
+            iv_document_code = #{ivDocumentCode,jdbcType=VARCHAR},
+            iv_document_id = #{ivDocumentId,jdbcType=BIGINT},
+            iv_documentline_id = #{ivDocumentlineId,jdbcType=BIGINT},
+            lc_code = #{lcCode,jdbcType=VARCHAR},
+            confirm_time = #{confirmTime,jdbcType=TIMESTAMP}
+        </set>
+        where ivoc_id = #{ivocId,jdbcType=BIGINT}
+    </update>
+
+    <update id="updateByPrimaryKeySelective">
+        update wms_iv_out_confirm
+        <set>
+            <if test="ivoId != null">
+                ivo_id = #{ivoId,jdbcType=BIGINT},
+            </if>
+            <if test="ivId != null">
+                iv_id = #{ivId,jdbcType=BIGINT},
+            </if>
+            <if test="ivIdIndex != null">
+                iv_id_index = #{ivIdIndex,jdbcType=INTEGER},
+            </if>
+            <if test="ivocQty != null">
+                ivoc_qty = #{ivocQty,jdbcType=DECIMAL},
+            </if>
+            <if test="apCodeDc != null">
+                ap_code_dc = #{apCodeDc,jdbcType=VARCHAR},
+            </if>
+            <if test="ivDocumentCode != null">
+                iv_document_code = #{ivDocumentCode,jdbcType=VARCHAR},
+            </if>
+            <if test="ivDocumentId != null">
+                iv_document_id = #{ivDocumentId,jdbcType=BIGINT},
+            </if>
+            <if test="ivDocumentlineId != null">
+                iv_documentline_id = #{ivDocumentlineId,jdbcType=BIGINT},
+            </if>
+            <if test="lcCode != null">
+                lc_code = #{lcCode,jdbcType=VARCHAR},
+            </if>
+            <if test="confirmTime != null">
+                confirm_time = #{confirmTime,jdbcType=TIMESTAMP}
+            </if>
+        </set>
+        where ivoc_id = #{ivocId,jdbcType=BIGINT}
+    </update>
+
+    <update id="updateBatch">
+        <foreach close="" collection="list" item="item" open="" separator=";">
+            update wms_iv_out_confirm
+            <set>
+                <if test="item.ivoId != null">
+                    ivo_id = #{item.ivoId,jdbcType=BIGINT},
+                </if>
+                <if test="item.ivId != null">
+                    iv_id = #{item.ivId,jdbcType=BIGINT},
+                </if>
+                <if test="item.ivIdIndex != null">
+                    iv_id_index = #{item.ivIdIndex,jdbcType=INTEGER},
+                </if>
+                <if test="item.ivocQty != null">
+                    ivoc_qty = #{item.ivocQty,jdbcType=DECIMAL},
+                </if>
+                <if test="item.apCodeDc != null">
+                    ap_code_dc = #{item.apCodeDc,jdbcType=VARCHAR},
+                </if>
+                <if test="item.ivDocumentCode != null">
+                    iv_document_code = #{item.ivDocumentCode,jdbcType=VARCHAR},
+                </if>
+                <if test="item.ivDocumentId != null">
+                    iv_document_id = #{item.ivDocumentId,jdbcType=BIGINT},
+                </if>
+                <if test="item.ivDocumentlineId != null">
+                    iv_documentline_id = #{item.ivDocumentlineId,jdbcType=BIGINT},
+                </if>
+                <if test="item.lcCode != null">
+                    lc_code = #{item.lcCode,jdbcType=VARCHAR},
+                </if>
+                <if test="item.confirmTime != null">
+                    confirm_time = #{item.confirmTime,jdbcType=TIMESTAMP}
+                </if>
+            </set>
+            where ivoc_id = #{item.ivocId,jdbcType=BIGINT}
+        </foreach>
+    </update>
+
+    <select id="selectByPrimaryKey" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List" />
+        from wms_iv_out_confirm
+        where ivoc_id = #{ivocId,jdbcType=BIGINT}
+    </select>
+
+    <select id="selectByPrimaryKeyWithLock" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List" />
+        from wms_iv_out_confirm
+        where ivoc_id = #{ivocId,jdbcType=BIGINT} for update
+    </select>
+
+    <select id="selectByPrimaryKeys" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List" />
+        from wms_iv_out_confirm where ivoc_id in
+        <foreach close=")" collection="list" item="item" open="(" separator=",">
+            #{item}
+        </foreach>
+    </select>
+
+    <select id="selectByEntity" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from wms_iv_out_confirm
+        <where>
+            <if test="ivocId != null">
+                and ivoc_id=#{ivocId,jdbcType=BIGINT}
+            </if>
+            <if test="ivoId != null">
+                and ivo_id=#{ivoId,jdbcType=BIGINT}
+            </if>
+            <if test="ivId != null">
+                and iv_id=#{ivId,jdbcType=BIGINT}
+            </if>
+            <if test="ivIdIndex != null">
+                and iv_id_index=#{ivIdIndex,jdbcType=INTEGER}
+            </if>
+            <if test="ivocQty != null">
+                and ivoc_qty=#{ivocQty,jdbcType=DECIMAL}
+            </if>
+            <if test="apCodeDc != null">
+                and ap_code_dc=#{apCodeDc,jdbcType=VARCHAR}
+            </if>
+            <if test="ivDocumentCode != null">
+                and iv_document_code=#{ivDocumentCode,jdbcType=VARCHAR}
+            </if>
+            <if test="ivDocumentId != null">
+                and iv_document_id=#{ivDocumentId,jdbcType=BIGINT}
+            </if>
+            <if test="ivDocumentlineId != null">
+                and iv_documentline_id=#{ivDocumentlineId,jdbcType=BIGINT}
+            </if>
+            <if test="lcCode != null">
+                and lc_code=#{lcCode,jdbcType=VARCHAR}
+            </if>
+            <if test="confirmTime != null">
+                and confirm_time=#{confirmTime,jdbcType=TIMESTAMP}
+            </if>
+        </where>
+    </select>
+
+    <select id="selectByConditions" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from wms_iv_out_confirm
+        <where>
+            <if test="ivocId != null">
+                and ivoc_id ${ivocId}
+            </if>
+            <if test="ivoId != null">
+                and ivo_id ${ivoId}
+            </if>
+            <if test="ivId != null">
+                and iv_id ${ivId}
+            </if>
+            <if test="ivIdIndex != null">
+                and iv_id_index ${ivIdIndex}
+            </if>
+            <if test="ivocQty != null">
+                and ivoc_qty ${ivocQty}
+            </if>
+            <if test="apCodeDc != null">
+                and ap_code_dc ${apCodeDc}
+            </if>
+            <if test="ivDocumentCode != null">
+                and iv_document_code ${ivDocumentCode}
+            </if>
+            <if test="ivDocumentId != null">
+                and iv_document_id ${ivDocumentId}
+            </if>
+            <if test="ivDocumentlineId != null">
+                and iv_documentline_id ${ivDocumentlineId}
+            </if>
+            <if test="lcCode != null">
+                and lc_code ${lcCode}
+            </if>
+            <if test="confirmTime != null">
+                and confirm_time ${confirmTime}
+            </if>
+        </where>
+        <if test="orderBy != null">
+            order by ${orderBy}
+        </if>
+    </select>
+
+    <select id="selectAll" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from wms_iv_out_confirm
+    </select>
+
+    <select id="count" resultType="java.lang.Long">
+        select count(*) from wms_iv_out_confirm
+    </select>
+
+    <select id="selectByFunction">
+        select ${function}(${column}) from wms_iv_out_confirm
+    </select>
+
+</mapper>

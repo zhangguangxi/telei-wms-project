@@ -42,8 +42,8 @@
         SELECT
         <include refid="Page_Query_Column_List"/>
         FROM wms_do_line wdl
-        WHERE wrl.doh_id = #{dohId,jdbcType=BIGINT}
-        ORDER BY wrl.dol_id DESC
+        WHERE wdl.doh_id = #{dohId,jdbcType=BIGINT}
+        ORDER BY wdl.dol_id DESC
     </select>
 
 </mapper>

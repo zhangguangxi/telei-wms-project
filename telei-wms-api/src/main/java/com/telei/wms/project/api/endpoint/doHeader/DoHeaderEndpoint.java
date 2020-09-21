@@ -25,7 +25,7 @@ public class DoHeaderEndpoint {
     @Autowired
     private DoHeaderBussiness doBussiness;
 
-    @ApiOperation("分页查询出库任务")
+    @ApiOperation("查询出库任务")
     @PostMapping(ServiceId.WMS_DO_HEADER_PAGE_QUERY)
     public DoHeaderPageQueryResponse pageQueryDoHeader(@RequestBody @Valid DoHeaderPageQueryRequest request) {
         return doBussiness.pageQueryDoHeader(request);

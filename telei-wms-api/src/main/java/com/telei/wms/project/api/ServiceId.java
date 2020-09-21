@@ -100,6 +100,8 @@ public class ServiceId {
     public static final String WMS_INVENTORY_ADJUST_LIFT_UP = "1030508";
     @RightResource(rightSystem = "wms", rightItem = "库存管理", rightFunction = "降任务")
     public static final String WMS_INVENTORY_ADJUST_LIFT_DOWN = "1030509";
+    @RightResource(rightSystem = "wms", rightItem = "库存管理", rightFunction = "扣减")
+    public static final String WMS_INVENTORY_DEDUCT = "1030510";
 
 
     /**
