@@ -23,4 +23,8 @@ public class WmsPloLineService extends BaseService<WmsPloLineRepository,WmsPloLi
     public List<PloLineLocationResponseVo> findLocationAll(Long warehouseId, List<Long> productIds) {
         return wmsPloLineRepository.findLocationAll(warehouseId, productIds);
     }
+
+    public List<WmsPloLine> selectByDolIdList(List<Long> dolIdList) {
+        return wmsPloLineRepository.selectByDolIdList(dolIdList);
+    }
 }

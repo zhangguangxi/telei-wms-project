@@ -93,6 +93,9 @@ public class PloBussiness {
         wmsPloHeader.setTotalWeight(wmsDoHeader.getTotalWeight());
         wmsPloHeader.setTotalVol(wmsDoHeader.getTotalVol());
         wmsPloHeader.setDetailedSpeciesQty(wmsDoHeader.getDetailedSpeciesQty());
+        wmsPloHeader.setPickedQty(BigDecimal.ZERO);
+        wmsPloHeader.setPickingWeight(BigDecimal.ZERO);
+        wmsPloHeader.setPickingVol(BigDecimal.ZERO);
         wmsPloHeader.setCreateUser("");
         wmsPloHeader.setCreateTime(DateUtils.nowWithUTC());
         wmsPloHeader.setLastUpdateUser("");
@@ -106,6 +109,9 @@ public class PloBussiness {
             wmsPloLine.setId(idGenerator.getUnique());
             wmsPloLine.setPloId(wmsPloHeader.getId());
             wmsPloLine.setPloCode(wmsPloHeader.getPloCode());
+            wmsPloLine.setPickedQty(BigDecimal.ZERO);
+            wmsPloLine.setPickedWeight(BigDecimal.ZERO);
+            wmsPloLine.setPickedVol(BigDecimal.ZERO);
         }
         //新增拣货单
         wmsPloHeaderService.insertSelective(wmsPloHeader);
@@ -141,7 +147,8 @@ public class PloBussiness {
         for (WmsPloLine wmsPloLine : wmsPloLines) {
             PloLineLocationResponseVo ploLineLocationResponseVo = paoLineLocation.get(wmsPloLine.getProductId());
             if (Objects.isNull(ploLineLocationResponseVo)) {
-                continue;
+                //未找到库位
+                ErrorCode.PLO_ADD_ERROR_4009.throwError();
             }
             wmsPloLine.setLcCode(ploLineLocationResponseVo.getLcCode());
             wmsPloLine.setLcAisle(ploLineLocationResponseVo.getLcAisle());
@@ -273,7 +280,7 @@ public class PloBussiness {
      */
     public List<PloDetailPageQueryResponse> pageQueryPloDetail(PloDetailPageQueryRequest request) {
         WmsPloDetail wmsPloDetail = new WmsPloDetail();
-        wmsPloDetail.setPlolId(request.getPloId());
+        wmsPloDetail.setPloId(request.getPloId());
         List<WmsPloDetail> wmsPloDetails = wmsPloDetailService.selectByEntity(wmsPloDetail);
         return DataConvertUtil.parseDataAsArray(wmsPloDetails, PloDetailPageQueryResponse.class);
     }

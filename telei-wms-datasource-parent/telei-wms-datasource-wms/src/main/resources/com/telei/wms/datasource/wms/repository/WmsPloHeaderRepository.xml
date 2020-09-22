@@ -5,6 +5,7 @@
     <resultMap id="PageQueryResultMap" extends="BaseResultMap" type="com.telei.wms.datasource.wms.vo.PloHeaderPageQueryResponseVo">
         <result column="warehouse_name" jdbcType="VARCHAR" property="warehouseName"/>
         <result column="supplier_name" jdbcType="VARCHAR" property="supplierName"/>
+        <result column="customer_name" jdbcType="VARCHAR" property="customerName"/>
         <result column="pl_user" jdbcType="VARCHAR" property="plUser"/>
     </resultMap>
 
@@ -36,6 +37,7 @@
         wph.last_update_time,
         cw.warehouse_name,
         cs.supplier_name,
+        cc.customer_name,
         group_concat(wpd.create_user) pl_user
     </sql>
 
@@ -45,6 +47,7 @@
         FROM wms_plo_header wph
         INNER JOIN cdm.cdm_warehouse cw ON cw.warehouse_id = wph.warehouse_id
         INNER JOIN cdm.cdm_supplier cs ON cs.supplier_id = wph.supplier_id
+        INNER JOIN cdm.cdm_customer cc ON cc.customer_id = wph.customer_id
         LEFT JOIN wms_plo_detail wpd ON wph.plo_id = wpd.plo_id
         <where>
             <if test="ploCode != null and ploCode != ''">

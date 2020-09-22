@@ -4,6 +4,7 @@
 
     <resultMap id="PageQueryResultMap" extends="BaseResultMap" type="com.telei.wms.datasource.wms.vo.PloLinePageQueryResponseVo">
         <result column="pl_user" jdbcType="VARCHAR" property="plUser"/>
+        <result column="pl_time" jdbcType="VARCHAR" property="plTime"/>
     </resultMap>
 
     <sql id="Page_Query_Column_List">
@@ -39,7 +40,8 @@
         wpl.lc_y,
         wpl.lc_z,
         wpl.memo,
-        group_concat(wpd.create_user) pl_user
+        group_concat(wpd.create_user) pl_user,
+        group_concat(wpd.create_time) pl_time
     </sql>
 
     <select id="findAll" resultMap="PageQueryResultMap">
@@ -97,5 +99,14 @@
         AND wi.lc_type='S'
     </select>
 
+    <select id="selectByDolIdList" resultMap="BaseResultMap">
+        select
+            <include refid="Base_Column_List"/>
+        from wms_plo_line
+        where dol_id in
+        <foreach collection="list" item="item" open="(" separator="," close=")">
+            #{item}
+        </foreach>
+    </select>
 </mapper>
 

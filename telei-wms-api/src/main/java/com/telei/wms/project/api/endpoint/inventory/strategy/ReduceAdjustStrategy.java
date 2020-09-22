@@ -51,32 +51,23 @@ public class ReduceAdjustStrategy implements IAdjustStrategy{
                 /***库存调整单明细记录*/
                 adjustStrategyFactory.createAdjtLine(wmsAdjtHeader, wmsAdjtLineList, inventory,null,"REDUCE" ,ivQtyAdjt, lcCodeAdjt);
                 break;
-            }else if(ivQty.compareTo(ivQtyAdjt) == 0){
-                /**当前批次库存数 = 调整库存数*/
-                /**删除库存记录*/
-                deleteIvidList.add(inventory.getIvId());
-                /**库存变更记录*/
-                adjustStrategyFactory.createTransactionRecored(wmsIvTransactionList,inventory,lcCodeAdjt,"LESS",ivQtyAdjt,userInfo, nowWithUtc);
-                /**OMS库存回写记录*/
-                adjustStrategyFactory.createOmsInventoryChangeWriteBackCondition(ivQtyAdjt, list, inventory,2);
-                /***库存调整单明细记录*/
-                adjustStrategyFactory.createAdjtLine(wmsAdjtHeader, wmsAdjtLineList, inventory,null,"REDUCE" ,ivQtyAdjt, lcCodeAdjt);
-                break;
-            }else{
-                /**当前批次库存数 < 调整库存数*/
-                ivQtyAdjt = ivQtyAdjt.subtract(ivQty);
-                /**删除库存记录*/
-                deleteIvidList.add(inventory.getIvId());
-                /**库存变更记录*/
-                adjustStrategyFactory.createTransactionRecored(wmsIvTransactionList,inventory,lcCodeAdjt,"LESS",ivQtyAdjt,userInfo, nowWithUtc);
-                /**OMS库存回写记录*/
-                adjustStrategyFactory.createOmsInventoryChangeWriteBackCondition(ivQtyAdjt, list, inventory,2);
-                /***库存调整单明细记录*/
-                adjustStrategyFactory.createAdjtLine(wmsAdjtHeader, wmsAdjtLineList, inventory,null,"REDUCE" ,ivQtyAdjt, lcCodeAdjt);
             }
+
+            deleteIvidList.add(inventory.getIvId());
+            /**库存变更记录*/
+            adjustStrategyFactory.createTransactionRecored(wmsIvTransactionList,inventory,lcCodeAdjt,"LESS",ivQtyAdjt,userInfo, nowWithUtc);
+            /**OMS库存回写记录*/
+            adjustStrategyFactory.createOmsInventoryChangeWriteBackCondition(ivQtyAdjt, list, inventory,2);
+            /***库存调整单明细记录*/
+            adjustStrategyFactory.createAdjtLine(wmsAdjtHeader, wmsAdjtLineList, inventory,null,"REDUCE" ,ivQtyAdjt, lcCodeAdjt);
+
+            if(ivQty.compareTo(ivQtyAdjt) == 0){
+                break;
+            }
+
+            /**当前批次库存数 < 调整库存数*/
+            ivQtyAdjt = ivQtyAdjt.subtract(ivQty);
         }
         return list;
     }
-
-
 }

@@ -15,4 +15,6 @@ public interface WmsPloLineRepository extends BaseRepository<WmsPloLine,Long> {
     List<PloLinePageQueryResponseVo> findAll(Long ploId);
 
     List<PloLineLocationResponseVo> findLocationAll(@Param("warehouseId") Long warehouseId, @Param("productIds") List<Long> productIds);
+
+    List<WmsPloLine> selectByDolIdList(List<Long> list);
 }

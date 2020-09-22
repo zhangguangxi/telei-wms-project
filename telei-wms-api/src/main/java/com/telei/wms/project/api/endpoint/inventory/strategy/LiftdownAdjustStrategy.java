@@ -31,7 +31,7 @@ public class LiftdownAdjustStrategy implements IAdjustStrategy {
         List<WmsInventory> wmsInventories = DataConvertUtil.parseDataAsArray(WmsInventoryDbList, WmsInventory.class);
         BigDecimal totalIvQty = wmsInventories.stream().map(WmsInventory::getIvQty).reduce(BigDecimal.ZERO, BigDecimal::add);
         if (totalIvQty.compareTo(ivQtyAdjt) < 0) {
-            ErrorCode.ADJT_ERROR_4016.throwError(wmsAdjtHeader.getLcCode(),wmsAdjtHeader.getProductId(),ivQtyAdjt,totalIvQty,wmsAdjtHeader.getAdjhType());
+            ErrorCode.ADJT_ERROR_4016.throwError(wmsAdjtHeader.getLcCode(), wmsAdjtHeader.getProductId(), ivQtyAdjt, totalIvQty, wmsAdjtHeader.getAdjhType());
         }
         for (WmsInventory inventory : wmsInventories) {
             BigDecimal ivQty = inventory.getIvQty();
@@ -41,34 +41,30 @@ public class LiftdownAdjustStrategy implements IAdjustStrategy {
                 inventory.setIvQty(ivQtyAfter);
                 inventory.setIvTranstime(nowWithUtc);
                 wmsInventoryUpdateList.add(inventory);
-                adjustStrategyFactory.createTransactionRecored(wmsIvTransactionList,inventory, lcCodeAdjt, "MOVE", ivQtyAdjt, userInfo, nowWithUtc);
+                adjustStrategyFactory.createTransactionRecored(wmsIvTransactionList, inventory, lcCodeAdjt, "MOVE", ivQtyAdjt, userInfo, nowWithUtc);
                 /***库存调整单明细记录*/
-                adjustStrategyFactory.createAdjtLine(wmsAdjtHeader, wmsAdjtLineList, inventory, null,"LIFTDOWN", ivQtyAdjt, lcCodeAdjt);
+                adjustStrategyFactory.createAdjtLine(wmsAdjtHeader, wmsAdjtLineList, inventory, null, "LIFTDOWN", ivQtyAdjt, lcCodeAdjt);
                 /**库存记录*/
                 WmsInventory inventoryAdd = adjustStrategyFactory.createInventory(wmsInventoryAddList, inventory, ivQtyAdjt, nowWithUtc);
                 /**库存拆分记录*/
                 adjustStrategyFactory.createSplit(wmsIvSplitList, ivQtyAdjt, inventory, ivQtyAfter, inventoryAdd);
                 break;
-            } else if (ivQty.compareTo(ivQtyAdjt) == 0) {
-                /**当前批次库存数 = 调整库存数*/
-                deleteIvidList.add(inventory.getIvId());
-                adjustStrategyFactory.createTransactionRecored(wmsIvTransactionList,inventory, lcCodeAdjt, "MOVE", ivQtyAdjt, userInfo, nowWithUtc);
-                /**库存记录*/
-                WmsInventory inventoryAdd = adjustStrategyFactory.createInventory(wmsInventoryAddList, inventory, ivQtyAdjt, nowWithUtc);
-                /***库存调整单明细记录*/
-                adjustStrategyFactory.createAdjtLine(wmsAdjtHeader, wmsAdjtLineList, inventory, inventoryAdd,"LIFTDOWN", ivQtyAdjt, lcCodeAdjt);
-                break;
-            } else {
-                /**当前批次库存数 < 调整库存数*/
-                deleteIvidList.add(inventory.getIvId());
-                ivQtyAdjt = ivQtyAdjt.subtract(ivQty);
-                /**库存记录*/
-                WmsInventory inventoryAdd = adjustStrategyFactory.createInventory(wmsInventoryAddList, inventory, ivQtyAdjt, nowWithUtc);
-                /**库存变更记录*/
-                adjustStrategyFactory.createTransactionRecored(wmsIvTransactionList,inventory, lcCodeAdjt, "MOVE", ivQtyAdjt, userInfo, nowWithUtc);
-                /***库存调整单明细记录*/
-                adjustStrategyFactory.createAdjtLine(wmsAdjtHeader, wmsAdjtLineList, inventory,inventoryAdd, "LIFTDOWN", ivQtyAdjt, lcCodeAdjt);
             }
+
+            deleteIvidList.add(inventory.getIvId());
+            /**库存记录*/
+            WmsInventory inventoryAdd = adjustStrategyFactory.createInventory(wmsInventoryAddList, inventory, ivQtyAdjt, nowWithUtc);
+            /**库存变更记录*/
+            adjustStrategyFactory.createTransactionRecored(wmsIvTransactionList, inventory, lcCodeAdjt, "MOVE", ivQtyAdjt, userInfo, nowWithUtc);
+            /***库存调整单明细记录*/
+            adjustStrategyFactory.createAdjtLine(wmsAdjtHeader, wmsAdjtLineList, inventory, inventoryAdd, "LIFTDOWN", ivQtyAdjt, lcCodeAdjt);
+
+            if (ivQty.compareTo(ivQtyAdjt) == 0) {
+                /**当前批次库存数 = 调整库存数*/
+                break;
+            }
+            /**当前批次库存数 < 调整库存数*/
+            ivQtyAdjt = ivQtyAdjt.subtract(ivQty);
         }
         return null;
     }

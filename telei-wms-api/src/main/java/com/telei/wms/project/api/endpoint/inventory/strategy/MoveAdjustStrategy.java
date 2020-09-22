@@ -64,27 +64,20 @@ public class MoveAdjustStrategy  implements IAdjustStrategy {
                 /**库存拆分记录*/
                 adjustStrategyFactory.createSplit(wmsIvSplitList, ivQtyAdjt, inventory, ivQtyAfter, inventoryAdd);
                 break;
-            }else if(ivQty.compareTo(ivQtyAdjt) == 0){
-                /**当前批次库存数 = 调整库存数*/
-                deleteIvidList.add(inventory.getIvId());
-                /**新增库存变更记录*/
-                adjustStrategyFactory.createTransactionRecored(wmsIvTransactionList,inventory,lcCodeAdjt,"MOVE",ivQtyAdjt,userInfo, nowWithUtc);
-                /**新增库存记录*/
-                adjustStrategyFactory.createInventory(wmsInventoryAddList, inventory, ivQtyAdjt, nowWithUtc);
-                /***库存调整单明细记录*/
-                adjustStrategyFactory.createAdjtLine(wmsAdjtHeader, wmsAdjtLineList, inventory,null,"MOVE" ,ivQtyAdjt, lcCodeAdjt);
-                break;
-            }else{
-                /**当前批次库存数 < 调整库存数*/
-                deleteIvidList.add(inventory.getIvId());
-                ivQtyAdjt = ivQtyAdjt.subtract(ivQty);
-                /**新增库存记录*/
-                adjustStrategyFactory.createInventory(wmsInventoryAddList, inventory, ivQtyAdjt, nowWithUtc);
-                /**新增库存变更记录*/
-                adjustStrategyFactory.createTransactionRecored(wmsIvTransactionList,inventory,lcCodeAdjt,"MOVE",ivQtyAdjt,userInfo, nowWithUtc);
-                /***库存调整单明细记录*/
-                adjustStrategyFactory.createAdjtLine(wmsAdjtHeader, wmsAdjtLineList, inventory,null,"MOVE" ,ivQtyAdjt, lcCodeAdjt);
             }
+            /**当前批次库存数 = 调整库存数*/
+            deleteIvidList.add(inventory.getIvId());
+            /**新增库存变更记录*/
+            adjustStrategyFactory.createTransactionRecored(wmsIvTransactionList,inventory,lcCodeAdjt,"MOVE",ivQtyAdjt,userInfo, nowWithUtc);
+            /**新增库存记录*/
+            adjustStrategyFactory.createInventory(wmsInventoryAddList, inventory, ivQtyAdjt, nowWithUtc);
+            /***库存调整单明细记录*/
+            adjustStrategyFactory.createAdjtLine(wmsAdjtHeader, wmsAdjtLineList, inventory,null,"MOVE" ,ivQtyAdjt, lcCodeAdjt);
+
+            if(ivQty.compareTo(ivQtyAdjt) == 0){
+                break;
+            }
+            ivQtyAdjt = ivQtyAdjt.subtract(ivQty);
         }
         return null;
     }

@@ -11,4 +11,6 @@ public class PloLinePageQueryResponseVo extends WmsPloLine {
 
     /** 拣货员 */
     private String plUser;
+    /** 拣货时间 */
+    private String plTime;
 }

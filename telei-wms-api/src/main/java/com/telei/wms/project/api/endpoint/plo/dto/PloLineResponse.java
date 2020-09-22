@@ -71,4 +71,8 @@ public class PloLineResponse {
     private String lcZ;
     /** 备注 */
     private String memo;
+    /** 拣货员 */
+    private String plUser;
+    /** 拣货时间 */
+    private String plTime;
 }
