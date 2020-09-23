@@ -14,6 +14,7 @@ import com.telei.wms.commons.utils.DateUtils;
 import com.telei.wms.commons.utils.StringUtils;
 import com.telei.wms.customer.amqp.inventoryAddWriteBack.OmsInventoryAddWriteBack;
 import com.telei.wms.customer.amqp.inventoryChangeWriteBack.OmsInventoryChangeWriteBack;
+import com.telei.wms.customer.amqp.ivOutWriteBack.OmsIvOutWriteBack;
 import com.telei.wms.customer.businessNumber.BusinessNumberFeignClient;
 import com.telei.wms.customer.businessNumber.dto.BusinessNumberRequest;
 import com.telei.wms.customer.businessNumber.dto.BusinessNumberResponse;
@@ -28,6 +29,7 @@ import com.telei.wms.datasource.wms.vo.WmsInventoryPageQueryResponseVo;
 import com.telei.wms.project.api.ErrorCode;
 import com.telei.wms.project.api.amqp.producer.WmsOmsInventoryAddWriteBackProducer;
 import com.telei.wms.project.api.amqp.producer.WmsOmsInventoryChangeWriteBackProducer;
+import com.telei.wms.project.api.amqp.producer.WmsOmsIvOutWriteBackProducer;
 import com.telei.wms.project.api.endpoint.inventory.dto.*;
 import com.telei.wms.project.api.endpoint.inventory.strategy.AdjustStrategyFactory;
 import com.telei.wms.project.api.endpoint.inventory.strategy.IAdjustStrategy;
@@ -123,6 +125,9 @@ public class InventoryBussiness {
 
     @Autowired
     private WmsPloLineService wmsPloLineService;
+
+    @Autowired
+    private WmsOmsIvOutWriteBackProducer wmsOmsIvOutWriteBackProducer;
 
 
     /**
@@ -821,30 +826,38 @@ public class InventoryBussiness {
         try {
             WmsDoHeader wmsDoHeader = wmsDoHeaderService.selectByPrimaryKey(dohId);
             if (Objects.isNull(wmsDoHeader)) {
-                // TODO: 2020/9/22
+                ErrorCode.INVENTORY_DEDUCT_DO_RECORD_NOT_EXIST_40026.throwError();
             }
+
+            if(Objects.equals("0",wmsDoHeader.getHasPlo())){
+                ErrorCode.INVENTORY_DEDUCT_NOT_HAS_PLO_40027.throwError(JSON.toJSONString(dohId));
+            }
+
+            if(Objects.equals("0",wmsDoHeader.getHadCheck())){
+                ErrorCode.INVENTORY_DEDUCT_NOT_HAD_CHECK_40028.throwError(JSON.toJSONString(dohId));
+            }
+
             WmsDoLine wmsDoLine = new WmsDoLine();
             wmsDoLine.setDohId(dohId);
             List<WmsDoLine> wmsDoLines = wmsDoLineService.selectByEntity(wmsDoLine);
             if(Objects.isNull(wmsDoLines) || wmsDoLines.isEmpty()){
-                // TODO: 2020/9/22
+                ErrorCode.INVENTORY_DEDUCT_DO_LINE_NOT_EXIST_40029.throwError(JSON.toJSONString(dohId));
             }
-
 
             //根据订单id查询wms_iv_out(待出库存)明细集合
             WmsIvOut wmsIvOut = new WmsIvOut();
             wmsIvOut.setOrderId(dohId);
             List<WmsIvOut> wmsIvOutList = wmsIvOutService.selectByEntity(wmsIvOut);
-            log.info("\n +++++++++++++++++++++ 出库扣减库存操作::根据订单id -> {} 查询待出库存记录 ++++++++++++++++++++ \n ", JSON.toJSONString(wmsIvOutList));
+            log.info("\n +++++++++++++++++++++ 出库扣减库存操作::根据订单id -> {} 查询待出库存记录 -> {} ++++++++++++++++++++ \n ", JSON.toJSONString(dohId),JSON.toJSONString(wmsIvOutList));
             if (Objects.isNull(wmsIvOutList) || wmsIvOutList.isEmpty()) {
-                // TODO: 2020/9/22
+                ErrorCode.INVENTORY_DEDUCT_IV_OUT_NOT_EXIST_40030.throwError(JSON.toJSONString(wmsIvOut));
             }
             List<Long> dolIdList = wmsIvOutList.stream().map(WmsIvOut::getLineId).collect(Collectors.toList());
             List<WmsPloLine> wmsPloLineList = wmsPloLineService.selectByDolIdList(dolIdList);
 
-            log.info("\n +++++++++++++++++++++ 出库扣减库存操作::根据出库任务详情IDS -> {} 查询拣货详情记录 ++++++++++++++++++++ \n ", JSON.toJSONString(dolIdList), JSON.toJSONString(wmsPloLineList));
+            log.info("\n +++++++++++++++++++++ 出库扣减库存操作::根据出库任务详情IDS -> {} 查询拣货详情记录 -> {} ++++++++++++++++++++ \n ", JSON.toJSONString(dolIdList), JSON.toJSONString(wmsPloLineList));
             if (Objects.isNull(wmsPloLineList) || wmsPloLineList.isEmpty()) {
-                // TODO: 2020/9/22
+                ErrorCode.INVENTORY_DEDUCT_PLO_LINE_NOT_EXIST_40031.throwError(JSON.toJSONString(wmsPloLineList));
             }
             Map<Long, String> dolId2LcCodeMap = wmsPloLineList.stream().collect(Collectors.toMap(WmsPloLine::getDolId, WmsPloLine::getLcCode));
             List<WmsInventoryDeductConditionVo> inventoryDeductConditionList = new ArrayList();
@@ -867,10 +880,11 @@ public class InventoryBussiness {
 
             List<WmsInventory> inventories = wmsInventoryService.selectAll();
             if (Objects.isNull(inventories) || inventories.isEmpty()) {
-                // TODO: 2020/9/22
+                ErrorCode.INVENTORY_DEDUCT_INVENTORY_NOT_EXIST_40032.throwError();
             }
 
             List<WmsIvOutConfirm> ivIdIndexList = wmsIvOutConfirmService.selectIvIdIndex();
+            log.info("\n +++++++++++++++++++++ 出库扣减库存操作::查询锁定扣减记录-扣减次数最大值 -> {} ++++++++++++++++++++ \n ", JSON.toJSONString(ivIdIndexList));
             Map<Long, Integer> ivIdIndexMap = null;
             if (Objects.nonNull(ivIdIndexList) && !ivIdIndexList.isEmpty()) {
                 ivIdIndexMap = ivIdIndexList.stream().collect(Collectors.toMap(WmsIvOutConfirm::getId, WmsIvOutConfirm::getIvIdIndex));
@@ -891,11 +905,11 @@ public class InventoryBussiness {
             Map<Long, Integer> finalIvIdIndexMap = ivIdIndexMap;
             requestCondition2QtyMap.forEach((k, v) -> {
                 if (!inventoryMap.containsKey(k)) {
-                    // TODO: 2020/9/22
+                    ErrorCode.INVENTORY_DEDUCT_PRODUCT_NOT_EXIST_40033.throwError(k);
                 }
                 List<WmsInventory> list = inventoryMap.get(k);
                 if (Objects.isNull(list) || inventoryMap.isEmpty()) {
-                    // TODO: 2020/9/22
+                    ErrorCode.INVENTORY_DEDUCT_PRODUCT_NOT_EXIST_40034.throwError(k);
                 }
                 List<WmsInventory> sortedList = list.stream().sorted(Comparator.comparing(WmsInventory::getIabId)).collect(Collectors.toList());
                 BigDecimal requestIvQty = v;
@@ -932,36 +946,48 @@ public class InventoryBussiness {
             wmsDoHeader.setShippingTime(nowWithUTC);//发货时间(出库时间)
 
             if(LockMapUtil.confirmLock(dohId,lockValue)){
-                //删除带出库存、新增库存锁定记录、新增库存变动记录、更新库存记录(更新、删除)、库存任务(状态和时间)
+                log.info("\n +++++++++++++++++++++ 出库扣减库存操作:: 删除待出库存记录 -> {} ++++++++++++++++++++ \n ", JSON.toJSONString(deleteIvOutList));
                 int countForIvOut = wmsIvOutService.deleteByPrimaryKeys(deleteIvOutList);
                 if(countForIvOut != deleteIvOutList.size()){
-                    // TODO: 2020/9/22
+                    ErrorCode.INVENTORY_DEDUCT_DELETE_IV_OUT_40035.throwError();
                 }
+
+                log.info("\n +++++++++++++++++++++ 出库扣减库存操作:: 新增库存锁定扣减记录 -> {} ++++++++++++++++++++ \n ", JSON.toJSONString(addIvOutConfirmList));
                 int countForOutConfirm = wmsIvOutConfirmService.insertBatch(addIvOutConfirmList);
                 if(countForOutConfirm != addIvOutConfirmList.size()){
-                    // TODO: 2020/9/22
+                    ErrorCode.INVENTORY_DEDUCT_ADD_OUT_CONFIRM_40036.throwError();
                 }
 
+                log.info("\n +++++++++++++++++++++ 出库扣减库存操作:: 新增库存变动记录-> {} ++++++++++++++++++++ \n ", JSON.toJSONString(addIvTransactionList));
                 int countForTransaction = wmsIvTransactionService.insertBatch(addIvTransactionList);
                 if(countForTransaction != addIvTransactionList.size()){
-                    // TODO: 2020/9/22
+                    ErrorCode.INVENTORY_DEDUCT_ADD_TRANSACTION_40037.throwError();
                 }
 
+                log.info("\n +++++++++++++++++++++ 出库扣减库存操作:: 更新库存记录失败 -> {} ++++++++++++++++++++ \n ", JSON.toJSONString(updateInventoryList));
                 int countForInventoryUpdate = wmsInventoryService.updateBatch(updateInventoryList);
                 if(countForInventoryUpdate != updateInventoryList.size()){
-                    // TODO: 2020/9/22
-                }
-                int countForInventoryDelete = wmsInventoryService.deleteByPrimaryKeys(deleteInventoryList);
-                if(countForInventoryDelete != deleteInventoryList.size()){
-                    // TODO: 2020/9/22
+                    ErrorCode.INVENTORY_DEDUCT_UPDATE_INVENTORY_40038.throwError();
                 }
 
+                log.info("\n +++++++++++++++++++++ 出库扣减库存操作:: 删除库存记录 -> {} ++++++++++++++++++++ \n ", JSON.toJSONString(deleteInventoryList));
+                int countForInventoryDelete = wmsInventoryService.deleteByPrimaryKeys(deleteInventoryList);
+                if(countForInventoryDelete != deleteInventoryList.size()){
+                    ErrorCode.INVENTORY_DEDUCT_DELETE_INVENTORY_40039.throwError();
+                }
+
+                log.info("\n +++++++++++++++++++++ 出库扣减库存操作:: 更新出库单单头 -> {} ++++++++++++++++++++ \n ", JSON.toJSONString(wmsDoHeader));
                 int countForDoheader = wmsDoHeaderService.updateByPrimaryKey(wmsDoHeader);
                 if(countForDoheader <= 0 ){
-                    // TODO: 2020/9/22
+                    ErrorCode.INVENTORY_DEDUCT_UPDATE_DO_HEADER_40040.throwError();
                 }
             }
             /**异步回写OMS(出库计划单头/明细 销售单单头/明细 库存变动的相关记录)  inventoryDeductConditionList*/
+            List<OmsIvOutWriteBack.OmsIvOutWriteBackCondition> omsIvOutWriteBacks = DataConvertUtil.parseDataAsArray(inventoryDeductConditionList, OmsIvOutWriteBack.OmsIvOutWriteBackCondition.class);
+            OmsIvOutWriteBack omsIvOutWriteBack = new OmsIvOutWriteBack();
+            omsIvOutWriteBack.setList(omsIvOutWriteBacks);
+            WmsIdInstantdirective wmsIdInstantdirective = wmsIdInstantdirectiveBussiness.add("PUTON", "", omsIvOutWriteBack);
+            wmsOmsIvOutWriteBackProducer.send(wmsIdInstantdirective);
             return new InventoryDeductBussinessResponse();
         } finally {
             LockMapUtil.cancelLock(dohId,lockValue);
@@ -1026,4 +1052,5 @@ public class InventoryBussiness {
         wmsIvTransaction.setCreateUser(userInfo.getUserName());
         addIvTransactionList.add(wmsIvTransaction);
     }
+
 }

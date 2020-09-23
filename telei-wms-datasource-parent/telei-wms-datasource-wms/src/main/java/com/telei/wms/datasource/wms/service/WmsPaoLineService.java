@@ -16,8 +16,8 @@ public class WmsPaoLineService extends BaseService<WmsPaoLineRepository,WmsPaoLi
     @Autowired
     private WmsPaoLineRepository wmsPaoLineRepository;
 
-    public List<PaoLinePageQueryResponseVo> findAll(Long paoId) {
-        return wmsPaoLineRepository.findAll(paoId);
+    public List<PaoLinePageQueryResponseVo> findAll(Long paoId, Long companyId) {
+        return wmsPaoLineRepository.findAll(paoId, companyId);
     }
 
     public List<PaoLineLocationResponseVo> findLocationAll(Long warehouseId, List<Long> productIds) {

@@ -1,6 +1,45 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.telei.wms.datasource.wms.repository.WmsPloDetailRepository">
+
+    <resultMap id="PageQueryResultMap" extends="BaseResultMap" type="com.telei.wms.datasource.wms.vo.PloDetailPageQueryResponseVo">
+        <result column="big_bag_rate" jdbcType="DECIMAL" property="bigBagRate"/>
+        <result column="mid_bag_rate" jdbcType="DECIMAL" property="midBagRate"/>
+    </resultMap>
+
+    <sql id="Page_Query_Column_List">
+        wpd.plod_id,
+        wpd.plo_id,
+        wpd.plo_code,
+        wpd.plol_id,
+        wpd.dol_id,
+        wpd.product_id,
+        wpd.product_barcode,
+        wpd.spec_type,
+        wpd.media_id,
+        wpd.product_no,
+        wpd.product_name,
+        wpd.product_name_local,
+        wpd.product_upc_code,
+        wpd.brand,
+        wpd.pick_qty,
+        wpd.pick_weight,
+        wpd.pick_vol,
+        wpd.create_user,
+        wpd.create_time,
+        wpl.big_bag_rate,
+        wpl.mid_bag_rate
+    </sql>
+
+    <select id="findAll" resultMap="PageQueryResultMap">
+        SELECT
+        <include refid="Page_Query_Column_List"/>
+        FROM wms_plo_detail wpd
+        INNER JOIN wms_plo_line wpl ON wpl.plol_id = wpd.plol_id
+        WHERE wpd.plo_id = #{ploId,jdbcType=BIGINT}
+        ORDER BY wpd.plod_id DESC
+    </select>
+
     <select id="selectByDolIdList" resultMap="BaseResultMap">
         select
             <include refid="Base_Column_List"/>
@@ -9,5 +48,6 @@
                 #{item}
             </foreach>
     </select>
+
 </mapper>
 

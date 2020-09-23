@@ -11,6 +11,7 @@ import com.telei.wms.datasource.wms.vo.WmsInventoryPageQueryResponseVo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.Map;
 
@@ -28,5 +29,9 @@ public class WmsInventoryService extends BaseService<WmsInventoryRepository,WmsI
         page.setTotalRecords(pageInfo.getTotal());
         page.setContent(pageInfo.getList());
         return page;
+    }
+
+    public BigDecimal selectQtySum(Long productId, Long warehouseId, Long companyId) {
+        return wmsInventoryRepository.selectQtySum(productId, warehouseId, companyId);
     }
 }

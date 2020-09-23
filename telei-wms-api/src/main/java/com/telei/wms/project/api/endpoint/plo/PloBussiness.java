@@ -10,10 +10,12 @@ import com.telei.wms.customer.businessNumber.dto.BusinessNumberRequest;
 import com.telei.wms.customer.businessNumber.dto.BusinessNumberResponse;
 import com.telei.wms.datasource.wms.model.*;
 import com.telei.wms.datasource.wms.service.*;
+import com.telei.wms.datasource.wms.vo.PloDetailPageQueryResponseVo;
 import com.telei.wms.datasource.wms.vo.PloHeaderPageQueryRequestVo;
 import com.telei.wms.datasource.wms.vo.PloLineLocationResponseVo;
 import com.telei.wms.datasource.wms.vo.PloLinePageQueryResponseVo;
 import com.telei.wms.project.api.ErrorCode;
+import com.telei.wms.project.api.endpoint.ivOut.IvOutBussiness;
 import com.telei.wms.project.api.endpoint.plo.dto.*;
 import com.telei.wms.project.api.utils.DataConvertUtil;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -53,10 +55,20 @@ public class PloBussiness {
     @Autowired
     private WmsDoLineService wmsDoLineService;
 
+    @Autowired
+    private WmsIvOutService wmsIvOutService;
+
+    @Autowired
+    private WmsInventoryService wmsInventoryService;
+
+    @Autowired
+    private IvOutBussiness ivOutBussiness;
+
     /**
      * 新增
      * @param request
-     * @return   */
+     * @return
+     */
     @Transactional(rollbackFor = Exception.class)
     public PloCudBaseResponse addPlo(PloHeaderAddRequest request) {
         WmsDoHeader wmsDoHeader = wmsDoHeaderService.selectByPrimaryKey(request.getDohId());
@@ -104,7 +116,14 @@ public class PloBussiness {
         wmsDoLineEntity.setDohId(wmsDoHeader.getId());
         List<WmsDoLine> wmsDoLines = wmsDoLineService.selectByEntity(wmsDoLineEntity);
         List<WmsPloLine> wmsPloLines = DataConvertUtil.parseDataAsArray(wmsDoLines, WmsPloLine.class);
+        List<WmsIvOut> wmsIvOuts = new ArrayList<>();
         for (WmsPloLine wmsPloLine : wmsPloLines) {
+            BigDecimal ivOutQty = wmsIvOutService.selectQtySum(wmsPloLine.getProductId(), wmsPloHeader.getWarehouseId(), wmsPloHeader.getCompanyId());
+            BigDecimal ivQty = wmsInventoryService.selectQtySum(wmsPloLine.getProductId(), wmsPloHeader.getWarehouseId(), wmsPloHeader.getCompanyId());
+            if (wmsPloLine.getQty().add(ivOutQty).compareTo(ivQty) == 1) {
+                //拣货数量加待出库数量大于库存数量
+                ErrorCode.PLO_ADD_ERROR_4010.throwError();
+            }
             wmsPloLine.setDolId(wmsPloLine.getId());
             wmsPloLine.setId(idGenerator.getUnique());
             wmsPloLine.setPloId(wmsPloHeader.getId());
@@ -112,6 +131,21 @@ public class PloBussiness {
             wmsPloLine.setPickedQty(BigDecimal.ZERO);
             wmsPloLine.setPickedWeight(BigDecimal.ZERO);
             wmsPloLine.setPickedVol(BigDecimal.ZERO);
+            WmsIvOut wmsIvOut = new WmsIvOut();
+            wmsIvOut.setId(idGenerator.getUnique());
+            wmsIvOut.setCompanyId(wmsPloHeader.getCompanyId());
+            wmsIvOut.setWarehouseId(wmsPloHeader.getWarehouseId());
+            wmsIvOut.setWarehouseCode(wmsPloHeader.getWarehouseCode());
+            wmsIvOut.setOrderId(wmsPloHeader.getDohId());
+            wmsIvOut.setOrderCode(wmsPloHeader.getDohCode());
+            wmsIvOut.setLineId(wmsPloLine.getDolId());
+            wmsIvOut.setProductId(wmsPloLine.getProductId());
+            wmsIvOut.setQty(wmsPloLine.getQty());
+            wmsIvOuts.add(wmsIvOut);
+        }
+        if (! wmsIvOuts.isEmpty()) {
+            //新增待出库存
+            ivOutBussiness.addIvOut(wmsIvOuts);
         }
         //新增拣货单
         wmsPloHeaderService.insertSelective(wmsPloHeader);
@@ -279,10 +313,13 @@ public class PloBussiness {
      * @return
      */
     public List<PloDetailPageQueryResponse> pageQueryPloDetail(PloDetailPageQueryRequest request) {
-        WmsPloDetail wmsPloDetail = new WmsPloDetail();
-        wmsPloDetail.setPloId(request.getPloId());
-        List<WmsPloDetail> wmsPloDetails = wmsPloDetailService.selectByEntity(wmsPloDetail);
-        return DataConvertUtil.parseDataAsArray(wmsPloDetails, PloDetailPageQueryResponse.class);
+        WmsPloHeader wmsPloHeader = wmsPloHeaderService.selectByPrimaryKey(request.getPloId());
+        if (Objects.isNull(wmsPloHeader)) {
+            //主单不存在
+            ErrorCode.PLO_NOT_EXIST_4001.throwError();
+        }
+        List<PloDetailPageQueryResponseVo> ploDetailPageQueryResponseVos = wmsPloDetailService.findAll(wmsPloHeader.getId());
+        return DataConvertUtil.parseDataAsArray(ploDetailPageQueryResponseVos, PloDetailPageQueryResponse.class);
     }
 
     /**

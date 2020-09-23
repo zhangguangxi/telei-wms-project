@@ -1,5 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.telei.wms.datasource.wms.repository.WmsIvOutRepository">
+
+    <select id="selectQtySum" resultType="java.math.BigDecimal">
+        SELECT IFNULL(SUM(qty), 0)
+        FROM wms_iv_out
+        WHERE product_id=#{productId}
+        AND warehouse_id=#{warehouseId}
+        AND company_id=#{companyId}
+    </select>
+
 </mapper>
 

@@ -49,4 +49,8 @@ public class PloDetailPageQueryResponse {
     private String createUser;
     /** 创建时间 */
     private Date createTime;
+    /** 中包数量 */
+    private BigDecimal midBagRate;
+    /** 大包数量 */
+    private BigDecimal bigBagRate;
 }

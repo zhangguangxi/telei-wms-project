@@ -1,0 +1,326 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.telei.wms.datasource.wms.repository.WmsIvOutHistoryRepository">
+    <resultMap id="BaseResultMap" type="com.telei.wms.datasource.wms.model.WmsIvOutHistory">
+        <id column="ivo_id" jdbcType="BIGINT" property="id"/>
+            <result column="company_id" jdbcType="BIGINT" property="companyId"/>
+            <result column="warehouse_id" jdbcType="BIGINT" property="warehouseId"/>
+            <result column="warehouse_code" jdbcType="VARCHAR" property="warehouseCode"/>
+            <result column="plan_out_date" jdbcType="TIMESTAMP" property="planOutDate"/>
+            <result column="order_id" jdbcType="BIGINT" property="orderId"/>
+            <result column="order_code" jdbcType="VARCHAR" property="orderCode"/>
+            <result column="line_id" jdbcType="BIGINT" property="lineId"/>
+            <result column="product_id" jdbcType="BIGINT" property="productId"/>
+            <result column="qty" jdbcType="DECIMAL" property="qty"/>
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        ivo_id,company_id,warehouse_id,warehouse_code,plan_out_date,order_id,order_code,line_id,product_id,qty
+    </sql>
+
+        <insert id="insert">
+            insert into wms_iv_out_history (ivo_id,company_id,warehouse_id,warehouse_code,plan_out_date,order_id,order_code,line_id,product_id,qty)
+            values (#{id,jdbcType=BIGINT},#{companyId,jdbcType=BIGINT},#{warehouseId,jdbcType=BIGINT},#{warehouseCode,jdbcType=VARCHAR},#{planOutDate,jdbcType=TIMESTAMP},#{orderId,jdbcType=BIGINT},#{orderCode,jdbcType=VARCHAR},#{lineId,jdbcType=BIGINT},#{productId,jdbcType=BIGINT},#{qty,jdbcType=DECIMAL})
+        </insert>
+
+        <insert id="insertSelective">
+            insert into wms_iv_out_history
+            <trim prefix="(" suffix=")" suffixOverrides=",">
+                    <if test="id != null">
+                        ivo_id,
+                    </if>
+                    <if test="companyId != null">
+                        company_id,
+                    </if>
+                    <if test="warehouseId != null">
+                        warehouse_id,
+                    </if>
+                    <if test="warehouseCode != null">
+                        warehouse_code,
+                    </if>
+                    <if test="planOutDate != null">
+                        plan_out_date,
+                    </if>
+                    <if test="orderId != null">
+                        order_id,
+                    </if>
+                    <if test="orderCode != null">
+                        order_code,
+                    </if>
+                    <if test="lineId != null">
+                        line_id,
+                    </if>
+                    <if test="productId != null">
+                        product_id,
+                    </if>
+                    <if test="qty != null">
+                        qty
+                    </if>
+            </trim>
+            <trim prefix="values (" suffix=")" suffixOverrides=",">
+                    <if test="id != null">
+                        #{id,jdbcType=BIGINT},
+                    </if>
+                    <if test="companyId != null">
+                        #{companyId,jdbcType=BIGINT},
+                    </if>
+                    <if test="warehouseId != null">
+                        #{warehouseId,jdbcType=BIGINT},
+                    </if>
+                    <if test="warehouseCode != null">
+                        #{warehouseCode,jdbcType=VARCHAR},
+                    </if>
+                    <if test="planOutDate != null">
+                        #{planOutDate,jdbcType=TIMESTAMP},
+                    </if>
+                    <if test="orderId != null">
+                        #{orderId,jdbcType=BIGINT},
+                    </if>
+                    <if test="orderCode != null">
+                        #{orderCode,jdbcType=VARCHAR},
+                    </if>
+                    <if test="lineId != null">
+                        #{lineId,jdbcType=BIGINT},
+                    </if>
+                    <if test="productId != null">
+                        #{productId,jdbcType=BIGINT},
+                    </if>
+                    <if test="qty != null">
+                        #{qty,jdbcType=DECIMAL}
+                    </if>
+            </trim>
+        </insert>
+
+        <insert id="insertBatch">
+            insert into wms_iv_out_history (ivo_id,company_id,warehouse_id,warehouse_code,plan_out_date,order_id,order_code,line_id,product_id,qty) values
+            <foreach collection="list" item="item" separator=",">
+                (
+                    #{item.id,jdbcType=BIGINT},
+                    #{item.companyId,jdbcType=BIGINT},
+                    #{item.warehouseId,jdbcType=BIGINT},
+                    #{item.warehouseCode,jdbcType=VARCHAR},
+                    #{item.planOutDate,jdbcType=TIMESTAMP},
+                    #{item.orderId,jdbcType=BIGINT},
+                    #{item.orderCode,jdbcType=VARCHAR},
+                    #{item.lineId,jdbcType=BIGINT},
+                    #{item.productId,jdbcType=BIGINT},
+                    #{item.qty,jdbcType=DECIMAL}
+                )
+            </foreach>
+        </insert>
+
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+        delete from wms_iv_out_history
+        where ivo_id = #{id,jdbcType=BIGINT}
+    </delete>
+
+    <delete id="deleteByPrimaryKeys">
+        delete from wms_iv_out_history where ivo_id in
+        <foreach close=")" collection="list" item="item" open="(" separator=",">
+            #{item}
+        </foreach>
+    </delete>
+
+    <update id="updateByPrimaryKey">
+        update wms_iv_out_history
+        <set>
+                company_id = #{companyId,jdbcType=BIGINT},
+                warehouse_id = #{warehouseId,jdbcType=BIGINT},
+                warehouse_code = #{warehouseCode,jdbcType=VARCHAR},
+                plan_out_date = #{planOutDate,jdbcType=TIMESTAMP},
+                order_id = #{orderId,jdbcType=BIGINT},
+                order_code = #{orderCode,jdbcType=VARCHAR},
+                line_id = #{lineId,jdbcType=BIGINT},
+                product_id = #{productId,jdbcType=BIGINT},
+                qty = #{qty,jdbcType=DECIMAL}
+        </set>
+        where ivo_id = #{id,jdbcType=BIGINT}
+    </update>
+
+    <update id="updateByPrimaryKeySelective">
+        update wms_iv_out_history
+        <set>
+                <if test="companyId != null">
+                    company_id = #{companyId,jdbcType=BIGINT},
+                </if>
+                <if test="warehouseId != null">
+                    warehouse_id = #{warehouseId,jdbcType=BIGINT},
+                </if>
+                <if test="warehouseCode != null">
+                    warehouse_code = #{warehouseCode,jdbcType=VARCHAR},
+                </if>
+                <if test="planOutDate != null">
+                    plan_out_date = #{planOutDate,jdbcType=TIMESTAMP},
+                </if>
+                <if test="orderId != null">
+                    order_id = #{orderId,jdbcType=BIGINT},
+                </if>
+                <if test="orderCode != null">
+                    order_code = #{orderCode,jdbcType=VARCHAR},
+                </if>
+                <if test="lineId != null">
+                    line_id = #{lineId,jdbcType=BIGINT},
+                </if>
+                <if test="productId != null">
+                    product_id = #{productId,jdbcType=BIGINT},
+                </if>
+                <if test="qty != null">
+                    qty = #{qty,jdbcType=DECIMAL}
+                </if>
+        </set>
+        where ivo_id = #{id,jdbcType=BIGINT}
+    </update>
+
+    <update id="updateBatch">
+        <foreach close="" collection="list" item="item" open="" separator=";">
+            update wms_iv_out_history
+            <set>
+                    <if test="item.companyId != null">
+                        company_id = #{item.companyId,jdbcType=BIGINT},
+                    </if>
+                    <if test="item.warehouseId != null">
+                        warehouse_id = #{item.warehouseId,jdbcType=BIGINT},
+                    </if>
+                    <if test="item.warehouseCode != null">
+                        warehouse_code = #{item.warehouseCode,jdbcType=VARCHAR},
+                    </if>
+                    <if test="item.planOutDate != null">
+                        plan_out_date = #{item.planOutDate,jdbcType=TIMESTAMP},
+                    </if>
+                    <if test="item.orderId != null">
+                        order_id = #{item.orderId,jdbcType=BIGINT},
+                    </if>
+                    <if test="item.orderCode != null">
+                        order_code = #{item.orderCode,jdbcType=VARCHAR},
+                    </if>
+                    <if test="item.lineId != null">
+                        line_id = #{item.lineId,jdbcType=BIGINT},
+                    </if>
+                    <if test="item.productId != null">
+                        product_id = #{item.productId,jdbcType=BIGINT},
+                    </if>
+                    <if test="item.qty != null">
+                        qty = #{item.qty,jdbcType=DECIMAL}
+                    </if>
+            </set>
+            where ivo_id = #{item.id,jdbcType=BIGINT}
+        </foreach>
+    </update>
+
+    <select id="selectByPrimaryKey" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List" />
+        from wms_iv_out_history
+        where ivo_id = #{id,jdbcType=BIGINT}
+    </select>
+
+    <select id="selectByPrimaryKeyWithLock" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List" />
+        from wms_iv_out_history
+        where ivo_id = #{id,jdbcType=BIGINT} for update
+    </select>
+
+    <select id="selectByPrimaryKeys" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List" />
+        from wms_iv_out_history where ivo_id in
+        <foreach close=")" collection="list" item="item" open="(" separator=",">
+            #{item}
+        </foreach>
+    </select>
+
+    <select id="selectByEntity" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from wms_iv_out_history
+        <where>
+                <if test="id != null">
+                    and ivo_id=#{id,jdbcType=BIGINT}
+                </if>
+                <if test="companyId != null">
+                    and company_id=#{companyId,jdbcType=BIGINT}
+                </if>
+                <if test="warehouseId != null">
+                    and warehouse_id=#{warehouseId,jdbcType=BIGINT}
+                </if>
+                <if test="warehouseCode != null">
+                    and warehouse_code=#{warehouseCode,jdbcType=VARCHAR}
+                </if>
+                <if test="planOutDate != null">
+                    and plan_out_date=#{planOutDate,jdbcType=TIMESTAMP}
+                </if>
+                <if test="orderId != null">
+                    and order_id=#{orderId,jdbcType=BIGINT}
+                </if>
+                <if test="orderCode != null">
+                    and order_code=#{orderCode,jdbcType=VARCHAR}
+                </if>
+                <if test="lineId != null">
+                    and line_id=#{lineId,jdbcType=BIGINT}
+                </if>
+                <if test="productId != null">
+                    and product_id=#{productId,jdbcType=BIGINT}
+                </if>
+                <if test="qty != null">
+                    and qty=#{qty,jdbcType=DECIMAL}
+                </if>
+        </where>
+    </select>
+
+    <select id="selectByConditions" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from wms_iv_out_history
+        <where>
+                <if test="id != null">
+                    and ivo_id ${id}
+                </if>
+                <if test="companyId != null">
+                    and company_id ${companyId}
+                </if>
+                <if test="warehouseId != null">
+                    and warehouse_id ${warehouseId}
+                </if>
+                <if test="warehouseCode != null">
+                    and warehouse_code ${warehouseCode}
+                </if>
+                <if test="planOutDate != null">
+                    and plan_out_date ${planOutDate}
+                </if>
+                <if test="orderId != null">
+                    and order_id ${orderId}
+                </if>
+                <if test="orderCode != null">
+                    and order_code ${orderCode}
+                </if>
+                <if test="lineId != null">
+                    and line_id ${lineId}
+                </if>
+                <if test="productId != null">
+                    and product_id ${productId}
+                </if>
+                <if test="qty != null">
+                    and qty ${qty}
+                </if>
+        </where>
+        <if test="orderBy != null">
+            order by ${orderBy}
+        </if>
+    </select>
+
+    <select id="selectAll" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from wms_iv_out_history
+    </select>
+
+    <select id="count" resultType="java.lang.Long">
+        select count(*) from wms_iv_out_history
+    </select>
+
+    <select id="selectByFunction">
+        select ${function}(${column}) from wms_iv_out_history
+    </select>
+
+</mapper>

@@ -10,7 +10,7 @@ import java.util.Collection;
  * 撤销收货 Request
  */
 @Data
-public class RooHeaderCancelRequest {
+public class RooHeaderRevokeRequest {
 
     @ApiModelProperty(value = "收货单id", example = "4675353938365515777")
     @Check

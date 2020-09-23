@@ -28,14 +28,18 @@ public class RooEndpoint {
 
     @ApiOperation("新增收货单")
     @PostMapping(ServiceId.WMS_ROO_ADD)
-    public RooHeaderCudBaseResponse addRooHeader(@RequestBody @Valid RooHeaderAddRequest request) {
-        return rooBussiness.addRooHeader(request);
+    public RooHeaderAddResponse addRooHeader(@RequestBody @Valid RooHeaderAddRequest request) {
+        RooHeaderBussinessRequest businessRequest = DataConvertUtil.parseDataAsObject(request, RooHeaderBussinessRequest.class);
+        RooHeaderBussinessResponse businessResponse = rooBussiness.addRooHeader(businessRequest);
+        return DataConvertUtil.parseDataAsObject(businessResponse, RooHeaderAddResponse.class);
     }
 
     @ApiOperation("撤销收货单")
     @PostMapping(ServiceId.WMS_ROO_REVOKE)
-    public RooHeaderCudBaseResponse revokeRooHeader(@RequestBody @Valid RooHeaderCancelRequest request) {
-        return rooBussiness.revokeRooHeader(request);
+    public RooHeaderRevokeResponse revokeRooHeader(@RequestBody @Valid RooHeaderRevokeRequest request) {
+        RooHeaderBussinessRequest businessRequest = DataConvertUtil.parseDataAsObject(request, RooHeaderBussinessRequest.class);
+        RooHeaderBussinessResponse businessResponse = rooBussiness.revokeRooHeader(businessRequest);
+        return DataConvertUtil.parseDataAsObject(businessResponse, RooHeaderRevokeResponse.class);
     }
 
     @ApiOperation("收货单分页")
@@ -49,7 +53,9 @@ public class RooEndpoint {
     @ApiOperation("收货单详情")
     @PostMapping(ServiceId.WMS_ROO_DETAIL)
     public RooHeaderDetailResponse rooHeaderDetail(@RequestBody @Valid RooHeaderDetailRequest request) {
-        return rooBussiness.rooHeaderDetail(request);
+        RooHeaderBussinessRequest businessRequest = DataConvertUtil.parseDataAsObject(request, RooHeaderBussinessRequest.class);
+        RooHeaderBussinessResponse businessResponse = rooBussiness.rooHeaderDetail(businessRequest);
+        return DataConvertUtil.parseDataAsObject(businessResponse, RooHeaderDetailResponse.class);
     }
 
 }

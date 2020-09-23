@@ -78,5 +78,13 @@
             order by ${orderBy}
         </if>
     </select>
+
+    <select id="selectQtySum" resultType="java.math.BigDecimal">
+        SELECT IFNULL(SUM(iv_qty), 0)
+        FROM wms_inventory
+        WHERE product_id=#{productId}
+        AND warehouse_id=#{warehouseId}
+        AND company_id=#{companyId}
+    </select>
 </mapper>
 

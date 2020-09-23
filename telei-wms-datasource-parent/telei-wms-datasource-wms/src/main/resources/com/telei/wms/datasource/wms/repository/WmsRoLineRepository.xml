@@ -42,7 +42,7 @@
         SELECT
         <include refid="Page_Query_Column_List"/>
         FROM wms_ro_line wrl
-        INNER JOIN cdm.cdm_product cp ON cp.product_id = wrl.product_id
+        INNER JOIN cdm.cdm_product cp ON cp.product_id = wrl.product_id AND cp.company_id=#{companyId,jdbcType=BIGINT}
         WHERE wrl.ro_id = #{roId,jdbcType=BIGINT}
         ORDER BY wrl.rol_id DESC
     </select>

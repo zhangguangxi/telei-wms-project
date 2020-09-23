@@ -7,7 +7,7 @@ import lombok.Data;
  * 增删改基础response
  */
 @Data
-public class RooHeaderCudBaseResponse {
+public class RooHeaderCommonResponse {
 
     /**是否成功*/
     @ApiModelProperty(value = "是", example = "true/false", position = 1)

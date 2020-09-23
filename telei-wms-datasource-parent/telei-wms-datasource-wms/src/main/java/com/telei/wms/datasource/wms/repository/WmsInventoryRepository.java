@@ -6,6 +6,7 @@ import com.telei.wms.datasource.wms.vo.WmsInventoryPageQueryResponseVo;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
 
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.Map;
 
@@ -26,4 +27,13 @@ public interface WmsInventoryRepository extends BaseRepository<WmsInventory,Long
      * @return
      */
     List<WmsInventoryPageQueryResponseVo> selectCustomPage(Map<String, Object> paramMap);
+
+    /**
+     * 获取库存数
+     * @param productId
+     * @param warehouseId
+     * @param companyId
+     * @return
+     */
+    BigDecimal selectQtySum(@Param("productId") Long productId, @Param("warehouseId") Long warehouseId, @Param("companyId") Long companyId);
 }

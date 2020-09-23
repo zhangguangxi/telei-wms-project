@@ -73,7 +73,7 @@ public class RooBussiness {
      * @return
      */
     @Transactional(rollbackFor = Exception.class)
-    public RooHeaderCudBaseResponse addRooHeader(RooHeaderAddRequest request) {
+    public RooHeaderBussinessResponse addRooHeader(RooHeaderBussinessRequest request) {
         WmsRooHeader wmsRooHeader = DataConvertUtil.parseDataAsObject(request, WmsRooHeader.class);
         // 收货单id
         long rooId = idGenerator.getUnique();
@@ -182,7 +182,7 @@ public class RooBussiness {
             }
         }
         wmsRooHeader.setTotalQty(receQty);
-        RooHeaderCudBaseResponse response = new RooHeaderCudBaseResponse();
+        RooHeaderBussinessResponse response = new RooHeaderBussinessResponse();
         // 获取唯一锁标识
         String roHeadLockKey = String.valueOf(wmsRooHeader.getRoId());
         Object roHeadLockValue = tryLock(roHeadLockKey);
@@ -262,7 +262,7 @@ public class RooBussiness {
      * @return
      */
     @Transactional(rollbackFor = Exception.class)
-    public RooHeaderCudBaseResponse revokeRooHeader(RooHeaderCancelRequest request) {
+    public RooHeaderBussinessResponse revokeRooHeader(RooHeaderBussinessRequest request) {
         WmsRooHeader wmsRooHeader = wmsRooHeaderService.selectByPrimaryKey(request.getRooId());
         if (Objects.isNull(wmsRooHeader)) {
             ErrorCode.ROO_NOT_EXIST_4001.throwError();
@@ -336,7 +336,7 @@ public class RooBussiness {
         } else {
             ErrorCode.ROO_REVOKE_ERROR_4003.throwError();
         }
-        RooHeaderCudBaseResponse response = new RooHeaderCudBaseResponse();
+        RooHeaderBussinessResponse response = new RooHeaderBussinessResponse();
         response.setIsSuccess(Boolean.TRUE);
         return response;
     }
@@ -347,12 +347,12 @@ public class RooBussiness {
      * @param request
      * @return
      */
-    public RooHeaderDetailResponse rooHeaderDetail(RooHeaderDetailRequest request) {
+    public RooHeaderBussinessResponse rooHeaderDetail(RooHeaderBussinessRequest request) {
         RooHeaderResponseVo rooHeaderResponseVo = wmsRooHeaderService.selectRooHeaderDetail(request.getId());
         if (Objects.isNull(rooHeaderResponseVo)) {
             ErrorCode.ROO_NOT_EXIST_4001.throwError();
         }
-        RooHeaderDetailResponse response = DataConvertUtil.parseDataAsObject(rooHeaderResponseVo, RooHeaderDetailResponse.class);
+        RooHeaderBussinessResponse response = DataConvertUtil.parseDataAsObject(rooHeaderResponseVo, RooHeaderBussinessResponse.class);
         List<RooLineResponseVo> wmsRooLines = wmsRooLineService.findAll(request.getId());
         if (StringUtils.isNotNull(wmsRooLines) && !wmsRooLines.isEmpty()) {
             response.setRooLines(wmsRooLines);

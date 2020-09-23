@@ -12,7 +12,7 @@ import java.util.List;
 @Repository
 public interface WmsPaoLineRepository extends BaseRepository<WmsPaoLine,Long> {
 
-    List<PaoLinePageQueryResponseVo> findAll(Long paoId);
+    List<PaoLinePageQueryResponseVo> findAll(@Param("paoId") Long paoId, @Param("companyId") Long companyId);
 
     List<PaoLineLocationResponseVo> findLocationAll(@Param("warehouseId") Long warehouseId, @Param("productIds") List<Long> productIds);
 }

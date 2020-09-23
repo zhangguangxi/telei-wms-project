@@ -15,7 +15,7 @@ public class WmsRoLineService extends BaseService<WmsRoLineRepository,WmsRoLine,
     @Autowired
     private WmsRoLineRepository wmsRoLineRepository;
 
-    public List<RoLinePageQueryResponseVo> findAll(Long roId) {
-        return wmsRoLineRepository.findAll(roId);
+    public List<RoLinePageQueryResponseVo> findAll(Long roId, Long companyId) {
+        return wmsRoLineRepository.findAll(roId, companyId);
     }
 }

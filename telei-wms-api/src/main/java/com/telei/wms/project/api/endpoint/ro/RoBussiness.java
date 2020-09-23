@@ -84,7 +84,7 @@ public class RoBussiness {
             ErrorCode.RO_NOT_EXIST_4001.throwError();
         }
         RoHeaderDetailResponse response = DataConvertUtil.parseDataAsObject(wmsRoHeader, RoHeaderDetailResponse.class);
-        List<RoLinePageQueryResponseVo> roLinePageQueryResponseVos = wmsRoLineService.findAll(request.getId());
+        List<RoLinePageQueryResponseVo> roLinePageQueryResponseVos = wmsRoLineService.findAll(request.getId(), wmsRoHeader.getCompanyId());
         List<RoLineDetailResponse> roLineDetailResponses = DataConvertUtil.parseDataAsArray(roLinePageQueryResponseVos, RoLineDetailResponse.class);
         response.setRoLines(roLineDetailResponses);
         return response;

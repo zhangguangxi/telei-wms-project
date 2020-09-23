@@ -198,7 +198,7 @@ public class PaoBussiness {
             ErrorCode.PAO_NOT_EXIST_4001.throwError();
         }
         PaoHeaderDetailResponse response = DataConvertUtil.parseDataAsObject(wmsPaoHeader, PaoHeaderDetailResponse.class);
-        List<PaoLinePageQueryResponseVo> paoLinePageQueryResponseVos = wmsPaoLineService.findAll(request.getId());
+        List<PaoLinePageQueryResponseVo> paoLinePageQueryResponseVos = wmsPaoLineService.findAll(request.getId(), wmsPaoHeader.getCompanyId());
         List<PaoLineDetailResponse> paoLineDetailResponses = DataConvertUtil.parseDataAsArray(paoLinePageQueryResponseVos, PaoLineDetailResponse.class);
         response.setPaoLines(paoLineDetailResponses);
         return response;
