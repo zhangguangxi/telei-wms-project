@@ -7,10 +7,23 @@
     </resultMap>
 
     <select  id="selectIvIdIndex" resultMap="IvIdIndexResultMap">
-       select
-           ivoc_id ivocId, MAX(iv_id_index) ivIdIndex
-       from wms_iv_out_confirm
-        group by iv_id
+        SELECT
+            a.iv_id,
+            a.iv_id_index
+        FROM
+            wms_iv_out_confirm a
+                INNER JOIN (
+                SELECT
+                    iv_id,
+                    max( iv_id_index ) iv_id_index
+                FROM
+                    wms_iv_out_confirm
+                GROUP BY
+                    iv_id
+            ) b ON a.iv_id = b.iv_id
+                AND a.iv_id_index = b.iv_id_index
+        ORDER BY
+            a.iv_id;
     </select>
 </mapper>
 
