@@ -7,6 +7,7 @@ import com.nuochen.framework.autocoding.domain.condition.ConditionsBuilder;
 import com.telei.infrastructure.component.commons.CustomRequestContext;
 import com.telei.infrastructure.component.commons.utils.DateUtils;
 import com.telei.infrastructure.component.idgenerator.contract.Id;
+import com.telei.wms.commons.utils.ExcelUtil;
 import com.telei.wms.commons.utils.StringUtils;
 import com.telei.wms.customer.businessNumber.BusinessNumberFeignClient;
 import com.telei.wms.customer.businessNumber.dto.BusinessNumberRequest;
@@ -15,6 +16,9 @@ import com.telei.wms.customer.product.ProductFeignClient;
 import com.telei.wms.customer.product.dto.ProductDetailRequest;
 import com.telei.wms.customer.product.dto.ProductDetailResponse;
 import com.telei.wms.customer.product.dto.ProductListResponse;
+import com.telei.wms.customer.supplier.SupplierFeignClient;
+import com.telei.wms.customer.supplier.dto.SupplierRequest;
+import com.telei.wms.customer.supplier.dto.SupplierResponse;
 import com.telei.wms.datasource.wms.model.*;
 import com.telei.wms.datasource.wms.service.*;
 import com.telei.wms.datasource.wms.vo.WmsInitLineVO;
@@ -25,6 +29,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.servlet.http.HttpServletRequest;
 import java.math.BigDecimal;
 import java.util.*;
 import java.util.function.Function;
@@ -48,6 +53,9 @@ public class InitBussiness {
     private ProductFeignClient productFeignClient;
 
     @Autowired
+    private SupplierFeignClient supplierFeignClient;
+
+    @Autowired
     private WmsInitHeaderService wmsInitHeaderService;
 
     @Autowired
@@ -63,7 +71,7 @@ public class InitBussiness {
     private WmsInventoryHistoryService wmsInventoryHistoryService;
 
     /**
-     * 新增
+     * 新增&修改
      *
      * @param request
      * @return
@@ -71,23 +79,45 @@ public class InitBussiness {
     @Transactional(rollbackFor = Exception.class)
     public InitHeaderCudBaseResponse addInitHeader(InitHeaderAddRequest request) {
         WmsInitHeader wmsInitHeader = DataConvertUtil.parseDataAsObject(request, WmsInitHeader.class);
-        // 获取业务单号
-        BusinessNumberRequest businessNumberRequest = new BusinessNumberRequest();
-        businessNumberRequest.setType("WMS");
-        ApiResponse apiResponse = businessNumberFeignClient.get(businessNumberRequest);
-        BusinessNumberResponse businessNumberResponse = apiResponse.convertDataToObject(BusinessNumberResponse.class);
-        if (StringUtils.isEmpty(businessNumberResponse.getBusinessNumber())) {
-            // 未获取到业务单号
-            ErrorCode.BUSINESS_NUMBER_ERROR_4001.throwError();
+        long ivihId = -1;
+        if (Objects.isNull(wmsInitHeader.getId())) {
+            // 获取业务单号
+            BusinessNumberRequest businessNumberRequest = new BusinessNumberRequest();
+            businessNumberRequest.setType("WMS");
+            ApiResponse apiResponse = businessNumberFeignClient.get(businessNumberRequest);
+            BusinessNumberResponse businessNumberResponse = apiResponse.convertDataToObject(BusinessNumberResponse.class);
+            if (StringUtils.isEmpty(businessNumberResponse.getBusinessNumber())) {
+                // 未获取到业务单号
+                ErrorCode.BUSINESS_NUMBER_ERROR_4001.throwError();
+            }
+            // 库存初始化单头
+            ivihId = idGenerator.getUnique();
+            wmsInitHeader.setId(ivihId);
+            wmsInitHeader.setIvihCode(businessNumberResponse.getBusinessNumber());
+            wmsInitHeader.setIvihStatus("01");
+            wmsInitHeader.setCompanyId(CustomRequestContext.getUserInfo().getCompanyId());
+            wmsInitHeader.setCreateUser(CustomRequestContext.getUserInfo().getUserName());
+            wmsInitHeader.setCreateTime(DateUtils.nowWithUTC());
+            int initHeaderCount = wmsInitHeaderService.insert(wmsInitHeader);
+            if (initHeaderCount <= 0) {
+                ErrorCode.INIT_ADD_ERROR_4002.throwError();
+            }
+        } else {
+            ivihId = wmsInitHeader.getId();
+            WmsInitHeader initHeader = wmsInitHeaderService.selectByPrimaryKey(ivihId);
+            if (Objects.isNull(initHeader)) {
+                //订单不存在
+                ErrorCode.INIT_NOT_EXIST_4001.throwError();
+            }
+            // 删除库存初始化明细
+            WmsInitLine wmsInitLine = new WmsInitLine();
+            wmsInitLine.setIvihId(ivihId);
+            List<WmsInitLine> wmsInitLines = wmsInitLineService.selectByEntity(wmsInitLine);
+            if (StringUtils.isNotNull(wmsInitLines) && !wmsInitLines.isEmpty()) {
+                List<Long> ivilIds = wmsInitLines.stream().map(WmsInitLine::getId).collect(Collectors.toList());
+                wmsInitLineService.deleteByPrimaryKeys(ivilIds);
+            }
         }
-        // 库存初始化单头
-        long ivihId = idGenerator.getUnique();
-        wmsInitHeader.setId(ivihId);
-        wmsInitHeader.setIvihCode(businessNumberResponse.getBusinessNumber());
-        wmsInitHeader.setIvihStatus("01");
-        wmsInitHeader.setCompanyId(CustomRequestContext.getUserInfo().getCompanyId());
-        wmsInitHeader.setCreateUser(CustomRequestContext.getUserInfo().getUserName());
-        wmsInitHeader.setCreateTime(DateUtils.nowWithUTC());
         List<WmsInitLine> wmsInitLines = DataConvertUtil.parseDataAsArray(request.getInitLines(), WmsInitLine.class);
         if (!wmsInitLines.isEmpty()) {
             for (WmsInitLine initLine : wmsInitLines) {
@@ -95,16 +125,14 @@ public class InitBussiness {
                 initLine.setId(idGenerator.getUnique());
                 initLine.setIvihId(ivihId);
             }
+            int initLineCount = wmsInitLineService.insertBatch(wmsInitLines);
+            if (initLineCount <= 0) {
+                ErrorCode.INIT_ADD_ERROR_4002.throwError();
+            }
+        } else {
+            ErrorCode.INIT_ADD_ERROR_4002.throwError();
         }
         InitHeaderCudBaseResponse response = new InitHeaderCudBaseResponse();
-        int initHeaderCount = wmsInitHeaderService.insert(wmsInitHeader);
-        if (initHeaderCount <= 0) {
-            ErrorCode.INIT_ADD_ERROR_4002.throwError();
-        }
-        int initLineCount = wmsInitLineService.insertBatch(wmsInitLines);
-        if (initLineCount <= 0) {
-            ErrorCode.INIT_ADD_ERROR_4002.throwError();
-        }
         response.setIsSuccess(Boolean.TRUE);
         return response;
     }
@@ -121,7 +149,7 @@ public class InitBussiness {
         if (Objects.isNull(wmsInitHeader)) {
             ErrorCode.INIT_NOT_EXIST_4001.throwError();
         }
-        wmsInitHeader.setIvihStatus("20");
+        wmsInitHeader.setIvihStatus("10");
         wmsInitHeader.setAuditUser(CustomRequestContext.getUserInfo().getUserName());
         wmsInitHeader.setAuditTime(DateUtils.nowWithUTC());
 
@@ -165,11 +193,14 @@ public class InitBussiness {
                 wmsIvAttributebatch.setIabDocumentId(request.getId());
                 wmsIvAttributebatch.setIabDocumentlineId(initLine.getId());
                 wmsIvAttributebatch.setCompanyId(wmsInitHeader.getCompanyId());
+                wmsIvAttributebatch.setSupplierId(initLine.getSupplierId());
                 wmsIvAttributebatch.setCreateUser(CustomRequestContext.getUserInfo().getAccountId());
                 wmsIvAttributebatch.setCreateTime(DateUtils.nowWithUTC());
                 // 根据产品id获取产品详情对象
                 ProductDetailResponse productResponse = productDetailResponseMap.get(initLine.getProductId());
                 if (null != productResponse) {
+                    wmsIvAttributebatch.setProductId(initLine.getProductId());
+                    wmsIvAttributebatch.setProductNo(productResponse.getProductNo());
                     wmsIvAttributebatch.setProductName(productResponse.getProductName());
                     wmsIvAttributebatch.setProductNameLocal(productResponse.getProductNameLocal());
                     wmsIvAttributebatch.setProductCategoryId(productResponse.getProductCategoryId());
@@ -317,6 +348,83 @@ public class InitBussiness {
         InitHeaderBusinessPageQueryResponse response = new InitHeaderBusinessPageQueryResponse();
         response.setPage(page);
         return response;
+    }
+
+    /**
+     * 导出模板
+     *
+     * @param request
+     */
+    public void exportTemplate(HttpServletRequest request) {
+        List<InitLineDetailExcel> excelList = new ArrayList<>();
+        InitLineDetailExcel saleOrderDetailExcel = new InitLineDetailExcel(
+                "商品码",
+                "商品名称",
+                "商品条码",
+                "货位",
+                "",
+                new BigDecimal(100),
+                "供应商名称"
+        );
+        excelList.add(saleOrderDetailExcel);
+        ExcelUtil<InitLineDetailExcel> excelUtil = new ExcelUtil<>(InitLineDetailExcel.class);
+        excelUtil.exportExcel(excelList, "库存初始化商品模板", request);
+    }
+
+    /**
+     * 检查产品库存是否存在
+     *
+     * @param request
+     * @return
+     */
+    public List<InitLineCheckResponse> initLineCheck(InitLineCheckRequest request) {
+        List<InitLineCheckResponse> responseList = DataConvertUtil.parseDataAsArray(request.getInitLineDetails(), InitLineCheckResponse.class);
+        for (InitLineCheckResponse initLineCheck : responseList) {
+            if (StringUtils.isBlank(initLineCheck.getProductBarcode()) ||
+                    StringUtils.isBlank(initLineCheck.getLcCode()) ||
+                    StringUtils.isBlank(initLineCheck.getSupplierName())) {
+                initLineCheck.setReason("条码/供应商名称/库位编码为空!");
+                continue;
+            }
+            // 调用产品接口
+            ProductDetailRequest productDetailRequest = new ProductDetailRequest();
+            productDetailRequest.setProductBarcode(initLineCheck.getProductBarcode());
+            productDetailRequest.setCompanyId(CustomRequestContext.getUserInfo().getCompanyId());
+            ProductDetailResponse productDetailResponse = null;
+            try {
+                ApiResponse apiResponse = productFeignClient.getProductDetailByBarCode(productDetailRequest);
+                productDetailResponse = apiResponse.convertDataToObject(ProductDetailResponse.class);
+            } catch (Exception e) {
+                ErrorCode.BUSINESS_NUMBER_ERROR_4001.throwError();
+            }
+            if (Objects.isNull(productDetailResponse)) {
+                initLineCheck.setReason("产品不存在!");
+                continue;
+            }
+            // 调用供应商接口
+            SupplierRequest supplierRequest = new SupplierRequest();
+            supplierRequest.setSupplierName(initLineCheck.getSupplierName());
+            supplierRequest.setCompanyId(CustomRequestContext.getUserInfo().getCompanyId());
+            SupplierResponse supplierResponse = null;
+            try {
+                ApiResponse apiResponse = supplierFeignClient.getSupplierDetailByName(supplierRequest);
+                supplierResponse = apiResponse.convertDataToObject(SupplierResponse.class);
+            } catch (Exception e) {
+                ErrorCode.BUSINESS_NUMBER_ERROR_4001.throwError();
+            }
+            if (Objects.isNull(supplierResponse)) {
+                initLineCheck.setReason("供应商不存在!");
+                continue;
+            }
+            // 查询是否为空库位
+            WmsInventory wmsInventory = new WmsInventory();
+            wmsInventory.setLcCode(initLineCheck.getLcCode());
+            List<WmsInventory> wmsInventoryList = wmsInventoryService.selectByEntity(wmsInventory);
+            if(StringUtils.isNotNull(wmsInventoryList) && !wmsInventoryList.isEmpty()){
+                initLineCheck.setReason("当前库位不是空库位!");
+            }
+        }
+        return responseList;
     }
 
 }

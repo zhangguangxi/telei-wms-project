@@ -29,16 +29,16 @@ public class RooEndpoint {
     @ApiOperation("新增收货单")
     @PostMapping(ServiceId.WMS_ROO_ADD)
     public RooHeaderAddResponse addRooHeader(@RequestBody @Valid RooHeaderAddRequest request) {
-        RooHeaderBussinessRequest businessRequest = DataConvertUtil.parseDataAsObject(request, RooHeaderBussinessRequest.class);
-        RooHeaderBussinessResponse businessResponse = rooBussiness.addRooHeader(businessRequest);
+        RooHeaderBusinessRequest businessRequest = DataConvertUtil.parseDataAsObject(request, RooHeaderBusinessRequest.class);
+        RooHeaderBusinessResponse businessResponse = rooBussiness.addRooHeader(businessRequest);
         return DataConvertUtil.parseDataAsObject(businessResponse, RooHeaderAddResponse.class);
     }
 
     @ApiOperation("撤销收货单")
     @PostMapping(ServiceId.WMS_ROO_REVOKE)
     public RooHeaderRevokeResponse revokeRooHeader(@RequestBody @Valid RooHeaderRevokeRequest request) {
-        RooHeaderBussinessRequest businessRequest = DataConvertUtil.parseDataAsObject(request, RooHeaderBussinessRequest.class);
-        RooHeaderBussinessResponse businessResponse = rooBussiness.revokeRooHeader(businessRequest);
+        RooHeaderBusinessRequest businessRequest = DataConvertUtil.parseDataAsObject(request, RooHeaderBusinessRequest.class);
+        RooHeaderBusinessResponse businessResponse = rooBussiness.revokeRooHeader(businessRequest);
         return DataConvertUtil.parseDataAsObject(businessResponse, RooHeaderRevokeResponse.class);
     }
 
@@ -53,8 +53,8 @@ public class RooEndpoint {
     @ApiOperation("收货单详情")
     @PostMapping(ServiceId.WMS_ROO_DETAIL)
     public RooHeaderDetailResponse rooHeaderDetail(@RequestBody @Valid RooHeaderDetailRequest request) {
-        RooHeaderBussinessRequest businessRequest = DataConvertUtil.parseDataAsObject(request, RooHeaderBussinessRequest.class);
-        RooHeaderBussinessResponse businessResponse = rooBussiness.rooHeaderDetail(businessRequest);
+        RooHeaderBusinessRequest businessRequest = DataConvertUtil.parseDataAsObject(request, RooHeaderBusinessRequest.class);
+        RooHeaderBusinessResponse businessResponse = rooBussiness.rooHeaderDetail(businessRequest);
         return DataConvertUtil.parseDataAsObject(businessResponse, RooHeaderDetailResponse.class);
     }
 

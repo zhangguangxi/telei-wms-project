@@ -8,6 +8,7 @@
             <result column="rol_id" jdbcType="BIGINT" property="rolId"/>
             <result column="rool_status" jdbcType="VARCHAR" property="roolStatus"/>
             <result column="product_id" jdbcType="BIGINT" property="productId"/>
+            <result column="media_id" jdbcType="VARCHAR" property="mediaId"/>
             <result column="product_barcode" jdbcType="VARCHAR" property="productBarcode"/>
             <result column="product_upc_code" jdbcType="VARCHAR" property="productUpcCode"/>
             <result column="plan_qty" jdbcType="DECIMAL" property="planQty"/>
@@ -47,12 +48,12 @@
     </resultMap>
 
     <sql id="Base_Column_List">
-        rool_id,roo_id,ro_id,rol_id,rool_status,product_id,product_barcode,product_upc_code,plan_qty,rece_qty,tmp_putaway_qty,stock_unit,spec_type,weight,product_length,product_width,product_height,vol,mid_bag_qty,mid_bag_weight,mid_bag_length,mid_bag_width,mid_bag_height,mid_bag_vol,mid_bag_barcode,big_bag_qty,big_bag_weight,big_bag_length,big_bag_width,big_bag_height,big_bag_vol,big_bag_barcode,memo,product_date,effective_date,batch_no,qs_code,recv_time,recv_user,create_user,create_time,iab_id
+        rool_id,roo_id,ro_id,rol_id,rool_status,product_id,media_id,product_barcode,product_upc_code,plan_qty,rece_qty,tmp_putaway_qty,stock_unit,spec_type,weight,product_length,product_width,product_height,vol,mid_bag_qty,mid_bag_weight,mid_bag_length,mid_bag_width,mid_bag_height,mid_bag_vol,mid_bag_barcode,big_bag_qty,big_bag_weight,big_bag_length,big_bag_width,big_bag_height,big_bag_vol,big_bag_barcode,memo,product_date,effective_date,batch_no,qs_code,recv_time,recv_user,create_user,create_time,iab_id
     </sql>
 
         <insert id="insert">
-            insert into wms_roo_line (rool_id,roo_id,ro_id,rol_id,rool_status,product_id,product_barcode,product_upc_code,plan_qty,rece_qty,tmp_putaway_qty,stock_unit,spec_type,weight,product_length,product_width,product_height,vol,mid_bag_qty,mid_bag_weight,mid_bag_length,mid_bag_width,mid_bag_height,mid_bag_vol,mid_bag_barcode,big_bag_qty,big_bag_weight,big_bag_length,big_bag_width,big_bag_height,big_bag_vol,big_bag_barcode,memo,product_date,effective_date,batch_no,qs_code,recv_time,recv_user,create_user,create_time,iab_id)
-            values (#{id,jdbcType=BIGINT},#{rooId,jdbcType=BIGINT},#{roId,jdbcType=BIGINT},#{rolId,jdbcType=BIGINT},#{roolStatus,jdbcType=VARCHAR},#{productId,jdbcType=BIGINT},#{productBarcode,jdbcType=VARCHAR},#{productUpcCode,jdbcType=VARCHAR},#{planQty,jdbcType=DECIMAL},#{receQty,jdbcType=DECIMAL},#{tmpPutawayQty,jdbcType=DECIMAL},#{stockUnit,jdbcType=BIGINT},#{specType,jdbcType=VARCHAR},#{weight,jdbcType=DECIMAL},#{productLength,jdbcType=DECIMAL},#{productWidth,jdbcType=DECIMAL},#{productHeight,jdbcType=DECIMAL},#{vol,jdbcType=DECIMAL},#{midBagQty,jdbcType=INTEGER},#{midBagWeight,jdbcType=DECIMAL},#{midBagLength,jdbcType=DECIMAL},#{midBagWidth,jdbcType=DECIMAL},#{midBagHeight,jdbcType=DECIMAL},#{midBagVol,jdbcType=DECIMAL},#{midBagBarcode,jdbcType=VARCHAR},#{bigBagQty,jdbcType=INTEGER},#{bigBagWeight,jdbcType=DECIMAL},#{bigBagLength,jdbcType=DECIMAL},#{bigBagWidth,jdbcType=DECIMAL},#{bigBagHeight,jdbcType=DECIMAL},#{bigBagVol,jdbcType=DECIMAL},#{bigBagBarcode,jdbcType=VARCHAR},#{memo,jdbcType=VARCHAR},#{productDate,jdbcType=TIMESTAMP},#{effectiveDate,jdbcType=TIMESTAMP},#{batchNo,jdbcType=VARCHAR},#{qsCode,jdbcType=VARCHAR},#{recvTime,jdbcType=TIMESTAMP},#{recvUser,jdbcType=VARCHAR},#{createUser,jdbcType=VARCHAR},#{createTime,jdbcType=TIMESTAMP},#{iabId,jdbcType=BIGINT})
+            insert into wms_roo_line (rool_id,roo_id,ro_id,rol_id,rool_status,product_id,media_id,product_barcode,product_upc_code,plan_qty,rece_qty,tmp_putaway_qty,stock_unit,spec_type,weight,product_length,product_width,product_height,vol,mid_bag_qty,mid_bag_weight,mid_bag_length,mid_bag_width,mid_bag_height,mid_bag_vol,mid_bag_barcode,big_bag_qty,big_bag_weight,big_bag_length,big_bag_width,big_bag_height,big_bag_vol,big_bag_barcode,memo,product_date,effective_date,batch_no,qs_code,recv_time,recv_user,create_user,create_time,iab_id)
+            values (#{id,jdbcType=BIGINT},#{rooId,jdbcType=BIGINT},#{roId,jdbcType=BIGINT},#{rolId,jdbcType=BIGINT},#{roolStatus,jdbcType=VARCHAR},#{productId,jdbcType=BIGINT},#{mediaId,jdbcType=VARCHAR},#{productBarcode,jdbcType=VARCHAR},#{productUpcCode,jdbcType=VARCHAR},#{planQty,jdbcType=DECIMAL},#{receQty,jdbcType=DECIMAL},#{tmpPutawayQty,jdbcType=DECIMAL},#{stockUnit,jdbcType=BIGINT},#{specType,jdbcType=VARCHAR},#{weight,jdbcType=DECIMAL},#{productLength,jdbcType=DECIMAL},#{productWidth,jdbcType=DECIMAL},#{productHeight,jdbcType=DECIMAL},#{vol,jdbcType=DECIMAL},#{midBagQty,jdbcType=INTEGER},#{midBagWeight,jdbcType=DECIMAL},#{midBagLength,jdbcType=DECIMAL},#{midBagWidth,jdbcType=DECIMAL},#{midBagHeight,jdbcType=DECIMAL},#{midBagVol,jdbcType=DECIMAL},#{midBagBarcode,jdbcType=VARCHAR},#{bigBagQty,jdbcType=INTEGER},#{bigBagWeight,jdbcType=DECIMAL},#{bigBagLength,jdbcType=DECIMAL},#{bigBagWidth,jdbcType=DECIMAL},#{bigBagHeight,jdbcType=DECIMAL},#{bigBagVol,jdbcType=DECIMAL},#{bigBagBarcode,jdbcType=VARCHAR},#{memo,jdbcType=VARCHAR},#{productDate,jdbcType=TIMESTAMP},#{effectiveDate,jdbcType=TIMESTAMP},#{batchNo,jdbcType=VARCHAR},#{qsCode,jdbcType=VARCHAR},#{recvTime,jdbcType=TIMESTAMP},#{recvUser,jdbcType=VARCHAR},#{createUser,jdbcType=VARCHAR},#{createTime,jdbcType=TIMESTAMP},#{iabId,jdbcType=BIGINT})
         </insert>
 
         <insert id="insertSelective">
@@ -75,6 +76,9 @@
                     </if>
                     <if test="productId != null">
                         product_id,
+                    </if>
+                    <if test="mediaId != null">
+                        media_id,
                     </if>
                     <if test="productBarcode != null">
                         product_barcode,
@@ -204,6 +208,9 @@
                     <if test="productId != null">
                         #{productId,jdbcType=BIGINT},
                     </if>
+                    <if test="mediaId != null">
+                        #{mediaId,jdbcType=VARCHAR},
+                    </if>
                     <if test="productBarcode != null">
                         #{productBarcode,jdbcType=VARCHAR},
                     </if>
@@ -316,7 +323,7 @@
         </insert>
 
         <insert id="insertBatch">
-            insert into wms_roo_line (rool_id,roo_id,ro_id,rol_id,rool_status,product_id,product_barcode,product_upc_code,plan_qty,rece_qty,tmp_putaway_qty,stock_unit,spec_type,weight,product_length,product_width,product_height,vol,mid_bag_qty,mid_bag_weight,mid_bag_length,mid_bag_width,mid_bag_height,mid_bag_vol,mid_bag_barcode,big_bag_qty,big_bag_weight,big_bag_length,big_bag_width,big_bag_height,big_bag_vol,big_bag_barcode,memo,product_date,effective_date,batch_no,qs_code,recv_time,recv_user,create_user,create_time,iab_id) values
+            insert into wms_roo_line (rool_id,roo_id,ro_id,rol_id,rool_status,product_id,media_id,product_barcode,product_upc_code,plan_qty,rece_qty,tmp_putaway_qty,stock_unit,spec_type,weight,product_length,product_width,product_height,vol,mid_bag_qty,mid_bag_weight,mid_bag_length,mid_bag_width,mid_bag_height,mid_bag_vol,mid_bag_barcode,big_bag_qty,big_bag_weight,big_bag_length,big_bag_width,big_bag_height,big_bag_vol,big_bag_barcode,memo,product_date,effective_date,batch_no,qs_code,recv_time,recv_user,create_user,create_time,iab_id) values
             <foreach collection="list" item="item" separator=",">
                 (
                     #{item.id,jdbcType=BIGINT},
@@ -325,6 +332,7 @@
                     #{item.rolId,jdbcType=BIGINT},
                     #{item.roolStatus,jdbcType=VARCHAR},
                     #{item.productId,jdbcType=BIGINT},
+                    #{item.mediaId,jdbcType=VARCHAR},
                     #{item.productBarcode,jdbcType=VARCHAR},
                     #{item.productUpcCode,jdbcType=VARCHAR},
                     #{item.planQty,jdbcType=DECIMAL},
@@ -385,6 +393,7 @@
                 rol_id = #{rolId,jdbcType=BIGINT},
                 rool_status = #{roolStatus,jdbcType=VARCHAR},
                 product_id = #{productId,jdbcType=BIGINT},
+                media_id = #{mediaId,jdbcType=VARCHAR},
                 product_barcode = #{productBarcode,jdbcType=VARCHAR},
                 product_upc_code = #{productUpcCode,jdbcType=VARCHAR},
                 plan_qty = #{planQty,jdbcType=DECIMAL},
@@ -442,6 +451,9 @@
                 </if>
                 <if test="productId != null">
                     product_id = #{productId,jdbcType=BIGINT},
+                </if>
+                <if test="mediaId != null">
+                    media_id = #{mediaId,jdbcType=VARCHAR},
                 </if>
                 <if test="productBarcode != null">
                     product_barcode = #{productBarcode,jdbcType=VARCHAR},
@@ -573,6 +585,9 @@
                     </if>
                     <if test="item.productId != null">
                         product_id = #{item.productId,jdbcType=BIGINT},
+                    </if>
+                    <if test="item.mediaId != null">
+                        media_id = #{item.mediaId,jdbcType=VARCHAR},
                     </if>
                     <if test="item.productBarcode != null">
                         product_barcode = #{item.productBarcode,jdbcType=VARCHAR},
@@ -733,6 +748,9 @@
                 <if test="productId != null">
                     and product_id=#{productId,jdbcType=BIGINT}
                 </if>
+                <if test="mediaId != null">
+                    and media_id=#{mediaId,jdbcType=VARCHAR}
+                </if>
                 <if test="productBarcode != null">
                     and product_barcode=#{productBarcode,jdbcType=VARCHAR}
                 </if>
@@ -866,6 +884,9 @@
                 </if>
                 <if test="productId != null">
                     and product_id ${productId}
+                </if>
+                <if test="mediaId != null">
+                    and media_id ${mediaId}
                 </if>
                 <if test="productBarcode != null">
                     and product_barcode ${productBarcode}

@@ -1,9 +1,10 @@
 package com.telei.wms.datasource.wms.model;
 
 import com.nuochen.framework.autocoding.domain.Entity;
+import lombok.Data;
+
 import java.math.BigDecimal;
 import java.util.Date;
-import lombok.Data;
 
 /**
  * wms_init_line 库存初始化明细
@@ -16,6 +17,8 @@ public class WmsInitLine implements Entity<Long> {
     private Long ivihId;
     /** 产品序列码 */
     private Long productId;
+    /** 供应商id */
+    private Long supplierId;
     /** 库位编码 */
     private String lcCode;
     /** 先进先出时间 */

@@ -120,6 +120,12 @@ public class ServiceId {
     @RightResource(rightSystem = "wms", rightItem = "库存初始化", rightFunction = "库存初始化详情")
     public static final String WMS_INIT_DETAIL = "1030604";
 
+    @RightResource(rightSystem = "wms", rightItem = "库存初始化", rightFunction = "下载商品模板")
+    public static final String WMS_INIT_TEMPLATE = "1030605";
+
+    @RightResource(rightSystem = "wms", rightItem = "库存初始化", rightFunction = "检查产品库存供应商是否存在")
+    public static final String WMS_INIT_CHECK = "1030606";
+
     /**
      * 上架单
      * 07
@@ -176,5 +182,24 @@ public class ServiceId {
 
     @RightResource(rightSystem = "wms", rightItem = "出库任务", rightFunction = "出库")
     public static final String WMS_DO_SHIP = "1030904";
+
+    /**
+     * 升降任务
+     * 10
+     */
+    @RightResource(rightSystem = "wms", rightItem = "升降任务", rightFunction = "新增升降任务")
+    public static final String WMS_LIFT_WORK_ADD = "1031001";
+
+    @RightResource(rightSystem = "wms", rightItem = "升降任务", rightFunction = "撤销升降任务")
+    public static final String WMS_LIFT_WORK_REVOKE = "1031002";
+
+    @RightResource(rightSystem = "wms", rightItem = "升降任务", rightFunction = "升降任务查询")
+    public static final String WMS_LIFT_WORK_PAGE_QUERY = "1031003";
+
+    @RightResource(rightSystem = "wms", rightItem = "升降任务", rightFunction = "升降任务处理")
+    public static final String WMS_LIFT_WORK_UPDATE = "1031004";
+
+    @RightResource(rightSystem = "wms", rightItem = "升降任务", rightFunction = "查询产品对应库位信息")
+    public static final String WMS_LIFT_WORK_INFO = "1031005";
 
 }

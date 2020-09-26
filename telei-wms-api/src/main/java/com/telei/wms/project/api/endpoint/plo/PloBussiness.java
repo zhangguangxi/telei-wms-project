@@ -157,9 +157,10 @@ public class PloBussiness {
         }
         //更新出库任务
         WmsDoHeader updateWmsDoHeader = new WmsDoHeader();
-        updateWmsDoHeader.setId(wmsPloHeader.getId());
+        updateWmsDoHeader.setId(wmsPloHeader.getDohId());
         updateWmsDoHeader.setOrderStatus("20");
         updateWmsDoHeader.setHasPlo("1");
+        updateWmsDoHeader.setLastupdateTime(DateUtils.nowWithUTC());
         wmsDoHeaderService.updateByPrimaryKey(updateWmsDoHeader);
         PloCudBaseResponse response = new PloCudBaseResponse();
         return response;

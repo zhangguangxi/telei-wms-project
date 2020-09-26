@@ -1,0 +1,788 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.telei.wms.datasource.wms.repository.WmsLiftWorkRepository">
+    <resultMap id="BaseResultMap" type="com.telei.wms.datasource.wms.model.WmsLiftWork">
+        <id column="lift_id" jdbcType="BIGINT" property="id"/>
+            <result column="company_id" jdbcType="BIGINT" property="companyId"/>
+            <result column="warehouse_id" jdbcType="BIGINT" property="warehouseId"/>
+            <result column="warehouse_code" jdbcType="VARCHAR" property="warehouseCode"/>
+            <result column="lift_code" jdbcType="VARCHAR" property="liftCode"/>
+            <result column="lift_status" jdbcType="VARCHAR" property="liftStatus"/>
+            <result column="lift_type" jdbcType="VARCHAR" property="liftType"/>
+            <result column="product_id" jdbcType="BIGINT" property="productId"/>
+            <result column="product_no" jdbcType="VARCHAR" property="productNo"/>
+            <result column="product_name" jdbcType="VARCHAR" property="productName"/>
+            <result column="product_name_local" jdbcType="VARCHAR" property="productNameLocal"/>
+            <result column="product_barcode" jdbcType="VARCHAR" property="productBarcode"/>
+            <result column="product_upc_code" jdbcType="VARCHAR" property="productUpcCode"/>
+            <result column="lift_qty" jdbcType="DECIMAL" property="liftQty"/>
+            <result column="big_bag_qty" jdbcType="DECIMAL" property="bigBagQty"/>
+            <result column="big_bag_rate" jdbcType="DECIMAL" property="bigBagRate"/>
+            <result column="big_bag_extra_qty" jdbcType="DECIMAL" property="bigBagExtraQty"/>
+            <result column="sample_lc_code" jdbcType="VARCHAR" property="sampleLcCode"/>
+            <result column="prep_lc_code" jdbcType="VARCHAR" property="prepLcCode"/>
+            <result column="lc_code" jdbcType="VARCHAR" property="lcCode"/>
+            <result column="lift_document_type" jdbcType="VARCHAR" property="liftDocumentType"/>
+            <result column="lift_document_code" jdbcType="VARCHAR" property="liftDocumentCode"/>
+            <result column="lift_document_id" jdbcType="BIGINT" property="liftDocumentId"/>
+            <result column="lift_documentline_id" jdbcType="BIGINT" property="liftDocumentlineId"/>
+            <result column="create_time" jdbcType="TIMESTAMP" property="createTime"/>
+            <result column="create_user" jdbcType="VARCHAR" property="createUser"/>
+            <result column="operate_time" jdbcType="TIMESTAMP" property="operateTime"/>
+            <result column="operate_user_id" jdbcType="BIGINT" property="operateUserId"/>
+            <result column="operate_user" jdbcType="VARCHAR" property="operateUser"/>
+            <result column="lastupdate_time" jdbcType="TIMESTAMP" property="lastupdateTime"/>
+            <result column="lastupdate_user" jdbcType="VARCHAR" property="lastupdateUser"/>
+            <result column="memo" jdbcType="VARCHAR" property="memo"/>
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        lift_id,company_id,warehouse_id,warehouse_code,lift_code,lift_status,lift_type,product_id,product_no,product_name,product_name_local,product_barcode,product_upc_code,lift_qty,big_bag_qty,big_bag_rate,big_bag_extra_qty,sample_lc_code,prep_lc_code,lc_code,lift_document_type,lift_document_code,lift_document_id,lift_documentline_id,create_time,create_user,operate_time,operate_user_id,operate_user,lastupdate_time,lastupdate_user,memo
+    </sql>
+
+        <insert id="insert">
+            insert into wms_lift_work (lift_id,company_id,warehouse_id,warehouse_code,lift_code,lift_status,lift_type,product_id,product_no,product_name,product_name_local,product_barcode,product_upc_code,lift_qty,big_bag_qty,big_bag_rate,big_bag_extra_qty,sample_lc_code,prep_lc_code,lc_code,lift_document_type,lift_document_code,lift_document_id,lift_documentline_id,create_time,create_user,operate_time,operate_user_id,operate_user,lastupdate_time,lastupdate_user,memo)
+            values (#{id,jdbcType=BIGINT},#{companyId,jdbcType=BIGINT},#{warehouseId,jdbcType=BIGINT},#{warehouseCode,jdbcType=VARCHAR},#{liftCode,jdbcType=VARCHAR},#{liftStatus,jdbcType=VARCHAR},#{liftType,jdbcType=VARCHAR},#{productId,jdbcType=BIGINT},#{productNo,jdbcType=VARCHAR},#{productName,jdbcType=VARCHAR},#{productNameLocal,jdbcType=VARCHAR},#{productBarcode,jdbcType=VARCHAR},#{productUpcCode,jdbcType=VARCHAR},#{liftQty,jdbcType=DECIMAL},#{bigBagQty,jdbcType=DECIMAL},#{bigBagRate,jdbcType=DECIMAL},#{bigBagExtraQty,jdbcType=DECIMAL},#{sampleLcCode,jdbcType=VARCHAR},#{prepLcCode,jdbcType=VARCHAR},#{lcCode,jdbcType=VARCHAR},#{liftDocumentType,jdbcType=VARCHAR},#{liftDocumentCode,jdbcType=VARCHAR},#{liftDocumentId,jdbcType=BIGINT},#{liftDocumentlineId,jdbcType=BIGINT},#{createTime,jdbcType=TIMESTAMP},#{createUser,jdbcType=VARCHAR},#{operateTime,jdbcType=TIMESTAMP},#{operateUserId,jdbcType=BIGINT},#{operateUser,jdbcType=VARCHAR},#{lastupdateTime,jdbcType=TIMESTAMP},#{lastupdateUser,jdbcType=VARCHAR},#{memo,jdbcType=VARCHAR})
+        </insert>
+
+        <insert id="insertSelective">
+            insert into wms_lift_work
+            <trim prefix="(" suffix=")" suffixOverrides=",">
+                    <if test="id != null">
+                        lift_id,
+                    </if>
+                    <if test="companyId != null">
+                        company_id,
+                    </if>
+                    <if test="warehouseId != null">
+                        warehouse_id,
+                    </if>
+                    <if test="warehouseCode != null">
+                        warehouse_code,
+                    </if>
+                    <if test="liftCode != null">
+                        lift_code,
+                    </if>
+                    <if test="liftStatus != null">
+                        lift_status,
+                    </if>
+                    <if test="liftType != null">
+                        lift_type,
+                    </if>
+                    <if test="productId != null">
+                        product_id,
+                    </if>
+                    <if test="productNo != null">
+                        product_no,
+                    </if>
+                    <if test="productName != null">
+                        product_name,
+                    </if>
+                    <if test="productNameLocal != null">
+                        product_name_local,
+                    </if>
+                    <if test="productBarcode != null">
+                        product_barcode,
+                    </if>
+                    <if test="productUpcCode != null">
+                        product_upc_code,
+                    </if>
+                    <if test="liftQty != null">
+                        lift_qty,
+                    </if>
+                    <if test="bigBagQty != null">
+                        big_bag_qty,
+                    </if>
+                    <if test="bigBagRate != null">
+                        big_bag_rate,
+                    </if>
+                    <if test="bigBagExtraQty != null">
+                        big_bag_extra_qty,
+                    </if>
+                    <if test="sampleLcCode != null">
+                        sample_lc_code,
+                    </if>
+                    <if test="prepLcCode != null">
+                        prep_lc_code,
+                    </if>
+                    <if test="lcCode != null">
+                        lc_code,
+                    </if>
+                    <if test="liftDocumentType != null">
+                        lift_document_type,
+                    </if>
+                    <if test="liftDocumentCode != null">
+                        lift_document_code,
+                    </if>
+                    <if test="liftDocumentId != null">
+                        lift_document_id,
+                    </if>
+                    <if test="liftDocumentlineId != null">
+                        lift_documentline_id,
+                    </if>
+                    <if test="createTime != null">
+                        create_time,
+                    </if>
+                    <if test="createUser != null">
+                        create_user,
+                    </if>
+                    <if test="operateTime != null">
+                        operate_time,
+                    </if>
+                    <if test="operateUserId != null">
+                        operate_user_id,
+                    </if>
+                    <if test="operateUser != null">
+                        operate_user,
+                    </if>
+                    <if test="lastupdateTime != null">
+                        lastupdate_time,
+                    </if>
+                    <if test="lastupdateUser != null">
+                        lastupdate_user,
+                    </if>
+                    <if test="memo != null">
+                        memo
+                    </if>
+            </trim>
+            <trim prefix="values (" suffix=")" suffixOverrides=",">
+                    <if test="id != null">
+                        #{id,jdbcType=BIGINT},
+                    </if>
+                    <if test="companyId != null">
+                        #{companyId,jdbcType=BIGINT},
+                    </if>
+                    <if test="warehouseId != null">
+                        #{warehouseId,jdbcType=BIGINT},
+                    </if>
+                    <if test="warehouseCode != null">
+                        #{warehouseCode,jdbcType=VARCHAR},
+                    </if>
+                    <if test="liftCode != null">
+                        #{liftCode,jdbcType=VARCHAR},
+                    </if>
+                    <if test="liftStatus != null">
+                        #{liftStatus,jdbcType=VARCHAR},
+                    </if>
+                    <if test="liftType != null">
+                        #{liftType,jdbcType=VARCHAR},
+                    </if>
+                    <if test="productId != null">
+                        #{productId,jdbcType=BIGINT},
+                    </if>
+                    <if test="productNo != null">
+                        #{productNo,jdbcType=VARCHAR},
+                    </if>
+                    <if test="productName != null">
+                        #{productName,jdbcType=VARCHAR},
+                    </if>
+                    <if test="productNameLocal != null">
+                        #{productNameLocal,jdbcType=VARCHAR},
+                    </if>
+                    <if test="productBarcode != null">
+                        #{productBarcode,jdbcType=VARCHAR},
+                    </if>
+                    <if test="productUpcCode != null">
+                        #{productUpcCode,jdbcType=VARCHAR},
+                    </if>
+                    <if test="liftQty != null">
+                        #{liftQty,jdbcType=DECIMAL},
+                    </if>
+                    <if test="bigBagQty != null">
+                        #{bigBagQty,jdbcType=DECIMAL},
+                    </if>
+                    <if test="bigBagRate != null">
+                        #{bigBagRate,jdbcType=DECIMAL},
+                    </if>
+                    <if test="bigBagExtraQty != null">
+                        #{bigBagExtraQty,jdbcType=DECIMAL},
+                    </if>
+                    <if test="sampleLcCode != null">
+                        #{sampleLcCode,jdbcType=VARCHAR},
+                    </if>
+                    <if test="prepLcCode != null">
+                        #{prepLcCode,jdbcType=VARCHAR},
+                    </if>
+                    <if test="lcCode != null">
+                        #{lcCode,jdbcType=VARCHAR},
+                    </if>
+                    <if test="liftDocumentType != null">
+                        #{liftDocumentType,jdbcType=VARCHAR},
+                    </if>
+                    <if test="liftDocumentCode != null">
+                        #{liftDocumentCode,jdbcType=VARCHAR},
+                    </if>
+                    <if test="liftDocumentId != null">
+                        #{liftDocumentId,jdbcType=BIGINT},
+                    </if>
+                    <if test="liftDocumentlineId != null">
+                        #{liftDocumentlineId,jdbcType=BIGINT},
+                    </if>
+                    <if test="createTime != null">
+                        #{createTime,jdbcType=TIMESTAMP},
+                    </if>
+                    <if test="createUser != null">
+                        #{createUser,jdbcType=VARCHAR},
+                    </if>
+                    <if test="operateTime != null">
+                        #{operateTime,jdbcType=TIMESTAMP},
+                    </if>
+                    <if test="operateUserId != null">
+                        #{operateUserId,jdbcType=BIGINT},
+                    </if>
+                    <if test="operateUser != null">
+                        #{operateUser,jdbcType=VARCHAR},
+                    </if>
+                    <if test="lastupdateTime != null">
+                        #{lastupdateTime,jdbcType=TIMESTAMP},
+                    </if>
+                    <if test="lastupdateUser != null">
+                        #{lastupdateUser,jdbcType=VARCHAR},
+                    </if>
+                    <if test="memo != null">
+                        #{memo,jdbcType=VARCHAR}
+                    </if>
+            </trim>
+        </insert>
+
+        <insert id="insertBatch">
+            insert into wms_lift_work (lift_id,company_id,warehouse_id,warehouse_code,lift_code,lift_status,lift_type,product_id,product_no,product_name,product_name_local,product_barcode,product_upc_code,lift_qty,big_bag_qty,big_bag_rate,big_bag_extra_qty,sample_lc_code,prep_lc_code,lc_code,lift_document_type,lift_document_code,lift_document_id,lift_documentline_id,create_time,create_user,operate_time,operate_user_id,operate_user,lastupdate_time,lastupdate_user,memo) values
+            <foreach collection="list" item="item" separator=",">
+                (
+                    #{item.id,jdbcType=BIGINT},
+                    #{item.companyId,jdbcType=BIGINT},
+                    #{item.warehouseId,jdbcType=BIGINT},
+                    #{item.warehouseCode,jdbcType=VARCHAR},
+                    #{item.liftCode,jdbcType=VARCHAR},
+                    #{item.liftStatus,jdbcType=VARCHAR},
+                    #{item.liftType,jdbcType=VARCHAR},
+                    #{item.productId,jdbcType=BIGINT},
+                    #{item.productNo,jdbcType=VARCHAR},
+                    #{item.productName,jdbcType=VARCHAR},
+                    #{item.productNameLocal,jdbcType=VARCHAR},
+                    #{item.productBarcode,jdbcType=VARCHAR},
+                    #{item.productUpcCode,jdbcType=VARCHAR},
+                    #{item.liftQty,jdbcType=DECIMAL},
+                    #{item.bigBagQty,jdbcType=DECIMAL},
+                    #{item.bigBagRate,jdbcType=DECIMAL},
+                    #{item.bigBagExtraQty,jdbcType=DECIMAL},
+                    #{item.sampleLcCode,jdbcType=VARCHAR},
+                    #{item.prepLcCode,jdbcType=VARCHAR},
+                    #{item.lcCode,jdbcType=VARCHAR},
+                    #{item.liftDocumentType,jdbcType=VARCHAR},
+                    #{item.liftDocumentCode,jdbcType=VARCHAR},
+                    #{item.liftDocumentId,jdbcType=BIGINT},
+                    #{item.liftDocumentlineId,jdbcType=BIGINT},
+                    #{item.createTime,jdbcType=TIMESTAMP},
+                    #{item.createUser,jdbcType=VARCHAR},
+                    #{item.operateTime,jdbcType=TIMESTAMP},
+                    #{item.operateUserId,jdbcType=BIGINT},
+                    #{item.operateUser,jdbcType=VARCHAR},
+                    #{item.lastupdateTime,jdbcType=TIMESTAMP},
+                    #{item.lastupdateUser,jdbcType=VARCHAR},
+                    #{item.memo,jdbcType=VARCHAR}
+                )
+            </foreach>
+        </insert>
+
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+        delete from wms_lift_work
+        where lift_id = #{id,jdbcType=BIGINT}
+    </delete>
+
+    <delete id="deleteByPrimaryKeys">
+        delete from wms_lift_work where lift_id in
+        <foreach close=")" collection="list" item="item" open="(" separator=",">
+            #{item}
+        </foreach>
+    </delete>
+
+    <update id="updateByPrimaryKey">
+        update wms_lift_work
+        <set>
+                company_id = #{companyId,jdbcType=BIGINT},
+                warehouse_id = #{warehouseId,jdbcType=BIGINT},
+                warehouse_code = #{warehouseCode,jdbcType=VARCHAR},
+                lift_code = #{liftCode,jdbcType=VARCHAR},
+                lift_status = #{liftStatus,jdbcType=VARCHAR},
+                lift_type = #{liftType,jdbcType=VARCHAR},
+                product_id = #{productId,jdbcType=BIGINT},
+                product_no = #{productNo,jdbcType=VARCHAR},
+                product_name = #{productName,jdbcType=VARCHAR},
+                product_name_local = #{productNameLocal,jdbcType=VARCHAR},
+                product_barcode = #{productBarcode,jdbcType=VARCHAR},
+                product_upc_code = #{productUpcCode,jdbcType=VARCHAR},
+                lift_qty = #{liftQty,jdbcType=DECIMAL},
+                big_bag_qty = #{bigBagQty,jdbcType=DECIMAL},
+                big_bag_rate = #{bigBagRate,jdbcType=DECIMAL},
+                big_bag_extra_qty = #{bigBagExtraQty,jdbcType=DECIMAL},
+                sample_lc_code = #{sampleLcCode,jdbcType=VARCHAR},
+                prep_lc_code = #{prepLcCode,jdbcType=VARCHAR},
+                lc_code = #{lcCode,jdbcType=VARCHAR},
+                lift_document_type = #{liftDocumentType,jdbcType=VARCHAR},
+                lift_document_code = #{liftDocumentCode,jdbcType=VARCHAR},
+                lift_document_id = #{liftDocumentId,jdbcType=BIGINT},
+                lift_documentline_id = #{liftDocumentlineId,jdbcType=BIGINT},
+                create_time = #{createTime,jdbcType=TIMESTAMP},
+                create_user = #{createUser,jdbcType=VARCHAR},
+                operate_time = #{operateTime,jdbcType=TIMESTAMP},
+                operate_user_id = #{operateUserId,jdbcType=BIGINT},
+                operate_user = #{operateUser,jdbcType=VARCHAR},
+                lastupdate_time = #{lastupdateTime,jdbcType=TIMESTAMP},
+                lastupdate_user = #{lastupdateUser,jdbcType=VARCHAR},
+                memo = #{memo,jdbcType=VARCHAR}
+        </set>
+        where lift_id = #{id,jdbcType=BIGINT}
+    </update>
+
+    <update id="updateByPrimaryKeySelective">
+        update wms_lift_work
+        <set>
+                <if test="companyId != null">
+                    company_id = #{companyId,jdbcType=BIGINT},
+                </if>
+                <if test="warehouseId != null">
+                    warehouse_id = #{warehouseId,jdbcType=BIGINT},
+                </if>
+                <if test="warehouseCode != null">
+                    warehouse_code = #{warehouseCode,jdbcType=VARCHAR},
+                </if>
+                <if test="liftCode != null">
+                    lift_code = #{liftCode,jdbcType=VARCHAR},
+                </if>
+                <if test="liftStatus != null">
+                    lift_status = #{liftStatus,jdbcType=VARCHAR},
+                </if>
+                <if test="liftType != null">
+                    lift_type = #{liftType,jdbcType=VARCHAR},
+                </if>
+                <if test="productId != null">
+                    product_id = #{productId,jdbcType=BIGINT},
+                </if>
+                <if test="productNo != null">
+                    product_no = #{productNo,jdbcType=VARCHAR},
+                </if>
+                <if test="productName != null">
+                    product_name = #{productName,jdbcType=VARCHAR},
+                </if>
+                <if test="productNameLocal != null">
+                    product_name_local = #{productNameLocal,jdbcType=VARCHAR},
+                </if>
+                <if test="productBarcode != null">
+                    product_barcode = #{productBarcode,jdbcType=VARCHAR},
+                </if>
+                <if test="productUpcCode != null">
+                    product_upc_code = #{productUpcCode,jdbcType=VARCHAR},
+                </if>
+                <if test="liftQty != null">
+                    lift_qty = #{liftQty,jdbcType=DECIMAL},
+                </if>
+                <if test="bigBagQty != null">
+                    big_bag_qty = #{bigBagQty,jdbcType=DECIMAL},
+                </if>
+                <if test="bigBagRate != null">
+                    big_bag_rate = #{bigBagRate,jdbcType=DECIMAL},
+                </if>
+                <if test="bigBagExtraQty != null">
+                    big_bag_extra_qty = #{bigBagExtraQty,jdbcType=DECIMAL},
+                </if>
+                <if test="sampleLcCode != null">
+                    sample_lc_code = #{sampleLcCode,jdbcType=VARCHAR},
+                </if>
+                <if test="prepLcCode != null">
+                    prep_lc_code = #{prepLcCode,jdbcType=VARCHAR},
+                </if>
+                <if test="lcCode != null">
+                    lc_code = #{lcCode,jdbcType=VARCHAR},
+                </if>
+                <if test="liftDocumentType != null">
+                    lift_document_type = #{liftDocumentType,jdbcType=VARCHAR},
+                </if>
+                <if test="liftDocumentCode != null">
+                    lift_document_code = #{liftDocumentCode,jdbcType=VARCHAR},
+                </if>
+                <if test="liftDocumentId != null">
+                    lift_document_id = #{liftDocumentId,jdbcType=BIGINT},
+                </if>
+                <if test="liftDocumentlineId != null">
+                    lift_documentline_id = #{liftDocumentlineId,jdbcType=BIGINT},
+                </if>
+                <if test="createTime != null">
+                    create_time = #{createTime,jdbcType=TIMESTAMP},
+                </if>
+                <if test="createUser != null">
+                    create_user = #{createUser,jdbcType=VARCHAR},
+                </if>
+                <if test="operateTime != null">
+                    operate_time = #{operateTime,jdbcType=TIMESTAMP},
+                </if>
+                <if test="operateUserId != null">
+                    operate_user_id = #{operateUserId,jdbcType=BIGINT},
+                </if>
+                <if test="operateUser != null">
+                    operate_user = #{operateUser,jdbcType=VARCHAR},
+                </if>
+                <if test="lastupdateTime != null">
+                    lastupdate_time = #{lastupdateTime,jdbcType=TIMESTAMP},
+                </if>
+                <if test="lastupdateUser != null">
+                    lastupdate_user = #{lastupdateUser,jdbcType=VARCHAR},
+                </if>
+                <if test="memo != null">
+                    memo = #{memo,jdbcType=VARCHAR}
+                </if>
+        </set>
+        where lift_id = #{id,jdbcType=BIGINT}
+    </update>
+
+    <update id="updateBatch">
+        <foreach close="" collection="list" item="item" open="" separator=";">
+            update wms_lift_work
+            <set>
+                    <if test="item.companyId != null">
+                        company_id = #{item.companyId,jdbcType=BIGINT},
+                    </if>
+                    <if test="item.warehouseId != null">
+                        warehouse_id = #{item.warehouseId,jdbcType=BIGINT},
+                    </if>
+                    <if test="item.warehouseCode != null">
+                        warehouse_code = #{item.warehouseCode,jdbcType=VARCHAR},
+                    </if>
+                    <if test="item.liftCode != null">
+                        lift_code = #{item.liftCode,jdbcType=VARCHAR},
+                    </if>
+                    <if test="item.liftStatus != null">
+                        lift_status = #{item.liftStatus,jdbcType=VARCHAR},
+                    </if>
+                    <if test="item.liftType != null">
+                        lift_type = #{item.liftType,jdbcType=VARCHAR},
+                    </if>
+                    <if test="item.productId != null">
+                        product_id = #{item.productId,jdbcType=BIGINT},
+                    </if>
+                    <if test="item.productNo != null">
+                        product_no = #{item.productNo,jdbcType=VARCHAR},
+                    </if>
+                    <if test="item.productName != null">
+                        product_name = #{item.productName,jdbcType=VARCHAR},
+                    </if>
+                    <if test="item.productNameLocal != null">
+                        product_name_local = #{item.productNameLocal,jdbcType=VARCHAR},
+                    </if>
+                    <if test="item.productBarcode != null">
+                        product_barcode = #{item.productBarcode,jdbcType=VARCHAR},
+                    </if>
+                    <if test="item.productUpcCode != null">
+                        product_upc_code = #{item.productUpcCode,jdbcType=VARCHAR},
+                    </if>
+                    <if test="item.liftQty != null">
+                        lift_qty = #{item.liftQty,jdbcType=DECIMAL},
+                    </if>
+                    <if test="item.bigBagQty != null">
+                        big_bag_qty = #{item.bigBagQty,jdbcType=DECIMAL},
+                    </if>
+                    <if test="item.bigBagRate != null">
+                        big_bag_rate = #{item.bigBagRate,jdbcType=DECIMAL},
+                    </if>
+                    <if test="item.bigBagExtraQty != null">
+                        big_bag_extra_qty = #{item.bigBagExtraQty,jdbcType=DECIMAL},
+                    </if>
+                    <if test="item.sampleLcCode != null">
+                        sample_lc_code = #{item.sampleLcCode,jdbcType=VARCHAR},
+                    </if>
+                    <if test="item.prepLcCode != null">
+                        prep_lc_code = #{item.prepLcCode,jdbcType=VARCHAR},
+                    </if>
+                    <if test="item.lcCode != null">
+                        lc_code = #{item.lcCode,jdbcType=VARCHAR},
+                    </if>
+                    <if test="item.liftDocumentType != null">
+                        lift_document_type = #{item.liftDocumentType,jdbcType=VARCHAR},
+                    </if>
+                    <if test="item.liftDocumentCode != null">
+                        lift_document_code = #{item.liftDocumentCode,jdbcType=VARCHAR},
+                    </if>
+                    <if test="item.liftDocumentId != null">
+                        lift_document_id = #{item.liftDocumentId,jdbcType=BIGINT},
+                    </if>
+                    <if test="item.liftDocumentlineId != null">
+                        lift_documentline_id = #{item.liftDocumentlineId,jdbcType=BIGINT},
+                    </if>
+                    <if test="item.createTime != null">
+                        create_time = #{item.createTime,jdbcType=TIMESTAMP},
+                    </if>
+                    <if test="item.createUser != null">
+                        create_user = #{item.createUser,jdbcType=VARCHAR},
+                    </if>
+                    <if test="item.operateTime != null">
+                        operate_time = #{item.operateTime,jdbcType=TIMESTAMP},
+                    </if>
+                    <if test="item.operateUserId != null">
+                        operate_user_id = #{item.operateUserId,jdbcType=BIGINT},
+                    </if>
+                    <if test="item.operateUser != null">
+                        operate_user = #{item.operateUser,jdbcType=VARCHAR},
+                    </if>
+                    <if test="item.lastupdateTime != null">
+                        lastupdate_time = #{item.lastupdateTime,jdbcType=TIMESTAMP},
+                    </if>
+                    <if test="item.lastupdateUser != null">
+                        lastupdate_user = #{item.lastupdateUser,jdbcType=VARCHAR},
+                    </if>
+                    <if test="item.memo != null">
+                        memo = #{item.memo,jdbcType=VARCHAR}
+                    </if>
+            </set>
+            where lift_id = #{item.id,jdbcType=BIGINT}
+        </foreach>
+    </update>
+
+    <select id="selectByPrimaryKey" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List" />
+        from wms_lift_work
+        where lift_id = #{id,jdbcType=BIGINT}
+    </select>
+
+    <select id="selectByPrimaryKeyWithLock" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List" />
+        from wms_lift_work
+        where lift_id = #{id,jdbcType=BIGINT} for update
+    </select>
+
+    <select id="selectByPrimaryKeys" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List" />
+        from wms_lift_work where lift_id in
+        <foreach close=")" collection="list" item="item" open="(" separator=",">
+            #{item}
+        </foreach>
+    </select>
+
+    <select id="selectByEntity" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from wms_lift_work
+        <where>
+                <if test="id != null">
+                    and lift_id=#{id,jdbcType=BIGINT}
+                </if>
+                <if test="companyId != null">
+                    and company_id=#{companyId,jdbcType=BIGINT}
+                </if>
+                <if test="warehouseId != null">
+                    and warehouse_id=#{warehouseId,jdbcType=BIGINT}
+                </if>
+                <if test="warehouseCode != null">
+                    and warehouse_code=#{warehouseCode,jdbcType=VARCHAR}
+                </if>
+                <if test="liftCode != null">
+                    and lift_code=#{liftCode,jdbcType=VARCHAR}
+                </if>
+                <if test="liftStatus != null">
+                    and lift_status=#{liftStatus,jdbcType=VARCHAR}
+                </if>
+                <if test="liftType != null">
+                    and lift_type=#{liftType,jdbcType=VARCHAR}
+                </if>
+                <if test="productId != null">
+                    and product_id=#{productId,jdbcType=BIGINT}
+                </if>
+                <if test="productNo != null">
+                    and product_no=#{productNo,jdbcType=VARCHAR}
+                </if>
+                <if test="productName != null">
+                    and product_name=#{productName,jdbcType=VARCHAR}
+                </if>
+                <if test="productNameLocal != null">
+                    and product_name_local=#{productNameLocal,jdbcType=VARCHAR}
+                </if>
+                <if test="productBarcode != null">
+                    and product_barcode=#{productBarcode,jdbcType=VARCHAR}
+                </if>
+                <if test="productUpcCode != null">
+                    and product_upc_code=#{productUpcCode,jdbcType=VARCHAR}
+                </if>
+                <if test="liftQty != null">
+                    and lift_qty=#{liftQty,jdbcType=DECIMAL}
+                </if>
+                <if test="bigBagQty != null">
+                    and big_bag_qty=#{bigBagQty,jdbcType=DECIMAL}
+                </if>
+                <if test="bigBagRate != null">
+                    and big_bag_rate=#{bigBagRate,jdbcType=DECIMAL}
+                </if>
+                <if test="bigBagExtraQty != null">
+                    and big_bag_extra_qty=#{bigBagExtraQty,jdbcType=DECIMAL}
+                </if>
+                <if test="sampleLcCode != null">
+                    and sample_lc_code=#{sampleLcCode,jdbcType=VARCHAR}
+                </if>
+                <if test="prepLcCode != null">
+                    and prep_lc_code=#{prepLcCode,jdbcType=VARCHAR}
+                </if>
+                <if test="lcCode != null">
+                    and lc_code=#{lcCode,jdbcType=VARCHAR}
+                </if>
+                <if test="liftDocumentType != null">
+                    and lift_document_type=#{liftDocumentType,jdbcType=VARCHAR}
+                </if>
+                <if test="liftDocumentCode != null">
+                    and lift_document_code=#{liftDocumentCode,jdbcType=VARCHAR}
+                </if>
+                <if test="liftDocumentId != null">
+                    and lift_document_id=#{liftDocumentId,jdbcType=BIGINT}
+                </if>
+                <if test="liftDocumentlineId != null">
+                    and lift_documentline_id=#{liftDocumentlineId,jdbcType=BIGINT}
+                </if>
+                <if test="createTime != null">
+                    and create_time=#{createTime,jdbcType=TIMESTAMP}
+                </if>
+                <if test="createUser != null">
+                    and create_user=#{createUser,jdbcType=VARCHAR}
+                </if>
+                <if test="operateTime != null">
+                    and operate_time=#{operateTime,jdbcType=TIMESTAMP}
+                </if>
+                <if test="operateUserId != null">
+                    and operate_user_id=#{operateUserId,jdbcType=BIGINT}
+                </if>
+                <if test="operateUser != null">
+                    and operate_user=#{operateUser,jdbcType=VARCHAR}
+                </if>
+                <if test="lastupdateTime != null">
+                    and lastupdate_time=#{lastupdateTime,jdbcType=TIMESTAMP}
+                </if>
+                <if test="lastupdateUser != null">
+                    and lastupdate_user=#{lastupdateUser,jdbcType=VARCHAR}
+                </if>
+                <if test="memo != null">
+                    and memo=#{memo,jdbcType=VARCHAR}
+                </if>
+        </where>
+    </select>
+
+    <select id="selectByConditions" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from wms_lift_work
+        <where>
+                <if test="id != null">
+                    and lift_id ${id}
+                </if>
+                <if test="companyId != null">
+                    and company_id ${companyId}
+                </if>
+                <if test="warehouseId != null">
+                    and warehouse_id ${warehouseId}
+                </if>
+                <if test="warehouseCode != null">
+                    and warehouse_code ${warehouseCode}
+                </if>
+                <if test="liftCode != null">
+                    and lift_code ${liftCode}
+                </if>
+                <if test="liftStatus != null">
+                    and lift_status ${liftStatus}
+                </if>
+                <if test="liftType != null">
+                    and lift_type ${liftType}
+                </if>
+                <if test="productId != null">
+                    and product_id ${productId}
+                </if>
+                <if test="productNo != null">
+                    and product_no ${productNo}
+                </if>
+                <if test="productName != null">
+                    and product_name ${productName}
+                </if>
+                <if test="productNameLocal != null">
+                    and product_name_local ${productNameLocal}
+                </if>
+                <if test="productBarcode != null">
+                    and product_barcode ${productBarcode}
+                </if>
+                <if test="productUpcCode != null">
+                    and product_upc_code ${productUpcCode}
+                </if>
+                <if test="liftQty != null">
+                    and lift_qty ${liftQty}
+                </if>
+                <if test="bigBagQty != null">
+                    and big_bag_qty ${bigBagQty}
+                </if>
+                <if test="bigBagRate != null">
+                    and big_bag_rate ${bigBagRate}
+                </if>
+                <if test="bigBagExtraQty != null">
+                    and big_bag_extra_qty ${bigBagExtraQty}
+                </if>
+                <if test="sampleLcCode != null">
+                    and sample_lc_code ${sampleLcCode}
+                </if>
+                <if test="prepLcCode != null">
+                    and prep_lc_code ${prepLcCode}
+                </if>
+                <if test="lcCode != null">
+                    and lc_code ${lcCode}
+                </if>
+                <if test="liftDocumentType != null">
+                    and lift_document_type ${liftDocumentType}
+                </if>
+                <if test="liftDocumentCode != null">
+                    and lift_document_code ${liftDocumentCode}
+                </if>
+                <if test="liftDocumentId != null">
+                    and lift_document_id ${liftDocumentId}
+                </if>
+                <if test="liftDocumentlineId != null">
+                    and lift_documentline_id ${liftDocumentlineId}
+                </if>
+                <if test="createTime != null">
+                    and create_time ${createTime}
+                </if>
+                <if test="createUser != null">
+                    and create_user ${createUser}
+                </if>
+                <if test="operateTime != null">
+                    and operate_time ${operateTime}
+                </if>
+                <if test="operateUserId != null">
+                    and operate_user_id ${operateUserId}
+                </if>
+                <if test="operateUser != null">
+                    and operate_user ${operateUser}
+                </if>
+                <if test="lastupdateTime != null">
+                    and lastupdate_time ${lastupdateTime}
+                </if>
+                <if test="lastupdateUser != null">
+                    and lastupdate_user ${lastupdateUser}
+                </if>
+                <if test="memo != null">
+                    and memo ${memo}
+                </if>
+        </where>
+        <if test="orderBy != null">
+            order by ${orderBy}
+        </if>
+    </select>
+
+    <select id="selectAll" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from wms_lift_work
+    </select>
+
+    <select id="count" resultType="java.lang.Long">
+        select count(*) from wms_lift_work
+    </select>
+
+    <select id="selectByFunction">
+        select ${function}(${column}) from wms_lift_work
+    </select>
+
+</mapper>

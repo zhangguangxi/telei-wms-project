@@ -8,6 +8,7 @@ import com.nuochen.framework.autocoding.domain.mybatis.BaseService;
 import com.telei.wms.datasource.wms.model.WmsInventory;
 import com.telei.wms.datasource.wms.repository.WmsInventoryRepository;
 import com.telei.wms.datasource.wms.vo.WmsInventoryPageQueryResponseVo;
+import com.telei.wms.datasource.wms.vo.WmsInventoryVo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -34,4 +35,9 @@ public class WmsInventoryService extends BaseService<WmsInventoryRepository,WmsI
     public BigDecimal selectQtySum(Long productId, Long warehouseId, Long companyId) {
         return wmsInventoryRepository.selectQtySum(productId, warehouseId, companyId);
     }
+
+    public WmsInventoryVo getLcCodeByInventory(Long productId, Long warehouseId, Long companyId, Integer lcCodeNumber) {
+        return wmsInventoryRepository.getLcCodeByInventory(productId, warehouseId, companyId, lcCodeNumber);
+    }
+
 }

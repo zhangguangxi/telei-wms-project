@@ -3,6 +3,7 @@ package com.telei.wms.datasource.wms.repository;
 import com.nuochen.framework.autocoding.domain.mybatis.BaseRepository;
 import com.telei.wms.datasource.wms.model.WmsInventory;
 import com.telei.wms.datasource.wms.vo.WmsInventoryPageQueryResponseVo;
+import com.telei.wms.datasource.wms.vo.WmsInventoryVo;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
 
@@ -11,9 +12,10 @@ import java.util.List;
 import java.util.Map;
 
 @Repository
-public interface WmsInventoryRepository extends BaseRepository<WmsInventory,Long> {
+public interface WmsInventoryRepository extends BaseRepository<WmsInventory, Long> {
     /**
      * 根据库位编码与产品id查询库存
+     *
      * @param wmsInventory
      * @return
      */
@@ -23,6 +25,7 @@ public interface WmsInventoryRepository extends BaseRepository<WmsInventory,Long
 
     /**
      * 库存分页查询
+     *
      * @param paramMap
      * @return
      */
@@ -30,10 +33,22 @@ public interface WmsInventoryRepository extends BaseRepository<WmsInventory,Long
 
     /**
      * 获取库存数
+     *
      * @param productId
      * @param warehouseId
      * @param companyId
      * @return
      */
     BigDecimal selectQtySum(@Param("productId") Long productId, @Param("warehouseId") Long warehouseId, @Param("companyId") Long companyId);
+
+    /**
+     * 就近查找当前商品的高架库位
+     * @param productId
+     * @param warehouseId
+     * @param companyId
+     * @param lcCodeNumber
+     * @return
+     */
+    WmsInventoryVo getLcCodeByInventory(@Param("productId") Long productId, @Param("warehouseId") Long warehouseId, @Param("companyId") Long companyId, @Param("lcCodeNumber") Integer lcCodeNumber);
+
 }

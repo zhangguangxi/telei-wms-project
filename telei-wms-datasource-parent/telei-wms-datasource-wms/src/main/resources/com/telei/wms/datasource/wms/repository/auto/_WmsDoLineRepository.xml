@@ -41,14 +41,17 @@
         dol_id,doh_id,spd_id,sp_id,so_id,sod_id,product_id,product_barcode,spec_type,media_id,product_no,product_name,product_name_local,product_upc_code,brand,stock_unit,unit_gross_weight,unit_vol,qty,weight,vol,big_bag_qty,big_bag_rate,mid_bag_qty,mid_bag_rate,small_bag_qty,ship_qty,ship_weight,ship_vol,memo,cost_reference,unit_price,amount
     </sql>
 
-        <insert id="insert" keyProperty="id" useGeneratedKeys="true">
-            insert into wms_do_line (doh_id,spd_id,sp_id,so_id,sod_id,product_id,product_barcode,spec_type,media_id,product_no,product_name,product_name_local,product_upc_code,brand,stock_unit,unit_gross_weight,unit_vol,qty,weight,vol,big_bag_qty,big_bag_rate,mid_bag_qty,mid_bag_rate,small_bag_qty,ship_qty,ship_weight,ship_vol,memo,cost_reference,unit_price,amount)
+        <insert id="insert">
+            insert into wms_do_line (dol_id,doh_id,spd_id,sp_id,so_id,sod_id,product_id,product_barcode,spec_type,media_id,product_no,product_name,product_name_local,product_upc_code,brand,stock_unit,unit_gross_weight,unit_vol,qty,weight,vol,big_bag_qty,big_bag_rate,mid_bag_qty,mid_bag_rate,small_bag_qty,ship_qty,ship_weight,ship_vol,memo,cost_reference,unit_price,amount)
             values (#{id,jdbcType=BIGINT},#{dohId,jdbcType=BIGINT},#{spdId,jdbcType=BIGINT},#{spId,jdbcType=BIGINT},#{soId,jdbcType=BIGINT},#{sodId,jdbcType=BIGINT},#{productId,jdbcType=BIGINT},#{productBarcode,jdbcType=VARCHAR},#{specType,jdbcType=VARCHAR},#{mediaId,jdbcType=VARCHAR},#{productNo,jdbcType=VARCHAR},#{productName,jdbcType=VARCHAR},#{productNameLocal,jdbcType=VARCHAR},#{productUpcCode,jdbcType=VARCHAR},#{brand,jdbcType=VARCHAR},#{stockUnit,jdbcType=BIGINT},#{unitGrossWeight,jdbcType=DECIMAL},#{unitVol,jdbcType=DECIMAL},#{qty,jdbcType=DECIMAL},#{weight,jdbcType=DECIMAL},#{vol,jdbcType=DECIMAL},#{bigBagQty,jdbcType=DECIMAL},#{bigBagRate,jdbcType=DECIMAL},#{midBagQty,jdbcType=DECIMAL},#{midBagRate,jdbcType=DECIMAL},#{smallBagQty,jdbcType=DECIMAL},#{shipQty,jdbcType=DECIMAL},#{shipWeight,jdbcType=DECIMAL},#{shipVol,jdbcType=DECIMAL},#{memo,jdbcType=VARCHAR},#{costReference,jdbcType=DECIMAL},#{unitPrice,jdbcType=DECIMAL},#{amount,jdbcType=DECIMAL})
         </insert>
 
-        <insert id="insertSelective" keyProperty="id" useGeneratedKeys="true">
+        <insert id="insertSelective">
             insert into wms_do_line
             <trim prefix="(" suffix=")" suffixOverrides=",">
+                    <if test="id != null">
+                        dol_id,
+                    </if>
                     <if test="dohId != null">
                         doh_id,
                     </if>
@@ -147,6 +150,9 @@
                     </if>
             </trim>
             <trim prefix="values (" suffix=")" suffixOverrides=",">
+                    <if test="id != null">
+                        #{id,jdbcType=BIGINT},
+                    </if>
                     <if test="dohId != null">
                         #{dohId,jdbcType=BIGINT},
                     </if>
@@ -246,10 +252,11 @@
             </trim>
         </insert>
 
-        <insert id="insertBatch" keyProperty="id" useGeneratedKeys="true">
-            insert into wms_do_line (doh_id,spd_id,sp_id,so_id,sod_id,product_id,product_barcode,spec_type,media_id,product_no,product_name,product_name_local,product_upc_code,brand,stock_unit,unit_gross_weight,unit_vol,qty,weight,vol,big_bag_qty,big_bag_rate,mid_bag_qty,mid_bag_rate,small_bag_qty,ship_qty,ship_weight,ship_vol,memo,cost_reference,unit_price,amount) values
+        <insert id="insertBatch">
+            insert into wms_do_line (dol_id,doh_id,spd_id,sp_id,so_id,sod_id,product_id,product_barcode,spec_type,media_id,product_no,product_name,product_name_local,product_upc_code,brand,stock_unit,unit_gross_weight,unit_vol,qty,weight,vol,big_bag_qty,big_bag_rate,mid_bag_qty,mid_bag_rate,small_bag_qty,ship_qty,ship_weight,ship_vol,memo,cost_reference,unit_price,amount) values
             <foreach collection="list" item="item" separator=",">
                 (
+                    #{item.id,jdbcType=BIGINT},
                     #{item.dohId,jdbcType=BIGINT},
                     #{item.spdId,jdbcType=BIGINT},
                     #{item.spId,jdbcType=BIGINT},

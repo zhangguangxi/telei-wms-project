@@ -10,7 +10,7 @@ import java.util.List;
  * wms_roo_header 收货单
  */
 @Data
-public class RooHeaderBussinessRequest {
+public class RooHeaderBusinessRequest {
     /** id */
     private Long id;
     /** 业务单据编号-按单据编码规则生成 */

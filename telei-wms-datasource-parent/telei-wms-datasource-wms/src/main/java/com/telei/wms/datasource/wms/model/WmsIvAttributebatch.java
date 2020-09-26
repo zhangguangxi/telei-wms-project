@@ -20,6 +20,10 @@ public class WmsIvAttributebatch implements Entity<Long> {
     private Long warehouseId;
     /** 仓库code */
     private String warehouseCode;
+    /** 供应商id */
+    private Long supplierId;
+    /** 产品编码 */
+    private String productNo;
     /** 产品名称 */
     private String productName;
     /** 产品本地名称 */

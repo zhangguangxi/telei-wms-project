@@ -7,12 +7,11 @@ import com.telei.wms.project.api.utils.DataConvertUtil;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
+import java.util.List;
 
 /**
  * @author gongrp
@@ -26,16 +25,28 @@ public class InitEndpoint {
     @Autowired
     private InitBussiness initBussiness;
 
-    @ApiOperation("新增库存初始化")
+    @ApiOperation("保存库存初始化")
     @PostMapping(ServiceId.WMS_INIT_ADD)
     public InitHeaderCudBaseResponse addInitHeader(@RequestBody @Valid InitHeaderAddRequest request) {
         return initBussiness.addInitHeader(request);
     }
 
-    @ApiOperation("审核库存初始化")
+    @ApiOperation("提交库存初始化")
     @PostMapping(ServiceId.WMS_INIT_AUDIT)
     public InitHeaderCudBaseResponse auditInitHeader(@RequestBody @Valid InitHeaderAuditRequest request) {
         return initBussiness.auditInitHeader(request);
+    }
+
+    @ApiOperation("下载库存初始化商品模板")
+    @GetMapping(ServiceId.WMS_INIT_TEMPLATE)
+    public void exportTemplate(HttpServletRequest request) {
+        initBussiness.exportTemplate(request);
+    }
+
+    @ApiOperation("检查产品库存供应商是否存在")
+    @PostMapping(ServiceId.WMS_INIT_CHECK)
+    public List<InitLineCheckResponse> initLineCheck(@RequestBody @Valid InitLineCheckRequest request) {
+        return initBussiness.initLineCheck(request);
     }
 
     @ApiOperation("库存初始化分页")

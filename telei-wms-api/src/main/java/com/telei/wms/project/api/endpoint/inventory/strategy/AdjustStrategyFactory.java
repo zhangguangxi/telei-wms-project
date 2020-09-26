@@ -8,7 +8,6 @@ import com.telei.wms.customer.amqp.inventoryChangeWriteBack.OmsInventoryChangeWr
 import com.telei.wms.datasource.wms.model.*;
 import com.telei.wms.project.api.utils.DataConvertUtil;
 import lombok.extern.slf4j.Slf4j;
-import org.checkerframework.checker.index.qual.SameLen;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -53,7 +52,8 @@ public class AdjustStrategyFactory {
      * @param nowWithUtc
      * @return
      */
-    public  WmsIvTransaction createTransactionRecored(List<WmsIvTransaction> wmsIvTransactionList,WmsInventory inventory,String lcCodeTo,  String ivChangeType ,BigDecimal curIvIdQtyAdjt, UserInfo userInfo, Date nowWithUtc) {
+    public  WmsIvTransaction createTransactionRecored(List<WmsIvTransaction> wmsIvTransactionList,WmsInventory inventory,String lcCodeTo,
+                                                      String ivChangeType ,BigDecimal curIvIdQtyAdjt, UserInfo userInfo, Date nowWithUtc) {
         WmsIvTransaction wmsIvTransaction = DataConvertUtil.parseDataAsObject(inventory,WmsIvTransaction.class);
         wmsIvTransaction.setId(idGenerator.getUnique());
         wmsIvTransaction.setApCode("ADJT");/**应用类型*/

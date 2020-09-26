@@ -15,14 +15,10 @@ public class OmsInventoryChangeWriteBack {
 
     @Data
     public static class OmsInventoryChangeWriteBackCondition {
-        /** 库存id */
-        private Long ivId;
         /**公司id*/
         private Long companyId;
         /** 仓库id */
         private Long warehouseId;
-        /** 仓库code */
-        private String warehouseCode;
         /** 产品id */
         private Long productId;
         /**调整数量*/

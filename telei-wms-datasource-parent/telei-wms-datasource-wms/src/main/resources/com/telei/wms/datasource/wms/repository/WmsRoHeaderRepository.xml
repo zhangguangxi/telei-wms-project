@@ -5,6 +5,7 @@
     <resultMap id="PageQueryResultMap" extends="BaseResultMap" type="com.telei.wms.datasource.wms.vo.RoHeaderPageQueryResponseVo">
         <result column="warehouse_name" jdbcType="VARCHAR" property="warehouseName"/>
         <result column="supplier_name" jdbcType="VARCHAR" property="supplierName"/>
+        <result column="user_name" jdbcType="VARCHAR" property="userName"/>
     </resultMap>
 
     <sql id="Page_Query_Column_List">
@@ -47,7 +48,8 @@
         wrh.last_update_user,
         wrh.last_update_time,
         cw.warehouse_name,
-        cs.supplier_name
+        cs.supplier_name,
+        csa.user_name
     </sql>
 
     <select id="findAll" resultMap="PageQueryResultMap">
@@ -56,6 +58,7 @@
         FROM wms_ro_header wrh
         INNER JOIN cdm.cdm_warehouse cw ON cw.warehouse_id = wrh.warehouse_id
         INNER JOIN cdm.cdm_supplier cs ON cs.supplier_id = wrh.supplier_id
+        INNER JOIN cdm.cdm_sys_account csa ON csa.account_id = wrh.owner_user
         <where>
             <if test="roCode != null and roCode != ''">
                 wrh.ro_code LIKE concat('%',#{roCode},'%')
@@ -68,6 +71,9 @@
             </if>
             <if test="ownerUser != null and ownerUser != ''">
                 AND wrh.owner_user=#{ownerUser}
+            </if>
+            <if test="custOrderNo != null and custOrderNo != ''">
+                AND wrh.cust_order_no LIKE concat('%',#{custOrderNo},'%')
             </if>
             <if test="orderStatus != null and orderStatus != ''">
                 AND wrh.order_status=#{orderStatus}

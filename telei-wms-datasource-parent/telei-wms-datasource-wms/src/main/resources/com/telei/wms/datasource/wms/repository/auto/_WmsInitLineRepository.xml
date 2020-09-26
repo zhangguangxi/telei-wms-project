@@ -5,6 +5,7 @@
         <id column="ivil_id" jdbcType="BIGINT" property="id"/>
             <result column="ivih_id" jdbcType="BIGINT" property="ivihId"/>
             <result column="product_id" jdbcType="BIGINT" property="productId"/>
+            <result column="supplier_id" jdbcType="BIGINT" property="supplierId"/>
             <result column="lc_code" jdbcType="VARCHAR" property="lcCode"/>
             <result column="iv_fifo_time" jdbcType="TIMESTAMP" property="ivFifoTime"/>
             <result column="iv_qty" jdbcType="DECIMAL" property="ivQty"/>
@@ -14,12 +15,12 @@
     </resultMap>
 
     <sql id="Base_Column_List">
-        ivil_id,ivih_id,product_id,lc_code,iv_fifo_time,iv_qty,product_date,iv_effective_date,batch_no
+        ivil_id,ivih_id,product_id,supplier_id,lc_code,iv_fifo_time,iv_qty,product_date,iv_effective_date,batch_no
     </sql>
 
         <insert id="insert">
-            insert into wms_init_line (ivil_id,ivih_id,product_id,lc_code,iv_fifo_time,iv_qty,product_date,iv_effective_date,batch_no)
-            values (#{id,jdbcType=BIGINT},#{ivihId,jdbcType=BIGINT},#{productId,jdbcType=BIGINT},#{lcCode,jdbcType=VARCHAR},#{ivFifoTime,jdbcType=TIMESTAMP},#{ivQty,jdbcType=DECIMAL},#{productDate,jdbcType=TIMESTAMP},#{ivEffectiveDate,jdbcType=TIMESTAMP},#{batchNo,jdbcType=VARCHAR})
+            insert into wms_init_line (ivil_id,ivih_id,product_id,supplier_id,lc_code,iv_fifo_time,iv_qty,product_date,iv_effective_date,batch_no)
+            values (#{id,jdbcType=BIGINT},#{ivihId,jdbcType=BIGINT},#{productId,jdbcType=BIGINT},#{supplierId,jdbcType=BIGINT},#{lcCode,jdbcType=VARCHAR},#{ivFifoTime,jdbcType=TIMESTAMP},#{ivQty,jdbcType=DECIMAL},#{productDate,jdbcType=TIMESTAMP},#{ivEffectiveDate,jdbcType=TIMESTAMP},#{batchNo,jdbcType=VARCHAR})
         </insert>
 
         <insert id="insertSelective">
@@ -33,6 +34,9 @@
                     </if>
                     <if test="productId != null">
                         product_id,
+                    </if>
+                    <if test="supplierId != null">
+                        supplier_id,
                     </if>
                     <if test="lcCode != null">
                         lc_code,
@@ -63,6 +67,9 @@
                     <if test="productId != null">
                         #{productId,jdbcType=BIGINT},
                     </if>
+                    <if test="supplierId != null">
+                        #{supplierId,jdbcType=BIGINT},
+                    </if>
                     <if test="lcCode != null">
                         #{lcCode,jdbcType=VARCHAR},
                     </if>
@@ -85,12 +92,13 @@
         </insert>
 
         <insert id="insertBatch">
-            insert into wms_init_line (ivil_id,ivih_id,product_id,lc_code,iv_fifo_time,iv_qty,product_date,iv_effective_date,batch_no) values
+            insert into wms_init_line (ivil_id,ivih_id,product_id,supplier_id,lc_code,iv_fifo_time,iv_qty,product_date,iv_effective_date,batch_no) values
             <foreach collection="list" item="item" separator=",">
                 (
                     #{item.id,jdbcType=BIGINT},
                     #{item.ivihId,jdbcType=BIGINT},
                     #{item.productId,jdbcType=BIGINT},
+                    #{item.supplierId,jdbcType=BIGINT},
                     #{item.lcCode,jdbcType=VARCHAR},
                     #{item.ivFifoTime,jdbcType=TIMESTAMP},
                     #{item.ivQty,jdbcType=DECIMAL},
@@ -118,6 +126,7 @@
         <set>
                 ivih_id = #{ivihId,jdbcType=BIGINT},
                 product_id = #{productId,jdbcType=BIGINT},
+                supplier_id = #{supplierId,jdbcType=BIGINT},
                 lc_code = #{lcCode,jdbcType=VARCHAR},
                 iv_fifo_time = #{ivFifoTime,jdbcType=TIMESTAMP},
                 iv_qty = #{ivQty,jdbcType=DECIMAL},
@@ -136,6 +145,9 @@
                 </if>
                 <if test="productId != null">
                     product_id = #{productId,jdbcType=BIGINT},
+                </if>
+                <if test="supplierId != null">
+                    supplier_id = #{supplierId,jdbcType=BIGINT},
                 </if>
                 <if test="lcCode != null">
                     lc_code = #{lcCode,jdbcType=VARCHAR},
@@ -168,6 +180,9 @@
                     </if>
                     <if test="item.productId != null">
                         product_id = #{item.productId,jdbcType=BIGINT},
+                    </if>
+                    <if test="item.supplierId != null">
+                        supplier_id = #{item.supplierId,jdbcType=BIGINT},
                     </if>
                     <if test="item.lcCode != null">
                         lc_code = #{item.lcCode,jdbcType=VARCHAR},
@@ -229,6 +244,9 @@
                 <if test="productId != null">
                     and product_id=#{productId,jdbcType=BIGINT}
                 </if>
+                <if test="supplierId != null">
+                    and supplier_id=#{supplierId,jdbcType=BIGINT}
+                </if>
                 <if test="lcCode != null">
                     and lc_code=#{lcCode,jdbcType=VARCHAR}
                 </if>
@@ -263,6 +281,9 @@
                 </if>
                 <if test="productId != null">
                     and product_id ${productId}
+                </if>
+                <if test="supplierId != null">
+                    and supplier_id ${supplierId}
                 </if>
                 <if test="lcCode != null">
                     and lc_code ${lcCode}

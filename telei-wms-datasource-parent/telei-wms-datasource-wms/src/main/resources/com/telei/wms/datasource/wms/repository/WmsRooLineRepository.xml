@@ -6,7 +6,6 @@
         <result column="product_no" jdbcType="VARCHAR" property="productNo"/>
         <result column="product_name" jdbcType="VARCHAR" property="productName"/>
         <result column="brand" jdbcType="VARCHAR" property="brand"/>
-        <result column="image_path" jdbcType="VARCHAR" property="imagePath"/>
     </resultMap>
 
     <sql id="Page_Query_Column_List">
@@ -16,6 +15,7 @@
         wrl.rol_id,
         wrl.rool_status,
         wrl.product_id,
+        wrl.media_id,
         wrl.product_barcode,
         wrl.product_upc_code,
         wrl.plan_qty,
@@ -52,7 +52,6 @@
         wrl.create_user,
         wrl.create_time,
         wrl.iab_id,
-        wl.media_id imagePath,
         wl.product_no,
         wl.product_name,
         wl.brand

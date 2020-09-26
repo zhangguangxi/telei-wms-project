@@ -22,6 +22,8 @@ public class WmsRooLine implements Entity<Long> {
     private String roolStatus;
     /** 商品id */
     private Long productId;
+    /** 图片 */
+    private String mediaId;
     /** 条码 */
     private String productBarcode;
     /** UPC码 */

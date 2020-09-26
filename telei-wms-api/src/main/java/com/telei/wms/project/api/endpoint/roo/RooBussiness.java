@@ -73,7 +73,7 @@ public class RooBussiness {
      * @return
      */
     @Transactional(rollbackFor = Exception.class)
-    public RooHeaderBussinessResponse addRooHeader(RooHeaderBussinessRequest request) {
+    public RooHeaderBusinessResponse addRooHeader(RooHeaderBusinessRequest request) {
         WmsRooHeader wmsRooHeader = DataConvertUtil.parseDataAsObject(request, WmsRooHeader.class);
         // 收货单id
         long rooId = idGenerator.getUnique();
@@ -95,6 +95,7 @@ public class RooBussiness {
         wmsRooHeader.setOrderType("20");
         wmsRooHeader.setRoStatus("20");
         wmsRooHeader.setCreateUser(userName);
+        wmsRooHeader.setCompanyId(companyId);
         wmsRooHeader.setCreateTime(DateUtils.nowWithUTC());
         BigDecimal receQty = BigDecimal.ZERO;
         List<Long> categoryIds = new ArrayList<>();
@@ -147,12 +148,14 @@ public class RooBussiness {
                 wmsIvAttributebatch.setIabDocumentId(rooLine.getRoId());
                 wmsIvAttributebatch.setIabDocumentlineId(rooLine.getRolId());
                 wmsIvAttributebatch.setCompanyId(wmsRooHeader.getCompanyId());
+                wmsIvAttributebatch.setSupplierId(wmsRooHeader.getSupplierId());
                 wmsIvAttributebatch.setCreateUser(accountId);
                 wmsIvAttributebatch.setCreateTime(DateUtils.nowWithUTC());
                 // 根据产品id获取产品详情对象
                 ProductDetailResponse productResponse = productDetailResponseMap.get(rooLine.getProductId());
                 if (null != productResponse) {
                     wmsIvAttributebatch.setProductId(productResponse.getProductId());
+                    wmsIvAttributebatch.setProductNo(productResponse.getProductNo());
                     wmsIvAttributebatch.setProductName(productResponse.getProductName());
                     wmsIvAttributebatch.setProductNameLocal(productResponse.getProductNameLocal());
                     wmsIvAttributebatch.setProductCategoryId(productResponse.getProductCategoryId());
@@ -182,7 +185,7 @@ public class RooBussiness {
             }
         }
         wmsRooHeader.setTotalQty(receQty);
-        RooHeaderBussinessResponse response = new RooHeaderBussinessResponse();
+        RooHeaderBusinessResponse response = new RooHeaderBusinessResponse();
         // 获取唯一锁标识
         String roHeadLockKey = String.valueOf(wmsRooHeader.getRoId());
         Object roHeadLockValue = tryLock(roHeadLockKey);
@@ -262,7 +265,7 @@ public class RooBussiness {
      * @return
      */
     @Transactional(rollbackFor = Exception.class)
-    public RooHeaderBussinessResponse revokeRooHeader(RooHeaderBussinessRequest request) {
+    public RooHeaderBusinessResponse revokeRooHeader(RooHeaderBusinessRequest request) {
         WmsRooHeader wmsRooHeader = wmsRooHeaderService.selectByPrimaryKey(request.getRooId());
         if (Objects.isNull(wmsRooHeader)) {
             ErrorCode.ROO_NOT_EXIST_4001.throwError();
@@ -336,7 +339,7 @@ public class RooBussiness {
         } else {
             ErrorCode.ROO_REVOKE_ERROR_4003.throwError();
         }
-        RooHeaderBussinessResponse response = new RooHeaderBussinessResponse();
+        RooHeaderBusinessResponse response = new RooHeaderBusinessResponse();
         response.setIsSuccess(Boolean.TRUE);
         return response;
     }
@@ -347,12 +350,12 @@ public class RooBussiness {
      * @param request
      * @return
      */
-    public RooHeaderBussinessResponse rooHeaderDetail(RooHeaderBussinessRequest request) {
+    public RooHeaderBusinessResponse rooHeaderDetail(RooHeaderBusinessRequest request) {
         RooHeaderResponseVo rooHeaderResponseVo = wmsRooHeaderService.selectRooHeaderDetail(request.getId());
         if (Objects.isNull(rooHeaderResponseVo)) {
             ErrorCode.ROO_NOT_EXIST_4001.throwError();
         }
-        RooHeaderBussinessResponse response = DataConvertUtil.parseDataAsObject(rooHeaderResponseVo, RooHeaderBussinessResponse.class);
+        RooHeaderBusinessResponse response = DataConvertUtil.parseDataAsObject(rooHeaderResponseVo, RooHeaderBusinessResponse.class);
         List<RooLineResponseVo> wmsRooLines = wmsRooLineService.findAll(request.getId());
         if (StringUtils.isNotNull(wmsRooLines) && !wmsRooLines.isEmpty()) {
             response.setRooLines(wmsRooLines);

@@ -7,6 +7,8 @@
             <result column="company_id" jdbcType="BIGINT" property="companyId"/>
             <result column="warehouse_id" jdbcType="BIGINT" property="warehouseId"/>
             <result column="warehouse_code" jdbcType="VARCHAR" property="warehouseCode"/>
+            <result column="supplier_id" jdbcType="BIGINT" property="supplierId"/>
+            <result column="product_no" jdbcType="VARCHAR" property="productNo"/>
             <result column="product_name" jdbcType="VARCHAR" property="productName"/>
             <result column="product_name_local" jdbcType="VARCHAR" property="productNameLocal"/>
             <result column="product_barcode" jdbcType="VARCHAR" property="productBarcode"/>
@@ -51,12 +53,12 @@
     </resultMap>
 
     <sql id="Base_Column_List">
-        iab_id,product_id,company_id,warehouse_id,warehouse_code,product_name,product_name_local,product_barcode,product_upc_code,batch_no,product_category_id,spec_type,weight,product_length,product_width,product_height,vol,stock_unit,product_color,product_size,price,texture,image_path,mid_bag_rate,mid_bag_weight,mid_bag_length,mid_bag_width,mid_bag_height,mid_bag_vol,mid_bag_barcode,big_bag_rate,big_bag_weight,big_bag_length,big_bag_width,big_bag_height,big_bag_vol,big_bag_barcode,product_date,effective_date,qs_code,ap_code,document_code,iab_document_id,iab_documentline_id,create_user,create_time
+        iab_id,product_id,company_id,warehouse_id,warehouse_code,supplier_id,product_no,product_name,product_name_local,product_barcode,product_upc_code,batch_no,product_category_id,spec_type,weight,product_length,product_width,product_height,vol,stock_unit,product_color,product_size,price,texture,image_path,mid_bag_rate,mid_bag_weight,mid_bag_length,mid_bag_width,mid_bag_height,mid_bag_vol,mid_bag_barcode,big_bag_rate,big_bag_weight,big_bag_length,big_bag_width,big_bag_height,big_bag_vol,big_bag_barcode,product_date,effective_date,qs_code,ap_code,document_code,iab_document_id,iab_documentline_id,create_user,create_time
     </sql>
 
         <insert id="insert">
-            insert into wms_iv_attributebatch (iab_id,product_id,company_id,warehouse_id,warehouse_code,product_name,product_name_local,product_barcode,product_upc_code,batch_no,product_category_id,spec_type,weight,product_length,product_width,product_height,vol,stock_unit,product_color,product_size,price,texture,image_path,mid_bag_rate,mid_bag_weight,mid_bag_length,mid_bag_width,mid_bag_height,mid_bag_vol,mid_bag_barcode,big_bag_rate,big_bag_weight,big_bag_length,big_bag_width,big_bag_height,big_bag_vol,big_bag_barcode,product_date,effective_date,qs_code,ap_code,document_code,iab_document_id,iab_documentline_id,create_user,create_time)
-            values (#{id,jdbcType=BIGINT},#{productId,jdbcType=BIGINT},#{companyId,jdbcType=BIGINT},#{warehouseId,jdbcType=BIGINT},#{warehouseCode,jdbcType=VARCHAR},#{productName,jdbcType=VARCHAR},#{productNameLocal,jdbcType=VARCHAR},#{productBarcode,jdbcType=VARCHAR},#{productUpcCode,jdbcType=VARCHAR},#{batchNo,jdbcType=VARCHAR},#{productCategoryId,jdbcType=BIGINT},#{specType,jdbcType=VARCHAR},#{weight,jdbcType=DECIMAL},#{productLength,jdbcType=DECIMAL},#{productWidth,jdbcType=DECIMAL},#{productHeight,jdbcType=DECIMAL},#{vol,jdbcType=DECIMAL},#{stockUnit,jdbcType=BIGINT},#{productColor,jdbcType=VARCHAR},#{productSize,jdbcType=VARCHAR},#{price,jdbcType=DECIMAL},#{texture,jdbcType=VARCHAR},#{imagePath,jdbcType=VARCHAR},#{midBagRate,jdbcType=INTEGER},#{midBagWeight,jdbcType=DECIMAL},#{midBagLength,jdbcType=DECIMAL},#{midBagWidth,jdbcType=DECIMAL},#{midBagHeight,jdbcType=DECIMAL},#{midBagVol,jdbcType=DECIMAL},#{midBagBarcode,jdbcType=VARCHAR},#{bigBagRate,jdbcType=INTEGER},#{bigBagWeight,jdbcType=DECIMAL},#{bigBagLength,jdbcType=DECIMAL},#{bigBagWidth,jdbcType=DECIMAL},#{bigBagHeight,jdbcType=DECIMAL},#{bigBagVol,jdbcType=DECIMAL},#{bigBagBarcode,jdbcType=VARCHAR},#{productDate,jdbcType=TIMESTAMP},#{effectiveDate,jdbcType=TIMESTAMP},#{qsCode,jdbcType=VARCHAR},#{apCode,jdbcType=VARCHAR},#{documentCode,jdbcType=VARCHAR},#{iabDocumentId,jdbcType=BIGINT},#{iabDocumentlineId,jdbcType=BIGINT},#{createUser,jdbcType=BIGINT},#{createTime,jdbcType=TIMESTAMP})
+            insert into wms_iv_attributebatch (iab_id,product_id,company_id,warehouse_id,warehouse_code,supplier_id,product_no,product_name,product_name_local,product_barcode,product_upc_code,batch_no,product_category_id,spec_type,weight,product_length,product_width,product_height,vol,stock_unit,product_color,product_size,price,texture,image_path,mid_bag_rate,mid_bag_weight,mid_bag_length,mid_bag_width,mid_bag_height,mid_bag_vol,mid_bag_barcode,big_bag_rate,big_bag_weight,big_bag_length,big_bag_width,big_bag_height,big_bag_vol,big_bag_barcode,product_date,effective_date,qs_code,ap_code,document_code,iab_document_id,iab_documentline_id,create_user,create_time)
+            values (#{id,jdbcType=BIGINT},#{productId,jdbcType=BIGINT},#{companyId,jdbcType=BIGINT},#{warehouseId,jdbcType=BIGINT},#{warehouseCode,jdbcType=VARCHAR},#{supplierId,jdbcType=BIGINT},#{productNo,jdbcType=VARCHAR},#{productName,jdbcType=VARCHAR},#{productNameLocal,jdbcType=VARCHAR},#{productBarcode,jdbcType=VARCHAR},#{productUpcCode,jdbcType=VARCHAR},#{batchNo,jdbcType=VARCHAR},#{productCategoryId,jdbcType=BIGINT},#{specType,jdbcType=VARCHAR},#{weight,jdbcType=DECIMAL},#{productLength,jdbcType=DECIMAL},#{productWidth,jdbcType=DECIMAL},#{productHeight,jdbcType=DECIMAL},#{vol,jdbcType=DECIMAL},#{stockUnit,jdbcType=BIGINT},#{productColor,jdbcType=VARCHAR},#{productSize,jdbcType=VARCHAR},#{price,jdbcType=DECIMAL},#{texture,jdbcType=VARCHAR},#{imagePath,jdbcType=VARCHAR},#{midBagRate,jdbcType=INTEGER},#{midBagWeight,jdbcType=DECIMAL},#{midBagLength,jdbcType=DECIMAL},#{midBagWidth,jdbcType=DECIMAL},#{midBagHeight,jdbcType=DECIMAL},#{midBagVol,jdbcType=DECIMAL},#{midBagBarcode,jdbcType=VARCHAR},#{bigBagRate,jdbcType=INTEGER},#{bigBagWeight,jdbcType=DECIMAL},#{bigBagLength,jdbcType=DECIMAL},#{bigBagWidth,jdbcType=DECIMAL},#{bigBagHeight,jdbcType=DECIMAL},#{bigBagVol,jdbcType=DECIMAL},#{bigBagBarcode,jdbcType=VARCHAR},#{productDate,jdbcType=TIMESTAMP},#{effectiveDate,jdbcType=TIMESTAMP},#{qsCode,jdbcType=VARCHAR},#{apCode,jdbcType=VARCHAR},#{documentCode,jdbcType=VARCHAR},#{iabDocumentId,jdbcType=BIGINT},#{iabDocumentlineId,jdbcType=BIGINT},#{createUser,jdbcType=BIGINT},#{createTime,jdbcType=TIMESTAMP})
         </insert>
 
         <insert id="insertSelective">
@@ -76,6 +78,12 @@
                     </if>
                     <if test="warehouseCode != null">
                         warehouse_code,
+                    </if>
+                    <if test="supplierId != null">
+                        supplier_id,
+                    </if>
+                    <if test="productNo != null">
+                        product_no,
                     </if>
                     <if test="productName != null">
                         product_name,
@@ -217,6 +225,12 @@
                     <if test="warehouseCode != null">
                         #{warehouseCode,jdbcType=VARCHAR},
                     </if>
+                    <if test="supplierId != null">
+                        #{supplierId,jdbcType=BIGINT},
+                    </if>
+                    <if test="productNo != null">
+                        #{productNo,jdbcType=VARCHAR},
+                    </if>
                     <if test="productName != null">
                         #{productName,jdbcType=VARCHAR},
                     </if>
@@ -344,7 +358,7 @@
         </insert>
 
         <insert id="insertBatch">
-            insert into wms_iv_attributebatch (iab_id,product_id,company_id,warehouse_id,warehouse_code,product_name,product_name_local,product_barcode,product_upc_code,batch_no,product_category_id,spec_type,weight,product_length,product_width,product_height,vol,stock_unit,product_color,product_size,price,texture,image_path,mid_bag_rate,mid_bag_weight,mid_bag_length,mid_bag_width,mid_bag_height,mid_bag_vol,mid_bag_barcode,big_bag_rate,big_bag_weight,big_bag_length,big_bag_width,big_bag_height,big_bag_vol,big_bag_barcode,product_date,effective_date,qs_code,ap_code,document_code,iab_document_id,iab_documentline_id,create_user,create_time) values
+            insert into wms_iv_attributebatch (iab_id,product_id,company_id,warehouse_id,warehouse_code,supplier_id,product_no,product_name,product_name_local,product_barcode,product_upc_code,batch_no,product_category_id,spec_type,weight,product_length,product_width,product_height,vol,stock_unit,product_color,product_size,price,texture,image_path,mid_bag_rate,mid_bag_weight,mid_bag_length,mid_bag_width,mid_bag_height,mid_bag_vol,mid_bag_barcode,big_bag_rate,big_bag_weight,big_bag_length,big_bag_width,big_bag_height,big_bag_vol,big_bag_barcode,product_date,effective_date,qs_code,ap_code,document_code,iab_document_id,iab_documentline_id,create_user,create_time) values
             <foreach collection="list" item="item" separator=",">
                 (
                     #{item.id,jdbcType=BIGINT},
@@ -352,6 +366,8 @@
                     #{item.companyId,jdbcType=BIGINT},
                     #{item.warehouseId,jdbcType=BIGINT},
                     #{item.warehouseCode,jdbcType=VARCHAR},
+                    #{item.supplierId,jdbcType=BIGINT},
+                    #{item.productNo,jdbcType=VARCHAR},
                     #{item.productName,jdbcType=VARCHAR},
                     #{item.productNameLocal,jdbcType=VARCHAR},
                     #{item.productBarcode,jdbcType=VARCHAR},
@@ -416,6 +432,8 @@
                 company_id = #{companyId,jdbcType=BIGINT},
                 warehouse_id = #{warehouseId,jdbcType=BIGINT},
                 warehouse_code = #{warehouseCode,jdbcType=VARCHAR},
+                supplier_id = #{supplierId,jdbcType=BIGINT},
+                product_no = #{productNo,jdbcType=VARCHAR},
                 product_name = #{productName,jdbcType=VARCHAR},
                 product_name_local = #{productNameLocal,jdbcType=VARCHAR},
                 product_barcode = #{productBarcode,jdbcType=VARCHAR},
@@ -475,6 +493,12 @@
                 </if>
                 <if test="warehouseCode != null">
                     warehouse_code = #{warehouseCode,jdbcType=VARCHAR},
+                </if>
+                <if test="supplierId != null">
+                    supplier_id = #{supplierId,jdbcType=BIGINT},
+                </if>
+                <if test="productNo != null">
+                    product_no = #{productNo,jdbcType=VARCHAR},
                 </if>
                 <if test="productName != null">
                     product_name = #{productName,jdbcType=VARCHAR},
@@ -618,6 +642,12 @@
                     </if>
                     <if test="item.warehouseCode != null">
                         warehouse_code = #{item.warehouseCode,jdbcType=VARCHAR},
+                    </if>
+                    <if test="item.supplierId != null">
+                        supplier_id = #{item.supplierId,jdbcType=BIGINT},
+                    </if>
+                    <if test="item.productNo != null">
+                        product_no = #{item.productNo,jdbcType=VARCHAR},
                     </if>
                     <if test="item.productName != null">
                         product_name = #{item.productName,jdbcType=VARCHAR},
@@ -790,6 +820,12 @@
                 <if test="warehouseCode != null">
                     and warehouse_code=#{warehouseCode,jdbcType=VARCHAR}
                 </if>
+                <if test="supplierId != null">
+                    and supplier_id=#{supplierId,jdbcType=BIGINT}
+                </if>
+                <if test="productNo != null">
+                    and product_no=#{productNo,jdbcType=VARCHAR}
+                </if>
                 <if test="productName != null">
                     and product_name=#{productName,jdbcType=VARCHAR}
                 </if>
@@ -935,6 +971,12 @@
                 </if>
                 <if test="warehouseCode != null">
                     and warehouse_code ${warehouseCode}
+                </if>
+                <if test="supplierId != null">
+                    and supplier_id ${supplierId}
+                </if>
+                <if test="productNo != null">
+                    and product_no ${productNo}
                 </if>
                 <if test="productName != null">
                     and product_name ${productName}

@@ -13,4 +13,6 @@ public class RoHeaderPageQueryResponseVo extends WmsRoHeader {
     private String warehouseName;
     /** 供应商名称 */
     private String supplierName;
+    /** 所属人名称 */
+    private String userName;
 }

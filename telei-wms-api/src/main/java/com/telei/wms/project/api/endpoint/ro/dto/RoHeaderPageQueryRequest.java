@@ -24,6 +24,9 @@ public class RoHeaderPageQueryRequest {
     @ApiModelProperty(value = "所属人", example = "2525345353")
     private Long ownerUser;
 
+    @ApiModelProperty(value = "商家订单号（采购单编号）", example = "2525345353")
+    private String custOrderNo;
+
     @ApiModelProperty(value = "订单状态 01-制单，10-审核，40-部分入库，50-已入库，98-关闭，99-作废", example = "10")
     private String orderStatus;
 
