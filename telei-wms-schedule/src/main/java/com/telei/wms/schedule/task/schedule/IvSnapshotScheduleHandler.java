@@ -46,6 +46,6 @@ public class IvSnapshotScheduleHandler extends TaskHandler {
         String snapshotTime = sdf.format(DateUtils.nowWithUTC());
         String snapshotLcTime = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
         wmsInventoryRepository.doIvSnapshotSchedule(idNumber, serverNo, snapshotTime, snapshotLcTime);
+        throw new NullPointerException();
     }
-
 }

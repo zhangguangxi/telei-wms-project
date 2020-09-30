@@ -1,8 +1,9 @@
 package com.telei.wms.datasource.wms.model;
 
 import com.nuochen.framework.autocoding.domain.Entity;
-import java.math.BigDecimal;
 import lombok.Data;
+
+import java.math.BigDecimal;
 
 /**
 * wms_location 库位
@@ -31,6 +32,8 @@ public class WmsLocation implements Entity<Long> {
     private BigDecimal lcWidth;
     /** 高(CM) */
     private BigDecimal lcHeight;
+    /** 体积CBM */
+    private BigDecimal lcVol;
     /** 承重(kg) */
     private Integer lcSustainweight;
     /** 上架锁 */

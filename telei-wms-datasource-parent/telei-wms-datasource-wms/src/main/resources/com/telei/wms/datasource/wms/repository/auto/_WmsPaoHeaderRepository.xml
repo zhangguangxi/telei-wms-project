@@ -25,15 +25,17 @@
             <result column="lastupdate_time" jdbcType="TIMESTAMP" property="lastupdateTime"/>
             <result column="putaway_user" jdbcType="VARCHAR" property="putawayUser"/>
             <result column="putaway_time" jdbcType="TIMESTAMP" property="putawayTime"/>
+            <result column="recv_time" jdbcType="TIMESTAMP" property="recvTime"/>
+            <result column="recv_user" jdbcType="VARCHAR" property="recvUser"/>
     </resultMap>
 
     <sql id="Base_Column_List">
-        pao_id,pao_code,order_type,ro_id,ro_code,roo_id,roo_code,cust_order_no,company_id,warehouse_id,warehouse_code,total_qty,total_weight,total_net_weight,total_vol,putaway_qty,pao_status,create_user,create_time,lastupdate_user,lastupdate_time,putaway_user,putaway_time
+        pao_id,pao_code,order_type,ro_id,ro_code,roo_id,roo_code,cust_order_no,company_id,warehouse_id,warehouse_code,total_qty,total_weight,total_net_weight,total_vol,putaway_qty,pao_status,create_user,create_time,lastupdate_user,lastupdate_time,putaway_user,putaway_time,recv_time,recv_user
     </sql>
 
         <insert id="insert">
-            insert into wms_pao_header (pao_id,pao_code,order_type,ro_id,ro_code,roo_id,roo_code,cust_order_no,company_id,warehouse_id,warehouse_code,total_qty,total_weight,total_net_weight,total_vol,putaway_qty,pao_status,create_user,create_time,lastupdate_user,lastupdate_time,putaway_user,putaway_time)
-            values (#{id,jdbcType=BIGINT},#{paoCode,jdbcType=VARCHAR},#{orderType,jdbcType=VARCHAR},#{roId,jdbcType=BIGINT},#{roCode,jdbcType=VARCHAR},#{rooId,jdbcType=BIGINT},#{rooCode,jdbcType=VARCHAR},#{custOrderNo,jdbcType=VARCHAR},#{companyId,jdbcType=BIGINT},#{warehouseId,jdbcType=BIGINT},#{warehouseCode,jdbcType=VARCHAR},#{totalQty,jdbcType=DECIMAL},#{totalWeight,jdbcType=DECIMAL},#{totalNetWeight,jdbcType=DECIMAL},#{totalVol,jdbcType=DECIMAL},#{putawayQty,jdbcType=DECIMAL},#{paoStatus,jdbcType=VARCHAR},#{createUser,jdbcType=VARCHAR},#{createTime,jdbcType=TIMESTAMP},#{lastupdateUser,jdbcType=VARCHAR},#{lastupdateTime,jdbcType=TIMESTAMP},#{putawayUser,jdbcType=VARCHAR},#{putawayTime,jdbcType=TIMESTAMP})
+            insert into wms_pao_header (pao_id,pao_code,order_type,ro_id,ro_code,roo_id,roo_code,cust_order_no,company_id,warehouse_id,warehouse_code,total_qty,total_weight,total_net_weight,total_vol,putaway_qty,pao_status,create_user,create_time,lastupdate_user,lastupdate_time,putaway_user,putaway_time,recv_time,recv_user)
+            values (#{id,jdbcType=BIGINT},#{paoCode,jdbcType=VARCHAR},#{orderType,jdbcType=VARCHAR},#{roId,jdbcType=BIGINT},#{roCode,jdbcType=VARCHAR},#{rooId,jdbcType=BIGINT},#{rooCode,jdbcType=VARCHAR},#{custOrderNo,jdbcType=VARCHAR},#{companyId,jdbcType=BIGINT},#{warehouseId,jdbcType=BIGINT},#{warehouseCode,jdbcType=VARCHAR},#{totalQty,jdbcType=DECIMAL},#{totalWeight,jdbcType=DECIMAL},#{totalNetWeight,jdbcType=DECIMAL},#{totalVol,jdbcType=DECIMAL},#{putawayQty,jdbcType=DECIMAL},#{paoStatus,jdbcType=VARCHAR},#{createUser,jdbcType=VARCHAR},#{createTime,jdbcType=TIMESTAMP},#{lastupdateUser,jdbcType=VARCHAR},#{lastupdateTime,jdbcType=TIMESTAMP},#{putawayUser,jdbcType=VARCHAR},#{putawayTime,jdbcType=TIMESTAMP},#{recvTime,jdbcType=TIMESTAMP},#{recvUser,jdbcType=VARCHAR})
         </insert>
 
         <insert id="insertSelective">
@@ -106,7 +108,13 @@
                         putaway_user,
                     </if>
                     <if test="putawayTime != null">
-                        putaway_time
+                        putaway_time,
+                    </if>
+                    <if test="recvTime != null">
+                        recv_time,
+                    </if>
+                    <if test="recvUser != null">
+                        recv_user
                     </if>
             </trim>
             <trim prefix="values (" suffix=")" suffixOverrides=",">
@@ -177,13 +185,19 @@
                         #{putawayUser,jdbcType=VARCHAR},
                     </if>
                     <if test="putawayTime != null">
-                        #{putawayTime,jdbcType=TIMESTAMP}
+                        #{putawayTime,jdbcType=TIMESTAMP},
+                    </if>
+                    <if test="recvTime != null">
+                        #{recvTime,jdbcType=TIMESTAMP},
+                    </if>
+                    <if test="recvUser != null">
+                        #{recvUser,jdbcType=VARCHAR}
                     </if>
             </trim>
         </insert>
 
         <insert id="insertBatch">
-            insert into wms_pao_header (pao_id,pao_code,order_type,ro_id,ro_code,roo_id,roo_code,cust_order_no,company_id,warehouse_id,warehouse_code,total_qty,total_weight,total_net_weight,total_vol,putaway_qty,pao_status,create_user,create_time,lastupdate_user,lastupdate_time,putaway_user,putaway_time) values
+            insert into wms_pao_header (pao_id,pao_code,order_type,ro_id,ro_code,roo_id,roo_code,cust_order_no,company_id,warehouse_id,warehouse_code,total_qty,total_weight,total_net_weight,total_vol,putaway_qty,pao_status,create_user,create_time,lastupdate_user,lastupdate_time,putaway_user,putaway_time,recv_time,recv_user) values
             <foreach collection="list" item="item" separator=",">
                 (
                     #{item.id,jdbcType=BIGINT},
@@ -208,7 +222,9 @@
                     #{item.lastupdateUser,jdbcType=VARCHAR},
                     #{item.lastupdateTime,jdbcType=TIMESTAMP},
                     #{item.putawayUser,jdbcType=VARCHAR},
-                    #{item.putawayTime,jdbcType=TIMESTAMP}
+                    #{item.putawayTime,jdbcType=TIMESTAMP},
+                    #{item.recvTime,jdbcType=TIMESTAMP},
+                    #{item.recvUser,jdbcType=VARCHAR}
                 )
             </foreach>
         </insert>
@@ -249,7 +265,9 @@
                 lastupdate_user = #{lastupdateUser,jdbcType=VARCHAR},
                 lastupdate_time = #{lastupdateTime,jdbcType=TIMESTAMP},
                 putaway_user = #{putawayUser,jdbcType=VARCHAR},
-                putaway_time = #{putawayTime,jdbcType=TIMESTAMP}
+                putaway_time = #{putawayTime,jdbcType=TIMESTAMP},
+                recv_time = #{recvTime,jdbcType=TIMESTAMP},
+                recv_user = #{recvUser,jdbcType=VARCHAR}
         </set>
         where pao_id = #{id,jdbcType=BIGINT}
     </update>
@@ -321,7 +339,13 @@
                     putaway_user = #{putawayUser,jdbcType=VARCHAR},
                 </if>
                 <if test="putawayTime != null">
-                    putaway_time = #{putawayTime,jdbcType=TIMESTAMP}
+                    putaway_time = #{putawayTime,jdbcType=TIMESTAMP},
+                </if>
+                <if test="recvTime != null">
+                    recv_time = #{recvTime,jdbcType=TIMESTAMP},
+                </if>
+                <if test="recvUser != null">
+                    recv_user = #{recvUser,jdbcType=VARCHAR}
                 </if>
         </set>
         where pao_id = #{id,jdbcType=BIGINT}
@@ -395,7 +419,13 @@
                         putaway_user = #{item.putawayUser,jdbcType=VARCHAR},
                     </if>
                     <if test="item.putawayTime != null">
-                        putaway_time = #{item.putawayTime,jdbcType=TIMESTAMP}
+                        putaway_time = #{item.putawayTime,jdbcType=TIMESTAMP},
+                    </if>
+                    <if test="item.recvTime != null">
+                        recv_time = #{item.recvTime,jdbcType=TIMESTAMP},
+                    </if>
+                    <if test="item.recvUser != null">
+                        recv_user = #{item.recvUser,jdbcType=VARCHAR}
                     </if>
             </set>
             where pao_id = #{item.id,jdbcType=BIGINT}
@@ -499,6 +529,12 @@
                 <if test="putawayTime != null">
                     and putaway_time=#{putawayTime,jdbcType=TIMESTAMP}
                 </if>
+                <if test="recvTime != null">
+                    and recv_time=#{recvTime,jdbcType=TIMESTAMP}
+                </if>
+                <if test="recvUser != null">
+                    and recv_user=#{recvUser,jdbcType=VARCHAR}
+                </if>
         </where>
     </select>
 
@@ -575,6 +611,12 @@
                 </if>
                 <if test="putawayTime != null">
                     and putaway_time ${putawayTime}
+                </if>
+                <if test="recvTime != null">
+                    and recv_time ${recvTime}
+                </if>
+                <if test="recvUser != null">
+                    and recv_user ${recvUser}
                 </if>
         </where>
         <if test="orderBy != null">

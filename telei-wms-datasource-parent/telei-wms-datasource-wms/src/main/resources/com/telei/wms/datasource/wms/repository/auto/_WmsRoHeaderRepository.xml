@@ -28,6 +28,7 @@
             <result column="recv_all_time" jdbcType="TIMESTAMP" property="recvAllTime"/>
             <result column="putaway_all_time" jdbcType="TIMESTAMP" property="putawayAllTime"/>
             <result column="order_status" jdbcType="VARCHAR" property="orderStatus"/>
+            <result column="had_print_to" jdbcType="VARCHAR" property="hadPrintTo"/>
             <result column="owner_user" jdbcType="BIGINT" property="ownerUser"/>
             <result column="memo" jdbcType="VARCHAR" property="memo"/>
             <result column="logistics_company" jdbcType="VARCHAR" property="logisticsCompany"/>
@@ -43,12 +44,12 @@
     </resultMap>
 
     <sql id="Base_Column_List">
-        ro_id,ro_code,po_id,rp_id,company_id,warehouse_id,warehouse_code,supplier_id,customer_id,cust_order_no,order_type,est_arrive_time,delivery_time,total_weight,total_vol,total_qty,total_amount,currency_id,species_qty,rece_qty,rece_species_qty,putaway_qty,enforcement,recv_all_time,putaway_all_time,order_status,owner_user,memo,logistics_company,tracking_no,supplier_contact_id,supplier_contact_name,supplier_contact_mobile,supplier_contact_address,create_user,create_time,last_update_user,last_update_time
+        ro_id,ro_code,po_id,rp_id,company_id,warehouse_id,warehouse_code,supplier_id,customer_id,cust_order_no,order_type,est_arrive_time,delivery_time,total_weight,total_vol,total_qty,total_amount,currency_id,species_qty,rece_qty,rece_species_qty,putaway_qty,enforcement,recv_all_time,putaway_all_time,order_status,had_print_to,owner_user,memo,logistics_company,tracking_no,supplier_contact_id,supplier_contact_name,supplier_contact_mobile,supplier_contact_address,create_user,create_time,last_update_user,last_update_time
     </sql>
 
         <insert id="insert">
-            insert into wms_ro_header (ro_id,ro_code,po_id,rp_id,company_id,warehouse_id,warehouse_code,supplier_id,customer_id,cust_order_no,order_type,est_arrive_time,delivery_time,total_weight,total_vol,total_qty,total_amount,currency_id,species_qty,rece_qty,rece_species_qty,putaway_qty,enforcement,recv_all_time,putaway_all_time,order_status,owner_user,memo,logistics_company,tracking_no,supplier_contact_id,supplier_contact_name,supplier_contact_mobile,supplier_contact_address,create_user,create_time,last_update_user,last_update_time)
-            values (#{id,jdbcType=BIGINT},#{roCode,jdbcType=VARCHAR},#{poId,jdbcType=BIGINT},#{rpId,jdbcType=BIGINT},#{companyId,jdbcType=BIGINT},#{warehouseId,jdbcType=BIGINT},#{warehouseCode,jdbcType=VARCHAR},#{supplierId,jdbcType=BIGINT},#{customerId,jdbcType=BIGINT},#{custOrderNo,jdbcType=VARCHAR},#{orderType,jdbcType=VARCHAR},#{estArriveTime,jdbcType=TIMESTAMP},#{deliveryTime,jdbcType=TIMESTAMP},#{totalWeight,jdbcType=DECIMAL},#{totalVol,jdbcType=DECIMAL},#{totalQty,jdbcType=DECIMAL},#{totalAmount,jdbcType=DECIMAL},#{currencyId,jdbcType=INTEGER},#{speciesQty,jdbcType=INTEGER},#{receQty,jdbcType=DECIMAL},#{receSpeciesQty,jdbcType=INTEGER},#{putawayQty,jdbcType=DECIMAL},#{enforcement,jdbcType=INTEGER},#{recvAllTime,jdbcType=TIMESTAMP},#{putawayAllTime,jdbcType=TIMESTAMP},#{orderStatus,jdbcType=VARCHAR},#{ownerUser,jdbcType=BIGINT},#{memo,jdbcType=VARCHAR},#{logisticsCompany,jdbcType=VARCHAR},#{trackingNo,jdbcType=VARCHAR},#{supplierContactId,jdbcType=BIGINT},#{supplierContactName,jdbcType=VARCHAR},#{supplierContactMobile,jdbcType=VARCHAR},#{supplierContactAddress,jdbcType=VARCHAR},#{createUser,jdbcType=VARCHAR},#{createTime,jdbcType=TIMESTAMP},#{lastUpdateUser,jdbcType=VARCHAR},#{lastUpdateTime,jdbcType=TIMESTAMP})
+            insert into wms_ro_header (ro_id,ro_code,po_id,rp_id,company_id,warehouse_id,warehouse_code,supplier_id,customer_id,cust_order_no,order_type,est_arrive_time,delivery_time,total_weight,total_vol,total_qty,total_amount,currency_id,species_qty,rece_qty,rece_species_qty,putaway_qty,enforcement,recv_all_time,putaway_all_time,order_status,had_print_to,owner_user,memo,logistics_company,tracking_no,supplier_contact_id,supplier_contact_name,supplier_contact_mobile,supplier_contact_address,create_user,create_time,last_update_user,last_update_time)
+            values (#{id,jdbcType=BIGINT},#{roCode,jdbcType=VARCHAR},#{poId,jdbcType=BIGINT},#{rpId,jdbcType=BIGINT},#{companyId,jdbcType=BIGINT},#{warehouseId,jdbcType=BIGINT},#{warehouseCode,jdbcType=VARCHAR},#{supplierId,jdbcType=BIGINT},#{customerId,jdbcType=BIGINT},#{custOrderNo,jdbcType=VARCHAR},#{orderType,jdbcType=VARCHAR},#{estArriveTime,jdbcType=TIMESTAMP},#{deliveryTime,jdbcType=TIMESTAMP},#{totalWeight,jdbcType=DECIMAL},#{totalVol,jdbcType=DECIMAL},#{totalQty,jdbcType=DECIMAL},#{totalAmount,jdbcType=DECIMAL},#{currencyId,jdbcType=INTEGER},#{speciesQty,jdbcType=INTEGER},#{receQty,jdbcType=DECIMAL},#{receSpeciesQty,jdbcType=INTEGER},#{putawayQty,jdbcType=DECIMAL},#{enforcement,jdbcType=INTEGER},#{recvAllTime,jdbcType=TIMESTAMP},#{putawayAllTime,jdbcType=TIMESTAMP},#{orderStatus,jdbcType=VARCHAR},#{hadPrintTo,jdbcType=VARCHAR},#{ownerUser,jdbcType=BIGINT},#{memo,jdbcType=VARCHAR},#{logisticsCompany,jdbcType=VARCHAR},#{trackingNo,jdbcType=VARCHAR},#{supplierContactId,jdbcType=BIGINT},#{supplierContactName,jdbcType=VARCHAR},#{supplierContactMobile,jdbcType=VARCHAR},#{supplierContactAddress,jdbcType=VARCHAR},#{createUser,jdbcType=VARCHAR},#{createTime,jdbcType=TIMESTAMP},#{lastUpdateUser,jdbcType=VARCHAR},#{lastUpdateTime,jdbcType=TIMESTAMP})
         </insert>
 
         <insert id="insertSelective">
@@ -131,6 +132,9 @@
                     </if>
                     <if test="orderStatus != null">
                         order_status,
+                    </if>
+                    <if test="hadPrintTo != null">
+                        had_print_to,
                     </if>
                     <if test="ownerUser != null">
                         owner_user,
@@ -248,6 +252,9 @@
                     <if test="orderStatus != null">
                         #{orderStatus,jdbcType=VARCHAR},
                     </if>
+                    <if test="hadPrintTo != null">
+                        #{hadPrintTo,jdbcType=VARCHAR},
+                    </if>
                     <if test="ownerUser != null">
                         #{ownerUser,jdbcType=BIGINT},
                     </if>
@@ -288,7 +295,7 @@
         </insert>
 
         <insert id="insertBatch">
-            insert into wms_ro_header (ro_id,ro_code,po_id,rp_id,company_id,warehouse_id,warehouse_code,supplier_id,customer_id,cust_order_no,order_type,est_arrive_time,delivery_time,total_weight,total_vol,total_qty,total_amount,currency_id,species_qty,rece_qty,rece_species_qty,putaway_qty,enforcement,recv_all_time,putaway_all_time,order_status,owner_user,memo,logistics_company,tracking_no,supplier_contact_id,supplier_contact_name,supplier_contact_mobile,supplier_contact_address,create_user,create_time,last_update_user,last_update_time) values
+            insert into wms_ro_header (ro_id,ro_code,po_id,rp_id,company_id,warehouse_id,warehouse_code,supplier_id,customer_id,cust_order_no,order_type,est_arrive_time,delivery_time,total_weight,total_vol,total_qty,total_amount,currency_id,species_qty,rece_qty,rece_species_qty,putaway_qty,enforcement,recv_all_time,putaway_all_time,order_status,had_print_to,owner_user,memo,logistics_company,tracking_no,supplier_contact_id,supplier_contact_name,supplier_contact_mobile,supplier_contact_address,create_user,create_time,last_update_user,last_update_time) values
             <foreach collection="list" item="item" separator=",">
                 (
                     #{item.id,jdbcType=BIGINT},
@@ -317,6 +324,7 @@
                     #{item.recvAllTime,jdbcType=TIMESTAMP},
                     #{item.putawayAllTime,jdbcType=TIMESTAMP},
                     #{item.orderStatus,jdbcType=VARCHAR},
+                    #{item.hadPrintTo,jdbcType=VARCHAR},
                     #{item.ownerUser,jdbcType=BIGINT},
                     #{item.memo,jdbcType=VARCHAR},
                     #{item.logisticsCompany,jdbcType=VARCHAR},
@@ -373,6 +381,7 @@
                 recv_all_time = #{recvAllTime,jdbcType=TIMESTAMP},
                 putaway_all_time = #{putawayAllTime,jdbcType=TIMESTAMP},
                 order_status = #{orderStatus,jdbcType=VARCHAR},
+                had_print_to = #{hadPrintTo,jdbcType=VARCHAR},
                 owner_user = #{ownerUser,jdbcType=BIGINT},
                 memo = #{memo,jdbcType=VARCHAR},
                 logistics_company = #{logisticsCompany,jdbcType=VARCHAR},
@@ -466,6 +475,9 @@
                 </if>
                 <if test="orderStatus != null">
                     order_status = #{orderStatus,jdbcType=VARCHAR},
+                </if>
+                <if test="hadPrintTo != null">
+                    had_print_to = #{hadPrintTo,jdbcType=VARCHAR},
                 </if>
                 <if test="ownerUser != null">
                     owner_user = #{ownerUser,jdbcType=BIGINT},
@@ -585,6 +597,9 @@
                     </if>
                     <if test="item.orderStatus != null">
                         order_status = #{item.orderStatus,jdbcType=VARCHAR},
+                    </if>
+                    <if test="item.hadPrintTo != null">
+                        had_print_to = #{item.hadPrintTo,jdbcType=VARCHAR},
                     </if>
                     <if test="item.ownerUser != null">
                         owner_user = #{item.ownerUser,jdbcType=BIGINT},
@@ -733,6 +748,9 @@
                 <if test="orderStatus != null">
                     and order_status=#{orderStatus,jdbcType=VARCHAR}
                 </if>
+                <if test="hadPrintTo != null">
+                    and had_print_to=#{hadPrintTo,jdbcType=VARCHAR}
+                </if>
                 <if test="ownerUser != null">
                     and owner_user=#{ownerUser,jdbcType=BIGINT}
                 </if>
@@ -854,6 +872,9 @@
                 </if>
                 <if test="orderStatus != null">
                     and order_status ${orderStatus}
+                </if>
+                <if test="hadPrintTo != null">
+                    and had_print_to ${hadPrintTo}
                 </if>
                 <if test="ownerUser != null">
                     and owner_user ${ownerUser}

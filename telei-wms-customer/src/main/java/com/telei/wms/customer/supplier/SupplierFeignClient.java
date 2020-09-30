@@ -18,6 +18,6 @@ public interface SupplierFeignClient {
      * @return
      */
     @PostMapping("internal/011712")
-    ApiResponse getSupplierDetailByName(SupplierRequest request);
+    ApiResponse getSupplierListByName(SupplierRequest request);
 
 }

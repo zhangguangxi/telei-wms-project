@@ -2,6 +2,7 @@ package com.telei.wms.datasource.wms.repository;
 
 import com.nuochen.framework.autocoding.domain.mybatis.BaseRepository;
 import com.telei.wms.datasource.wms.model.WmsInventory;
+import com.telei.wms.datasource.wms.vo.LiftTaskPageQueryResponseVo;
 import com.telei.wms.datasource.wms.vo.WmsInventoryPageQueryResponseVo;
 import com.telei.wms.datasource.wms.vo.WmsInventoryVo;
 import org.apache.ibatis.annotations.Param;
@@ -30,6 +31,14 @@ public interface WmsInventoryRepository extends BaseRepository<WmsInventory, Lon
      * @return
      */
     List<WmsInventoryPageQueryResponseVo> selectCustomPage(Map<String, Object> paramMap);
+
+    /**
+     * 智能升降配置分页查询
+     *
+     * @param paramMap
+     * @return
+     */
+    List<LiftTaskPageQueryResponseVo> liftTaskPageQuery(Map<String, Object> paramMap);
 
     /**
      * 获取库存数

@@ -39,7 +39,7 @@ id-generator:
 #数据同步配置
 id-instantdirective:
   #当前server名称
-  server-name: HANGHZHOU
+  server-name: HANGZHOU
   #当前系统
   system: WMS
 

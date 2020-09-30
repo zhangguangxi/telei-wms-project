@@ -49,7 +49,7 @@
         wrh.last_update_time,
         cw.warehouse_name,
         cs.supplier_name,
-        csa.user_name
+        csa.employee_name user_name
     </sql>
 
     <select id="findAll" resultMap="PageQueryResultMap">
@@ -77,6 +77,12 @@
             </if>
             <if test="orderStatus != null and orderStatus != ''">
                 AND wrh.order_status=#{orderStatus}
+            </if>
+            <if test="companyId != null and companyId != ''">
+                AND wrh.company_id=#{companyId}
+            </if>
+            <if test="hadPrintTo != null and hadPrintTo != ''">
+                AND wrh.had_print_to=#{hadPrintTo}
             </if>
             AND wrh.order_status!='99'
         </where>

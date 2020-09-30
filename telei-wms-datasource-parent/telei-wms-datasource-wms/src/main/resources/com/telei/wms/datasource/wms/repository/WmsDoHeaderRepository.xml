@@ -8,6 +8,31 @@
         <result column="supplier_name" jdbcType="VARCHAR" property="supplierName"/>
     </resultMap>
 
+    <resultMap id="PullReplenishmentResultMap" extends="BaseResultMap" type="com.telei.wms.datasource.wms.vo.PullReplenishmentPageQueryResponseVo">
+        <result column="image_path" jdbcType="VARCHAR" property="imagePath"/>
+        <result column="product_no" jdbcType="VARCHAR" property="productNo"/>
+        <result column="product_name" jdbcType="VARCHAR" property="productName"/>
+        <result column="product_barcode" jdbcType="VARCHAR" property="productBarcode"/>
+        <result column="company_id" jdbcType="BIGINT" property="companyId"/>
+        <result column="product_id" jdbcType="BIGINT" property="productId"/>
+        <result column="brand" jdbcType="VARCHAR" property="brand"/>
+        <result column="big_bag_vol" jdbcType="DECIMAL" property="bigBagVol"/>
+        <result column="big_bag_weight" jdbcType="DECIMAL" property="bigBagWeight"/>
+        <result column="big_bag_qty" jdbcType="DECIMAL" property="bigBagQty"/>
+        <result column="mid_bag_qty" jdbcType="DECIMAL" property="midBagQty"/>
+        <result column="cost_reference" jdbcType="DECIMAL" property="costReference"/>
+        <result column="ship_qty" jdbcType="DECIMAL" property="shipQty"/>
+        <result column="ship_vol" jdbcType="DECIMAL" property="shipVol"/>
+        <result column="ship_weight" jdbcType="DECIMAL" property="shipWeight"/>
+        <result column="ship_big_qty" jdbcType="DECIMAL" property="shipBigQty"/>
+        <result column="sum_vol" jdbcType="DECIMAL" property="sumVol"/>
+        <result column="sum_weight" jdbcType="DECIMAL" property="sumWeight"/>
+        <result column="supplier_name" jdbcType="VARCHAR" property="supplierName"/>
+        <result column="supplier_id" jdbcType="BIGINT" property="supplierId"/>
+        <result column="internal_supplier" jdbcType="VARCHAR" property="internalSupplier"/>
+        <result column="category_name" jdbcType="VARCHAR" property="categoryName"/>
+    </resultMap>
+
     <sql id="Page_Query_Column_List">
         do.doh_id,
         do.doh_code,
@@ -164,6 +189,72 @@
         <if test="orderBy != null">
             order by ${orderBy}
         </if>
+    </select>
+
+    <select id="pullReplenishmentPageQuery" resultMap="PullReplenishmentResultMap">
+        SELECT
+            p.image_path,
+            p.product_no,
+            p.product_id,
+            p.product_name,
+            p.product_barcode,
+            p.brand,
+            p.big_bag_vol,
+            p.big_bag_weight,
+            p.big_bag_qty,
+            p.mid_bag_qty,
+            p.cost_reference,
+            SUM(dl.ship_qty) ship_qty,
+            SUM(dl.ship_vol) ship_vol,
+            SUM(dl.ship_weight) ship_weight,
+            ROUND(SUM(dl.ship_qty)/p.big_bag_qty,0) ship_big_qty,
+            ROUND(SUM(dl.ship_qty)/p.big_bag_qty,4)*p.big_bag_vol sum_vol,
+            ROUND(SUM(dl.ship_qty)/p.big_bag_qty,4)*p.big_bag_weight sum_weight,
+            su.supplier_name,
+            su.supplier_id,
+            su.internal_supplier,
+            pc.category_name
+        FROM wms_do_header d
+        JOIN wms_do_line dl ON dl.doh_id=d.doh_id
+        JOIN cdm.cdm_product p ON p.company_id = d.company_id AND p.product_id = dl.product_id
+        JOIN (
+            SELECT MAX(ps.ps_id),ps.company_id,ps.product_id,s.supplier_name,s.supplier_id,s.internal_supplier
+            FROM cdm.cdm_product_supplier ps
+            LEFT JOIN cdm.cdm_supplier s ON ps.supplier_id =s.supplier_id
+            WHERE ps.company_id ${companyId}
+            GROUP BY ps.company_id, ps.product_id
+        ) su ON su.company_id = p.company_id AND su.product_id = p.product_id
+        JOIN cdm.cdm_product_category pc ON pc.category_id = p.product_category_id
+        <where>
+            <if test="companyId != null">
+                and d.company_id ${companyId}
+            </if>
+            <if test="warehouseId != null">
+                and d.warehouse_id ${warehouseId}
+            </if>
+            <if test="shippingTime != null">
+                and d.shipping_time ${shippingTime}
+            </if>
+            <if test="productName != null">
+                and p.product_name ${productName}
+            </if>
+            <if test="productNo != null">
+                and p.product_no ${productNo}
+            </if>
+            <if test="productBarcode != null">
+                and p.product_barcode ${productBarcode}
+            </if>
+            <if test="supplierName != null">
+                and su.supplier_name ${supplierName}
+            </if>
+            <if test="pCategoryIds != null">
+                and pc.category_id ${pCategoryIds}
+            </if>
+        </where>
+        <if test="orderBy != null">
+            order by ${orderBy}
+        </if>
+        GROUP BY p.company_id, p.product_id
     </select>
 
 </mapper>

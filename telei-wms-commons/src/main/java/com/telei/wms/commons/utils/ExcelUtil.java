@@ -7,6 +7,7 @@ import com.telei.wms.commons.annotation.Excels;
 import com.telei.wms.commons.utils.text.Convert;
 import org.apache.poi.hssf.usermodel.HSSFDateUtil;
 import org.apache.poi.ss.usermodel.*;
+import org.apache.poi.ss.util.CellRangeAddress;
 import org.apache.poi.ss.util.CellRangeAddressList;
 import org.apache.poi.xssf.streaming.SXSSFWorkbook;
 import org.apache.poi.xssf.usermodel.XSSFDataValidation;
@@ -35,55 +36,125 @@ import java.util.*;
  * @author gongrp
  */
 public class ExcelUtil<T> {
-    private static final Logger log = LoggerFactory.getLogger(ExcelUtil.class);
-
     /**
      * Excel sheet最大行数，默认65536
      */
     public static final int sheetSize = 65536;
-
+    private static final Logger log = LoggerFactory.getLogger(ExcelUtil.class);
+    /**
+     * 实体对象
+     */
+    public Class<T> clazz;
     /**
      * 工作表名称
      */
     private String sheetName;
-
     /**
      * 导出类型（EXPORT:导出数据；IMPORT：导入模板）
      */
     private Type type;
-
     /**
      * 工作薄对象
      */
     private Workbook wb;
-
     /**
      * 工作表对象
      */
     private Sheet sheet;
-
     /**
      * 样式列表
      */
     private Map<String, CellStyle> styles;
-
     /**
      * 导入导出数据列表
      */
     private List<T> list;
-
     /**
      * 注解列表
      */
     private List<Object[]> fields;
 
-    /**
-     * 实体对象
-     */
-    public Class<T> clazz;
-
     public ExcelUtil(Class<T> clazz) {
         this.clazz = clazz;
+    }
+
+    /**
+     * 解析导出值 0=男,1=女,2=未知
+     *
+     * @param propertyValue 参数值
+     * @param converterExp  翻译注解
+     * @return 解析后值
+     * @throws Exception
+     */
+    public static String convertByExp(String propertyValue, String converterExp) throws Exception {
+        try {
+            String[] convertSource = converterExp.split(",");
+            for (String item : convertSource) {
+                String[] itemArray = item.split("=");
+                if (itemArray[0].equals(propertyValue)) {
+                    return itemArray[1];
+                }
+            }
+        } catch (Exception e) {
+            throw e;
+        }
+        return propertyValue;
+    }
+
+    /**
+     * 反向解析值 男=0,女=1,未知=2
+     *
+     * @param propertyValue 参数值
+     * @param converterExp  翻译注解
+     * @return 解析后值
+     * @throws Exception
+     */
+    public static String reverseByExp(String propertyValue, String converterExp) throws Exception {
+        try {
+            String[] convertSource = converterExp.split(",");
+            for (String item : convertSource) {
+                String[] itemArray = item.split("=");
+                if (itemArray[1].equals(propertyValue)) {
+                    return itemArray[0];
+                }
+            }
+        } catch (Exception e) {
+            throw e;
+        }
+        return propertyValue;
+    }
+
+    /**
+     * 下载文件名重新编码
+     *
+     * @param request  请求对象
+     * @param fileName 文件名
+     * @return 编码后的文件名
+     */
+    public static String setFileDownloadHeader(HttpServletRequest request, String fileName)
+            throws UnsupportedEncodingException {
+        final String agent = request.getHeader("USER-AGENT");
+        String filename = fileName;
+        if (agent != null) {
+            if ((agent.toLowerCase().indexOf("msie") > 0 || agent.toLowerCase().indexOf("trident") > 0)) {
+                // IE浏览器
+                filename = URLEncoder.encode(filename, "utf-8");
+                filename = filename.replace("+", " ");
+            } else if (agent.toLowerCase().indexOf("firefox") > 0) {
+                // 火狐浏览器
+                filename = new String(fileName.getBytes("GB2312"), StandardCharsets.ISO_8859_1);
+            } else if (agent.toLowerCase().indexOf("safari") > 0) {
+                // safari浏览器
+                filename = new String(fileName.getBytes(StandardCharsets.UTF_8), StandardCharsets.ISO_8859_1);
+            } else if (agent.toLowerCase().indexOf("chrome") > 0) {
+                // google浏览器
+                filename = URLEncoder.encode(filename, "utf-8");
+            } else {
+                // 其它浏览器
+                filename = URLEncoder.encode(filename, "utf-8");
+            }
+        }
+        return filename;
     }
 
     public void init(List<T> list, String sheetName, Type type) {
@@ -224,12 +295,18 @@ public class ExcelUtil<T> {
      * 对list数据源将其里面的数据导入到excel表单
      *
      * @param list      导出数据集合
-     * @param sheetName 工作表的名称
+     * @param sheetName 工作表的名称=表格标题
      * @return 结果
      */
     public String exportExcel(List<T> list, String sheetName, HttpServletRequest request) {
+        String[] split = sheetName.split("=");
+        String title = null;
+        sheetName = split[0];
+        if (split.length > 1) {
+            title = split[1];
+        }
         this.init(list, sheetName, Type.EXPORT);
-        return exportExcel(request);
+        return exportExcel(request, title);
     }
 
     /**
@@ -237,24 +314,40 @@ public class ExcelUtil<T> {
      *
      * @return 结果
      */
-    public String exportExcel(HttpServletRequest request) {
+    public String exportExcel(HttpServletRequest request, String title) {
         OutputStream out = null;
         try {
             // 取出一共有多少个sheet.
             double sheetNo = Math.ceil(list.size() / sheetSize);
             for (int index = 0; index <= sheetNo; index++) {
                 createSheet(sheetNo, index);
-
-                // 产生一行
-                Row row = sheet.createRow(0);
+                int number = 0;
+                //设置标题
+                if (StringUtils.isNoneBlank(title)) {
+                    // 产生一行
+                    Row row = sheet.createRow(0);
+                    Cell cell = row.createCell(0);
+                    cell.setCellValue(title);
+                    CellStyle cellStyle = wb.createCellStyle();
+                    cellStyle.setVerticalAlignment(VerticalAlignment.CENTER);
+                    cellStyle.setAlignment(HorizontalAlignment.LEFT);
+                    Font font = wb.createFont();
+                    font.setBold(true);
+                    font.setFontHeight((short) 400);
+                    cellStyle.setFont(font);
+                    cell.setCellStyle(cellStyle);
+                    sheet.addMergedRegionUnsafe(new CellRangeAddress(0, 0, 0, fields.size()-1));
+                    number = 1;
+                }
+                Row row2 = sheet.createRow(number);
                 int column = 0;
                 // 写入各个字段的列头名称
                 for (Object[] os : fields) {
                     Excel excel = (Excel) os[1];
-                    this.createCell(excel, row, column++);
+                    this.createCell(excel, row2, column++);
                 }
                 if (Type.EXPORT.equals(type)) {
-                    fillExcelData(index, row);
+                    fillExcelData(index, row2, number);
                 }
             }
             HttpServletResponse response = ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getResponse();
@@ -291,11 +384,11 @@ public class ExcelUtil<T> {
      * @param index 序号
      * @param row   单元格行
      */
-    public void fillExcelData(int index, Row row) {
+    public void fillExcelData(int index, Row row, int number) {
         int startNo = index * sheetSize;
         int endNo = Math.min(startNo + sheetSize, list.size());
         for (int i = startNo; i < endNo; i++) {
-            row = sheet.createRow(i + 1 - startNo);
+            row = sheet.createRow(i + 1 + number - startNo);
             // 得到导出对象.
             T vo = (T) list.get(i);
             int column = 0;
@@ -491,52 +584,6 @@ public class ExcelUtil<T> {
     }
 
     /**
-     * 解析导出值 0=男,1=女,2=未知
-     *
-     * @param propertyValue 参数值
-     * @param converterExp  翻译注解
-     * @return 解析后值
-     * @throws Exception
-     */
-    public static String convertByExp(String propertyValue, String converterExp) throws Exception {
-        try {
-            String[] convertSource = converterExp.split(",");
-            for (String item : convertSource) {
-                String[] itemArray = item.split("=");
-                if (itemArray[0].equals(propertyValue)) {
-                    return itemArray[1];
-                }
-            }
-        } catch (Exception e) {
-            throw e;
-        }
-        return propertyValue;
-    }
-
-    /**
-     * 反向解析值 男=0,女=1,未知=2
-     *
-     * @param propertyValue 参数值
-     * @param converterExp  翻译注解
-     * @return 解析后值
-     * @throws Exception
-     */
-    public static String reverseByExp(String propertyValue, String converterExp) throws Exception {
-        try {
-            String[] convertSource = converterExp.split(",");
-            for (String item : convertSource) {
-                String[] itemArray = item.split("=");
-                if (itemArray[1].equals(propertyValue)) {
-                    return itemArray[0];
-                }
-            }
-        } catch (Exception e) {
-            throw e;
-        }
-        return propertyValue;
-    }
-
-    /**
      * 获取bean中的属性值
      *
      * @param vo    实体对象
@@ -677,39 +724,6 @@ public class ExcelUtil<T> {
             return val;
         }
         return val;
-    }
-
-    /**
-     * 下载文件名重新编码
-     *
-     * @param request  请求对象
-     * @param fileName 文件名
-     * @return 编码后的文件名
-     */
-    public static String setFileDownloadHeader(HttpServletRequest request, String fileName)
-            throws UnsupportedEncodingException {
-        final String agent = request.getHeader("USER-AGENT");
-        String filename = fileName;
-        if(agent != null){
-            if ((agent.toLowerCase().indexOf("msie") > 0 || agent.toLowerCase().indexOf("trident") > 0)) {
-                // IE浏览器
-                filename = URLEncoder.encode(filename, "utf-8");
-                filename = filename.replace("+", " ");
-            } else if (agent.toLowerCase().indexOf("firefox") > 0) {
-                // 火狐浏览器
-                filename = new String(fileName.getBytes("GB2312"), StandardCharsets.ISO_8859_1);
-            } else if (agent.toLowerCase().indexOf("safari") > 0) {
-                // safari浏览器
-                filename = new String(fileName.getBytes(StandardCharsets.UTF_8), StandardCharsets.ISO_8859_1);
-            } else if (agent.toLowerCase().indexOf("chrome") > 0) {
-                // google浏览器
-                filename = URLEncoder.encode(filename, "utf-8");
-            } else {
-                // 其它浏览器
-                filename = URLEncoder.encode(filename, "utf-8");
-            }
-        }
-        return filename;
     }
 
 }

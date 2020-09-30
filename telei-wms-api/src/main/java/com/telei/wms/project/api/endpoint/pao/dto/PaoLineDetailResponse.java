@@ -69,4 +69,8 @@ public class PaoLineDetailResponse {
     private String placeOfOrigin;
     /** 规格型号 */
     private String specType;
+    /** 中包数量 */
+    private BigDecimal midBagQty;
+    /** 大包数量 */
+    private BigDecimal bigBagQty;
 }

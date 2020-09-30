@@ -11,5 +11,13 @@
         LIMIT 1;
     </select>
 
+    <select id="selectByLcCodes"  resultMap="BaseResultMap">
+        select
+            <include refid="Base_Column_List"/>
+        from wms_location where lc_code in
+        <foreach collection="list" item="item" open="(" separator="," close=")">
+            #{item}
+        </foreach>
+    </select>
 </mapper>
 

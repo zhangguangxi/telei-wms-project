@@ -1,9 +1,10 @@
 package com.telei.wms.datasource.wms.model;
 
 import com.nuochen.framework.autocoding.domain.Entity;
+import lombok.Data;
+
 import java.math.BigDecimal;
 import java.util.Date;
-import lombok.Data;
 
 /**
  * wms_ro_header 入库任务
@@ -54,7 +55,7 @@ public class WmsRoHeader implements Entity<Long> {
     private Integer receSpeciesQty;
     /** 上架数量 */
     private BigDecimal putawayQty;
-    /** 强制收货标记 1-是 0-否 */
+    /** 强制入库标记 1-是 0-否 */
     private Integer enforcement;
     /** 收货完成时间 */
     private Date recvAllTime;
@@ -62,6 +63,8 @@ public class WmsRoHeader implements Entity<Long> {
     private Date putawayAllTime;
     /** 订单状态 01-制单，10-审核，40-部分入库，50-已入库，98-关闭，99-作废 */
     private String orderStatus;
+    /** 0 没有打印过入库任务,1 打印过入库任务 */
+    private String hadPrintTo;
     /** 所属人,存储account_id */
     private Long ownerUser;
     /** 备注 */

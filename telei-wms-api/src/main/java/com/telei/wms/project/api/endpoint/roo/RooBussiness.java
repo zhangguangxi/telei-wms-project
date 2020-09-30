@@ -21,7 +21,10 @@ import com.telei.wms.datasource.wms.service.*;
 import com.telei.wms.datasource.wms.vo.RooHeaderResponseVo;
 import com.telei.wms.datasource.wms.vo.RooLineResponseVo;
 import com.telei.wms.project.api.ErrorCode;
-import com.telei.wms.project.api.endpoint.roo.dto.*;
+import com.telei.wms.project.api.endpoint.roo.dto.RooHeaderBusinessPageQueryRequest;
+import com.telei.wms.project.api.endpoint.roo.dto.RooHeaderBusinessPageQueryResponse;
+import com.telei.wms.project.api.endpoint.roo.dto.RooHeaderBusinessRequest;
+import com.telei.wms.project.api.endpoint.roo.dto.RooHeaderBusinessResponse;
 import com.telei.wms.project.api.utils.DataConvertUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -94,6 +97,8 @@ public class RooBussiness {
         wmsRooHeader.setRooCode(businessNumberResponse.getBusinessNumber());
         wmsRooHeader.setOrderType("20");
         wmsRooHeader.setRoStatus("20");
+        wmsRooHeader.setTmpPutawayQty(BigDecimal.ZERO);
+        wmsRooHeader.setPutawayQty(BigDecimal.ZERO);
         wmsRooHeader.setCreateUser(userName);
         wmsRooHeader.setCompanyId(companyId);
         wmsRooHeader.setCreateTime(DateUtils.nowWithUTC());
@@ -125,8 +130,7 @@ public class RooBussiness {
                 rooLine.setId(idGenerator.getUnique());
                 rooLine.setRooId(rooId);
                 rooLine.setRoolStatus("20");
-                rooLine.setRecvTime(DateUtils.nowWithUTC());
-                rooLine.setRecvUser(userName);
+                rooLine.setTmpPutawayQty(BigDecimal.ZERO);
                 rooLine.setCreateTime(DateUtils.nowWithUTC());
                 rooLine.setCreateUser(userName);
                 rooLine.setIabId(iabId);
@@ -375,16 +379,16 @@ public class RooBussiness {
         if (null != request.getStartTime() && null != request.getEndTime()) {
             conditionsBuilder.between("createTime", request.getStartTime(), request.getEndTime());
         }
-        if (StringUtils.isNotNull(request.getOwnerUser())) {
+        if (StringUtils.isNoneBlank(request.getOwnerUser())) {
             conditionsBuilder.eq("ownerUser", request.getOwnerUser());
         }
-        if (StringUtils.isNotNull(request.getRoCode())) {
+        if (StringUtils.isNoneBlank(request.getRoCode())) {
             conditionsBuilder.eq("roCode", request.getRoCode());
         }
-        if (StringUtils.isNotNull(request.getRooCode())) {
+        if (StringUtils.isNoneBlank(request.getRooCode())) {
             conditionsBuilder.eq("rooCode", request.getRooCode());
         }
-        if (StringUtils.isNotNull(request.getRoStatus())) {
+        if (StringUtils.isNoneBlank(request.getRoStatus())) {
             conditionsBuilder.eq("roStatus", request.getRoStatus());
         }else{
             conditionsBuilder.ne("roStatus", 99);

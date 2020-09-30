@@ -48,6 +48,10 @@ public class RooHeaderDetailResponse {
     private String createUser;
     /** 创建时间 */
     private Date createTime;
+    /** 收货用户 */
+    private String recvUser;
+    /** 收货时间 */
+    private Date recvTime;
 
     /** 仓库名称 */
     private String warehouseName;

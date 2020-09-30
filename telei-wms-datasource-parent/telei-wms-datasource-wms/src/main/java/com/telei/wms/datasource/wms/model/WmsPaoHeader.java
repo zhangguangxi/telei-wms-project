@@ -1,9 +1,10 @@
 package com.telei.wms.datasource.wms.model;
 
 import com.nuochen.framework.autocoding.domain.Entity;
+import lombok.Data;
+
 import java.math.BigDecimal;
 import java.util.Date;
-import lombok.Data;
 
 /**
  * wms_pao_header 上架单
@@ -56,4 +57,8 @@ public class WmsPaoHeader implements Entity<Long> {
     private String putawayUser;
     /** 上架时间 */
     private Date putawayTime;
+    /** 收货时间 */
+    private Date recvTime;
+    /** 收货用户 */
+    private String recvUser;
 }

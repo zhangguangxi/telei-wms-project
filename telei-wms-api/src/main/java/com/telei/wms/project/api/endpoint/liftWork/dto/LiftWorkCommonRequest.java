@@ -5,14 +5,13 @@ import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 
 import java.math.BigDecimal;
-import java.util.Date;
 
 /**
  * wms_lift_work 升降任务
  */
 @Data
 public class LiftWorkCommonRequest {
-    private Long liftId;
+    private Long id;
 
     @ApiModelProperty(value = "仓库id",example = "2",position = 7)
     @Check
@@ -46,11 +45,9 @@ public class LiftWorkCommonRequest {
     private String productBarcode;
 
     @ApiModelProperty(value = "UPC码",example = "12345678",position = 7)
-    @Check
     private String productUpcCode;
 
     @ApiModelProperty(value = "数量",example = "12345678",position = 7)
-    @Check
     private BigDecimal liftQty;
 
     @ApiModelProperty(value = "大包数量",example = "12345678",position = 7)
@@ -71,14 +68,22 @@ public class LiftWorkCommonRequest {
     @Check
     private String prepLcCode;
 
+    @ApiModelProperty(value = "实际库位",example = "12345678",position = 7)
+    private String lcCode;
+
     @ApiModelProperty(value = "操作用户ID",example = "12345678",position = 7)
-    @Check
     private Long operateUserId;
 
     @ApiModelProperty(value = "操作用户",example = "admin",position = 7)
-    @Check
     private String operateUser;
 
     @ApiModelProperty(value = "备注",example = "12345678",position = 7)
     private String memo;
+
+    @ApiModelProperty(value = "升降任务编码",example = "12345678",position = 7)
+    private String liftCode;
+
+    @ApiModelProperty(value = "公司id",example = "12345678",position = 7)
+    private Long companyId;
+
 }

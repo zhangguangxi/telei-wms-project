@@ -1,5 +1,6 @@
 package com.telei.wms.project.api.endpoint.ro;
 
+import com.alibaba.fastjson.JSON;
 import com.nuochen.framework.autocoding.domain.Pagination;
 import com.telei.infrastructure.component.commons.CustomRequestContext;
 import com.telei.infrastructure.component.idgenerator.contract.Id;
@@ -17,6 +18,8 @@ import com.telei.wms.project.api.amqp.producer.WmsOmsRecovicePlanCancelCallbackP
 import com.telei.wms.project.api.endpoint.ro.dto.*;
 import com.telei.wms.project.api.endpoint.wmsIdInstantdirective.WmsIdInstantdirectiveBussiness;
 import com.telei.wms.project.api.utils.DataConvertUtil;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -33,6 +36,8 @@ import static com.telei.infrastructure.component.commons.utils.LockMapUtil.*;
  */
 @Service
 public class RoBussiness {
+
+    private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
     //删除
     private static final String DELETE_STATUS = "99";
@@ -63,12 +68,19 @@ public class RoBussiness {
      */
     @Transactional(rollbackFor = Exception.class)
     public RoCudBaseResponse addRo(RoHeaderAddRequest request) {
+        RoCudBaseResponse response = new RoCudBaseResponse();
+        WmsRoHeader wmsRoHeaderEntity = new WmsRoHeader();
+        wmsRoHeaderEntity.setPoId(request.getPoId());
+        WmsRoHeader wmsRoHeaderIsExist = wmsRoHeaderService.selectOneByEntity(wmsRoHeaderEntity);
+        if (! Objects.isNull(wmsRoHeaderIsExist)) {
+            logger.warn("采购单不能重复生成入库任务，RoHeaderAddRequest：" + JSON.toJSONString(request));
+            return response;
+        }
         WmsRoHeader wmsRoHeader = DataConvertUtil.parseDataAsObject(request, WmsRoHeader.class);
         List<WmsRoLine> wmsRoLines = DataConvertUtil.parseDataAsArray(request.getRoLines(), WmsRoLine.class);
         wmsRoHeader.setCreateTime(DateUtils.nowWithUTC());
         wmsRoHeaderService.insertSelective(wmsRoHeader);
         wmsRoLineService.insertBatch(wmsRoLines);
-        RoCudBaseResponse response = new RoCudBaseResponse();
         return response;
     }
 
@@ -96,9 +108,10 @@ public class RoBussiness {
      * @return
      */
     public RoHeaderPageQueryResponse pageQueryRoHeader(RoHeaderPageQueryRequest request) {
-        RoHeaderPageQueryRequestVo roHeaderPageQueryRequestVo = DataConvertUtil.parseDataAsObject(request, RoHeaderPageQueryRequestVo.class);
+        RoHeaderPageQueryRequestVo requestVo = DataConvertUtil.parseDataAsObject(request, RoHeaderPageQueryRequestVo.class);
+        requestVo.setCompanyId(CustomRequestContext.getUserInfo().getCompanyId());
         Pagination pagination = new Pagination(request.getPageNumber(), request.getPageSize());
-        Pagination page = (Pagination) wmsRoHeaderService.findAll(pagination, roHeaderPageQueryRequestVo);
+        Pagination page = (Pagination) wmsRoHeaderService.findAll(pagination, requestVo);
         RoHeaderPageQueryResponse response = new RoHeaderPageQueryResponse();
         response.setPage(page);
         return response;
@@ -153,6 +166,7 @@ public class RoBussiness {
                     WmsRoHeader updateWmsRoHeader = new WmsRoHeader();
                     updateWmsRoHeader.setId(wmsRoHeader.getId());
                     updateWmsRoHeader.setOrderStatus(DELETE_STATUS);
+                    updateWmsRoHeader.setLastUpdateTime(DateUtils.nowWithUTC());
                     wmsRoHeaderService.updateByPrimaryKey(updateWmsRoHeader);
                     //已撤销状态
                     omsRecovicePlan.setOrderStatus("91");

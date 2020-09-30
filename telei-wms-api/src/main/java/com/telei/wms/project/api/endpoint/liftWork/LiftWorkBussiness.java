@@ -113,7 +113,7 @@ public class LiftWorkBussiness {
     @Transactional(rollbackFor = Exception.class)
     public LiftWorkBusinessResponse updateLiftWork(LiftWorkBusinessRequest request) {
         List<LiftWorkCommonRequest> updateRequestList = request.getUpdateRequestList();
-        List<Long> liftIds = updateRequestList.stream().map(LiftWorkCommonRequest::getLiftId).collect(Collectors.toList());
+        List<Long> liftIds = updateRequestList.stream().map(LiftWorkCommonRequest::getId).collect(Collectors.toList());
         List<WmsLiftWork> liftWorkList = wmsLiftWorkService.selectByPrimaryKeys(liftIds);
         if (liftWorkList.size() <= 0 || liftWorkList.size() != updateRequestList.size()) {
             ErrorCode.LIFT_WORK_NOT_EXIST_4001.throwError();
@@ -159,7 +159,7 @@ public class LiftWorkBussiness {
                 inventory.setLcCode(wmsLiftWork.getSampleLcCode());
                 List<WmsInventory> inventories = wmsInventoryService.selectByEntity(inventory);
                 BigDecimal ivQty = BigDecimal.ZERO;
-                if(StringUtils.isNotNull(inventories) && !inventories.isEmpty()){
+                if (StringUtils.isNotNull(inventories) && !inventories.isEmpty()) {
                     ivQty = inventories.stream().map(WmsInventory::getIvQty).reduce(BigDecimal.ZERO, BigDecimal::add);
                 }
                 // 写入库存调整单
@@ -191,7 +191,7 @@ public class LiftWorkBussiness {
                 inventory.setLcCode(lcCode);
                 List<WmsInventory> inventories = wmsInventoryService.selectByEntity(inventory);
                 BigDecimal ivQty = BigDecimal.ZERO;
-                if(StringUtils.isNotNull(inventories) && !inventories.isEmpty()){
+                if (StringUtils.isNotNull(inventories) && !inventories.isEmpty()) {
                     ivQty = inventories.stream().map(WmsInventory::getIvQty).reduce(BigDecimal.ZERO, BigDecimal::add);
                 }
                 // 写入库存调整单
@@ -201,6 +201,11 @@ public class LiftWorkBussiness {
                 businessRequest.setIvQtyAdjt(wmsLiftWork.getLiftQty());
                 businessRequest.setReason("升降任务-降货处理");
                 inventoryBussiness.adjustInventory(businessRequest, "LIFTDOWN");
+            }
+            if (StringUtils.isNotNull(wmsLiftWork.getBigBagRate())) {
+                BigDecimal[] big = wmsLiftWork.getLiftQty().divideAndRemainder(wmsLiftWork.getBigBagRate());
+                wmsLiftWork.setBigBagQty(big[0]);
+                wmsLiftWork.setBigBagExtraQty(big[1]);
             }
             int count = wmsLiftWorkService.updateByPrimaryKeySelective(wmsLiftWork);
             if (count <= 0) {
@@ -221,25 +226,25 @@ public class LiftWorkBussiness {
         if (null != request.getStartTime() && null != request.getEndTime()) {
             conditionsBuilder.between("createTime", request.getStartTime(), request.getEndTime());
         }
-        if (StringUtils.isNotNull(request.getProductNo())) {
+        if (StringUtils.isNoneBlank(request.getProductNo())) {
             conditionsBuilder.like("productNo", request.getProductNo());
         }
-        if (StringUtils.isNotNull(request.getProductName())) {
+        if (StringUtils.isNoneBlank(request.getProductName())) {
             conditionsBuilder.like("productName", request.getProductName());
         }
-        if (StringUtils.isNotNull(request.getProductBarcode())) {
+        if (StringUtils.isNoneBlank(request.getProductBarcode())) {
             conditionsBuilder.like("productBarcode", request.getProductBarcode());
         }
-        if (StringUtils.isNotNull(request.getSampleLcCode())) {
+        if (StringUtils.isNoneBlank(request.getSampleLcCode())) {
             conditionsBuilder.like("sampleLcCode", request.getSampleLcCode());
         }
-        if (StringUtils.isNotNull(request.getLiftType())) {
+        if (StringUtils.isNoneBlank(request.getLiftType())) {
             conditionsBuilder.eq("liftType", request.getLiftType());
         }
-        if (StringUtils.isNotNull(request.getLiftStatus())) {
+        if (StringUtils.isNoneBlank(request.getLiftStatus())) {
             conditionsBuilder.eq("liftStatus", request.getLiftStatus());
         }
-        if (StringUtils.isNotNull(request.getOperateUser())) {
+        if (StringUtils.isNoneBlank(request.getOperateUser())) {
             conditionsBuilder.like("operateUser", request.getOperateUser());
         }
         conditionsBuilder.eq("companyId", CustomRequestContext.getUserInfo().getCompanyId());

@@ -4,6 +4,7 @@ import lombok.Data;
 
 import java.math.BigDecimal;
 import java.util.Collection;
+import java.util.List;
 
 /**
  * @author gongrp
@@ -32,4 +33,7 @@ public class ProductDetailRequest {
     private String productBarcode;
     /**状态*/
     private Integer status;
+
+    /**条码集合*/
+    private List<String> productBarcodes;
 }

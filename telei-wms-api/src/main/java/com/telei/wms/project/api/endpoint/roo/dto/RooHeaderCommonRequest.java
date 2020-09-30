@@ -5,6 +5,7 @@ import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 
 import java.math.BigDecimal;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -45,6 +46,14 @@ public class RooHeaderCommonRequest {
 
     @ApiModelProperty(value = "备注",example = "2",position = 7)
     private String memo;
+
+    @ApiModelProperty(value = "收货用户",example = "2",position = 7)
+    @Check
+    private String recvUser;
+
+    @ApiModelProperty(value = "收货时间",example = "2020-10-25 10:00:00",position = 7)
+    @Check
+    private Date recvTime;
 
     @ApiModelProperty(value = "新增收货列表",example = "",position = 7)
     @Check

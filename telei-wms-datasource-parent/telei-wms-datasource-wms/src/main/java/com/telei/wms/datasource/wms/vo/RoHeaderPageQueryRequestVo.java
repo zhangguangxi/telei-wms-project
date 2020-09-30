@@ -22,4 +22,8 @@ public class RoHeaderPageQueryRequestVo {
     private String custOrderNo;
     /** 订单状态 01-制单，10-审核，40-部分入库，50-已入库，98-关闭，99-作废 */
     private String orderStatus;
+    /** 公司id */
+    private Long companyId;
+    /** 0 没有打印过入库任务,1 打印过入库任务 */
+    private String hadPrintTo;
 }

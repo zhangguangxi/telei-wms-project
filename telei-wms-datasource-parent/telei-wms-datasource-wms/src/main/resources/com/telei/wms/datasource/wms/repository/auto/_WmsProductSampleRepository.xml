@@ -1,0 +1,242 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.telei.wms.datasource.wms.repository.WmsProductSampleRepository">
+    <resultMap id="BaseResultMap" type="com.telei.wms.datasource.wms.model.WmsProductSample">
+        <id column="ps_id" jdbcType="BIGINT" property="id"/>
+            <result column="warehouse_id" jdbcType="BIGINT" property="warehouseId"/>
+            <result column="warehouse_code" jdbcType="VARCHAR" property="warehouseCode"/>
+            <result column="product_id" jdbcType="BIGINT" property="productId"/>
+            <result column="ceiling_multiple" jdbcType="DECIMAL" property="ceilingMultiple"/>
+            <result column="limit_multiple" jdbcType="DECIMAL" property="limitMultiple"/>
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        ps_id,warehouse_id,warehouse_code,product_id,ceiling_multiple,limit_multiple
+    </sql>
+
+        <insert id="insert">
+            insert into wms_product_sample (ps_id,warehouse_id,warehouse_code,product_id,ceiling_multiple,limit_multiple)
+            values (#{id,jdbcType=BIGINT},#{warehouseId,jdbcType=BIGINT},#{warehouseCode,jdbcType=VARCHAR},#{productId,jdbcType=BIGINT},#{ceilingMultiple,jdbcType=DECIMAL},#{limitMultiple,jdbcType=DECIMAL})
+        </insert>
+
+        <insert id="insertSelective">
+            insert into wms_product_sample
+            <trim prefix="(" suffix=")" suffixOverrides=",">
+                    <if test="id != null">
+                        ps_id,
+                    </if>
+                    <if test="warehouseId != null">
+                        warehouse_id,
+                    </if>
+                    <if test="warehouseCode != null">
+                        warehouse_code,
+                    </if>
+                    <if test="productId != null">
+                        product_id,
+                    </if>
+                    <if test="ceilingMultiple != null">
+                        ceiling_multiple,
+                    </if>
+                    <if test="limitMultiple != null">
+                        limit_multiple
+                    </if>
+            </trim>
+            <trim prefix="values (" suffix=")" suffixOverrides=",">
+                    <if test="id != null">
+                        #{id,jdbcType=BIGINT},
+                    </if>
+                    <if test="warehouseId != null">
+                        #{warehouseId,jdbcType=BIGINT},
+                    </if>
+                    <if test="warehouseCode != null">
+                        #{warehouseCode,jdbcType=VARCHAR},
+                    </if>
+                    <if test="productId != null">
+                        #{productId,jdbcType=BIGINT},
+                    </if>
+                    <if test="ceilingMultiple != null">
+                        #{ceilingMultiple,jdbcType=DECIMAL},
+                    </if>
+                    <if test="limitMultiple != null">
+                        #{limitMultiple,jdbcType=DECIMAL}
+                    </if>
+            </trim>
+        </insert>
+
+        <insert id="insertBatch">
+            insert into wms_product_sample (ps_id,warehouse_id,warehouse_code,product_id,ceiling_multiple,limit_multiple) values
+            <foreach collection="list" item="item" separator=",">
+                (
+                    #{item.id,jdbcType=BIGINT},
+                    #{item.warehouseId,jdbcType=BIGINT},
+                    #{item.warehouseCode,jdbcType=VARCHAR},
+                    #{item.productId,jdbcType=BIGINT},
+                    #{item.ceilingMultiple,jdbcType=DECIMAL},
+                    #{item.limitMultiple,jdbcType=DECIMAL}
+                )
+            </foreach>
+        </insert>
+
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+        delete from wms_product_sample
+        where ps_id = #{id,jdbcType=BIGINT}
+    </delete>
+
+    <delete id="deleteByPrimaryKeys">
+        delete from wms_product_sample where ps_id in
+        <foreach close=")" collection="list" item="item" open="(" separator=",">
+            #{item}
+        </foreach>
+    </delete>
+
+    <update id="updateByPrimaryKey">
+        update wms_product_sample
+        <set>
+                warehouse_id = #{warehouseId,jdbcType=BIGINT},
+                warehouse_code = #{warehouseCode,jdbcType=VARCHAR},
+                product_id = #{productId,jdbcType=BIGINT},
+                ceiling_multiple = #{ceilingMultiple,jdbcType=DECIMAL},
+                limit_multiple = #{limitMultiple,jdbcType=DECIMAL}
+        </set>
+        where ps_id = #{id,jdbcType=BIGINT}
+    </update>
+
+    <update id="updateByPrimaryKeySelective">
+        update wms_product_sample
+        <set>
+                <if test="warehouseId != null">
+                    warehouse_id = #{warehouseId,jdbcType=BIGINT},
+                </if>
+                <if test="warehouseCode != null">
+                    warehouse_code = #{warehouseCode,jdbcType=VARCHAR},
+                </if>
+                <if test="productId != null">
+                    product_id = #{productId,jdbcType=BIGINT},
+                </if>
+                <if test="ceilingMultiple != null">
+                    ceiling_multiple = #{ceilingMultiple,jdbcType=DECIMAL},
+                </if>
+                <if test="limitMultiple != null">
+                    limit_multiple = #{limitMultiple,jdbcType=DECIMAL}
+                </if>
+        </set>
+        where ps_id = #{id,jdbcType=BIGINT}
+    </update>
+
+    <update id="updateBatch">
+        <foreach close="" collection="list" item="item" open="" separator=";">
+            update wms_product_sample
+            <set>
+                    <if test="item.warehouseId != null">
+                        warehouse_id = #{item.warehouseId,jdbcType=BIGINT},
+                    </if>
+                    <if test="item.warehouseCode != null">
+                        warehouse_code = #{item.warehouseCode,jdbcType=VARCHAR},
+                    </if>
+                    <if test="item.productId != null">
+                        product_id = #{item.productId,jdbcType=BIGINT},
+                    </if>
+                    <if test="item.ceilingMultiple != null">
+                        ceiling_multiple = #{item.ceilingMultiple,jdbcType=DECIMAL},
+                    </if>
+                    <if test="item.limitMultiple != null">
+                        limit_multiple = #{item.limitMultiple,jdbcType=DECIMAL}
+                    </if>
+            </set>
+            where ps_id = #{item.id,jdbcType=BIGINT}
+        </foreach>
+    </update>
+
+    <select id="selectByPrimaryKey" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List" />
+        from wms_product_sample
+        where ps_id = #{id,jdbcType=BIGINT}
+    </select>
+
+    <select id="selectByPrimaryKeyWithLock" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List" />
+        from wms_product_sample
+        where ps_id = #{id,jdbcType=BIGINT} for update
+    </select>
+
+    <select id="selectByPrimaryKeys" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List" />
+        from wms_product_sample where ps_id in
+        <foreach close=")" collection="list" item="item" open="(" separator=",">
+            #{item}
+        </foreach>
+    </select>
+
+    <select id="selectByEntity" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from wms_product_sample
+        <where>
+                <if test="id != null">
+                    and ps_id=#{id,jdbcType=BIGINT}
+                </if>
+                <if test="warehouseId != null">
+                    and warehouse_id=#{warehouseId,jdbcType=BIGINT}
+                </if>
+                <if test="warehouseCode != null">
+                    and warehouse_code=#{warehouseCode,jdbcType=VARCHAR}
+                </if>
+                <if test="productId != null">
+                    and product_id=#{productId,jdbcType=BIGINT}
+                </if>
+                <if test="ceilingMultiple != null">
+                    and ceiling_multiple=#{ceilingMultiple,jdbcType=DECIMAL}
+                </if>
+                <if test="limitMultiple != null">
+                    and limit_multiple=#{limitMultiple,jdbcType=DECIMAL}
+                </if>
+        </where>
+    </select>
+
+    <select id="selectByConditions" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from wms_product_sample
+        <where>
+                <if test="id != null">
+                    and ps_id ${id}
+                </if>
+                <if test="warehouseId != null">
+                    and warehouse_id ${warehouseId}
+                </if>
+                <if test="warehouseCode != null">
+                    and warehouse_code ${warehouseCode}
+                </if>
+                <if test="productId != null">
+                    and product_id ${productId}
+                </if>
+                <if test="ceilingMultiple != null">
+                    and ceiling_multiple ${ceilingMultiple}
+                </if>
+                <if test="limitMultiple != null">
+                    and limit_multiple ${limitMultiple}
+                </if>
+        </where>
+        <if test="orderBy != null">
+            order by ${orderBy}
+        </if>
+    </select>
+
+    <select id="selectAll" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from wms_product_sample
+    </select>
+
+    <select id="count" resultType="java.lang.Long">
+        select count(*) from wms_product_sample
+    </select>
+
+    <select id="selectByFunction">
+        select ${function}(${column}) from wms_product_sample
+    </select>
+
+</mapper>

@@ -18,4 +18,6 @@ public class PloHeaderPageQueryRequestVo {
     private Long warehouseId;
     /** 拣货单状态  01-制单，20-部分拣货，30-已拣货，98-关闭 */
     private String orderStatus;
+    /** 公司id */
+    private Long companyId;
 }

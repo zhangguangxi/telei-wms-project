@@ -20,4 +20,6 @@ public class PaoHeaderPageQueryRequestVo {
     private String putawayUser;
     /** 状态  01-制单，10-部分上架，20-已上架，98-关闭，99-作废 */
     private String paoStatus;
+    /** 公司id */
+    private Long companyId;
 }

@@ -21,5 +21,4 @@ public class IvSnapshotSchedule {
     public void doIvSnapshotSchedule(){
         ivSnapshotScheduleHandler.run();
     }
-
 }

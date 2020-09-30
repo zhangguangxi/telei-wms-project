@@ -14,6 +14,7 @@
         <result column="lc_length" jdbcType="DECIMAL" property="lcLength"/>
         <result column="lc_width" jdbcType="DECIMAL" property="lcWidth"/>
         <result column="lc_height" jdbcType="DECIMAL" property="lcHeight"/>
+        <result column="lc_vol" jdbcType="DECIMAL" property="lcVol"/>
         <result column="lc_sustainweight" jdbcType="INTEGER" property="lcSustainweight"/>
         <result column="lc_putawaylock" jdbcType="VARCHAR" property="lcPutawaylock"/>
         <result column="lc_pickinglock" jdbcType="VARCHAR" property="lcPickinglock"/>
@@ -21,12 +22,12 @@
     </resultMap>
 
     <sql id="Base_Column_List">
-        location_id,lc_code,warehouse_id,warehouse_code,lc_aisle,lc_x,lc_y,lc_z,lc_type,lc_length,lc_width,lc_height,lc_sustainweight,lc_putawaylock,lc_pickinglock,memo
+        location_id,lc_code,warehouse_id,warehouse_code,lc_aisle,lc_x,lc_y,lc_z,lc_type,lc_length,lc_width,lc_height,lc_vol,lc_sustainweight,lc_putawaylock,lc_pickinglock,memo
     </sql>
 
     <insert id="insert">
-        insert into wms_location (location_id,lc_code,warehouse_id,warehouse_code,lc_aisle,lc_x,lc_y,lc_z,lc_type,lc_length,lc_width,lc_height,lc_sustainweight,lc_putawaylock,lc_pickinglock,memo)
-        values (#{locationId,jdbcType=BIGINT},#{lcCode,jdbcType=VARCHAR},#{warehouseId,jdbcType=BIGINT},#{warehouseCode,jdbcType=VARCHAR},#{lcAisle,jdbcType=VARCHAR},#{lcX,jdbcType=VARCHAR},#{lcY,jdbcType=VARCHAR},#{lcZ,jdbcType=VARCHAR},#{lcType,jdbcType=VARCHAR},#{lcLength,jdbcType=DECIMAL},#{lcWidth,jdbcType=DECIMAL},#{lcHeight,jdbcType=DECIMAL},#{lcSustainweight,jdbcType=INTEGER},#{lcPutawaylock,jdbcType=VARCHAR},#{lcPickinglock,jdbcType=VARCHAR},#{memo,jdbcType=VARCHAR})
+        insert into wms_location (location_id,lc_code,warehouse_id,warehouse_code,lc_aisle,lc_x,lc_y,lc_z,lc_type,lc_length,lc_width,lc_height,lc_vol,lc_sustainweight,lc_putawaylock,lc_pickinglock,memo)
+        values (#{locationId,jdbcType=BIGINT},#{lcCode,jdbcType=VARCHAR},#{warehouseId,jdbcType=BIGINT},#{warehouseCode,jdbcType=VARCHAR},#{lcAisle,jdbcType=VARCHAR},#{lcX,jdbcType=VARCHAR},#{lcY,jdbcType=VARCHAR},#{lcZ,jdbcType=VARCHAR},#{lcType,jdbcType=VARCHAR},#{lcLength,jdbcType=DECIMAL},#{lcWidth,jdbcType=DECIMAL},#{lcHeight,jdbcType=DECIMAL},#{lcVol,jdbcType=DECIMAL},#{lcSustainweight,jdbcType=INTEGER},#{lcPutawaylock,jdbcType=VARCHAR},#{lcPickinglock,jdbcType=VARCHAR},#{memo,jdbcType=VARCHAR})
     </insert>
 
     <insert id="insertSelective">
@@ -67,6 +68,9 @@
             </if>
             <if test="lcHeight != null">
                 lc_height,
+            </if>
+            <if test="lcVol != null">
+                lc_vol,
             </if>
             <if test="lcSustainweight != null">
                 lc_sustainweight,
@@ -118,6 +122,9 @@
             <if test="lcHeight != null">
                 #{lcHeight,jdbcType=DECIMAL},
             </if>
+            <if test="lcVol != null">
+                #{lcVol,jdbcType=DECIMAL},
+            </if>
             <if test="lcSustainweight != null">
                 #{lcSustainweight,jdbcType=INTEGER},
             </if>
@@ -134,7 +141,7 @@
     </insert>
 
     <insert id="insertBatch">
-        insert into wms_location (location_id,lc_code,warehouse_id,warehouse_code,lc_aisle,lc_x,lc_y,lc_z,lc_type,lc_length,lc_width,lc_height,lc_sustainweight,lc_putawaylock,lc_pickinglock,memo) values
+        insert into wms_location (location_id,lc_code,warehouse_id,warehouse_code,lc_aisle,lc_x,lc_y,lc_z,lc_type,lc_length,lc_width,lc_height,lc_vol,lc_sustainweight,lc_putawaylock,lc_pickinglock,memo) values
         <foreach collection="list" item="item" separator=",">
             (
             #{item.locationId,jdbcType=BIGINT},
@@ -149,6 +156,7 @@
             #{item.lcLength,jdbcType=DECIMAL},
             #{item.lcWidth,jdbcType=DECIMAL},
             #{item.lcHeight,jdbcType=DECIMAL},
+            #{item.lcVol,jdbcType=DECIMAL},
             #{item.lcSustainweight,jdbcType=INTEGER},
             #{item.lcPutawaylock,jdbcType=VARCHAR},
             #{item.lcPickinglock,jdbcType=VARCHAR},
@@ -183,6 +191,7 @@
             lc_length = #{lcLength,jdbcType=DECIMAL},
             lc_width = #{lcWidth,jdbcType=DECIMAL},
             lc_height = #{lcHeight,jdbcType=DECIMAL},
+            lc_vol = #{lcVol,jdbcType=DECIMAL},
             lc_sustainweight = #{lcSustainweight,jdbcType=INTEGER},
             lc_putawaylock = #{lcPutawaylock,jdbcType=VARCHAR},
             lc_pickinglock = #{lcPickinglock,jdbcType=VARCHAR},
@@ -226,6 +235,9 @@
             </if>
             <if test="lcHeight != null">
                 lc_height = #{lcHeight,jdbcType=DECIMAL},
+            </if>
+            <if test="lcVol != null">
+                lc_vol = #{lcVol,jdbcType=DECIMAL},
             </if>
             <if test="lcSustainweight != null">
                 lc_sustainweight = #{lcSustainweight,jdbcType=INTEGER},
@@ -279,6 +291,9 @@
                 </if>
                 <if test="item.lcHeight != null">
                     lc_height = #{item.lcHeight,jdbcType=DECIMAL},
+                </if>
+                <if test="item.lcVol != null">
+                    lc_vol = #{item.lcVol,jdbcType=DECIMAL},
                 </if>
                 <if test="item.lcSustainweight != null">
                     lc_sustainweight = #{item.lcSustainweight,jdbcType=INTEGER},
@@ -361,6 +376,9 @@
             <if test="lcHeight != null">
                 and lc_height=#{lcHeight,jdbcType=DECIMAL}
             </if>
+            <if test="lcVol != null">
+                and lc_vol=#{lcVol,jdbcType=DECIMAL}
+            </if>
             <if test="lcSustainweight != null">
                 and lc_sustainweight=#{lcSustainweight,jdbcType=INTEGER}
             </if>
@@ -416,6 +434,9 @@
             </if>
             <if test="lcHeight != null">
                 and lc_height ${lcHeight}
+            </if>
+            <if test="lcVol != null">
+                and lc_vol ${lcVol}
             </if>
             <if test="lcSustainweight != null">
                 and lc_sustainweight ${lcSustainweight}

@@ -2,6 +2,7 @@ package com.telei.wms.project.api.endpoint.plo;
 
 import com.nuochen.framework.app.api.ApiResponse;
 import com.nuochen.framework.autocoding.domain.Pagination;
+import com.telei.infrastructure.component.commons.CustomRequestContext;
 import com.telei.infrastructure.component.commons.utils.DateUtils;
 import com.telei.infrastructure.component.idgenerator.contract.Id;
 import com.telei.wms.commons.utils.StringUtils;
@@ -33,6 +34,13 @@ import java.util.stream.Collectors;
  */
 @Service
 public class PloBussiness {
+
+    //保存
+    private static final String SAVE_STATUS = "01";
+    //部分拣货
+    private static final String PART_PICKING_STATUS = "20";
+    //已拣货
+    private static final String PICKING_FINISH_STATUS = "30";
 
     @Autowired
     private Id idGenerator;
@@ -84,7 +92,7 @@ public class PloBussiness {
         wmsPloHeader.setId(idGenerator.getUnique());
         //获取业务单号
         BusinessNumberRequest businessNumberRequest = new BusinessNumberRequest();
-        businessNumberRequest.setType("WMS");
+        businessNumberRequest.setType("JH");
         ApiResponse apiResponse = businessNumberFeignClient.get(businessNumberRequest);
         BusinessNumberResponse businessNumberResponse = apiResponse.convertDataToObject(BusinessNumberResponse.class);
         if (StringUtils.isEmpty(businessNumberResponse.getBusinessNumber())) {
@@ -100,7 +108,7 @@ public class PloBussiness {
         wmsPloHeader.setCustOrderNo(wmsDoHeader.getCustOrderNo());
         wmsPloHeader.setSupplierId(wmsDoHeader.getSupplierId());
         wmsPloHeader.setCustomerId(wmsDoHeader.getCustomerId());
-        wmsPloHeader.setOrderStatus("01");
+        wmsPloHeader.setOrderStatus(SAVE_STATUS);
         wmsPloHeader.setTotalQty(wmsDoHeader.getTotalQty());
         wmsPloHeader.setTotalWeight(wmsDoHeader.getTotalWeight());
         wmsPloHeader.setTotalVol(wmsDoHeader.getTotalVol());
@@ -108,9 +116,9 @@ public class PloBussiness {
         wmsPloHeader.setPickedQty(BigDecimal.ZERO);
         wmsPloHeader.setPickingWeight(BigDecimal.ZERO);
         wmsPloHeader.setPickingVol(BigDecimal.ZERO);
-        wmsPloHeader.setCreateUser("");
+        wmsPloHeader.setCreateUser(CustomRequestContext.getUserInfo().getUserName());
         wmsPloHeader.setCreateTime(DateUtils.nowWithUTC());
-        wmsPloHeader.setLastUpdateUser("");
+        wmsPloHeader.setLastUpdateUser(CustomRequestContext.getUserInfo().getUserName());
         wmsPloHeader.setLastUpdateTime(DateUtils.nowWithUTC());
         WmsDoLine wmsDoLineEntity = new WmsDoLine();
         wmsDoLineEntity.setDohId(wmsDoHeader.getId());
@@ -217,9 +225,10 @@ public class PloBussiness {
      * @return
      */
     public PloHeaderPageQueryResponse pageQueryPloHeader(PloHeaderPageQueryRequest request) {
-        PloHeaderPageQueryRequestVo ploHeaderPageQueryRequestVo = DataConvertUtil.parseDataAsObject(request, PloHeaderPageQueryRequestVo.class);
+        PloHeaderPageQueryRequestVo requestVo = DataConvertUtil.parseDataAsObject(request, PloHeaderPageQueryRequestVo.class);
+        requestVo.setCompanyId(CustomRequestContext.getUserInfo().getCompanyId());
         Pagination pagination = new Pagination(request.getPageNumber(), request.getPageSize());
-        Pagination page = (Pagination) wmsPloHeaderService.findAll(pagination, ploHeaderPageQueryRequestVo);
+        Pagination page = (Pagination) wmsPloHeaderService.findAll(pagination, requestVo);
         PloHeaderPageQueryResponse response = new PloHeaderPageQueryResponse();
         response.setPage(page);
         return response;
@@ -299,7 +308,7 @@ public class PloBussiness {
         //更新拣货单头
         WmsPloHeader updateWmsPloHeader = new WmsPloHeader();
         updateWmsPloHeader.setId(ploId);
-        updateWmsPloHeader.setOrderStatus("20");
+        updateWmsPloHeader.setOrderStatus(PART_PICKING_STATUS);
         updateWmsPloHeader.setPickedQty(wmsPloHeader.getPickedQty().add(totalQty));
         updateWmsPloHeader.setPickingWeight(wmsPloHeader.getPickingWeight().add(totalWeight));
         updateWmsPloHeader.setPickingVol(wmsPloHeader.getPickingVol().add(totalVol));
@@ -335,11 +344,11 @@ public class PloBussiness {
             //主单不存在
             ErrorCode.PLO_NOT_EXIST_4001.throwError();
         }
-        if ("30".equals(wmsPloHeader.getOrderStatus())) {
+        if (PICKING_FINISH_STATUS.equals(wmsPloHeader.getOrderStatus())) {
             //不能重复提交拣货完毕
             ErrorCode.PLO_FINISH_ERROR_4006.throwError();
         }
-        if ("20".equals(wmsPloHeader.getOrderStatus())) {
+        if (PART_PICKING_STATUS.equals(wmsPloHeader.getOrderStatus())) {
             //只有提交拣货才能操作拣货完毕
             ErrorCode.PLO_FINISH_ERROR_4007.throwError();
         }
@@ -350,7 +359,7 @@ public class PloBussiness {
         //更新拣货单状态
         WmsPloHeader updateWmsPloHeader = new WmsPloHeader();
         updateWmsPloHeader.setId(wmsPloHeader.getId());
-        updateWmsPloHeader.setOrderStatus("30");
+        updateWmsPloHeader.setOrderStatus(PICKING_FINISH_STATUS);
         updateWmsPloHeader.setLastUpdateUser("");
         updateWmsPloHeader.setLastUpdateTime(DateUtils.nowWithUTC());
         wmsPloHeaderService.updateByPrimaryKeySelective(updateWmsPloHeader);

@@ -1,9 +1,10 @@
 package com.telei.wms.datasource.wms.model;
 
 import com.nuochen.framework.autocoding.domain.Entity;
+import lombok.Data;
+
 import java.math.BigDecimal;
 import java.util.Date;
-import lombok.Data;
 
 /**
  * wms_roo_header 收货单
@@ -46,4 +47,8 @@ public class WmsRooHeader implements Entity<Long> {
     private String createUser;
     /** 创建时间 */
     private Date createTime;
+    /** 收货用户 */
+    private String recvUser;
+    /** 收货时间 */
+    private Date recvTime;
 }

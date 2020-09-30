@@ -25,6 +25,9 @@
             <if test="paoStatus != null">
                 AND wph.pao_status=#{paoStatus}
             </if>
+            <if test="companyId != null and companyId != ''">
+                AND wph.company_id=#{companyId}
+            </if>
             AND wph.pao_status!='99'
         </where>
         ORDER BY wph.pao_id DESC

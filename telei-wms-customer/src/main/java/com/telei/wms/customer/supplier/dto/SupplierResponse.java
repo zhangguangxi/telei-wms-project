@@ -11,33 +11,33 @@ import java.util.Date;
 @Data
 public class SupplierResponse {
     /**
-     * 客户id
+     * 供应商id
      */
     private Long id;
     /**
-     * 客户编码
+     * 供应商编码
      */
-    private String customerCode;
+    private String supplierCode;
     /**
-     * 客户名称
+     * 供应商名称
      */
-    private String customerName;
+    private String supplierName;
     /**
-     * 客户地址
+     * 供应商类别
      */
-    private String customerAddress;
+    private String supplierGroup;
     /**
-     * 内部客户
+     * 供应商地址
      */
-    private String internalCustomer;
+    private String supplierAddress;
+    /**
+     * 内部供应商
+     */
+    private String internalSupplier;
     /**
      * 对应公司
      */
     private Long mappingCompanyId;
-    /**
-     * 客户类别
-     */
-    private String customerGroup;
     /**
      * 所属地区
      */
@@ -110,9 +110,5 @@ public class SupplierResponse {
      * 公司id
      */
     private Long companyId;
-    /**
-     * 公司名称
-     */
-    private String companyName;
 
 }

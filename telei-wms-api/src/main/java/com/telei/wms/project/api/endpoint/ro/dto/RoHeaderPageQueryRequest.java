@@ -30,6 +30,9 @@ public class RoHeaderPageQueryRequest {
     @ApiModelProperty(value = "订单状态 01-制单，10-审核，40-部分入库，50-已入库，98-关闭，99-作废", example = "10")
     private String orderStatus;
 
+    @ApiModelProperty(value = "0 没有打印过入库任务,1 打印过入库任务", example = "0")
+    private String hadPrintTo;
+
     @ApiModelProperty(value = "当前页", example = "1", required = true)
     private Integer pageNumber;
 

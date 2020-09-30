@@ -4,8 +4,25 @@
 
     <resultMap id="PageQueryResultMap" extends="BaseResultMap" type="com.telei.wms.datasource.wms.vo.RoLinePageQueryResponseVo">
         <result column="place_of_origin" jdbcType="VARCHAR" property="placeOfOrigin"/>
-        <result column="mid_bag_qty" jdbcType="VARCHAR" property="midBagQty"/>
-        <result column="big_bag_qty" jdbcType="VARCHAR" property="bigBagQty"/>
+        <result column="unit_gross_weight" jdbcType="DECIMAL" property="weight"/>
+        <result column="product_length" jdbcType="DECIMAL" property="productLength"/>
+        <result column="product_width" jdbcType="DECIMAL" property="productWidth"/>
+        <result column="product_height" jdbcType="DECIMAL" property="productHeight"/>
+        <result column="unit_vol" jdbcType="DECIMAL" property="vol"/>
+        <result column="mid_bag_qty" jdbcType="INTEGER" property="midBagQty"/>
+        <result column="mid_bag_weight" jdbcType="DECIMAL" property="midBagWeight"/>
+        <result column="mid_bag_length" jdbcType="DECIMAL" property="midBagLength"/>
+        <result column="mid_bag_width" jdbcType="DECIMAL" property="midBagWidth"/>
+        <result column="mid_bag_height" jdbcType="DECIMAL" property="midBagHeight"/>
+        <result column="mid_bag_vol" jdbcType="DECIMAL" property="midBagVol"/>
+        <result column="mid_bag_barcode" jdbcType="DECIMAL" property="midBagBarcode"/>
+        <result column="big_bag_qty" jdbcType="INTEGER" property="bigBagQty"/>
+        <result column="big_bag_weight" jdbcType="DECIMAL" property="bigBagWeight"/>
+        <result column="big_bag_length" jdbcType="DECIMAL" property="bigBagLength"/>
+        <result column="big_bag_width" jdbcType="DECIMAL" property="bigBagWidth"/>
+        <result column="big_bag_height" jdbcType="DECIMAL" property="bigBagHeight"/>
+        <result column="big_bag_vol" jdbcType="DECIMAL" property="bigBagVol"/>
+        <result column="big_bag_barcode" jdbcType="DECIMAL" property="bigBagBarcode"/>
     </resultMap>
 
     <sql id="Page_Query_Column_List">
@@ -34,8 +51,25 @@
         wrl.unit_price_currency_id,
         wrl.memo,
         cp.place_of_origin,
+        cp.unit_gross_weight,
+        cp.product_length,
+        cp.product_width,
+        cp.product_height,
+        cp.unit_vol,
         cp.mid_bag_qty,
-        cp.big_bag_qty
+        cp.mid_bag_weight,
+        cp.mid_bag_length,
+        cp.mid_bag_width,
+        cp.mid_bag_height,
+        cp.mid_bag_vol,
+        cp.mid_bag_barcode,
+        cp.big_bag_qty,
+        cp.big_bag_weight,
+        cp.big_bag_length,
+        cp.big_bag_width,
+        cp.big_bag_height,
+        cp.big_bag_vol,
+        cp.big_bag_barcode
     </sql>
 
     <select id="findAll" resultMap="PageQueryResultMap">
@@ -44,7 +78,7 @@
         FROM wms_ro_line wrl
         INNER JOIN cdm.cdm_product cp ON cp.product_id = wrl.product_id AND cp.company_id=#{companyId,jdbcType=BIGINT}
         WHERE wrl.ro_id = #{roId,jdbcType=BIGINT}
-        ORDER BY wrl.rol_id DESC
+        ORDER BY wrl.rol_id ASC
     </select>
 
 </mapper>

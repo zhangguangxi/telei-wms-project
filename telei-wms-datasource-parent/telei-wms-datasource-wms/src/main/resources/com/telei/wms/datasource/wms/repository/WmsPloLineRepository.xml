@@ -51,7 +51,7 @@
         LEFT JOIN wms_plo_detail wpd ON wpl.plol_id = wpd.plol_id
         WHERE wpl.plo_id = #{ploId,jdbcType=BIGINT}
         GROUP BY wpl.plol_id
-        ORDER BY wpl.plol_id DESC
+        ORDER BY wpl.plol_id ASC
     </select>
 
     <resultMap id="LocationResultMap" type="com.telei.wms.datasource.wms.vo.PloLineLocationResponseVo">

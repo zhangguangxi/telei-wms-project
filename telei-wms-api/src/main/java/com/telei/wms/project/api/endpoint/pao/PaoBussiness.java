@@ -2,6 +2,7 @@ package com.telei.wms.project.api.endpoint.pao;
 
 import com.nuochen.framework.app.api.ApiResponse;
 import com.nuochen.framework.autocoding.domain.Pagination;
+import com.telei.infrastructure.component.commons.CustomRequestContext;
 import com.telei.infrastructure.component.idgenerator.contract.Id;
 import com.telei.wms.commons.utils.DateUtils;
 import com.telei.wms.commons.utils.StringUtils;
@@ -71,47 +72,66 @@ public class PaoBussiness {
      * @return   */
     @Transactional(rollbackFor = Exception.class)
     public PaoCudBaseResponse addPao(PaoHeaderAddRequest request) {
+        WmsRooHeader wmsRooHeaderInfo = wmsRooHeaderService.selectByPrimaryKey(request.getRooId());
+        if (Objects.isNull(wmsRooHeaderInfo)) {
+            //收货单不存在
+            ErrorCode.PAO_NOT_EXIST_4004.throwError();
+        }
         WmsPaoHeader wmsPaoHeader = DataConvertUtil.parseDataAsObject(request, WmsPaoHeader.class);
         List<WmsPaoLine> wmsPaoLines = DataConvertUtil.parseDataAsArray(request.getPaoLines(), WmsPaoLine.class);
         //收货单明细数量
         Map<Long, BigDecimal> rooLineQty = new HashMap<>();
         wmsPaoHeader.setId(idGenerator.getUnique());
-        //获取业务单号
-        BusinessNumberRequest businessNumberRequest = new BusinessNumberRequest();
-        businessNumberRequest.setType("WMS");
-        ApiResponse apiResponse = businessNumberFeignClient.get(businessNumberRequest);
-        BusinessNumberResponse businessNumberResponse = apiResponse.convertDataToObject(BusinessNumberResponse.class);
-        if (StringUtils.isEmpty(businessNumberResponse.getBusinessNumber())) {
-            //未获取到业务单号
-            ErrorCode.PAO_ADD_ERROR_4002.throwError();
-        }
-        wmsPaoHeader.setPaoCode(businessNumberResponse.getBusinessNumber());
-        //已上架总数
+        wmsPaoHeader.setRoId(wmsRooHeaderInfo.getRoId());
+        wmsPaoHeader.setRoCode(wmsRooHeaderInfo.getRoCode());
+        wmsPaoHeader.setRooId(wmsRooHeaderInfo.getId());
+        wmsPaoHeader.setRooCode(wmsRooHeaderInfo.getRooCode());
+        wmsPaoHeader.setWarehouseId(wmsRooHeaderInfo.getWarehouseId());
+        wmsPaoHeader.setWarehouseCode(wmsRooHeaderInfo.getWarehouseCode());
+        wmsPaoHeader.setRecvTime(wmsRooHeaderInfo.getRecvTime());
+        wmsPaoHeader.setRecvUser(wmsRooHeaderInfo.getRecvUser());
+        wmsPaoHeader.setOrderType("20");
+        wmsPaoHeader.setPaoStatus(SAVE_STATUS);
+        wmsPaoHeader.setCompanyId(CustomRequestContext.getUserInfo().getCompanyId());
+        wmsPaoHeader.setCreateUser(CustomRequestContext.getUserInfo().getUserName());
+        wmsPaoHeader.setCreateTime(DateUtils.nowWithUTC());
+        wmsPaoHeader.setLastupdateUser(CustomRequestContext.getUserInfo().getUserName());
+        wmsPaoHeader.setLastupdateTime(DateUtils.nowWithUTC());
+        //总数量
         BigDecimal totalQty = BigDecimal.ZERO;
+        //总重量
+        BigDecimal totalWeight = BigDecimal.ZERO;
+        //总净重
+        BigDecimal totalNetWeight = BigDecimal.ZERO;
+        //总体积
+        BigDecimal totalVol = BigDecimal.ZERO;
         for (WmsPaoLine wmsPaoLine : wmsPaoLines) {
             wmsPaoLine.setId(idGenerator.getUnique());
             wmsPaoLine.setPaoId(wmsPaoHeader.getId());
+            wmsPaoLine.setRoId(wmsPaoHeader.getRoId());
+            wmsPaoLine.setRooId(wmsPaoHeader.getRooId());
+            wmsPaoLine.setRooCode(wmsPaoHeader.getRooCode());
             wmsPaoLine.setPaoStatus(SAVE_STATUS);
             wmsPaoLine.setPrepLcCode("");
             wmsPaoLine.setLcCode("");
             wmsPaoLine.setPaolFifoTime(DateUtils.nowWithUTC());
-            //累加上架数
+            //累加总数
             totalQty = totalQty.add(wmsPaoLine.getPaolQty());
+            totalWeight = totalWeight.add(wmsPaoLine.getLineTotalWeight());
+            totalNetWeight = totalNetWeight.add(wmsPaoLine.getLineNetWeight());
+            totalVol = totalVol.add(wmsPaoLine.getLineTotalVol());
             rooLineQty.put(wmsPaoLine.getRoolId(), wmsPaoLine.getPaolQty());
         }
-        wmsPaoHeader.setOrderType("20");
-        wmsPaoHeader.setCompanyId(4676772684313397249L);
-        wmsPaoHeader.setCreateUser("");
-        wmsPaoHeader.setCreateTime(DateUtils.nowWithUTC());
-//        wmsPaoHeader.setLastupdateTime(DateUtils.nowWithUTC());
         wmsPaoHeader.setTotalQty(totalQty);
+        wmsPaoHeader.setTotalWeight(totalWeight);
+        wmsPaoHeader.setTotalNetWeight(totalNetWeight);
+        wmsPaoHeader.setTotalVol(totalVol);
         //获取锁标识
         String lockKey = String.valueOf(request.getRooId());
         Object lockValue = tryLock(lockKey);
-
         try {
             //获取收货单信息
-            WmsRooHeader wmsRooHeader = wmsRooHeaderService.selectByPrimaryKey(request.getRooId());
+            WmsRooHeader wmsRooHeader = wmsRooHeaderInfo;
             WmsRooHeader updateWmsRooHeader = new WmsRooHeader();
             updateWmsRooHeader.setId(wmsRooHeader.getId());
             updateWmsRooHeader.setRoStatus("40");
@@ -137,6 +157,16 @@ public class PaoBussiness {
             }
             //确认锁
             if (confirmLock(lockKey, lockValue)) {
+                //获取业务单号
+                BusinessNumberRequest businessNumberRequest = new BusinessNumberRequest();
+                businessNumberRequest.setType("SJD");
+                ApiResponse apiResponse = businessNumberFeignClient.get(businessNumberRequest);
+                BusinessNumberResponse businessNumberResponse = apiResponse.convertDataToObject(BusinessNumberResponse.class);
+                if (StringUtils.isEmpty(businessNumberResponse.getBusinessNumber())) {
+                    //未获取到业务单号
+                    ErrorCode.PAO_ADD_ERROR_4002.throwError();
+                }
+                wmsPaoHeader.setPaoCode(businessNumberResponse.getBusinessNumber());
                 //保存上架单
                 wmsPaoHeaderService.insertSelective(wmsPaoHeader);
                 if (! wmsPaoLines.isEmpty()) {
@@ -154,8 +184,6 @@ public class PaoBussiness {
             } else {
                 ErrorCode.PAO_ADD_ERROR_4002.throwError();
             }
-        } catch (Exception e) {
-            throw e;
         } finally {
             //释放锁
             cancelLock(lockKey, lockValue);
@@ -210,9 +238,10 @@ public class PaoBussiness {
      * @return
      */
     public PaoHeaderPageQueryResponse pageQueryRoHeader(PaoHeaderPageQueryRequest request) {
-        PaoHeaderPageQueryRequestVo paoHeaderPageQueryRequestVo = DataConvertUtil.parseDataAsObject(request, PaoHeaderPageQueryRequestVo.class);
+        PaoHeaderPageQueryRequestVo requestVo = DataConvertUtil.parseDataAsObject(request, PaoHeaderPageQueryRequestVo.class);
+        requestVo.setCompanyId(CustomRequestContext.getUserInfo().getCompanyId());
         Pagination pagination = new Pagination(request.getPageNumber(), request.getPageSize());
-        Pagination page = (Pagination) wmsPaoHeaderService.findAll(pagination, paoHeaderPageQueryRequestVo);
+        Pagination page = (Pagination) wmsPaoHeaderService.findAll(pagination, requestVo);
         PaoHeaderPageQueryResponse response = new PaoHeaderPageQueryResponse();
         response.setPage(page);
         return response;
@@ -254,7 +283,6 @@ public class PaoBussiness {
         //获取锁标识
         String lockKey = String.valueOf(wmsPaoHeaderInfo.getRooId());
         Object lockValue = tryLock(lockKey);
-
         try {
             //获取上架单明细
             WmsPaoLine wmsPaoLineEntity = new WmsPaoLine();
@@ -288,6 +316,8 @@ public class PaoBussiness {
             //获取上架单撤销状态
             WmsPaoHeader wmsPaoHeader = DataConvertUtil.parseDataAsObject(request, WmsPaoHeader.class);
             wmsPaoHeader.setPaoStatus(DELETE_STATUS);
+            wmsPaoHeader.setLastupdateUser(CustomRequestContext.getUserInfo().getUserName());
+            wmsPaoHeader.setLastupdateTime(DateUtils.nowWithUTC());
             //确认锁
             if (confirmLock(lockKey, lockValue)) {
                 //更新收货单收货数
@@ -302,8 +332,6 @@ public class PaoBussiness {
             } else {
                 ErrorCode.PAO_CANCEL_ERROR_4003.throwError();
             }
-        } catch (Exception e) {
-            throw e;
         } finally {
             //释放锁
             cancelLock(lockKey, lockValue);

@@ -3,6 +3,8 @@ package com.telei.wms.datasource.wms.vo;
 import com.telei.wms.datasource.wms.model.WmsPaoLine;
 import lombok.Data;
 
+import java.math.BigDecimal;
+
 /**
  * 上架单详细
  */
@@ -21,4 +23,8 @@ public class PaoLinePageQueryResponseVo extends WmsPaoLine {
     private String placeOfOrigin;
     /** 规格型号 */
     private String specType;
+    /** 中包数量 */
+    private BigDecimal midBagQty;
+    /** 大包数量 */
+    private BigDecimal bigBagQty;
 }

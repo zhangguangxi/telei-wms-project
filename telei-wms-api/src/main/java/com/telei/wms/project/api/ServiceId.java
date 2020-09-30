@@ -202,4 +202,27 @@ public class ServiceId {
     @RightResource(rightSystem = "wms", rightItem = "升降任务", rightFunction = "查询产品对应库位信息")
     public static final String WMS_LIFT_WORK_INFO = "1031005";
 
+    /**
+     * 升降任务
+     * 11
+     */
+    @RightResource(rightSystem = "wms", rightItem = "智能升降配置", rightFunction = "发布升降任务")
+    public static final String WMS_LIFT_TASK_ADD = "1031101";
+
+    @RightResource(rightSystem = "wms", rightItem = "智能升降配置", rightFunction = "批量设置上限/下限")
+    public static final String WMS_LIFT_TASK_UPDATE = "1031102";
+
+    @RightResource(rightSystem = "wms", rightItem = "智能升降配置", rightFunction = "智能升降配置查询")
+    public static final String WMS_LIFT_TASK_PAGE_QUERY = "1031103";
+
+    /**
+     * 升降任务
+     * 11
+     */
+    @RightResource(rightSystem = "wms", rightItem = "拉式补货", rightFunction = "拉式补货查询")
+    public static final String WMS_PULL_REPLENISHMENT_PAGE_QUERY = "1031201";
+
+    @RightResource(rightSystem = "wms", rightItem = "拉式补货", rightFunction = "拉式补货导出")
+    public static final String WMS_PULL_REPLENISHMENT_EXPORT = "1031202";
+
 }

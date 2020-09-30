@@ -18,6 +18,10 @@ public class PaoHeaderDetailResponse {
     private Long roId;
     /** 入库任务单号 */
     private String roCode;
+    /** 收货作单头id */
+    private Long rooId;
+    /** 收货单号 */
+    private String rooCode;
     /** 商家订单号 */
     private String custOrderNo;
     /** 公司id */
@@ -43,13 +47,17 @@ public class PaoHeaderDetailResponse {
     /** 创建时间 */
     private Date createTime;
     /** 最后更新用户 */
-    private Date lastupdateUser;
+    private String lastupdateUser;
     /** 最后更新时间 */
-    private String lastupdateTime;
+    private Date lastupdateTime;
     /** 上架用户 */
     private String putawayUser;
     /** 上架时间 */
     private Date putawayTime;
+    /** 收货时间 */
+    private Date recvTime;
+    /** 收货用户 */
+    private String recvUser;
 
     private List<PaoLineDetailResponse> paoLines;
 }

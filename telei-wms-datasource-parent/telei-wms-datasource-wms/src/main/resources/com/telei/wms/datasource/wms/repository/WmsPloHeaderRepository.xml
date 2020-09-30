@@ -62,6 +62,9 @@
             <if test="orderStatus != null and orderStatus != ''">
                 AND wph.order_status=#{orderStatus}
             </if>
+            <if test="companyId != null and companyId != ''">
+                AND wph.company_id=#{companyId}
+            </if>
             AND wph.order_status!='99'
         </where>
         GROUP BY wph.plo_id

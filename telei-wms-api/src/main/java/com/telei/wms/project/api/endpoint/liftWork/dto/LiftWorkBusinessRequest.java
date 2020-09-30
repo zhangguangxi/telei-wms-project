@@ -13,6 +13,8 @@ import java.util.List;
 @Data
 public class LiftWorkBusinessRequest {
 
+    private Long id;
+
     private Long companyId;
 
     private Long warehouseId;
@@ -45,11 +47,17 @@ public class LiftWorkBusinessRequest {
 
     private String prepLcCode;
 
+    private String lcCode;
+
+    private String liftStatus;
+
     private Long operateUserId;
 
     private String operateUser;
 
     private String memo;
+
+    private String liftCode;
 
     private Collection<Long> ids;
 

@@ -4,7 +4,7 @@ server:
 # spring
 spring:
   profiles:
-    active: local
+    active: dev
   application:
     name: telei-wms-api
   # message
@@ -41,10 +41,12 @@ swagger:
 
 customize:
   feign:
-    auth-url: http://127.0.0.1:20010
-    wms-url: http://127.0.0.1:8811
+#    auth-url: http://127.0.0.1:20010
+    auth-url: http://192.168.1.114:20010
+#    wms-url: http://127.0.0.1:8811
+    wms-url: http://192.168.1.114:8811
   permission-switch:
-    auto-sync: false
+    auto-sync: true
 
 ##########################################profile options######################################
 
@@ -349,5 +351,5 @@ jetcache:
     default:
       type: redis.lettuce
       keyConvertor: fastjson
-      #      uri: redis://127.0.0.1:6379/0
-      uri: redis://admin1314@127.0.0.1:6379/0
+#      uri: redis://admin1314@127.0.0.1:6379/0
+      uri: redis://admin1314@192.168.1.114:6379/0

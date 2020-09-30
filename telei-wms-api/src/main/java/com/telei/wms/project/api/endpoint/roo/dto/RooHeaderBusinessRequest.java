@@ -4,6 +4,7 @@ import lombok.Data;
 
 import java.math.BigDecimal;
 import java.util.Collection;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -43,6 +44,10 @@ public class RooHeaderBusinessRequest {
     private String roStatus;
     /** 备注 */
     private String memo;
+    /** 收货用户 */
+    private String recvUser;
+    /** 收货时间 */
+    private Date recvTime;
 
     private Long rooId;
 

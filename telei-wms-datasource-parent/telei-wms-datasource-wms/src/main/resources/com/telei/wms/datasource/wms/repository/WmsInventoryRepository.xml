@@ -17,8 +17,8 @@
         cp.product_no,
         cp.product_name,
         cp.product_barcode,
-        (wi.big_bag_rate / wi.mid_bag_rate) as big_bag_rate,
-        wi.mid_bag_rate,
+        mid_bag_rate,
+        wi.big_bag_rate,
         wi.big_bag_rate  as box_qty,
         cp.big_bag_vol,
         cp.big_bag_weight,
@@ -100,6 +100,64 @@
         GROUP BY a.lc_code
         ORDER BY ABS(CONVERT(replace(replace(a.lc_code,'Z',''),'-',''), SIGNED)-#{lcCodeNumber})
         LIMIT 1;
+    </select>
+
+    <select id="liftTaskPageQuery" resultType="com.telei.wms.datasource.wms.vo.LiftTaskPageQueryResponseVo">
+        SELECT
+            ps.id,
+            iv.product_id,
+            iab.product_no,
+            iab.product_name,
+            iab.product_barcode,
+            iab.product_upc_code,
+            iab.big_bag_rate/iab.mid_bag_rate big_bag_specification,
+            iab.mid_bag_rate,
+            iab.big_bag_rate,
+            iab.big_bag_vol,
+            iab.big_bag_weight,
+            iv.lc_code,
+            lc.lc_vol/1000000 location_volume,
+            lc.lc_vol/1000000*0.85 storage_volume,
+            ROUND(lc.lc_vol/1000000*0.85/iab.big_bag_vol) number_large_package,
+            SUM(iv.iv_qty) iv_qty,
+            ROUND(SUM(iv.iv_qty)/iab.big_bag_rate) big_count,
+            ROUND(MOD(SUM(iv.iv_qty),iab.big_bag_rate) / iab.mid_bag_rate) middle_count,
+            MOD(SUM(iv.iv_qty),iab.mid_bag_rate) small_count,
+            IFNULL(ps.ceiling_multiple,2) ceiling_multiple,
+            IFNULL(ps.limit_multiple,0.2) limit_multiple,
+            ROUND(IFNULL(ps.ceiling_multiple,2)* ROUND(lc.lc_vol/1000000*0.85/iab.big_bag_vol)) inventory_ceiling_big_count,
+            ROUND(IFNULL(ps.limit_multiple,0.2)* ROUND(lc.lc_vol/1000000*0.85/iab.big_bag_vol)) inventory_limit_big_count,
+            CASE WHEN ROUND(SUM(iv.iv_qty)/iab.big_bag_rate) > ROUND(IFNULL(ps.ceiling_multiple,2)* ROUND(lc.lc_vol/1000000*0.85/iab.big_bag_vol)) THEN 'RISE' WHEN ROUND(SUM(iv.iv_qty)/iab.big_bag_rate) &lt; ROUND(IFNULL(ps.limit_multiple,0.2)* ROUND(lc.lc_vol/1000000*0.85/iab.big_bag_vol)) THEN 'DROP' ELSE '-' END lc_type
+        FROM wms_inventory iv
+        LEFT JOIN wms_iv_attributebatch iab ON iv.iab_id = iab.iab_id
+        LEFT JOIN wms_location lc ON iv.lc_code = lc.lc_code
+        LEFT JOIN wms_product_sample ps ON iv.warehouse_id=ps.warehouse_id AND iv.product_id=ps.product_id
+        <where>
+            iv.lc_type = 'S'
+            AND iv.lc_code NOT IN ( SELECT distinct wlw.sample_lc_code FROM wms_lift_work wlw )
+            <if test="lcCode != null">
+                and iv.lc_code ${lcCode}
+            </if>
+            <if test="productNo != null">
+                and iab.product_no ${productNo}
+            </if>
+            <if test="productName != null">
+                and iab.product_name ${productName}
+            </if>
+            <if test="productBarcode != null">
+                and iab.product_barcode ${productBarcode}
+            </if>
+            <if test="warehouseId != null">
+                and iv.warehouse_id ${warehouseId}
+            </if>
+            <if test="companyId != null">
+                and iv.company_id ${companyId}
+            </if>
+        </where>
+        <if test="orderBy != null">
+            order by ${orderBy}
+        </if>
+        GROUP BY iab.product_id,iv.lc_code
     </select>
 
 </mapper>

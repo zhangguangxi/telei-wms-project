@@ -70,5 +70,9 @@ public class InventoryAddRequest {
         @ApiModelProperty(value = "入库任务id",example = "1234",position = 16)
         @Check
         private Long roId;
+
+        @Check
+        @ApiModelProperty(value = "上架员",example = "张三",position = 17)
+        private String putawayUser;
     }
 }
