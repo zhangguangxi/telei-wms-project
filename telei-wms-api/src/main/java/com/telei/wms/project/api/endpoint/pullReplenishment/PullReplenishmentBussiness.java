@@ -49,6 +49,9 @@ public class PullReplenishmentBussiness {
         if (StringUtils.isNoneBlank(request.getProductNo())) {
             conditionsBuilder.like("productNo", request.getProductNo());
         }
+        if (StringUtils.isNoneBlank(request.getInternalSupplier())) {
+            conditionsBuilder.eq("internalSupplier", request.getInternalSupplier());
+        }
         if (StringUtils.isNotNull(request.getWarehouseId())) {
             conditionsBuilder.eq("warehouseId", request.getWarehouseId());
         }
@@ -103,6 +106,9 @@ public class PullReplenishmentBussiness {
             title.append("商品码：");
             title.append(businessPageQueryRequest.getProductNo());
             title.append(" ");
+        }
+        if (StringUtils.isNoneBlank(businessPageQueryRequest.getInternalSupplier())) {
+            conditionsBuilder.eq("internalSupplier", businessPageQueryRequest.getInternalSupplier());
         }
         if (StringUtils.isNotNull(businessPageQueryRequest.getWarehouseId())) {
             conditionsBuilder.eq("warehouseId", businessPageQueryRequest.getWarehouseId());

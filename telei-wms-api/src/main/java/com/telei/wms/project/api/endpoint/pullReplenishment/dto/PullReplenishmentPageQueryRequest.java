@@ -36,6 +36,9 @@ public class PullReplenishmentPageQueryRequest {
     @ApiModelProperty(value = "仓库id", example = "1")
     private Long warehouseId;
 
+    @ApiModelProperty(value = "是否内部供应商 1：是 0：否", example = "1")
+    private String internalSupplier;
+
     @ApiModelProperty(value = "当前页", example = "1", required = true)
     private Integer pageNumber;
 

@@ -6,6 +6,8 @@
         <result column="warehouse_name" jdbcType="VARCHAR" property="warehouseName"/>
         <result column="customer_name" jdbcType="VARCHAR" property="customerName"/>
         <result column="supplier_name" jdbcType="VARCHAR" property="supplierName"/>
+        <result column="seller" jdbcType="VARCHAR" property="seller"/>
+        <result column="sp_code" jdbcType="VARCHAR" property="spCode"/>
     </resultMap>
 
     <resultMap id="PullReplenishmentResultMap" extends="BaseResultMap" type="com.telei.wms.datasource.wms.vo.PullReplenishmentPageQueryResponseVo">
@@ -70,7 +72,9 @@
         do.lastupdate_time,
         do.shipping_time,
         cw.warehouse_name,
-        cc.customer_name
+        cc.customer_name,
+        csa.employee_name seller,
+        osp.sp_code
     </sql>
 
     <select id="findAll" resultMap="PageQueryResultMap">
@@ -79,6 +83,8 @@
         FROM wms_do_header as do
         LEFT JOIN cdm.cdm_warehouse cw ON cw.warehouse_id = do.warehouse_id
         LEFT JOIN cdm.cdm_customer cc ON cc.customer_id = do.customer_id
+        LEFT JOIN oms.oms_ship_plan osp ON osp.sp_id = do.sp_id
+        LEFT JOIN cdm.cdm_sys_account csa ON csa.account_id = osp.owner_user
         <where>
             <if test="id != null">
                 and do.doh_id ${id}
@@ -220,8 +226,11 @@
         JOIN (
             SELECT MAX(ps.ps_id),ps.company_id,ps.product_id,s.supplier_name,s.supplier_id,s.internal_supplier
             FROM cdm.cdm_product_supplier ps
-            LEFT JOIN cdm.cdm_supplier s ON ps.supplier_id =s.supplier_id
+            JOIN cdm.cdm_supplier s ON ps.supplier_id =s.supplier_id
             WHERE ps.company_id ${companyId}
+            <if test="internalSupplier != null">
+                and s.internal_supplier ${internalSupplier}
+            </if>
             GROUP BY ps.company_id, ps.product_id
         ) su ON su.company_id = p.company_id AND su.product_id = p.product_id
         JOIN cdm.cdm_product_category pc ON pc.category_id = p.product_category_id

@@ -15,5 +15,7 @@ public class RooLineResponseVo extends WmsRooLine {
     private String productName;
     /** 品牌 */
     private String brand;
+    /** 产地 */
+    private String placeOfOrigin;
 
 }

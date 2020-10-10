@@ -216,8 +216,8 @@ public class ServiceId {
     public static final String WMS_LIFT_TASK_PAGE_QUERY = "1031103";
 
     /**
-     * 升降任务
-     * 11
+     * 拉式补货
+     * 12
      */
     @RightResource(rightSystem = "wms", rightItem = "拉式补货", rightFunction = "拉式补货查询")
     public static final String WMS_PULL_REPLENISHMENT_PAGE_QUERY = "1031201";
@@ -225,4 +225,13 @@ public class ServiceId {
     @RightResource(rightSystem = "wms", rightItem = "拉式补货", rightFunction = "拉式补货导出")
     public static final String WMS_PULL_REPLENISHMENT_EXPORT = "1031202";
 
+    /***
+     *
+     *  套打(嵌套打印)
+     *  13
+     *
+     */
+
+    @RightResource(rightSystem = "wms", rightItem = "套打", rightFunction = "收货打印详情")
+    public static final String WMS_ROO_NEST_PRINT_DETAIL = "1031301";
 }

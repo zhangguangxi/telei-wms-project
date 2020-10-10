@@ -75,4 +75,11 @@ public class DoLineDetailResponse {
     private BigDecimal unitPrice;
     /** 金额 */
     private BigDecimal amount;
+
+    /** 产地 */
+    private String placeOfOrigin;
+    /** 大包毛重(KG) */
+    private BigDecimal bigBagWeight;
+    /** 大包体积(CBM) */
+    private BigDecimal bigBagVol;
 }

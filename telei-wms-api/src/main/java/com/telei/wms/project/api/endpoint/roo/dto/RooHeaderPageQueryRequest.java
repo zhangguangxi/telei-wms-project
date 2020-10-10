@@ -24,7 +24,7 @@ public class RooHeaderPageQueryRequest {
     @ApiModelProperty(value = "入库单据编号", example = "2525345353")
     private String roCode;
 
-    @ApiModelProperty(value = "收货状态 20-收货成功，99-关闭", example = "20")
+    @ApiModelProperty(value = "收货状态 20-已收货，30-待上架，40-已上架，99-关闭", example = "20")
     private String roStatus;
 
     @ApiModelProperty(value = "所属人", example = "2525345353")

@@ -9,4 +9,6 @@ import lombok.Data;
 @Data
 public class PaoHeaderPageQueryResponseVo extends WmsPaoHeader {
 
+    /** 仓库名称 */
+    private String warehouseName;
 }

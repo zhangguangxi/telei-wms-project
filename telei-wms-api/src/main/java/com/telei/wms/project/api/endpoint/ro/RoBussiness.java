@@ -70,7 +70,7 @@ public class RoBussiness {
     public RoCudBaseResponse addRo(RoHeaderAddRequest request) {
         RoCudBaseResponse response = new RoCudBaseResponse();
         WmsRoHeader wmsRoHeaderEntity = new WmsRoHeader();
-        wmsRoHeaderEntity.setPoId(request.getPoId());
+        wmsRoHeaderEntity.setRpId(request.getRpId());
         WmsRoHeader wmsRoHeaderIsExist = wmsRoHeaderService.selectOneByEntity(wmsRoHeaderEntity);
         if (! Objects.isNull(wmsRoHeaderIsExist)) {
             logger.warn("采购单不能重复生成入库任务，RoHeaderAddRequest：" + JSON.toJSONString(request));
@@ -167,7 +167,7 @@ public class RoBussiness {
                     updateWmsRoHeader.setId(wmsRoHeader.getId());
                     updateWmsRoHeader.setOrderStatus(DELETE_STATUS);
                     updateWmsRoHeader.setLastUpdateTime(DateUtils.nowWithUTC());
-                    wmsRoHeaderService.updateByPrimaryKey(updateWmsRoHeader);
+                    wmsRoHeaderService.updateByPrimaryKeySelective(updateWmsRoHeader);
                     //已撤销状态
                     omsRecovicePlan.setOrderStatus("91");
                 }

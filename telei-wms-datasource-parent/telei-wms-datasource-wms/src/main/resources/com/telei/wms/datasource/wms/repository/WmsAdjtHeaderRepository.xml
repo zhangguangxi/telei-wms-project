@@ -20,6 +20,7 @@
         select
         <include refid="Custom_Base_Column_List"/>
         from wms_adjt_header wa
+        left join wms_location wl on wa.lc_code = wl.lc_code
         left join cdm.cdm_product cp on  cp.product_id = wa.product_id
         <where>
             <if test="lcCode != null">
@@ -39,7 +40,7 @@
             </if>
 
             <if test="lcType != null">
-                and wa.lc_type ${lcType}
+                and wl.lc_type ${lcType}
             </if>
 
             <if test="warehouseId != null">

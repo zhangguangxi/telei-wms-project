@@ -16,8 +16,8 @@ public class WmsRooLineService extends BaseService<WmsRooLineRepository,WmsRooLi
     @Autowired
     private WmsRooLineRepository wmsRooLineRepository;
 
-    public List<RooLineResponseVo> findAll(Long rooId) {
-        return wmsRooLineRepository.findAll(rooId);
+    public List<RooLineResponseVo> findAll(Long rooId, Long companyId) {
+        return wmsRooLineRepository.findAll(rooId, companyId);
     }
 
 }

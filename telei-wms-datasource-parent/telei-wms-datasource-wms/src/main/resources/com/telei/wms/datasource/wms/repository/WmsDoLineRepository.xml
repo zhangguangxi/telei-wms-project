@@ -2,6 +2,12 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.telei.wms.datasource.wms.repository.WmsDoLineRepository">
 
+    <resultMap id="PageQueryResultMap" extends="BaseResultMap" type="com.telei.wms.datasource.wms.vo.DoLineResponseVo">
+        <result column="place_of_origin" jdbcType="VARCHAR" property="placeOfOrigin"/>
+        <result column="big_bag_weight" jdbcType="DECIMAL" property="bigBagWeight"/>
+        <result column="big_bag_vol" jdbcType="DECIMAL" property="bigBagVol"/>
+    </resultMap>
+
     <sql id="Page_Query_Column_List">
         wdl.dol_id,
         wdl.doh_id,
@@ -35,13 +41,17 @@
         wdl.memo,
         wdl.cost_reference,
         wdl.unit_price,
-        wdl.amount
+        wdl.amount,
+        cp.place_of_origin,
+        cp.big_bag_weight,
+        cp.big_bag_vol
     </sql>
 
-    <select id="findAll" resultMap="BaseResultMap">
+    <select id="findAll" resultMap="PageQueryResultMap">
         SELECT
         <include refid="Page_Query_Column_List"/>
         FROM wms_do_line wdl
+        LEFT JOIN cdm.cdm_product cp ON cp.product_id = wdl.product_id AND cp.company_id=#{companyId,jdbcType=BIGINT}
         WHERE wdl.doh_id = #{dohId,jdbcType=BIGINT}
         ORDER BY wdl.dol_id DESC
     </select>

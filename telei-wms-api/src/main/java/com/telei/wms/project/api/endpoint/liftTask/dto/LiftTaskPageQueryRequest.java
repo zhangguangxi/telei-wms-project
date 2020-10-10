@@ -21,6 +21,9 @@ public class LiftTaskPageQueryRequest {
     @ApiModelProperty(value = "库位", example = "S1-25-15")
     private String lcCode;
 
+    @ApiModelProperty(value = "升降货类型", example = "RISE")
+    private String lcType;
+
     @ApiModelProperty(value = "当前页", example = "1", required = true)
     private Integer pageNumber;
 

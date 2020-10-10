@@ -31,6 +31,11 @@ public class LiftTaskBusinessPageQueryRequest {
     private String lcCode;
 
     /**
+     * 样品库位(升,RISE; 降，DROP)
+     */
+    private String lcType;
+
+    /**
      * 当前页
      */
     private Integer pageNumber;

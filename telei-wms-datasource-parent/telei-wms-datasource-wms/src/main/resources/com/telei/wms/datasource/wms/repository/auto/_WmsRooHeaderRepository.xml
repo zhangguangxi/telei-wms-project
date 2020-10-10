@@ -88,7 +88,7 @@
                         create_user,
                     </if>
                     <if test="createTime != null">
-                        create_time
+                        create_time,
                     </if>
                     <if test="recvUser != null">
                         recv_user,
@@ -150,7 +150,7 @@
                         #{createUser,jdbcType=VARCHAR},
                     </if>
                     <if test="createTime != null">
-                        #{createTime,jdbcType=TIMESTAMP}
+                        #{createTime,jdbcType=TIMESTAMP},
                     </if>
                     <if test="recvUser != null">
                         #{recvUser,jdbcType=VARCHAR},
@@ -279,7 +279,7 @@
                     create_user = #{createUser,jdbcType=VARCHAR},
                 </if>
                 <if test="createTime != null">
-                    create_time = #{createTime,jdbcType=TIMESTAMP}
+                    create_time = #{createTime,jdbcType=TIMESTAMP},
                 </if>
                 <if test="recvUser != null">
                     recv_user = #{recvUser,jdbcType=VARCHAR},

@@ -3,12 +3,43 @@
 <mapper namespace="com.telei.wms.datasource.wms.repository.WmsPaoHeaderRepository">
 
     <resultMap id="PageQueryResultMap" extends="BaseResultMap" type="com.telei.wms.datasource.wms.vo.PaoHeaderPageQueryResponseVo">
+        <result column="warehouse_name" jdbcType="VARCHAR" property="warehouseName"/>
     </resultMap>
+
+    <sql id="Page_Query_Column_List">
+        wph.pao_id,
+        wph.pao_code,
+        wph.order_type,
+        wph.ro_id,
+        wph.ro_code,
+        wph.roo_id,
+        wph.roo_code,
+        wph.cust_order_no,
+        wph.company_id,
+        wph.warehouse_id,
+        wph.warehouse_code,
+        wph.total_qty,
+        wph.total_weight,
+        wph.total_net_weight,
+        wph.total_vol,
+        wph.putaway_qty,
+        wph.pao_status,
+        wph.create_user,
+        wph.create_time,
+        wph.lastupdate_user,
+        wph.lastupdate_time,
+        wph.putaway_user,
+        wph.putaway_time,
+        wph.recv_time,
+        wph.recv_user,
+        cw.warehouse_name
+    </sql>
 
     <select id="findAll" resultMap="PageQueryResultMap">
         SELECT
-        <include refid="Base_Column_List"/>
+        <include refid="Page_Query_Column_List"/>
         FROM wms_pao_header wph
+        INNER JOIN cdm.cdm_warehouse cw ON cw.warehouse_id = wph.warehouse_id
         <where>
             <if test="startTime != null and endTime != null and startTime != '' and endTime != ''">
                 wph.create_time&gt;=#{startTime} AND wph.create_time&lt;=#{endTime}

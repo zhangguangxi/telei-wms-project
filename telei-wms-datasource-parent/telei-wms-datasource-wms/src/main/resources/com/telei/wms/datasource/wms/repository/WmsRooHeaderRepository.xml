@@ -27,6 +27,8 @@
         wrh.memo,
         wrh.create_user,
         wrh.create_time,
+        wrh.recv_user,
+        wrh.recv_time,
         cw.warehouse_name,
         cs.supplier_name
     </sql>

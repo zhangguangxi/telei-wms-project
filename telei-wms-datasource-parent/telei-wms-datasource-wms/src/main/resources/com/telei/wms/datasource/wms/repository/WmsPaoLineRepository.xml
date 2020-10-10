@@ -11,6 +11,7 @@
         <result column="spec_type" jdbcType="VARCHAR" property="specType"/>
         <result column="mid_bag_qty" jdbcType="DECIMAL" property="midBagQty"/>
         <result column="big_bag_qty" jdbcType="DECIMAL" property="bigBagQty"/>
+        <result column="image_path" jdbcType="VARCHAR" property="imagePath"/>
     </resultMap>
 
     <sql id="Page_Query_Column_List">
@@ -45,7 +46,8 @@
         cp.place_of_origin,
         cp.spec_type,
         cp.mid_bag_qty,
-        cp.big_bag_qty
+        cp.big_bag_qty,
+        cp.image_path
     </sql>
 
     <select id="findAll" resultMap="PageQueryResultMap">

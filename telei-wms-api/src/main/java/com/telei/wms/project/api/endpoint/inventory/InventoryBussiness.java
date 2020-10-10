@@ -65,7 +65,7 @@ public class InventoryBussiness {
     //库存调整-审核状态
     private static  final String ADJUST_REVIEW = "20";
 
-    //上架-状态
+    //已上架-状态
     private static  final String SHIFT_STATUS = "20";
 
     @Autowired
@@ -247,7 +247,6 @@ public class InventoryBussiness {
             log.info("\n +++++++++++++++++++++ 上架操作::根据产品IDS -> {},查询产品集合 -> {} ++++++++++++++++++++ \n ", JSON.toJSONString(requestProductIdList), JSON.toJSONString(productList));
 
 
-
             //2.2 库存批次-预处理
             List<WmsIvAttributebatch> ivAttributebatcheList = wmsIvAttributebatchService.selectByPrimaryKeys(requestIabIdList);
             if (Objects.isNull(ivAttributebatcheList) || ivAttributebatcheList.isEmpty()) {
@@ -271,6 +270,7 @@ public class InventoryBussiness {
             wmsPaoHeader.setPutawayQty(Objects.isNull(wmsPaoHeader.getPutawayQty()) ? waitPutawayQty : (wmsPaoHeader.getPutawayQty().add(waitPutawayQty)));//已上架数量
             wmsPaoHeader.setLastupdateUser(userInfo.getUserName());//用户名
             wmsPaoHeader.setLastupdateTime(nowWithUTC);//最后更新时间
+            wmsPaoHeader.setPaoStatus(SHIFT_STATUS);//已上架
 
             //2.4 上架单明细-预处理(上架时间、上架用户、上架数量)
             List<WmsPaoLine> paoLineList = wmsPaoLineService.selectByPrimaryKeys(requestPaolIdList);
@@ -279,7 +279,7 @@ public class InventoryBussiness {
             }
             log.info("\n +++++++++++++++++++++ 上架操作::根据上架明细IDS -> {},查询上架单明细集合 -> {} ++++++++++++++++++++ \n ", JSON.toJSONString(requestPaolIdList), JSON.toJSONString(paoLineList));
 
-            List<Long> shiftList = paoLineList.stream().filter(item -> Objects.nonNull(item.getPaoStatus()) && Objects.equals("20", item.getPaoStatus())).map(WmsPaoLine::getPaoId).collect(toList());
+            List<Long> shiftList = paoLineList.stream().filter(item -> Objects.nonNull(item.getPaoStatus()) && Objects.equals(SHIFT_STATUS, item.getPaoStatus())).map(WmsPaoLine::getPaoId).collect(toList());
             if(Objects.nonNull(shiftList) && !shiftList.isEmpty()){
                     ErrorCode.INVENTORY_ADD_ERROR_PAO_LINE_ALREADY_SHIFT_23.throwError(JSON.toJSONString(shiftList));
             }
@@ -381,7 +381,7 @@ public class InventoryBussiness {
                 inventory.setBigBagRate(Objects.isNull(bigBagRate) ? 0 : bigBagRate.intValue());//大包转换率  批次表中获取
                 inventory.setBigBagQty(ivQty.divideAndRemainder(bigBagRate)[0]);//大包数量
                 inventory.setBigBagExtraQty(ivQty.divideAndRemainder(bigBagRate)[1]);//大包剩余数量
-                inventory.setMidBagRate(Objects.isNull(midBagRate) ? 0 : bigBagRate.intValue()); // 中包转化数(批次表记录)
+                inventory.setMidBagRate(Objects.isNull(midBagRate) ? 0 : midBagRate.intValue()); // 中包转化数(批次表记录)
                 inventory.setMidBagQty(ivQty.divideAndRemainder(midBagRate)[0]);//中包数量
                 inventory.setMidBagExtraQty(ivQty.divideAndRemainder(midBagRate)[1]);//中包剩余数量
                 inventory.setIvTranstime(nowWithUTC);//最近库存更新时间
@@ -794,10 +794,12 @@ public class InventoryBussiness {
             WmsInventory dbInventory = v.get(0);
             Integer bigBagRate = dbInventory.getBigBagRate();
             Integer midBagRate = dbInventory.getMidBagRate();
+            //大包数量
             detailVo.setBigBagQty(iabQty.divideToIntegralValue(new BigDecimal(bigBagRate)));
             BigDecimal[] bigDecimals = iabQty.divideAndRemainder(new BigDecimal(midBagRate));
             detailVo.setMidBagQty(bigDecimals[0]);
             detailVo.setTinyBagQty(bigDecimals[1]);
+            detailVo.setQty(iabQty);
             list.add(detailVo);
         });
         InventoryDetailBussinessResponse response = new InventoryDetailBussinessResponse();
@@ -997,7 +999,7 @@ public class InventoryBussiness {
             });
 
             /**回写出库任务*/
-            wmsDoHeader.setOrderStatus("50");//已出库
+            wmsDoHeader.setOrderStatus(ALL_INVENTORY_STATUS);//已出库
             wmsDoHeader.setShippingTime(nowWithUTC);//发货时间(出库时间)
 
             if (LockMapUtil.confirmLock(dohId, lockValue)) {

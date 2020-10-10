@@ -72,6 +72,12 @@
             <if test="ownerUser != null and ownerUser != ''">
                 AND wrh.owner_user=#{ownerUser}
             </if>
+            <if test="userName != null and userName != ''">
+                AND csa.employee_name LIKE concat('%',#{userName},'%')
+            </if>
+            <if test="createUser != null and createUser != ''">
+                AND wrh.create_user LIKE concat('%',#{createUser},'%')
+            </if>
             <if test="custOrderNo != null and custOrderNo != ''">
                 AND wrh.cust_order_no LIKE concat('%',#{custOrderNo},'%')
             </if>

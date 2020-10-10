@@ -15,5 +15,8 @@ public class DoHeaderResponseVo extends WmsDoHeader {
     private String customerName;
     /** 供应商名称 */
     private String supplierName;
-
+    /** 销售员 */
+    private String seller;
+    /** 出库计划编号 */
+    private String spCode;
 }

@@ -360,7 +360,7 @@ public class PloBussiness {
         WmsPloHeader updateWmsPloHeader = new WmsPloHeader();
         updateWmsPloHeader.setId(wmsPloHeader.getId());
         updateWmsPloHeader.setOrderStatus(PICKING_FINISH_STATUS);
-        updateWmsPloHeader.setLastUpdateUser("");
+        updateWmsPloHeader.setLastUpdateUser(CustomRequestContext.getUserInfo().getUserName());
         updateWmsPloHeader.setLastUpdateTime(DateUtils.nowWithUTC());
         wmsPloHeaderService.updateByPrimaryKeySelective(updateWmsPloHeader);
         //更新出库任务单状态

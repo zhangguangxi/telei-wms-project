@@ -307,9 +307,12 @@ datasource:
     testWhileIdle: true
     timeBetweenEvictionRunsMillis: 60000
     type: com.alibaba.druid.pool.DruidDataSource
-    url: jdbc:mysql://127.0.0.1:3306/wms?characterEncoding=utf8&allowMultiQueries=true&useUnicode=true&useSSL=false
-    username: root
-    password: admin1314
+#    url: jdbc:mysql://127.0.0.1:3306/wms?characterEncoding=utf8&allowMultiQueries=true&useUnicode=true&useSSL=false
+#    username: root
+#    password: admin1314
+    url: jdbc:mysql://rm-bp1ban5365z07u391.mysql.rds.aliyuncs.com:3306/wms?characterEncoding=utf8&allowMultiQueries=true&useUnicode=true&useSSL=false
+    username: muser
+    password: Tel202020
     validationQuery:  'x'
 
 id-generator:

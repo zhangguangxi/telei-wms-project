@@ -49,6 +49,8 @@ public class PullReplenishmentBusinessPageQueryRequest {
      */
     private Long warehouseId;
 
+    private String internalSupplier;
+
     /**
      * 当前页
      */

@@ -360,7 +360,7 @@ public class RooBussiness {
             ErrorCode.ROO_NOT_EXIST_4001.throwError();
         }
         RooHeaderBusinessResponse response = DataConvertUtil.parseDataAsObject(rooHeaderResponseVo, RooHeaderBusinessResponse.class);
-        List<RooLineResponseVo> wmsRooLines = wmsRooLineService.findAll(request.getId());
+        List<RooLineResponseVo> wmsRooLines = wmsRooLineService.findAll(request.getId(), CustomRequestContext.getUserInfo().getCompanyId());
         if (StringUtils.isNotNull(wmsRooLines) && !wmsRooLines.isEmpty()) {
             response.setRooLines(wmsRooLines);
         }
@@ -383,10 +383,10 @@ public class RooBussiness {
             conditionsBuilder.eq("ownerUser", request.getOwnerUser());
         }
         if (StringUtils.isNoneBlank(request.getRoCode())) {
-            conditionsBuilder.eq("roCode", request.getRoCode());
+            conditionsBuilder.like("roCode", request.getRoCode());
         }
         if (StringUtils.isNoneBlank(request.getRooCode())) {
-            conditionsBuilder.eq("rooCode", request.getRooCode());
+            conditionsBuilder.like("rooCode", request.getRooCode());
         }
         if (StringUtils.isNoneBlank(request.getRoStatus())) {
             conditionsBuilder.eq("roStatus", request.getRoStatus());

@@ -151,7 +151,7 @@ public enum ErrorCode {
     LIFT_WORK_PRODUCT_IS_NULL_EQUALS_4009,
 
     LIFT_TASK_UPDATE_ERROR_4001,
-    LIFT_TASK_ADD_ERROR_4002
+    LIFT_TASK_ADD_ERROR_4002,
     ;
 
     private  String code;

@@ -1,6 +1,7 @@
 package com.telei.wms.customer.supplier;
 
 import com.nuochen.framework.app.api.ApiResponse;
+import com.telei.wms.customer.supplier.dto.SupplierDetailRequest;
 import com.telei.wms.customer.supplier.dto.SupplierRequest;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -20,4 +21,12 @@ public interface SupplierFeignClient {
     @PostMapping("internal/011712")
     ApiResponse getSupplierListByName(SupplierRequest request);
 
+
+    /**
+     * 根据供应商id查询供应商详情
+     * @param request
+     * @return
+     */
+    @PostMapping("internal/011707")
+    ApiResponse getSupplierDetailById(SupplierDetailRequest request);
 }

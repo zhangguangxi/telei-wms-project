@@ -136,11 +136,25 @@ public class LiftTaskBussiness {
     public LiftTaskBusinessResponse updateLiftTask(LiftTaskBusinessRequest request) {
         List<WmsProductSampleCommonRequest> updateRequestList = request.getUpdateRequestList();
         if (StringUtils.isNotNull(updateRequestList) && !updateRequestList.isEmpty()) {
-            List<WmsProductSample> wmsProductSampleList = new ArrayList<>();
+            List<WmsProductSample> productSampleUpdateList = new ArrayList<>();
+            List<WmsProductSample> productSampleAddList = new ArrayList<>();
             for (WmsProductSampleCommonRequest commonRequest : updateRequestList) {
                 WmsProductSample wmsProductSample = DataConvertUtil.parseDataAsObject(commonRequest, WmsProductSample.class);
-                wmsProductSampleList.add(wmsProductSample);
-                int count = wmsProductSampleService.updateBatch(wmsProductSampleList);
+                if(StringUtils.isNotNull(wmsProductSample.getId())){
+                    productSampleUpdateList.add(wmsProductSample);
+                }else {
+                    wmsProductSample.setId(idGenerator.getUnique());
+                    productSampleAddList.add(wmsProductSample);
+                }
+            }
+            if(productSampleUpdateList.size() > 0){
+                int count = wmsProductSampleService.updateBatch(productSampleUpdateList);
+                if (count <= 0) {
+                    ErrorCode.LIFT_TASK_UPDATE_ERROR_4001.throwError();
+                }
+            }
+            if(productSampleAddList.size() > 0){
+                int count = wmsProductSampleService.insertBatch(productSampleAddList);
                 if (count <= 0) {
                     ErrorCode.LIFT_TASK_UPDATE_ERROR_4001.throwError();
                 }
@@ -169,9 +183,12 @@ public class LiftTaskBussiness {
         if (StringUtils.isNoneBlank(request.getLcCode())) {
             conditionsBuilder.like("lcCode", request.getLcCode());
         }
+        if (StringUtils.isNoneBlank(request.getLcType())) {
+            conditionsBuilder.like("lcType", request.getLcType());
+        }
         conditionsBuilder.eq("companyId", CustomRequestContext.getUserInfo().getCompanyId());
         Map<String, Object> paramMap = conditionsBuilder.build();
-        paramMap.put("orderBy", " lift_id DESC");
+        paramMap.put("orderBy", " ps.ps_id DESC");
         Pagination page = (Pagination) wmsInventoryService.liftTaskPageQuery(pagination, paramMap);
         LiftTaskBusinessPageQueryResponse response = new LiftTaskBusinessPageQueryResponse();
         response.setPage(page);

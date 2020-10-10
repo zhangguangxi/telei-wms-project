@@ -18,6 +18,10 @@ public class RoHeaderPageQueryRequestVo {
     private Long warehouseId;
     /** 所属人,存储account_id */
     private Long ownerUser;
+    /** 所属人名称 */
+    private String userName;
+    /** 创建用户 */
+    private String createUser;
     /** 商家订单号 */
     private String custOrderNo;
     /** 订单状态 01-制单，10-审核，40-部分入库，50-已入库，98-关闭，99-作废 */

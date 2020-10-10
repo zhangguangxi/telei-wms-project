@@ -11,6 +11,7 @@ import com.telei.wms.datasource.wms.model.WmsDoLine;
 import com.telei.wms.datasource.wms.model.WmsIdInstantdirective;
 import com.telei.wms.datasource.wms.service.WmsDoHeaderService;
 import com.telei.wms.datasource.wms.service.WmsDoLineService;
+import com.telei.wms.datasource.wms.vo.DoLineResponseVo;
 import com.telei.wms.project.api.ErrorCode;
 import com.telei.wms.project.api.amqp.producer.WmsOmsShipPlanCancelCallbackProducer;
 import com.telei.wms.project.api.endpoint.doHeader.dto.*;
@@ -75,7 +76,7 @@ public class DoHeaderBussiness {
             ErrorCode.DO_NOT_EXIST_4001.throwError();
         }
         DoHeaderDetailResponse response = DataConvertUtil.parseDataAsObject(wmsDoHeader, DoHeaderDetailResponse.class);
-        List<WmsDoLine> wmsDoLineList = wmsDoLineService.findAll(request.getId());
+        List<DoLineResponseVo> wmsDoLineList = wmsDoLineService.findAll(request.getId(), wmsDoHeader.getCompanyId());
         List<DoLineDetailResponse> doLineDetailResponses = DataConvertUtil.parseDataAsArray(wmsDoLineList, DoLineDetailResponse.class);
         response.setDoLines(doLineDetailResponses);
         return response;

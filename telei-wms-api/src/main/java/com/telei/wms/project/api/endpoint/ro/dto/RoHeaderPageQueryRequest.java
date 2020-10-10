@@ -21,8 +21,11 @@ public class RoHeaderPageQueryRequest {
     @ApiModelProperty(value = "仓库id", example = "2525345353")
     private Long warehouseId;
 
-    @ApiModelProperty(value = "所属人", example = "2525345353")
-    private Long ownerUser;
+    @ApiModelProperty(value = "所属人名称", example = "2525345353")
+    private String userName;
+
+    @ApiModelProperty(value = "创建用户", example = "2525345353")
+    private String createUser;
 
     @ApiModelProperty(value = "商家订单号（采购单编号）", example = "2525345353")
     private String custOrderNo;

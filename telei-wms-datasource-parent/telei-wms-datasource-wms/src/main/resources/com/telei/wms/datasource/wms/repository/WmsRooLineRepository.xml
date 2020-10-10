@@ -52,19 +52,20 @@
         wrl.create_user,
         wrl.create_time,
         wrl.iab_id,
-        wl.product_no,
-        wl.product_name,
-        wl.brand
+        cp.product_no,
+        cp.product_name,
+        cp.brand,
+        cp.place_of_origin
     </sql>
 
     <select id="findAll" resultMap="PageQueryResultMap">
         SELECT
         <include refid="Page_Query_Column_List"/>
         FROM wms_roo_line wrl
-        INNER JOIN wms_ro_line wl ON wl.rol_id = wrl.rol_id
+        INNER JOIN cdm.cdm_product cp ON cp.product_id = wrl.product_id AND cp.company_id=#{companyId,jdbcType=BIGINT}
         <where>
-            <if test="id != null">
-                and wrl.roo_id = #{id}
+            <if test="rooId != null">
+                and wrl.roo_id = #{rooId}
             </if>
         </where>
     </select>
