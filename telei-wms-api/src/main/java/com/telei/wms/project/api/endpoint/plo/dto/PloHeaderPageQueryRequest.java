@@ -19,6 +19,12 @@ public class PloHeaderPageQueryRequest {
     @ApiModelProperty(value = "业务单据编号", example = "2525345353")
     private String ploCode;
 
+    @ApiModelProperty(value = "任务单据编号", example = "2525345353")
+    private String dohCode;
+
+    @ApiModelProperty(value = "拣货员", example = "Dean")
+    private String plUser;
+
     @ApiModelProperty(value = "仓库id", example = "2525345353")
     private Long warehouseId;
 

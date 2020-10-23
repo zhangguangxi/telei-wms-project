@@ -7,21 +7,21 @@ import org.joda.time.format.DateTimeFormat;
 
 import java.lang.management.ManagementFactory;
 import java.text.ParseException;
-import java.text.ParsePosition;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.List;
 
 /**
  * 日期工具类
  */
 public abstract class DateUtils {
-    private static final String yyyyMMdd = "yyyy-MM-dd";
-    private static final String HHmmss = "HH:mm:ss";
-    private static final String yyyyMMddHHmmss = String.join(" ", yyyyMMdd, HHmmss);
-    public static String YYYY_MM_DD_HH_MM_SS = "yyyy-MM-dd HH:mm:ss";
+    public  static final String yyyyMMdd = "yyyy-MM-dd";
+    public  static final String HHmmss = "HH:mm:ss";
+    public  static final String yyyyMMddHHmmss = String.join(" ", yyyyMMdd, HHmmss);
+    public  static String YYYY_MM_DD_HH_MM_SS = "yyyy-MM-dd HH:mm:ss";
+    public  static final String RANGE_TIME_START = " 00:00:00";
+    public  static final String RANGE_TIME_END= " 23:59:59";
+
     private static String[] parsePatterns = {
             "yyyy-MM-dd", "yyyy-MM-dd HH:mm:ss", "yyyy-MM-dd HH:mm", "yyyy-MM",
             "yyyy/MM/dd", "yyyy/MM/dd HH:mm:ss", "yyyy/MM/dd HH:mm", "yyyy/MM",

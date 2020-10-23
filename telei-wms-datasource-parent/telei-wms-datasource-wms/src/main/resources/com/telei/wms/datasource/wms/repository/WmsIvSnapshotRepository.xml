@@ -66,5 +66,13 @@
 			a.product_id
     </select>
 
+    <select id="findAll" resultMap="BaseResultMap">
+		SELECT
+		<include refid="Base_Column_List" />
+		FROM wms_iv_snapshot
+		where ivst_id = #{ivstId} and ivs_id > #{spMaxId}
+		limit 100;
+    </select>
+
 </mapper>
 

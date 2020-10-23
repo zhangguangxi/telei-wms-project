@@ -6,7 +6,7 @@
             <result column="plo_code" jdbcType="VARCHAR" property="ploCode"/>
             <result column="doh_id" jdbcType="BIGINT" property="dohId"/>
             <result column="doh_code" jdbcType="VARCHAR" property="dohCode"/>
-            <result column="company_id" jdbcType="VARCHAR" property="companyId"/>
+            <result column="company_id" jdbcType="BIGINT" property="companyId"/>
             <result column="warehouse_id" jdbcType="BIGINT" property="warehouseId"/>
             <result column="warehouse_code" jdbcType="VARCHAR" property="warehouseCode"/>
             <result column="cust_order_no" jdbcType="VARCHAR" property="custOrderNo"/>
@@ -23,6 +23,7 @@
             <result column="picking_vol" jdbcType="DECIMAL" property="pickingVol"/>
             <result column="mobile_picking" jdbcType="VARCHAR" property="mobilePicking"/>
             <result column="memo" jdbcType="VARCHAR" property="memo"/>
+            <result column="plo_time" jdbcType="TIMESTAMP" property="ploTime"/>
             <result column="create_user" jdbcType="VARCHAR" property="createUser"/>
             <result column="create_time" jdbcType="TIMESTAMP" property="createTime"/>
             <result column="last_update_user" jdbcType="VARCHAR" property="lastUpdateUser"/>
@@ -30,12 +31,12 @@
     </resultMap>
 
     <sql id="Base_Column_List">
-        plo_id,plo_code,doh_id,doh_code,company_id,warehouse_id,warehouse_code,cust_order_no,supplier_id,customer_id,order_status,is_freezing,total_qty,total_weight,total_vol,detailed_species_qty,picked_qty,picking_weight,picking_vol,mobile_picking,memo,create_user,create_time,last_update_user,last_update_time
+        plo_id,plo_code,doh_id,doh_code,company_id,warehouse_id,warehouse_code,cust_order_no,supplier_id,customer_id,order_status,is_freezing,total_qty,total_weight,total_vol,detailed_species_qty,picked_qty,picking_weight,picking_vol,mobile_picking,memo,plo_time,create_user,create_time,last_update_user,last_update_time
     </sql>
 
         <insert id="insert">
-            insert into wms_plo_header (plo_id,plo_code,doh_id,doh_code,company_id,warehouse_id,warehouse_code,cust_order_no,supplier_id,customer_id,order_status,is_freezing,total_qty,total_weight,total_vol,detailed_species_qty,picked_qty,picking_weight,picking_vol,mobile_picking,memo,create_user,create_time,last_update_user,last_update_time)
-            values (#{id,jdbcType=BIGINT},#{ploCode,jdbcType=VARCHAR},#{dohId,jdbcType=BIGINT},#{dohCode,jdbcType=VARCHAR},#{companyId,jdbcType=VARCHAR},#{warehouseId,jdbcType=BIGINT},#{warehouseCode,jdbcType=VARCHAR},#{custOrderNo,jdbcType=VARCHAR},#{supplierId,jdbcType=BIGINT},#{customerId,jdbcType=BIGINT},#{orderStatus,jdbcType=VARCHAR},#{isFreezing,jdbcType=INTEGER},#{totalQty,jdbcType=DECIMAL},#{totalWeight,jdbcType=DECIMAL},#{totalVol,jdbcType=DECIMAL},#{detailedSpeciesQty,jdbcType=INTEGER},#{pickedQty,jdbcType=DECIMAL},#{pickingWeight,jdbcType=DECIMAL},#{pickingVol,jdbcType=DECIMAL},#{mobilePicking,jdbcType=VARCHAR},#{memo,jdbcType=VARCHAR},#{createUser,jdbcType=VARCHAR},#{createTime,jdbcType=TIMESTAMP},#{lastUpdateUser,jdbcType=VARCHAR},#{lastUpdateTime,jdbcType=TIMESTAMP})
+            insert into wms_plo_header (plo_id,plo_code,doh_id,doh_code,company_id,warehouse_id,warehouse_code,cust_order_no,supplier_id,customer_id,order_status,is_freezing,total_qty,total_weight,total_vol,detailed_species_qty,picked_qty,picking_weight,picking_vol,mobile_picking,memo,plo_time,create_user,create_time,last_update_user,last_update_time)
+            values (#{id,jdbcType=BIGINT},#{ploCode,jdbcType=VARCHAR},#{dohId,jdbcType=BIGINT},#{dohCode,jdbcType=VARCHAR},#{companyId,jdbcType=BIGINT},#{warehouseId,jdbcType=BIGINT},#{warehouseCode,jdbcType=VARCHAR},#{custOrderNo,jdbcType=VARCHAR},#{supplierId,jdbcType=BIGINT},#{customerId,jdbcType=BIGINT},#{orderStatus,jdbcType=VARCHAR},#{isFreezing,jdbcType=INTEGER},#{totalQty,jdbcType=DECIMAL},#{totalWeight,jdbcType=DECIMAL},#{totalVol,jdbcType=DECIMAL},#{detailedSpeciesQty,jdbcType=INTEGER},#{pickedQty,jdbcType=DECIMAL},#{pickingWeight,jdbcType=DECIMAL},#{pickingVol,jdbcType=DECIMAL},#{mobilePicking,jdbcType=VARCHAR},#{memo,jdbcType=VARCHAR},#{ploTime,jdbcType=TIMESTAMP},#{createUser,jdbcType=VARCHAR},#{createTime,jdbcType=TIMESTAMP},#{lastUpdateUser,jdbcType=VARCHAR},#{lastUpdateTime,jdbcType=TIMESTAMP})
         </insert>
 
         <insert id="insertSelective">
@@ -104,6 +105,9 @@
                     <if test="memo != null">
                         memo,
                     </if>
+                    <if test="ploTime != null">
+                        plo_time,
+                    </if>
                     <if test="createUser != null">
                         create_user,
                     </if>
@@ -131,7 +135,7 @@
                         #{dohCode,jdbcType=VARCHAR},
                     </if>
                     <if test="companyId != null">
-                        #{companyId,jdbcType=VARCHAR},
+                        #{companyId,jdbcType=BIGINT},
                     </if>
                     <if test="warehouseId != null">
                         #{warehouseId,jdbcType=BIGINT},
@@ -181,6 +185,9 @@
                     <if test="memo != null">
                         #{memo,jdbcType=VARCHAR},
                     </if>
+                    <if test="ploTime != null">
+                        #{ploTime,jdbcType=TIMESTAMP},
+                    </if>
                     <if test="createUser != null">
                         #{createUser,jdbcType=VARCHAR},
                     </if>
@@ -197,14 +204,14 @@
         </insert>
 
         <insert id="insertBatch">
-            insert into wms_plo_header (plo_id,plo_code,doh_id,doh_code,company_id,warehouse_id,warehouse_code,cust_order_no,supplier_id,customer_id,order_status,is_freezing,total_qty,total_weight,total_vol,detailed_species_qty,picked_qty,picking_weight,picking_vol,mobile_picking,memo,create_user,create_time,last_update_user,last_update_time) values
+            insert into wms_plo_header (plo_id,plo_code,doh_id,doh_code,company_id,warehouse_id,warehouse_code,cust_order_no,supplier_id,customer_id,order_status,is_freezing,total_qty,total_weight,total_vol,detailed_species_qty,picked_qty,picking_weight,picking_vol,mobile_picking,memo,plo_time,create_user,create_time,last_update_user,last_update_time) values
             <foreach collection="list" item="item" separator=",">
                 (
                     #{item.id,jdbcType=BIGINT},
                     #{item.ploCode,jdbcType=VARCHAR},
                     #{item.dohId,jdbcType=BIGINT},
                     #{item.dohCode,jdbcType=VARCHAR},
-                    #{item.companyId,jdbcType=VARCHAR},
+                    #{item.companyId,jdbcType=BIGINT},
                     #{item.warehouseId,jdbcType=BIGINT},
                     #{item.warehouseCode,jdbcType=VARCHAR},
                     #{item.custOrderNo,jdbcType=VARCHAR},
@@ -221,6 +228,7 @@
                     #{item.pickingVol,jdbcType=DECIMAL},
                     #{item.mobilePicking,jdbcType=VARCHAR},
                     #{item.memo,jdbcType=VARCHAR},
+                    #{item.ploTime,jdbcType=TIMESTAMP},
                     #{item.createUser,jdbcType=VARCHAR},
                     #{item.createTime,jdbcType=TIMESTAMP},
                     #{item.lastUpdateUser,jdbcType=VARCHAR},
@@ -247,7 +255,7 @@
                 plo_code = #{ploCode,jdbcType=VARCHAR},
                 doh_id = #{dohId,jdbcType=BIGINT},
                 doh_code = #{dohCode,jdbcType=VARCHAR},
-                company_id = #{companyId,jdbcType=VARCHAR},
+                company_id = #{companyId,jdbcType=BIGINT},
                 warehouse_id = #{warehouseId,jdbcType=BIGINT},
                 warehouse_code = #{warehouseCode,jdbcType=VARCHAR},
                 cust_order_no = #{custOrderNo,jdbcType=VARCHAR},
@@ -264,6 +272,7 @@
                 picking_vol = #{pickingVol,jdbcType=DECIMAL},
                 mobile_picking = #{mobilePicking,jdbcType=VARCHAR},
                 memo = #{memo,jdbcType=VARCHAR},
+                plo_time = #{ploTime,jdbcType=TIMESTAMP},
                 create_user = #{createUser,jdbcType=VARCHAR},
                 create_time = #{createTime,jdbcType=TIMESTAMP},
                 last_update_user = #{lastUpdateUser,jdbcType=VARCHAR},
@@ -285,7 +294,7 @@
                     doh_code = #{dohCode,jdbcType=VARCHAR},
                 </if>
                 <if test="companyId != null">
-                    company_id = #{companyId,jdbcType=VARCHAR},
+                    company_id = #{companyId,jdbcType=BIGINT},
                 </if>
                 <if test="warehouseId != null">
                     warehouse_id = #{warehouseId,jdbcType=BIGINT},
@@ -335,6 +344,9 @@
                 <if test="memo != null">
                     memo = #{memo,jdbcType=VARCHAR},
                 </if>
+                <if test="ploTime != null">
+                    plo_time = #{ploTime,jdbcType=TIMESTAMP},
+                </if>
                 <if test="createUser != null">
                     create_user = #{createUser,jdbcType=VARCHAR},
                 </if>
@@ -365,7 +377,7 @@
                         doh_code = #{item.dohCode,jdbcType=VARCHAR},
                     </if>
                     <if test="item.companyId != null">
-                        company_id = #{item.companyId,jdbcType=VARCHAR},
+                        company_id = #{item.companyId,jdbcType=BIGINT},
                     </if>
                     <if test="item.warehouseId != null">
                         warehouse_id = #{item.warehouseId,jdbcType=BIGINT},
@@ -414,6 +426,9 @@
                     </if>
                     <if test="item.memo != null">
                         memo = #{item.memo,jdbcType=VARCHAR},
+                    </if>
+                    <if test="item.ploTime != null">
+                        plo_time = #{item.ploTime,jdbcType=TIMESTAMP},
                     </if>
                     <if test="item.createUser != null">
                         create_user = #{item.createUser,jdbcType=VARCHAR},
@@ -473,7 +488,7 @@
                     and doh_code=#{dohCode,jdbcType=VARCHAR}
                 </if>
                 <if test="companyId != null">
-                    and company_id=#{companyId,jdbcType=VARCHAR}
+                    and company_id=#{companyId,jdbcType=BIGINT}
                 </if>
                 <if test="warehouseId != null">
                     and warehouse_id=#{warehouseId,jdbcType=BIGINT}
@@ -522,6 +537,9 @@
                 </if>
                 <if test="memo != null">
                     and memo=#{memo,jdbcType=VARCHAR}
+                </if>
+                <if test="ploTime != null">
+                    and plo_time=#{ploTime,jdbcType=TIMESTAMP}
                 </if>
                 <if test="createUser != null">
                     and create_user=#{createUser,jdbcType=VARCHAR}
@@ -605,6 +623,9 @@
                 </if>
                 <if test="memo != null">
                     and memo ${memo}
+                </if>
+                <if test="ploTime != null">
+                    and plo_time ${ploTime}
                 </if>
                 <if test="createUser != null">
                     and create_user ${createUser}

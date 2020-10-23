@@ -15,8 +15,8 @@ public class WmsInitLineService extends BaseService<WmsInitLineRepository,WmsIni
     @Autowired
     private WmsInitLineRepository wmsInitLineRepository;
 
-    public List<WmsInitLineVO>  selectInitLinesByEntity(WmsInitLine wmsInitLine){
-        return wmsInitLineRepository.selectInitLinesByEntity(wmsInitLine);
+    public List<WmsInitLineVO>  selectInitLinesByEntity(Long ivihId, Long companyId){
+        return wmsInitLineRepository.selectInitLinesByEntity(ivihId, companyId);
     }
 
 }

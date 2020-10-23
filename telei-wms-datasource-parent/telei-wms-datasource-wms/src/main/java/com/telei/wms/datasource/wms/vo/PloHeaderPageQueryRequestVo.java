@@ -10,6 +10,10 @@ public class PloHeaderPageQueryRequestVo {
 
     /** 业务单据编号 */
     private String ploCode;
+    /** 任务单据编号 */
+    private String dohCode;
+    /** 拣货员 */
+    private String plUser;
     /** 开始时间 */
     private String startTime;
     /** 结束时间 */

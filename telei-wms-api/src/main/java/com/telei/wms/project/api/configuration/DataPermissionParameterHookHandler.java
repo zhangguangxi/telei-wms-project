@@ -4,7 +4,6 @@ import com.nuochen.framework.app.gateway.GatewayContext;
 import com.telei.infrastructure.component.commons.CustomRequestContext;
 import com.telei.infrastructure.component.datapermission.DataPermissionParameterHook;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
 
 import java.util.Map;
 
@@ -13,7 +12,7 @@ import java.util.Map;
  * @Auther: leo
  * @Date: 2020/7/28 23:02
  */
-@Component
+//@Component
 public class DataPermissionParameterHookHandler implements DataPermissionParameterHook {
     @Autowired
     private Caches caches;

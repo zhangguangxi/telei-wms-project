@@ -85,7 +85,7 @@ public class RooBussiness {
         Long accountId = CustomRequestContext.getUserInfo().getAccountId();
         // 获取业务单号
         BusinessNumberRequest businessNumberRequest = new BusinessNumberRequest();
-        businessNumberRequest.setType("WMS");
+        businessNumberRequest.setType("SHD");
         ApiResponse apiResponse = businessNumberFeignClient.get(businessNumberRequest);
         BusinessNumberResponse businessNumberResponse = apiResponse.convertDataToObject(BusinessNumberResponse.class);
         if (StringUtils.isEmpty(businessNumberResponse.getBusinessNumber())) {
@@ -162,10 +162,16 @@ public class RooBussiness {
                     wmsIvAttributebatch.setProductNo(productResponse.getProductNo());
                     wmsIvAttributebatch.setProductName(productResponse.getProductName());
                     wmsIvAttributebatch.setProductNameLocal(productResponse.getProductNameLocal());
-                    wmsIvAttributebatch.setProductCategoryId(productResponse.getProductCategoryId());
-                    wmsIvAttributebatch.setStockUnit(productResponse.getStockUnit());
+                    wmsIvAttributebatch.setProductBarcode(productResponse.getProductBarcode());
+                    wmsIvAttributebatch.setProductUpcCode(productResponse.getProductUpcCode());
+                    wmsIvAttributebatch.setSpecType(productResponse.getSpecType());
+                    wmsIvAttributebatch.setProductWidth(productResponse.getProductWidth());
+                    wmsIvAttributebatch.setProductLength(productResponse.getProductLength());
+                    wmsIvAttributebatch.setProductHeight(productResponse.getProductHeight());
                     wmsIvAttributebatch.setProductColor(productResponse.getProductColor());
                     wmsIvAttributebatch.setProductSize(productResponse.getProductSize());
+                    wmsIvAttributebatch.setProductCategoryId(productResponse.getProductCategoryId());
+                    wmsIvAttributebatch.setStockUnit(productResponse.getStockUnit());
                     wmsIvAttributebatch.setPrice(productResponse.getSellingPriceReference());
                     wmsIvAttributebatch.setVol(productResponse.getUnitVol());
                     wmsIvAttributebatch.setTexture(productResponse.getTexture());

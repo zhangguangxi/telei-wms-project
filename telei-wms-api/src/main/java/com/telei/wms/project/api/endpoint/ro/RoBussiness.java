@@ -15,6 +15,7 @@ import com.telei.wms.datasource.wms.vo.RoHeaderPageQueryRequestVo;
 import com.telei.wms.datasource.wms.vo.RoLinePageQueryResponseVo;
 import com.telei.wms.project.api.ErrorCode;
 import com.telei.wms.project.api.amqp.producer.WmsOmsRecovicePlanCancelCallbackProducer;
+import com.telei.wms.project.api.amqp.producer.WmsOmsRecovicePlanUpdateProducer;
 import com.telei.wms.project.api.endpoint.ro.dto.*;
 import com.telei.wms.project.api.endpoint.wmsIdInstantdirective.WmsIdInstantdirectiveBussiness;
 import com.telei.wms.project.api.utils.DataConvertUtil;
@@ -60,6 +61,9 @@ public class RoBussiness {
 
     @Autowired
     private WmsOmsRecovicePlanCancelCallbackProducer wmsOmsRecovicePlanCancelCallbackProducer;
+
+    @Autowired
+    private WmsOmsRecovicePlanUpdateProducer wmsOmsRecovicePlanUpdateProducer;
 
     /**
      * 新增
@@ -123,16 +127,32 @@ public class RoBussiness {
      * @return
      */
     public RoCudBaseResponse updateRoHeader(RoHeaderUpdateRequest request) {
-        WmsRoHeader wmsRoHeaderIsExist = wmsRoHeaderService.selectByPrimaryKey(request.getId());
-        if (Objects.isNull(wmsRoHeaderIsExist)) {
+        WmsRoHeader wmsRoHeaderEntity = new WmsRoHeader();
+        wmsRoHeaderEntity.setId(request.getId());
+        wmsRoHeaderEntity.setRpId(request.getRpId());
+        WmsRoHeader wmsRoHeaderInfo = wmsRoHeaderService.selectOneByEntity(wmsRoHeaderEntity);
+        if (Objects.isNull(wmsRoHeaderInfo)) {
             ErrorCode.RO_NOT_EXIST_4001.throwError();
         }
         WmsRoHeader wmsRoHeader = DataConvertUtil.parseDataAsObject(request, WmsRoHeader.class);
-        wmsRoHeader.setLastUpdateUser(CustomRequestContext.getUserInfo().getUserName());
+        wmsRoHeader.setId(wmsRoHeaderInfo.getId());
+        if (Objects.nonNull(CustomRequestContext.getUserInfo())) {
+            wmsRoHeader.setLastUpdateUser(CustomRequestContext.getUserInfo().getUserName());
+        }
         wmsRoHeader.setLastUpdateTime(DateUtils.nowWithUTC());
         int updateResult = wmsRoHeaderService.updateByPrimaryKeySelective(wmsRoHeader);
         RoCudBaseResponse response = new RoCudBaseResponse();
         response.setIsSuccess(updateResult > 0);
+        if (response.getIsSuccess() && request.getIsSync()) {
+            //需要同步到计划
+            OmsRecovicePlan omsRecovicePlan = DataConvertUtil.parseDataAsObject(request, OmsRecovicePlan.class);
+            omsRecovicePlan.setId(wmsRoHeaderInfo.getRpId());
+            omsRecovicePlan.setMemo(null);
+            //添加数据交互指令
+            WmsIdInstantdirective wmsIdInstantdirective = wmsIdInstantdirectiveBussiness.add("PUTON", "", omsRecovicePlan);
+            //发送消息到队列
+            wmsOmsRecovicePlanUpdateProducer.send(wmsIdInstantdirective);
+        }
         return response;
     }
 
@@ -216,6 +236,9 @@ public class RoBussiness {
             WmsRoHeader wmsRoHeader = wmsRoHeaderService.selectOneByEntity(wmsRoHeaderEntity);
             if (Objects.isNull(wmsRoHeader)) {
                 ErrorCode.RO_NOT_EXIST_4001.throwError();
+            }
+            if (CLOSE_STATUS.equals(wmsRoHeader.getOrderStatus())) {
+                return response;
             }
             if (! PART_INVENTORY_STATUS.equals(wmsRoHeader.getOrderStatus())) {
                 //强制收货状态不正确

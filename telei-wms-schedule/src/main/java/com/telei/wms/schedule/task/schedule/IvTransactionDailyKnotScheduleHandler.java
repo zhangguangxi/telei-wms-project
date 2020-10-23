@@ -1,6 +1,5 @@
 package com.telei.wms.schedule.task.schedule;
 
-import com.nuochen.framework.autocoding.domain.condition.ConditionsBuilder;
 import com.nuochen.framework.component.task.TaskContext;
 import com.nuochen.framework.component.task.TaskHandler;
 import com.telei.infrastructure.component.idgenerator.IdSecondGenerator;
@@ -8,11 +7,14 @@ import com.telei.wms.commons.utils.DateUtils;
 import com.telei.wms.commons.utils.StringUtils;
 import com.telei.wms.datasource.wms.model.WmsIvSnapshotTime;
 import com.telei.wms.datasource.wms.model.WmsIvTransaction;
+import com.telei.wms.datasource.wms.model.WmsIvTransactionDailyKnot;
 import com.telei.wms.datasource.wms.repository.WmsIvSnapshotDailyKnotRepository;
 import com.telei.wms.datasource.wms.repository.WmsIvSnapshotTimeRepository;
+import com.telei.wms.datasource.wms.repository.WmsIvTransactionDailyKnotRepository;
 import com.telei.wms.datasource.wms.repository.WmsIvTransactionRepository;
 import com.telei.wms.datasource.wms.vo.WmsIvSnapshotDailyKnotVO;
 import com.telei.wms.datasource.wms.vo.WmsIvTransactionDailyKnotVO;
+import com.telei.wms.schedule.utils.DataConvertUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -20,10 +22,7 @@ import org.springframework.stereotype.Component;
 import java.math.BigDecimal;
 import java.text.ParsePosition;
 import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Collectors;
 
 /**
@@ -48,6 +47,9 @@ public class IvTransactionDailyKnotScheduleHandler extends TaskHandler {
     @Autowired
     private WmsIvSnapshotDailyKnotRepository wmsIvSnapshotDailyKnotRepository;
 
+    @Autowired
+    private WmsIvTransactionDailyKnotRepository wmsIvTransactionDailyKnotRepository;
+
     protected IvTransactionDailyKnotScheduleHandler() {
         super("库存变动记录日结");
     }
@@ -65,7 +67,7 @@ public class IvTransactionDailyKnotScheduleHandler extends TaskHandler {
         /**
          * 举例：当前时间为2020-09-11 10:00:00统计日结需要查询2020-09-10~2020-09-11的快照数据
          */
-        String leftSnapshotTime = sdf.format(DateUtils.nowWithDate());
+        String leftSnapshotTime = sdf.format(DateUtils.leftWithDate());
         String rightSnapshotTime = sdf.format(DateUtils.nowWithDate());
         List<WmsIvSnapshotTime> snapshotTimeList = wmsIvSnapshotTimeRepository.selectEntityByTime(leftSnapshotTime, rightSnapshotTime);
         if (StringUtils.isNotNull(snapshotTimeList) && snapshotTimeList.size() == 2) {
@@ -97,16 +99,13 @@ public class IvTransactionDailyKnotScheduleHandler extends TaskHandler {
             /**
              * 根据时间查询出符合条件的id列表从中取出开始以及结束id
              */
-            ConditionsBuilder conditionsBuilder = ConditionsBuilder.create();
-            conditionsBuilder.ge("createTime", leftTime);
-            conditionsBuilder.lt("createTime", rightTime);
-            Map<String, Object> paramMap = conditionsBuilder.build();
-            List<WmsIvTransaction> ivTransactionList = wmsIvTransactionRepository.selectByConditions(paramMap);
+            List<WmsIvTransaction> ivTransactionList = wmsIvTransactionRepository.selectByCreateTime(leftTime, rightTime);
             if (StringUtils.isNotNull(ivTransactionList) && !ivTransactionList.isEmpty()) {
                 List<Long> ids = ivTransactionList.stream().map(WmsIvTransaction::getId).collect(Collectors.toList());
                 ivtIdFrom = ids.get(0);
                 ivtIdEnd = ids.get(ids.size() - 1);
             }
+            List<WmsIvTransactionDailyKnot> transactionDailyKnotList = new ArrayList<>();
             if (StringUtils.isNotNull(transactionList) && !transactionList.isEmpty()) {
                 long idNumber = idSecondGenerator.getUnique();
                 for (WmsIvTransactionDailyKnotVO dailyKnotVO : transactionList) {
@@ -156,11 +155,12 @@ public class IvTransactionDailyKnotScheduleHandler extends TaskHandler {
                     dailyKnotVO.setKnotBeginQty(leftDailyKnotVOMap.get(uniqueKey));
                     dailyKnotVO.setKnotEndQty(rightDailyKnotVOMap.get(uniqueKey));
                     idNumber++;
+                    WmsIvTransactionDailyKnot ivTransactionDailyKnot = DataConvertUtil.parseDataAsObject(dailyKnotVO, WmsIvTransactionDailyKnot.class);
+                    transactionDailyKnotList.add(ivTransactionDailyKnot);
                 }
+                wmsIvTransactionDailyKnotRepository.insertBatch(transactionDailyKnotList);
             }
         }
-
-
     }
 
 }

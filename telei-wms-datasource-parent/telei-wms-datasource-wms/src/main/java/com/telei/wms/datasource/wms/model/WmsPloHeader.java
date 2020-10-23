@@ -53,6 +53,8 @@ public class WmsPloHeader implements Entity<Long> {
     private String mobilePicking;
     /** 备注 */
     private String memo;
+    /** 拣货完成时间 */
+    private Date ploTime;
     /** 创建用户 */
     private String createUser;
     /** 创建时间 */

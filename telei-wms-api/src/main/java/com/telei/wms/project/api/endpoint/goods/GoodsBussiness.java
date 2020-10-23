@@ -3,12 +3,12 @@ package com.telei.wms.project.api.endpoint.goods;
 import com.alibaba.fastjson.JSON;
 import com.nuochen.framework.autocoding.domain.Pagination;
 import com.nuochen.framework.autocoding.domain.condition.ConditionsBuilder;
+import com.telei.infrastructure.component.datapermission.meta.DataPermissionFilter;
 import com.telei.wms.datasource.wms.model.Goods;
 import com.telei.wms.datasource.wms.service.GoodsService;
 import com.telei.wms.project.api.endpoint.goods.dto.*;
 import com.telei.wms.project.api.utils.DataConvertUtil;
 import com.telei.wms.project.api.utils.TempIdGeneratorUtil;
-import com.telei.infrastructure.component.datapermission.meta.DataPermissionFilter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -39,8 +39,11 @@ public class GoodsBussiness {
     @Transactional(rollbackFor = Exception.class )
     public GoodsBusinessAddResponse addGoods(GoodsBusinessAddRequest request){
         Goods goods = DataConvertUtil.parseDataAsObject(request, Goods.class);
+
         goods.setId(TempIdGeneratorUtil.autoId());
-        goodsServiceCache.addGoods(goods);
+//        goodsServiceCache.addGoods(goods);
+        goodsService.insertSelective(goods);
+//        int a = 1/0;
         GoodsBusinessAddResponse businessResponse = new GoodsBusinessAddResponse();
         businessResponse.setIsSuccess(true);
         return businessResponse;

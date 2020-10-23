@@ -18,8 +18,9 @@ public class TestSchedule {
     @Autowired
     private TestScheduleHandler testScheduleHandler;
 
-//    @Scheduled(cron = TaskCron.EVERY_SECONDS_10)
+    @Scheduled(cron = TaskCron.EVERY_SECONDS_10)
     public void testbiz(){
+
         testScheduleHandler.run();
     }
 }

@@ -10,7 +10,7 @@ import lombok.Data;
 @Data
 public class InventoryAdjustPageQueryBussinessRequest {
     private PageCommonRequest pageCommonRequest;
-    private InventoryPageQueryRequest.InventoryPageQueryCondition inventoryPageQueryCondition;
+    private InventoryPageQueryCondition inventoryPageQueryCondition;
 
     @Data
     public static class InventoryPageQueryCondition {

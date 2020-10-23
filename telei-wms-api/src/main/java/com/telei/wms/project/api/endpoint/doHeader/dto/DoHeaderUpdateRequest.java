@@ -11,16 +11,18 @@ import java.util.Date;
 @Data
 public class DoHeaderUpdateRequest {
 
-    /** 出库任务id */
-    @ApiModelProperty(value = "主键id", example = "4675353938365515777")
+    @ApiModelProperty(value = "出库任务id", example = "4675353938365515777")
     private Long id;
-    /** 核验时间 */
+
     @ApiModelProperty(value = "核验时间", example = "2020-07-01 10:00:00")
     private Date checkTime;
-    /** 发货时间 */
+
+    @ApiModelProperty(value = "核验人", example = "核验人")
+    private String checkUser;
+
     @ApiModelProperty(value = "发货时间", example = "2020-07-01 10:00:00")
     private Date shippingTime;
-    /** 备注 */
+
     @ApiModelProperty(value = "备注", example = "备注")
     private String memo;
 }

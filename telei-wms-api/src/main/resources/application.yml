@@ -41,12 +41,16 @@ swagger:
 
 customize:
   feign:
-#    auth-url: http://127.0.0.1:20010
-    auth-url: http://192.168.1.114:20010
-#    wms-url: http://127.0.0.1:8811
-    wms-url: http://192.168.1.114:8811
+    auth-url: http://127.0.0.1:20010
+    cdm-url: http://127.0.0.1:8811
+#    auth-url: http://192.168.1.114:20010
+#    cdm-url: http://192.168.1.114:8811
   permission-switch:
     auto-sync: true
+
+#id生成配置
+id-generator:
+  machine-id: 1
 
 ##########################################profile options######################################
 
@@ -90,9 +94,6 @@ datasource:
     username: root
     password: root
     validationQuery:  'x'
-
-id-generator:
-  machine-id: 1
 
 #数据同步配置
 id-instantdirective:
@@ -151,7 +152,7 @@ spring:
         acknowledge-mode: manual
         #并发配置
         concurrency: 1
-        max-concurrency: 10
+        max-concurrency: 1
 
 #datasource:
 datasource:
@@ -171,16 +172,11 @@ datasource:
     testWhileIdle: true
     timeBetweenEvictionRunsMillis: 60000
     type: com.alibaba.druid.pool.DruidDataSource
-    url: jdbc:mysql://192.168.1.114:3306/wms?characterEncoding=utf8&allowMultiQueries=true&useUnicode=true&useSSL=false
+#    url: jdbc:mysql://192.168.1.114:3306/wms?characterEncoding=utf8&allowMultiQueries=true&useUnicode=true&useSSL=false
+    url: jdbc:mysql://192.168.1.127:3306/wms?characterEncoding=utf8&allowMultiQueries=true&useUnicode=true&useSSL=false
     username: root
     password: admin1314
-    #    url: jdbc:mysql://127.0.0.1:3306/wms_db?characterEncoding=utf8&allowMultiQueries=true
-    #    username: root
-    #    password: admin
     validationQuery:  'x'
-
-id-generator:
-  machine-id: 1
 
 #数据同步配置
 id-instantdirective:
@@ -190,8 +186,36 @@ id-instantdirective:
   system: WMS
   #数据埋点配置
   data-dependencies:
+    WmsAdjtHeaderService: wms_adjt_header
+    WmsAdjtLineService: wms_adjt_line
+    WmsDoHeaderService: wms_do_header
+    WmsDoLineService: wms_do_line
+    WmsInitHeaderService: wms_init_header
+    WmsInitLineService: wms_init_line
+    WmsInventoryService: wms_inventory
+    WmsInventoryHistoryService: wms_inventory_history
+    WmsIvAttributebatchService: wms_iv_attributebatch
+    WmsIvOutService: wms_iv_out
+    WmsIvOutConfirmService: wms_iv_out_confirm
+    WmsIvOutHistoryService: wms_iv_out_history
+    WmsIvSnapshotService: wms_iv_snapshot
+    WmsIvSnapshotDailyKnotService: wms_iv_snapshot_daily_knot
+    WmsIvSnapshotTimeService: wms_iv_snapshot_time
+    WmsIvSplitService: wms_iv_split
+    WmsIvTransactionService: wms_iv_transaction
+    WmsIvTransactionDailyKnotService: wms_iv_transaction_daily_knot
+    WmsLiftWorkService: wms_lift_work
+    WmsLocationService: wms_location
+    WmsPaoHeaderService: wms_pao_header
+    WmsPaoLineService: wms_pao_line
+    WmsPloDetailService: wms_plo_detail
+    WmsPloHeaderService: wms_plo_header
+    WmsPloLineService: wms_plo_line
+    WmsProductSampleService: wms_product_sample
     WmsRoHeaderService: wms_ro_header
     WmsRoLineService: wms_ro_line
+    WmsRooHeaderService: wms_roo_header
+    WmsRooLineService: wms_roo_line
 
 #当前节点系统之间数据交互配置
 wms-id-instantdirective:
@@ -249,9 +273,6 @@ datasource:
     password: admin1314
     validationQuery:  'x'
 
-id-generator:
-  machine-id: 1
-
 upload:
   images:
     postUri: http://192.168.1.113:20011/internal/980107
@@ -272,6 +293,7 @@ jetcache:
       uri: redis://admin1314@192.168.1.113:6379/0
 
 ---
+#线上环境配置（修改时要注意）
 spring:
   profiles: prod
   #rabbitmq配置
@@ -307,16 +329,10 @@ datasource:
     testWhileIdle: true
     timeBetweenEvictionRunsMillis: 60000
     type: com.alibaba.druid.pool.DruidDataSource
-#    url: jdbc:mysql://127.0.0.1:3306/wms?characterEncoding=utf8&allowMultiQueries=true&useUnicode=true&useSSL=false
-#    username: root
-#    password: admin1314
-    url: jdbc:mysql://rm-bp1ban5365z07u391.mysql.rds.aliyuncs.com:3306/wms?characterEncoding=utf8&allowMultiQueries=true&useUnicode=true&useSSL=false
+    url: jdbc:mysql://rm-bp161h93ngd4vy9pp.mysql.rds.aliyuncs.com:3306/wms?characterEncoding=utf8&allowMultiQueries=true&useUnicode=true&useSSL=false
     username: muser
     password: Tel202020
     validationQuery:  'x'
-
-id-generator:
-  machine-id: 1
 
 #数据同步配置
 id-instantdirective:
@@ -326,8 +342,36 @@ id-instantdirective:
   system: WMS
   #数据埋点配置
   data-dependencies:
+    WmsAdjtHeaderService: wms_adjt_header
+    WmsAdjtLineService: wms_adjt_line
+    WmsDoHeaderService: wms_do_header
+    WmsDoLineService: wms_do_line
+    WmsInitHeaderService: wms_init_header
+    WmsInitLineService: wms_init_line
+    WmsInventoryService: wms_inventory
+    WmsInventoryHistoryService: wms_inventory_history
+    WmsIvAttributebatchService: wms_iv_attributebatch
+    WmsIvOutService: wms_iv_out
+    WmsIvOutConfirmService: wms_iv_out_confirm
+    WmsIvOutHistoryService: wms_iv_out_history
+    WmsIvSnapshotService: wms_iv_snapshot
+    WmsIvSnapshotDailyKnotService: wms_iv_snapshot_daily_knot
+    WmsIvSnapshotTimeService: wms_iv_snapshot_time
+    WmsIvSplitService: wms_iv_split
+    WmsIvTransactionService: wms_iv_transaction
+    WmsIvTransactionDailyKnotService: wms_iv_transaction_daily_knot
+    WmsLiftWorkService: wms_lift_work
+    WmsLocationService: wms_location
+    WmsPaoHeaderService: wms_pao_header
+    WmsPaoLineService: wms_pao_line
+    WmsPloDetailService: wms_plo_detail
+    WmsPloHeaderService: wms_plo_header
+    WmsPloLineService: wms_plo_line
+    WmsProductSampleService: wms_product_sample
     WmsRoHeaderService: wms_ro_header
     WmsRoLineService: wms_ro_line
+    WmsRooHeaderService: wms_roo_header
+    WmsRooLineService: wms_roo_line
 
 #当前节点系统之间数据交互配置
 wms-id-instantdirective:
@@ -337,6 +381,7 @@ wms-id-instantdirective:
   nodes:
     CDM: http://127.0.0.1:8811/internal/012301
     OMS: http://127.0.0.1:8812/internal/021401
+    WMS: http://127.0.0.1:8813/internal/1030201
 
 upload:
   images:
@@ -354,5 +399,4 @@ jetcache:
     default:
       type: redis.lettuce
       keyConvertor: fastjson
-#      uri: redis://admin1314@127.0.0.1:6379/0
-      uri: redis://admin1314@192.168.1.114:6379/0
+      uri: redis://admin1314@127.0.0.1:6379/0

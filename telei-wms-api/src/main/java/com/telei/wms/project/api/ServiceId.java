@@ -102,6 +102,10 @@ public class ServiceId {
     public static final String WMS_INVENTORY_ADJUST_LIFT_DOWN = "1030509";
     @RightResource(rightSystem = "wms", rightItem = "库存管理", rightFunction = "扣减")
     public static final String WMS_INVENTORY_DEDUCT = "1030510";
+    @RightResource(rightSystem = "wms", rightItem = "库存管理", rightFunction = "库存变动统计分页")
+    public static final String WMS_INVENTORY_CHANGE_PAGE_QUERY = "1030511";
+    @RightResource(rightSystem = "wms", rightItem = "库存管理", rightFunction = "库存变动详情列表")
+    public static final String WMS_INVENTORY_CHANGE_LIST = "1030512";
 
 
     /**
@@ -125,6 +129,9 @@ public class ServiceId {
 
     @RightResource(rightSystem = "wms", rightItem = "库存初始化", rightFunction = "检查产品库存供应商是否存在")
     public static final String WMS_INIT_CHECK = "1030606";
+
+    @RightResource(rightSystem = "wms", rightItem = "库存初始化", rightFunction = "删除库存初始化单")
+    public static final String WMS_INIT_DELETE = "1030607";
 
     /**
      * 上架单
@@ -166,6 +173,12 @@ public class ServiceId {
 
     @RightResource(rightSystem = "wms", rightItem = "拣货单", rightFunction = "拣货完成")
     public static final String WMS_PLO_FINISH = "1030806";
+
+    @RightResource(rightSystem = "wms", rightItem = "拣货单", rightFunction = "取消拣货单")
+    public static final String WMS_PLO_CANCEL_HEADER = "1030807";
+
+    @RightResource(rightSystem = "wms", rightItem = "拣货单", rightFunction = "取消拣货记录")
+    public static final String WMS_PLO_CANCEL_DETAIL = "1030808";
 
     /**
      * 出库任务
@@ -234,4 +247,52 @@ public class ServiceId {
 
     @RightResource(rightSystem = "wms", rightItem = "套打", rightFunction = "收货打印详情")
     public static final String WMS_ROO_NEST_PRINT_DETAIL = "1031301";
+
+    @RightResource(rightSystem = "wms", rightItem = "套打", rightFunction = "上架打印详情")
+    public static final String WMS_PAO_NEST_PRINT_DETAIL = "1031302";
+
+    @RightResource(rightSystem = "wms", rightItem = "套打", rightFunction = "升级任务打印详情")
+    public static final String WMS_LIFT_WORK_NEST_PRINT_DETAIL = "1031303";
+
+    @RightResource(rightSystem = "wms", rightItem = "套打", rightFunction = "拣货单打印详情")
+    public static final String WMS_PLO_NEST_PRINT_DETAIL = "1031304";
+
+    @RightResource(rightSystem = "wms", rightItem = "套打", rightFunction = "核验单打印详情")
+    public static final String WMS_CHECK_NEST_PRINT_DETAIL = "1031305";
+
+    /***
+     *
+     *  库位
+     *  14
+     *
+     */
+    @RightResource(rightSystem = "wms", rightItem = "库位", rightFunction = "新增库位")
+    public static final String WMS_LOCATION_ADD = "1031401";
+
+    @RightResource(rightSystem = "wms", rightItem = "库位", rightFunction = "修改库位")
+    public static final String WMS_LOCATION_UPDATE = "1031402";
+
+    @RightResource(rightSystem = "wms", rightItem = "库位", rightFunction = "删除库位")
+    public static final String WMS_LOCATION_DELETE = "1031403";
+
+    @RightResource(rightSystem = "wms", rightItem = "库位", rightFunction = "库位分页")
+    public static final String WMS_LOCATION_PAGE_QUERY = "1031404";
+
+    @RightResource(rightSystem = "wms", rightItem = "库位", rightFunction = "库位详情")
+    public static final String WMS_LOCATION_DETAIL = "1031405";
+
+    @RightResource(rightSystem = "wms", rightItem = "库位", rightFunction = "下载批量新增库位模板")
+    public static final String WMS_LOCATION_EXCEL_EXPORT = "1031406";
+
+    @RightResource(rightSystem = "wms", rightItem = "库位", rightFunction = "上传批量新增库位模板")
+    public static final String WMS_LOCATION_EXCEL_IMPORT = "1031407";
+
+    @RightResource(rightSystem = "wms", rightItem = "库位", rightFunction = "根据条件导出库位列表数据")
+    public static final String WMS_LOCATION_EXPORT_BY_QUERY = "1031408";
+
+    @RightResource(rightSystem = "wms", rightItem = "库位", rightFunction = "库位通道列表")
+    public static final String WMS_LOCATION_LC_AISLE_LIST = "1031409";
+
+    @RightResource(rightSystem = "wms", rightItem = "库位", rightFunction = "根据通道查询库位列表")
+    public static final String WMS_LOCATION_BY_LC_AISLE = "1031410";
 }

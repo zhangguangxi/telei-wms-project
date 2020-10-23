@@ -9,8 +9,10 @@ import com.telei.wms.customer.amqp.shipPlan.OmsShipPlan;
 import com.telei.wms.datasource.wms.model.WmsDoHeader;
 import com.telei.wms.datasource.wms.model.WmsDoLine;
 import com.telei.wms.datasource.wms.model.WmsIdInstantdirective;
+import com.telei.wms.datasource.wms.model.WmsPloHeader;
 import com.telei.wms.datasource.wms.service.WmsDoHeaderService;
 import com.telei.wms.datasource.wms.service.WmsDoLineService;
+import com.telei.wms.datasource.wms.service.WmsPloHeaderService;
 import com.telei.wms.datasource.wms.vo.DoLineResponseVo;
 import com.telei.wms.project.api.ErrorCode;
 import com.telei.wms.project.api.amqp.producer.WmsOmsShipPlanCancelCallbackProducer;
@@ -41,6 +43,9 @@ public class DoHeaderBussiness {
 
     @Autowired
     private WmsDoLineService wmsDoLineService;
+
+    @Autowired
+    private WmsPloHeaderService wmsPloHeaderService;
 
     @Autowired
     private WmsIdInstantdirectiveBussiness wmsIdInstantdirectiveBussiness;
@@ -79,6 +84,14 @@ public class DoHeaderBussiness {
         List<DoLineResponseVo> wmsDoLineList = wmsDoLineService.findAll(request.getId(), wmsDoHeader.getCompanyId());
         List<DoLineDetailResponse> doLineDetailResponses = DataConvertUtil.parseDataAsArray(wmsDoLineList, DoLineDetailResponse.class);
         response.setDoLines(doLineDetailResponses);
+        // 查询拣货单id
+        WmsPloHeader wmsPloHeader = new WmsPloHeader();
+        wmsPloHeader.setDohId(wmsDoHeader.getId());
+        wmsPloHeader.setDohCode(wmsDoHeader.getDohCode());
+        WmsPloHeader ploHeader = wmsPloHeaderService.selectOneByEntity(wmsPloHeader);
+        if(Objects.nonNull(ploHeader)){
+            response.setPloId(ploHeader.getId());
+        }
         return response;
     }
 
@@ -94,11 +107,19 @@ public class DoHeaderBussiness {
         if (null != request.getStartTime() && null != request.getEndTime()) {
             conditionsBuilder.between("createTime", request.getStartTime(), request.getEndTime());
         }
-        if (StringUtils.isNotNull(request.getDohCode())) {
+        if (StringUtils.isNoneBlank(request.getDohCode())) {
             conditionsBuilder.like("dohCode", request.getDohCode());
         }
-        if (StringUtils.isNotNull(request.getOrderStatus())) {
-            conditionsBuilder.eq("orderStatus", request.getOrderStatus());
+        if (StringUtils.isNoneBlank(request.getOrderStatus())) {
+            if("01".equals(request.getOrderStatus())){
+                conditionsBuilder.eq("hasPlo", "0");
+            } else if("02".equals(request.getOrderStatus())){
+                conditionsBuilder.eq("hadCheck", "1");
+            } else if("30".equals(request.getOrderStatus())){
+                conditionsBuilder.eq("orderStatus", "30");
+            } else if("40".equals(request.getOrderStatus())){
+                conditionsBuilder.eq("orderStatus", "40");
+            }
         }else{
             conditionsBuilder.notIn("orderStatus", orderStatuss);
         }
@@ -140,10 +161,12 @@ public class DoHeaderBussiness {
         if (Objects.isNull(wmsDoHeader)) {
             //待同步状态
             omsShipPlan.setOrderStatus("90");
-        } else if (DELETE_STATUS.equals(wmsDoHeader.getOrderStatus())) {
+        }
+        if (DELETE_STATUS.equals(wmsDoHeader.getOrderStatus())) {
             //已撤销状态
             omsShipPlan.setOrderStatus("91");
-        } else if ("0".equals(wmsDoHeader.getHasPlo())) {
+        }
+        if ("0".equals(wmsDoHeader.getHasPlo())) {
             // 0 没有拣货单,1 已经生成拣货单
             //确认锁
             if (confirmLock(lockKey, lockValue)) {
@@ -151,7 +174,7 @@ public class DoHeaderBussiness {
                 WmsDoHeader updateWmsDoHeader = new WmsDoHeader();
                 updateWmsDoHeader.setId(wmsDoHeader.getId());
                 updateWmsDoHeader.setOrderStatus(DELETE_STATUS);
-                wmsDoHeaderService.updateByPrimaryKey(updateWmsDoHeader);
+                wmsDoHeaderService.updateByPrimaryKeySelective(updateWmsDoHeader);
                 //已撤销状态
                 omsShipPlan.setOrderStatus("91");
             }
@@ -200,8 +223,7 @@ public class DoHeaderBussiness {
         wmsDoHeader.setLastupdateTime(DateUtils.nowWithUTC());
         int updateResult = wmsDoHeaderService.updateByPrimaryKeySelective(wmsDoHeader);
         /**
-         * TODO
-         * 扣减库存，回写上游单据
+         * 扣减库存，回写上游单据【前端调用另一个接口统一处理】
          */
         DoCudBaseResponse response = new DoCudBaseResponse();
         response.setIsSuccess(updateResult > 0);

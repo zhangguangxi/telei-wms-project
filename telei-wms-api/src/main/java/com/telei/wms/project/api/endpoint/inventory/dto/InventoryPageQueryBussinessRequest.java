@@ -14,6 +14,8 @@ public class InventoryPageQueryBussinessRequest {
 
     @Data
     public static class InventoryPageQueryCondition {
+        /**仓库id*/
+        private Long warehouseId;
         /**库位*/
         private String lcCode;
         /**商品码*/
@@ -24,5 +26,7 @@ public class InventoryPageQueryBussinessRequest {
         private String productBarcode;
         /**库位类型*/
         private String lcType;
+        /**库位是否有货*/
+        private String hasLcType;
     };
 }

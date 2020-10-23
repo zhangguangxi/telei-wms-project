@@ -1,7 +1,10 @@
 package com.telei.wms.project.api.endpoint.inventory.dto;
 
 import com.telei.wms.commons.utils.CommonResponse;
+import com.telei.wms.datasource.wms.model.WmsIvTransactionDailyKnot;
 import lombok.Data;
+
+import java.util.List;
 
 /**
  * @author: leo
@@ -9,5 +12,5 @@ import lombok.Data;
  */
 @Data
 public class InventoryDeductBussinessResponse extends CommonResponse {
-
+    List<WmsIvTransactionDailyKnot> list;
 }

@@ -52,13 +52,20 @@
         FROM
         wms_iv_transaction a
         INNER JOIN cdm.cdm_product cp ON a.product_id = cp.product_id AND a.company_id = cp.company_id
-        WHERE a.create_time >= ${leftTime} AND a.create_time &lt; ${rightTime}
+        WHERE a.create_time >= #{leftTime} AND a.create_time &lt; #{rightTime}
         GROUP BY
         a.product_id,
         a.company_id,
         a.warehouse_id,
         a.warehouse_code,
         a.customer_id
+    </select>
+
+    <select id="selectByCreateTime" resultMap="BaseResultMap">
+        select
+            <include refid="Base_Column_List"/>
+        from wms_iv_transaction
+        where create_time >= #{leftTime} AND create_time &lt; #{rightTime}
     </select>
 
 </mapper>

@@ -11,8 +11,6 @@ public class PloHeaderPageQueryResponseVo extends WmsPloHeader {
 
     /** 仓库名称 */
     private String warehouseName;
-    /** 供应商名称 */
-    private String supplierName;
     /** 客户名称 */
     private String customerName;
     /** 拣货员 */

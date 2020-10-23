@@ -14,4 +14,5 @@ public interface WmsIvTransactionRepository extends BaseRepository<WmsIvTransact
 
     List<WmsIvTransactionDailyKnotVO> selectByTime(@Param("leftTime") Date leftTime, @Param("rightTime") Date rightTime);
 
+    List<WmsIvTransaction> selectByCreateTime(@Param("leftTime") Date leftTime, @Param("rightTime") Date rightTime);
 }

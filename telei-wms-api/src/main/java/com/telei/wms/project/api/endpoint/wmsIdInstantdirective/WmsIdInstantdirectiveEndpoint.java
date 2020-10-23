@@ -1,12 +1,14 @@
 package com.telei.wms.project.api.endpoint.wmsIdInstantdirective;
 
 import com.nuochen.framework.app.gateway.GatewayConstants;
-import com.telei.infrastructure.component.idgenerator.contract.Id;
 import com.telei.wms.project.api.ServiceId;
 import com.telei.wms.project.api.endpoint.wmsIdInstantdirective.dto.WmsIdInstantdirectiveCallbackRequest;
 import com.telei.wms.project.api.endpoint.wmsIdInstantdirective.dto.WmsIdInstantdirectiveCudBaseResponse;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 /**
  * @Auther: Dean
@@ -15,9 +17,6 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @RequestMapping(GatewayConstants.INTERNAL_REQUEST_MAPPING)
 public class WmsIdInstantdirectiveEndpoint {
-
-    @Autowired
-    private Id idGenerator;
 
     @Autowired
     private WmsIdInstantdirectiveBussiness idInstantdirectiveBussiness;

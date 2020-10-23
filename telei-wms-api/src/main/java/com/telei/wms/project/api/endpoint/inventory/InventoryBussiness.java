@@ -26,7 +26,6 @@ import com.telei.wms.datasource.wms.model.*;
 import com.telei.wms.datasource.wms.service.*;
 import com.telei.wms.datasource.wms.vo.WmsDeductIvOutConfirmResponseVo;
 import com.telei.wms.datasource.wms.vo.WmsInventoryDeductConditionVo;
-import com.telei.wms.datasource.wms.vo.WmsInventoryPageQueryResponseVo;
 import com.telei.wms.project.api.ErrorCode;
 import com.telei.wms.project.api.amqp.producer.WmsOmsInventoryAddWriteBackProducer;
 import com.telei.wms.project.api.amqp.producer.WmsOmsInventoryChangeWriteBackProducer;
@@ -47,6 +46,8 @@ import java.util.function.Function;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+import static com.telei.wms.commons.utils.DateUtils.RANGE_TIME_END;
+import static com.telei.wms.commons.utils.DateUtils.RANGE_TIME_START;
 import static java.util.stream.Collectors.toList;
 
 /**
@@ -60,7 +61,13 @@ public class InventoryBussiness {
     private static  final  String PART_INVENTORY_STATUS = "40";
 
     //已入库
-    private static final String ALL_INVENTORY_STATUS ="50";
+    private static final String ALL_IN_INVENTORY_STATUS ="50";
+
+    //已出库
+    private static final String ALL_OUT_INVENTORY_STATUS ="40";
+
+    //已上架
+    private static final String ALL_SHIFT_INVENTORY_STATUS ="40";
 
     //库存调整-审核状态
     private static  final String ADJUST_REVIEW = "20";
@@ -146,6 +153,9 @@ public class InventoryBussiness {
 
     @Autowired
     private WmsLocationService wmsLocationService;
+
+    @Autowired
+    private WmsIvTransactionDailyKnotService wmsIvTransactionDailyKnotService;
 
 
     /**
@@ -238,6 +248,7 @@ public class InventoryBussiness {
             //3.1 产品(商品)-预处理
             ProductRequest productDetailRequest = new ProductRequest();
             productDetailRequest.setProductIds(requestProductIdList);
+            productDetailRequest.setCompanyId(userInfo.getCompanyId());
             ApiResponse productListResponse = productFeignClient.getProductList(productDetailRequest);
             ProductListResponse response = JSON.parseObject(JSON.toJSONString(productListResponse.getData()), ProductListResponse.class);
             List<ProductDetailResponse> productList = response.getProductList();
@@ -245,6 +256,7 @@ public class InventoryBussiness {
                 ErrorCode.INVENTORY_ADD_ERROR_PRODUCT_NOT_EXIST_4003.throwError(JSON.toJSONString(requestProductIdList));
             }
             log.info("\n +++++++++++++++++++++ 上架操作::根据产品IDS -> {},查询产品集合 -> {} ++++++++++++++++++++ \n ", JSON.toJSONString(requestProductIdList), JSON.toJSONString(productList));
+
 
 
             //2.2 库存批次-预处理
@@ -289,11 +301,11 @@ public class InventoryBussiness {
                 item.setPutawayTime(nowWithUTC);
                 item.setPutawayUser(userInfo.getUserName());
                 item.setPaoStatus(SHIFT_STATUS);
+                item.setLcCode(paolId2EntityMap.get(item.getId()).getLcCode());
             });
 
             //2.5 收货单单头-预处理(更新 putawayQty)
             Map<Long, BigDecimal> rooQtyMap = requestList.stream().collect(Collectors.groupingBy(InventoryAddBussinessRequest.InventoryAddRequestCondition::getRooId, CollectorsUtil.summingBigDecimal(InventoryAddBussinessRequest.InventoryAddRequestCondition::getIvQty)));
-
             if (Objects.isNull(rooQtyMap) || rooQtyMap.isEmpty()) {
                 ErrorCode.INVENTORY_ADD_ERROR_ROO_ID_IS_NULL_4007.throwError();
             }
@@ -306,6 +318,7 @@ public class InventoryBussiness {
             log.info("\n +++++++++++++++++++++ 上架操作::根据收货单单头IDS -> {},查询上收货单单头集合 -> {} ++++++++++++++++++++ \n ", JSON.toJSONString(requestRooIdList), JSON.toJSONString(rooHeaderList));
             rooHeaderList.forEach(item -> {
                 item.setPutawayQty(Objects.isNull(item.getPutawayQty()) ? rooQtyMap.get(item.getId()) : item.getPutawayQty().add(rooQtyMap.get(item.getId())));
+                item.setRoStatus(ALL_SHIFT_INVENTORY_STATUS);
             });
 
             //2.6 入库任务单头-预处理(上架数量累加:putawayQty 上架完成时间:putawayAllTime(when=putawayQty>=totalQty)  总计划入库数量:totalQty)
@@ -318,16 +331,16 @@ public class InventoryBussiness {
             if (Objects.isNull(roHeaderList) || roHeaderList.isEmpty()) {
                 ErrorCode.INVENTORY_ADD_ERROR_RO_NOT_EXIST_4011.throwError(JSON.toJSONString(requestRoIdList));
             }
-            log.info("\n +++++++++++++++++++++ 上架操作::根据收货单单头IDS -> {},查询上收货单单头集合 -> {} ++++++++++++++++++++ \n ", JSON.toJSONString(requestRooIdList), JSON.toJSONString(rooHeaderList));
+            log.info("\n +++++++++++++++++++++ 上架操作::根据上架单单头IDS -> {},查询上架单单头集合 -> {} ++++++++++++++++++++ \n ", JSON.toJSONString(requestRoIdList), JSON.toJSONString(roHeaderList));
 
             roHeaderList.stream().forEach(item -> {
                 item.setPutawayQty(Objects.isNull(item.getPutawayQty()) ? roQtyMap.get(item.getId()) : item.getPutawayQty().add(roQtyMap.get(item.getId())));//上架数量
-                if (item.getTotalQty().compareTo(item.getPutawayQty()) >= 0) {
-                    item.setPutawayAllTime(nowWithUTC);
-                    item.setOrderStatus(ALL_INVENTORY_STATUS);//已入库
+                if (item.getTotalQty().compareTo(item.getPutawayQty()) > 0) {
+                    item.setOrderStatus(PART_INVENTORY_STATUS);//部分入库
                     return;
                 }
-                item.setOrderStatus(PART_INVENTORY_STATUS);//部分入库
+                item.setPutawayAllTime(nowWithUTC);
+                item.setOrderStatus(ALL_IN_INVENTORY_STATUS);//已入库
             });
 
             //2.7 oms-入库计划单(单头/明细)-预处理 oms-采购单(单头/明细)-预处理
@@ -376,8 +389,7 @@ public class InventoryBussiness {
                 inventory.setQsCode("GD");//实物类别
                 inventory.setIvDocumentCode(wmsPaoHeader.getPaoCode());//业务单据编码
                 inventory.setIvFifoTime(ivAttributebatchDetail.getCreateTime());//先进先出时间(获取跑批次表的创建时间)
-                inventory.setStockUnit(productDetail.getStockUnit());
-                ;//计量单位
+                inventory.setStockUnit(productDetail.getStockUnit());//计量单位
                 inventory.setBigBagRate(Objects.isNull(bigBagRate) ? 0 : bigBagRate.intValue());//大包转换率  批次表中获取
                 inventory.setBigBagQty(ivQty.divideAndRemainder(bigBagRate)[0]);//大包数量
                 inventory.setBigBagExtraQty(ivQty.divideAndRemainder(bigBagRate)[1]);//大包剩余数量
@@ -416,13 +428,13 @@ public class InventoryBussiness {
         //3.1 库存/库存历史处理  插入wms_inventory wms_inventory_history wms_iv_transaction
         log.info("\n +++++++++++++++++++++ 上架操作::新增库存记录  -> {} ++++++++++++++++++++ \n ", JSON.toJSONString(inventoryList));
         int countForInventory = wmsInventoryService.insertBatch(inventoryList);
-        if (countForInventory != inventoryList.size()) {
+        if (countForInventory <= 0) {
             ErrorCode.INVENTORY_ADD_ERROR_4014.throwError();
         }
         List<WmsInventoryHistory> inventoryHistoryList = DataConvertUtil.parseDataAsArray(inventoryList, WmsInventoryHistory.class);
         log.info("\n +++++++++++++++++++++ 上架操作::新增库存历史记录  -> {} ++++++++++++++++++++ \n ", JSON.toJSONString(inventoryHistoryList));
         int countForInventoryHistory = wmsInventoryHistoryService.insertBatch(inventoryHistoryList);
-        if (countForInventoryHistory != inventoryHistoryList.size()) {
+        if (countForInventoryHistory <= 0) {
             ErrorCode.INVENTORY_ADD_ERROR_4015.throwError();
         }
 
@@ -445,9 +457,9 @@ public class InventoryBussiness {
         });
         log.info("\n +++++++++++++++++++++ 上架操作::新增库存变动记录  -> {} ++++++++++++++++++++ \n ", JSON.toJSONString(wmsIvTransactions));
         int countForTransaction = wmsIvTransactionService.insertBatch(wmsIvTransactions);
-//        if (countForTransaction != wmsIvTransactions.size()) {
-//            ErrorCode.INVENTORY_ADD_ERROR_4023.throwError();
-//        }
+        if (countForTransaction <= 0) {
+            ErrorCode.INVENTORY_ADD_ERROR_4023.throwError();
+        }
 
         //3.2 更新上架单单头/上架单明细
         log.info("\n +++++++++++++++++++++ 上架操作::更新上架单单头 -> {} ++++++++++++++++++++ \n ", JSON.toJSONString(wmsPaoHeader));
@@ -457,21 +469,21 @@ public class InventoryBussiness {
         }
         log.info("\n +++++++++++++++++++++ 上架操作::更新上架单明细 -> {} ++++++++++++++++++++ \n ", JSON.toJSONString(paoLineList));
         int countForPaoLine = wmsPaoLineService.updateBatch(paoLineList);
-//        if (countForPaoLine != paoLineList.size()) {
-//            ErrorCode.INVENTORY_ADD_ERROR_4017.throwError();
-//        }
+        if (countForPaoLine <= 0) {
+            ErrorCode.INVENTORY_ADD_ERROR_4017.throwError();
+        }
         //2.2 更新收货单单头
         log.info("\n +++++++++++++++++++++ 上架操作::更新收货单单头， -> {} ++++++++++++++++++++ \n ", JSON.toJSONString(rooHeaderList));
         int countForRootHeader = wmsRooHeaderService.updateBatch(rooHeaderList);
-//        if (countForRootHeader != rooHeaderList.size()) {
-//            ErrorCode.INVENTORY_ADD_ERROR_4018.throwError();
-//        }
+        if (countForRootHeader <= 0) {
+            ErrorCode.INVENTORY_ADD_ERROR_4018.throwError();
+        }
         //2.3 更新入库任务单头
         log.info("\n +++++++++++++++++++++ 上架操作::更新入库任务， -> {} ++++++++++++++++++++ \n ", JSON.toJSONString(roHeaderList));
         int countForRoHeader = wmsRoHeaderService.updateBatch(roHeaderList);
-//        if (countForRoHeader != roHeaderList.size()) {
-//            ErrorCode.INVENTORY_ADD_ERROR_4019.throwError();
-//        }
+        if (countForRoHeader <= 0) {
+            ErrorCode.INVENTORY_ADD_ERROR_4019.throwError();
+        }
 
         //4、异步(MQ)回写oms单据(更新入库计划单头/入库计划明细 更新采购单单头/采购单明细)
         //4.1 指令入库
@@ -530,12 +542,13 @@ public class InventoryBussiness {
         Date nowWithUTC = DateUtils.nowWithUTC();//UTC时间
         UserInfo userInfo = CustomRequestContext.getUserInfo();
         long adjtId = idGenerator.getUnique();//库存调整单单头id
-        String bussinessNumber = getBussinessNumber("wms");//获取业务单号
+        String bussinessNumber = getBussinessNumber("TZ");//获取业务单号
 
         /**库存调整单单头*/
         WmsAdjtHeader wmsAdjtHeader = DataConvertUtil.parseDataAsObject(request, WmsAdjtHeader.class);
         ProductRequest productRequest = new ProductRequest();
         Long productId = Long.valueOf(String.valueOf(((Map) JSON.toJSON(request)).get("productId")));
+        productRequest.setCompanyId(userInfo.getCompanyId());
         productRequest.setProductIds(Arrays.asList(productId));
         ApiResponse apiResponse = productFeignClient.getProductList(productRequest);
         List<ProductDetailResponse> productDetailResponseList = DataConvertUtil.parseDataAsArray(((Map) apiResponse.getData()).get("productList"), ProductDetailResponse.class);
@@ -578,7 +591,6 @@ public class InventoryBussiness {
         Object lockValue = LockMapUtil.tryLock(lockKey);
         log.info("\n +++++++++++++++++++++ 库存调整::尝试获取锁 当前线程-> {},lockKey -> {},lockValue -> {} ++++++++++++++++++++ \n ", Thread.currentThread().getName(), lockKey, lockValue);
         try {
-
             List<WmsAdjtLine> adjtLineList = Lists.newArrayList();
             List<WmsInventory> inventoryAddList = Lists.newArrayList();
             List<WmsInventory> inventoryUpdateList = Lists.newArrayList();
@@ -614,21 +626,21 @@ public class InventoryBussiness {
         /**库存调整单明细*/
         log.info("\n +++++++++++++++++++++ 库存调整:: 新增库存调整单明细 -> {} ++++++++++++++++++++ \n ", JSON.toJSONString(adjtLineList));
         int countForAdjtLine = wmsAdjtLineService.insertBatch(adjtLineList);
-        if (countForAdjtLine != countForAdjtLine) {
+        if (countForAdjtLine <= 0) {
             ErrorCode.ADJT_ERROR_4005.throwError(lcCode, productId, adjhType);
         }
         /**库存记录*/
         if (!inventoryAddList.isEmpty()) {
             log.info("\n +++++++++++++++++++++ 库存调整:: 新增库存记录 -> {} ++++++++++++++++++++ \n ", JSON.toJSONString(inventoryAddList));
             int countForInventoryAdd = wmsInventoryService.insertBatch(inventoryAddList);
-            if (countForInventoryAdd != inventoryAddList.size()) {
+            if (countForInventoryAdd <= 0) {
                 ErrorCode.ADJT_ERROR_4006.throwError(lcCode, productId, adjhType);
             }
             /**库存历史记录*/
             List<WmsInventoryHistory> wmsInventoryHistoryAddList = DataConvertUtil.parseDataAsArray(inventoryAddList, WmsInventoryHistory.class);
             log.info("\n +++++++++++++++++++++ 库存调整:: 新增库存历史记录 -> {} ++++++++++++++++++++ \n ", JSON.toJSONString(wmsInventoryHistoryAddList));
             int countForInventoryHistoryAdd = wmsInventoryHistoryService.insertBatch(wmsInventoryHistoryAddList);
-            if (countForInventoryHistoryAdd != wmsInventoryHistoryAddList.size()) {
+            if (countForInventoryHistoryAdd <= 0) {
                 ErrorCode.ADJT_ERROR_4007.throwError(lcCode, productId, adjhType);
             }
         }
@@ -637,7 +649,7 @@ public class InventoryBussiness {
         if (!inventoryUpdateList.isEmpty()) {
             log.info("\n +++++++++++++++++++++ 库存调整:: 更新库存记录 -> {} ++++++++++++++++++++ \n ", JSON.toJSONString(inventoryUpdateList));
             int countForInventoryUpdate = wmsInventoryService.updateBatch(inventoryUpdateList);
-            if (countForInventoryUpdate != inventoryUpdateList.size()) {
+            if (countForInventoryUpdate <= 0) {
                 ErrorCode.ADJT_ERROR_4008.throwError(lcCode, productId, adjhType);
             }
         }
@@ -646,7 +658,7 @@ public class InventoryBussiness {
         if (!deleteIvidList.isEmpty()) {
             log.info("\n +++++++++++++++++++++ 库存调整:: 删除库存记录，库存ID集合 -> {} ++++++++++++++++++++ \n ", JSON.toJSONString(deleteIvidList));
             int countForInventoryDelete = wmsInventoryService.deleteByPrimaryKeys(deleteIvidList);
-            if (countForInventoryDelete != deleteIvidList.size()) {
+            if (countForInventoryDelete <= 0) {
                 //库存调整失败-库存记录删除失败，库位编码={0},产品id={1},调整类型={2}
                 ErrorCode.ADJT_ERROR_4009.throwError(lcCode, productId, adjhType);
             }
@@ -659,7 +671,7 @@ public class InventoryBussiness {
         log.info("\n +++++++++++++++++++++ 库存调整:: 新增库存变更记录 -> {} ++++++++++++++++++++ \n ", JSON.toJSONString(ivTransactionList));
 
         int countForIvTransactionAdd = wmsIvTransactionService.insertBatch(ivTransactionList);
-        if (countForIvTransactionAdd != ivTransactionList.size()) {
+        if (countForIvTransactionAdd <= 0) {
             ErrorCode.ADJT_ERROR_4011.throwError(lcCode, productId, adjhType);
         }
 
@@ -667,7 +679,7 @@ public class InventoryBussiness {
         if (!ivSplitsList.isEmpty()) {
             log.info("\n +++++++++++++++++++++ 库存调整:: 新增库存拆分记录 -> {} ++++++++++++++++++++ \n ", JSON.toJSONString(ivSplitsList));
             int countForSplitAdd = wmsIvSplitService.insertBatch(ivSplitsList);
-            if (countForSplitAdd != ivSplitsList.size()) {
+            if (countForSplitAdd <= 0) {
                 ErrorCode.ADJT_ERROR_4012.throwError(lcCode, productId, adjhType);
             }
         }
@@ -726,47 +738,17 @@ public class InventoryBussiness {
         if (StringUtils.isNoneBlank(request.getInventoryPageQueryCondition().getProductBarcode())) {
             conditionsBuilder.like("productBarcode", request.getInventoryPageQueryCondition().getProductBarcode());
         }
-
         if (StringUtils.isNoneBlank(request.getInventoryPageQueryCondition().getLcType())) {
             conditionsBuilder.eq("lcType", request.getInventoryPageQueryCondition().getLcType());
         }
         conditionsBuilder.eq("companyId", CustomRequestContext.getUserInfo().getCompanyId());
-
-        conditionsBuilder.orderBy("wi.iv_id desc");
+        conditionsBuilder.eq("warehouseId", request.getInventoryPageQueryCondition().getWarehouseId());
+        conditionsBuilder.orderBy("wl.location_id DESC");
         Map<String, Object> paramMap = conditionsBuilder.build();
-        Pagination page = (Pagination) wmsInventoryService.selectCustomPage(pagination, paramMap);
-        List<WmsInventoryPageQueryResponseVo> list = (List<WmsInventoryPageQueryResponseVo>) page.getContent();
-        List<WmsInventoryPageQueryResponseVo> inventories = new ArrayList<>();
-        if (Objects.nonNull(list) && !list.isEmpty()) {
-            Map<String, List<WmsInventoryPageQueryResponseVo>> map = list.stream().collect(Collectors.groupingBy(item -> item.getCompanyId() + "#" + item.getWarehouseId() + "#" + item.getLcCode() + "#" + item.getProductId()));
-            map.forEach((k, v) -> {
-                String[] arr = k.split("#");
-                WmsInventoryPageQueryResponseVo dbResponseVo = v.get(0);
-                WmsInventoryPageQueryResponseVo responseVo = new WmsInventoryPageQueryResponseVo();
-                responseVo.setCompanyId(Long.valueOf(arr[0]));
-                responseVo.setWarehouseId(Long.valueOf(arr[1]));
-                responseVo.setWarehouseCode(dbResponseVo.getWarehouseCode());
-                responseVo.setLcCode(arr[2]);
-                responseVo.setProductId(Long.valueOf(arr[3]));
-                responseVo.setBigBagRate(dbResponseVo.getBigBagRate());//大包转换率(大包转中包)
-                responseVo.setMidBagRate(dbResponseVo.getMidBagRate());//中包转换率(中包转小包)
-                responseVo.setBoxQty(dbResponseVo.getBoxQty());//装箱数
-                responseVo.setProductNo(dbResponseVo.getProductNo());//商品码
-                responseVo.setProductName(dbResponseVo.getProductName());//商品名称
-                responseVo.setProductBarcode(dbResponseVo.getProductBarcode());//条码
-                responseVo.setBigBagVol(dbResponseVo.getBigBagVol());//大包体积
-                responseVo.setBigBagWeight(dbResponseVo.getBigBagWeight());//大包重量
-                responseVo.setLcCode(dbResponseVo.getLcCode());//货位(库位)
-                responseVo.setLcType(dbResponseVo.getLcType());//货位类型
-                responseVo.setCostReference(dbResponseVo.getCostReference());//单价
-                BigDecimal totalQty = v.stream().map(WmsInventoryPageQueryResponseVo::getQty).reduce(BigDecimal.ZERO, BigDecimal::add);
-                responseVo.setQty(totalQty);//库存数量
-                responseVo.setInventoryAmount(totalQty.multiply(Objects.isNull(responseVo.getCostReference()) ? new BigDecimal(0) : responseVo.getCostReference()));//库存金额
-                inventories.add(responseVo);
-            });
-            page.setContent(inventories);
-            page.setTotalRecords(Long.valueOf(inventories.size()));
+        if (StringUtils.isNoneBlank(request.getInventoryPageQueryCondition().getHasLcType())) {
+            paramMap.put("hasLcType", request.getInventoryPageQueryCondition().getHasLcType());
         }
+        Pagination page = (Pagination) wmsInventoryService.selectCustomPage(pagination, paramMap);
         InventoryPageQueryBussinessResponse response = new InventoryPageQueryBussinessResponse();
         response.setPage(page);
         return response;
@@ -784,7 +766,6 @@ public class InventoryBussiness {
         if (Objects.isNull(wmsInventories) || wmsInventories.isEmpty()) {
             ErrorCode.INVENTORY_DETAIL_ERROR_4024.throwError(request.getLcCode(), request.getProductId());
         }
-
         List<InventoryDetailResponse.InventoryDetailCondition> list = Lists.newArrayList();
         Map<Long, List<WmsInventory>> iabToInventoryMap = wmsInventories.stream().collect(Collectors.groupingBy(WmsInventory::getIabId));
         iabToInventoryMap.forEach((k, v) -> {
@@ -795,10 +776,11 @@ public class InventoryBussiness {
             Integer bigBagRate = dbInventory.getBigBagRate();
             Integer midBagRate = dbInventory.getMidBagRate();
             //大包数量
-            detailVo.setBigBagQty(iabQty.divideToIntegralValue(new BigDecimal(bigBagRate)));
-            BigDecimal[] bigDecimals = iabQty.divideAndRemainder(new BigDecimal(midBagRate));
-            detailVo.setMidBagQty(bigDecimals[0]);
-            detailVo.setTinyBagQty(bigDecimals[1]);
+            BigDecimal[] bigDecimals = iabQty.divideAndRemainder(new BigDecimal(bigBagRate));
+            detailVo.setBigBagQty(bigDecimals[0]);
+            BigDecimal[] midDecimals = bigDecimals[1].divideAndRemainder(new BigDecimal(midBagRate));
+            detailVo.setMidBagQty(midDecimals[0]);
+            detailVo.setTinyBagQty(midDecimals[1]);
             detailVo.setQty(iabQty);
             list.add(detailVo);
         });
@@ -886,14 +868,15 @@ public class InventoryBussiness {
                 ErrorCode.INVENTORY_DEDUCT_DO_RECORD_NOT_EXIST_40026.throwError();
             }
             log.info("\n +++++++++++++++++++++ 出库扣减库存操作::根据出库任务单头ID -> {}，查询出库任务单头记录 ++++++++++++++++++++ \n ", JSON.toJSONString(dohId), JSON.toJSONString(wmsDoHeader));
+            /**判断是否生成拣货单*/
             if (Objects.equals("0", wmsDoHeader.getHasPlo())) {
                 ErrorCode.INVENTORY_DEDUCT_NOT_HAS_PLO_40027.throwError(JSON.toJSONString(dohId));
             }
-
+            /**判断是否生成核验单*/
             if (Objects.equals("0", wmsDoHeader.getHadCheck())) {
                 ErrorCode.INVENTORY_DEDUCT_NOT_HAD_CHECK_40028.throwError(JSON.toJSONString(dohId));
             }
-
+            /**查询出库任务明细*/
             WmsDoLine wmsDoLine = new WmsDoLine();
             wmsDoLine.setDohId(dohId);
             List<WmsDoLine> wmsDoLines = wmsDoLineService.selectByEntity(wmsDoLine);
@@ -901,7 +884,8 @@ public class InventoryBussiness {
                 ErrorCode.INVENTORY_DEDUCT_DO_LINE_NOT_EXIST_40029.throwError(JSON.toJSONString(dohId));
             }
             log.info("\n +++++++++++++++++++++ 出库扣减库存操作::根据出库任务单头ID -> {}，查询出库任务明细记录 ++++++++++++++++++++ \n ", JSON.toJSONString(dohId), JSON.toJSONString(wmsDoLines));
-            //根据订单id查询wms_iv_out(待出库存)明细集合
+
+            /**根据订单id(出库任务id)查询wms_iv_out(待出库存-出库计划审核时生成)集合*/
             WmsIvOut wmsIvOut = new WmsIvOut();
             wmsIvOut.setOrderId(dohId);
             List<WmsIvOut> wmsIvOutList = wmsIvOutService.selectByEntity(wmsIvOut);
@@ -909,16 +893,23 @@ public class InventoryBussiness {
             if (Objects.isNull(wmsIvOutList) || wmsIvOutList.isEmpty()) {
                 ErrorCode.INVENTORY_DEDUCT_IV_OUT_NOT_EXIST_40030.throwError(JSON.toJSONString(wmsIvOut));
             }
+            /**获取待出库存集合中的lineId(出库任务明细id)集合*/
             List<Long> dolIdList = wmsIvOutList.stream().map(WmsIvOut::getLineId).collect(toList());
+            /**查询拣货单明细*/
             List<WmsPloLine> wmsPloLineList = wmsPloLineService.selectByDolIdList(dolIdList);
-
             log.info("\n +++++++++++++++++++++ 出库扣减库存操作::根据出库任务详情IDS -> {} 查询拣货详情记录 -> {} ++++++++++++++++++++ \n ", JSON.toJSONString(dolIdList), JSON.toJSONString(wmsPloLineList));
             if (Objects.isNull(wmsPloLineList) || wmsPloLineList.isEmpty()) {
                 ErrorCode.INVENTORY_DEDUCT_PLO_LINE_NOT_EXIST_40031.throwError(JSON.toJSONString(wmsPloLineList));
             }
+            /**捡货单明细id->lcCode映射*/
             Map<Long, String> dolId2LcCodeMap = wmsPloLineList.stream().collect(Collectors.toMap(WmsPloLine::getDolId, WmsPloLine::getLcCode));
-            List<WmsInventoryDeductConditionVo> inventoryDeductConditionList = new ArrayList();
+
+
+            /**自定义扣减集合*/
+            List<WmsInventoryDeductConditionVo> inventoryDeductConditionList = Lists.newArrayList();
+            /**出库任务明细id->entity映射*/
             Map<Long, WmsDoLine> id2DoLineEntityMap = wmsDoLines.stream().collect(Collectors.toMap(WmsDoLine::getId, Function.identity()));
+            /**遍历待出库存集合，组装扣减库存记录集合*/
             wmsIvOutList.stream().forEach(item -> {
                 WmsInventoryDeductConditionVo deductCondition = new WmsInventoryDeductConditionVo();
                 deductCondition.setCompanyId(item.getCompanyId());//公司id
@@ -946,20 +937,33 @@ public class InventoryBussiness {
             if (Objects.nonNull(ivIdIndexList) && !ivIdIndexList.isEmpty()) {
                 ivIdIndexMap = ivIdIndexList.stream().collect(Collectors.toMap(WmsDeductIvOutConfirmResponseVo::getIvId, WmsDeductIvOutConfirmResponseVo::getIvIdIndex));
             }
-            //库存分组处理(公司ID+仓库ID+库位编码)
+            //库存分组(公司ID+仓库ID+库位编码)
             Map<String, List<WmsInventory>> inventoryMap = inventories.stream().collect(Collectors.groupingBy((item -> item.getCompanyId() + "#" + item.getWarehouseId() + "#" + item.getLcCode() + "#" + item.getProductId())));
+            /**库存分组统计库存数量(公司ID+仓库ID+库位编码)*/
             Map<String, BigDecimal> requestCondition2QtyMap = inventoryDeductConditionList.stream().collect(Collectors.groupingBy((item -> item.getCompanyId() + "#" + item.getWarehouseId() + "#" + item.getLcCode() + "#" + item.getProductId()), CollectorsUtil.summingBigDecimal(WmsInventoryDeductConditionVo::getQty)));
+            //扣减库存分组处理(公司ID+仓库ID+库位编码)
             Map<String, List<WmsInventoryDeductConditionVo>> requestCondition2EntityMap = inventoryDeductConditionList.stream().collect(Collectors.groupingBy((item -> item.getCompanyId() + "#" + item.getWarehouseId() + "#" + item.getLcCode() + "#" + item.getProductId())));
 
+            //更新库存集合
             List<WmsInventory> updateInventoryList = Lists.newArrayList();
+            //删除库存集合(id)
             List<Long> deleteInventoryList = Lists.newArrayList();
+            //库存变动集合
             List<WmsIvTransaction> addIvTransactionList = Lists.newArrayList();
+            //库存锁定扣减集合
             List<WmsIvOutConfirm> addIvOutConfirmList = Lists.newArrayList();
+            //待出库存集合
             List<Long> deleteIvOutList = wmsIvOutList.stream().map(WmsIvOut::getId).collect(toList());
 
+            /**基本信息*/
+            /**当前UTC时间*/
             Date nowWithUTC = DateUtils.nowWithUTC();
+            /**登录用户信息*/
             UserInfo userInfo = CustomRequestContext.getUserInfo();
+            /**库存扣减次数映射 */
             Map<Long, Integer> finalIvIdIndexMap = ivIdIndexMap;
+
+            /**遍历 库存分组统计库存数量映射*/
             requestCondition2QtyMap.forEach((k, v) -> {
                 if (!inventoryMap.containsKey(k)) {
                     ErrorCode.INVENTORY_DEDUCT_PRODUCT_NOT_EXIST_40033.throwError(k);
@@ -968,63 +972,68 @@ public class InventoryBussiness {
                 if (Objects.isNull(list) || inventoryMap.isEmpty()) {
                     ErrorCode.INVENTORY_DEDUCT_PRODUCT_NOT_EXIST_40034.throwError(k);
                 }
+                //商品库存按照批次id升序排列(db)
                 List<WmsInventory> sortedList = list.stream().sorted(Comparator.comparing(WmsInventory::getIabId)).collect(toList());
-                BigDecimal requestIvQty = v;
-                for (WmsInventory inventory : sortedList) {
-                    BigDecimal dbIvQty = inventory.getIvQty();
-                    int compareRet = dbIvQty.compareTo(requestIvQty);
 
+                BigDecimal requestIvQty = v;//请求扣减库存数
+                for (WmsInventory inventory : sortedList) {
+                    BigDecimal dbIvQty = inventory.getIvQty();//库存记录中的库存商品库存数量
+                    int compareRet = dbIvQty.compareTo(requestIvQty);//当前库存记录中的商品库存数量与请求扣减库存数量进行对比
+                    //当前库存记录的商品库存数量可以满足请求扣减的库存数
                     if (compareRet > 0) {
                         BigDecimal curIvqty = dbIvQty.subtract(requestIvQty);
-                        inventory.setIvQty(curIvqty);
-                        inventory.setIvTranstime(nowWithUTC);
-                        updateInventoryList.add(inventory);
-                        createTransactionRecord(wmsDoHeader, requestCondition2EntityMap, addIvTransactionList, nowWithUTC, userInfo, k, requestIvQty, inventory, dbIvQty, curIvqty);
-                        createIvOutConfirmRecord(addIvOutConfirmList, wmsDoHeader, requestCondition2EntityMap, nowWithUTC, finalIvIdIndexMap, k, requestIvQty, inventory);
+                        inventory.setIvQty(curIvqty);//设置当前库存数量(扣减之后的库存数量)
+                        inventory.setIvTranstime(nowWithUTC);//最近库存更新时间
+                        updateInventoryList.add(inventory);//添加到库存更新集合中
+                        createTransactionRecord(wmsDoHeader, requestCondition2EntityMap, addIvTransactionList, nowWithUTC, userInfo, k, requestIvQty, inventory, dbIvQty, curIvqty);//新增库存变更记录
+                        createIvOutConfirmRecord(addIvOutConfirmList, wmsDoHeader, requestCondition2EntityMap, nowWithUTC, finalIvIdIndexMap, k, requestIvQty, inventory);//新增库存锁定记录
                         break;
                     }
 
-                    /**删除库存记录*/
+
+                      /**删除库存记录*/
                     deleteInventoryList.add(inventory.getId());
-                    /**创建库存变更记录*/
+                      /**创建库存变更记录*/
                     createTransactionRecord(wmsDoHeader, requestCondition2EntityMap, addIvTransactionList, nowWithUTC, userInfo, k, requestIvQty, inventory, dbIvQty, BigDecimal.ZERO);
-                    /**创建库存扣减记录*/
+                      /**创建库存扣减记录*/
                     createIvOutConfirmRecord(addIvOutConfirmList, wmsDoHeader, requestCondition2EntityMap, nowWithUTC, finalIvIdIndexMap, k, requestIvQty, inventory);
 
+                    //当前库存记录商品数量 少于请求扣减
                     if (compareRet == 0) {
                         break;
                     }
+                    //当前库存记录商品数量 少于请求扣减
                     requestIvQty = requestIvQty.subtract(dbIvQty);
                 }
             });
 
             /**回写出库任务*/
-            wmsDoHeader.setOrderStatus(ALL_INVENTORY_STATUS);//已出库
+            wmsDoHeader.setOrderStatus(ALL_OUT_INVENTORY_STATUS);//已出库
             wmsDoHeader.setShippingTime(nowWithUTC);//发货时间(出库时间)
 
             if (LockMapUtil.confirmLock(dohId, lockValue)) {
                 log.info("\n +++++++++++++++++++++ 出库扣减库存操作:: 删除待出库存记录 -> {} ++++++++++++++++++++ \n ", JSON.toJSONString(deleteIvOutList));
                 int countForIvOut = wmsIvOutService.deleteByPrimaryKeys(deleteIvOutList);
-                if (countForIvOut != deleteIvOutList.size()) {
+                if (countForIvOut <= 0) {
                     ErrorCode.INVENTORY_DEDUCT_DELETE_IV_OUT_40035.throwError();
                 }
 
                 log.info("\n +++++++++++++++++++++ 出库扣减库存操作:: 新增库存锁定扣减记录 -> {} ++++++++++++++++++++ \n ", JSON.toJSONString(addIvOutConfirmList));
                 int countForOutConfirm = wmsIvOutConfirmService.insertBatch(addIvOutConfirmList);
-                if (countForOutConfirm != addIvOutConfirmList.size()) {
+                if (countForOutConfirm <= 0) {
                     ErrorCode.INVENTORY_DEDUCT_ADD_OUT_CONFIRM_40036.throwError();
                 }
 
                 log.info("\n +++++++++++++++++++++ 出库扣减库存操作:: 新增库存变动记录-> {} ++++++++++++++++++++ \n ", JSON.toJSONString(addIvTransactionList));
                 int countForTransaction = wmsIvTransactionService.insertBatch(addIvTransactionList);
-                if (countForTransaction != addIvTransactionList.size()) {
+                if (countForTransaction <= 0) {
                     ErrorCode.INVENTORY_DEDUCT_ADD_TRANSACTION_40037.throwError();
                 }
 
                 log.info("\n +++++++++++++++++++++ 出库扣减库存操作:: 更新库存记录 -> {} ++++++++++++++++++++ \n ", JSON.toJSONString(updateInventoryList));
                 if (Objects.nonNull(updateInventoryList) && !updateInventoryList.isEmpty()) {
                     int countForInventoryUpdate = wmsInventoryService.updateBatch(updateInventoryList);
-                    if (countForInventoryUpdate != updateInventoryList.size()) {
+                    if (countForInventoryUpdate <= 0) {
                         ErrorCode.INVENTORY_DEDUCT_UPDATE_INVENTORY_40038.throwError();
                     }
                 }
@@ -1032,7 +1041,7 @@ public class InventoryBussiness {
                 log.info("\n +++++++++++++++++++++ 出库扣减库存操作:: 删除库存记录 -> {} ++++++++++++++++++++ \n ", JSON.toJSONString(deleteInventoryList));
                 if (Objects.nonNull(deleteInventoryList) && !deleteInventoryList.isEmpty()) {
                     int countForInventoryDelete = wmsInventoryService.deleteByPrimaryKeys(deleteInventoryList);
-                    if (countForInventoryDelete != deleteInventoryList.size()) {
+                    if (countForInventoryDelete <= 0) {
                         ErrorCode.INVENTORY_DEDUCT_DELETE_INVENTORY_40039.throwError();
                     }
                 }
@@ -1072,7 +1081,7 @@ public class InventoryBussiness {
         wmsIvOutConfirm.setId(idGenerator.getUnique());
         wmsIvOutConfirm.setIvoId(requestCondition2EntityMap.get(k).get(0).getIvoId());//待出库存id
         wmsIvOutConfirm.setIvId(inventory.getIvId());//库存id
-        wmsIvOutConfirm.setIvIdIndex(Objects.isNull(finalIvIdIndexMap) ? 1 : finalIvIdIndexMap.get(inventory.getIvId()) + 1);//扣减次数
+        wmsIvOutConfirm.setIvIdIndex(Objects.isNull(finalIvIdIndexMap) || Objects.isNull(finalIvIdIndexMap.get(inventory.getIvId()))? 1 : finalIvIdIndexMap.get(inventory.getIvId()) + 1);//扣减次数
         wmsIvOutConfirm.setIvocQty(requestIvQty);//扣减锁定库存数量
         wmsIvOutConfirm.setApCodeDc("DOMT");//应用类型代码
         wmsIvOutConfirm.setIvDocumentCode(wmsDoHeader.getDohCode());//引起库存变动业务单据编号
@@ -1095,9 +1104,9 @@ public class InventoryBussiness {
      * @param requestIvQty
      * @param inventory
      * @param dbIvQty
-     * @param zero
+     * @param afterQty
      */
-    private void createTransactionRecord(WmsDoHeader wmsDoHeader, Map<String, List<WmsInventoryDeductConditionVo>> requestCondition2EntityMap, List<WmsIvTransaction> addIvTransactionList, Date nowWithUTC, UserInfo userInfo, String k, BigDecimal requestIvQty, WmsInventory inventory, BigDecimal dbIvQty, BigDecimal zero) {
+    private void createTransactionRecord(WmsDoHeader wmsDoHeader, Map<String, List<WmsInventoryDeductConditionVo>> requestCondition2EntityMap, List<WmsIvTransaction> addIvTransactionList, Date nowWithUTC, UserInfo userInfo, String k, BigDecimal requestIvQty, WmsInventory inventory, BigDecimal dbIvQty, BigDecimal afterQty) {
         WmsIvTransaction wmsIvTransaction = DataConvertUtil.parseDataAsObject(inventory, WmsIvTransaction.class);
         wmsIvTransaction.setId(idGenerator.getUnique());
         wmsIvTransaction.setApCode("SHIP");/**应用类型-签出扣减*/
@@ -1108,11 +1117,56 @@ public class InventoryBussiness {
         wmsIvTransaction.setLcCodeFrom(inventory.getLcCode());/**原库位编码*/
         wmsIvTransaction.setLcCodeTo(inventory.getLcCode());/**目标库位编码*/
         wmsIvTransaction.setIvQtyFrom(dbIvQty);/**原数量*/
-        wmsIvTransaction.setIvQtyTo(zero);/**调整后数量*/
+        wmsIvTransaction.setIvQtyTo(afterQty);/**调整后数量*/
         wmsIvTransaction.setDcQty(requestIvQty);/**调整数量*/
         wmsIvTransaction.setCreateTime(nowWithUTC);
         wmsIvTransaction.setCreateUser(userInfo.getUserName());
         addIvTransactionList.add(wmsIvTransaction);
     }
 
+    /**
+     * 库存变动分页记录(核验)
+     *
+     * @param request
+     * @return
+     */
+    public InventoryChangePageQueryBussinessResponse changePageQueryInventory(InventoryChangePageQueryBussinessRequest request) {
+        Pagination pagination = new Pagination(request.getPageCommonRequest().getPageNumber(), request.getPageCommonRequest().getPageSize());
+        ConditionsBuilder conditionsBuilder = ConditionsBuilder.create();
+        if(Objects.nonNull(request.getInventoryChangePageQueryCondition())){
+            String startTime = request.getInventoryChangePageQueryCondition().getStartTime();
+            String endTime = request.getInventoryChangePageQueryCondition().getEndTime();
+            if(Objects.nonNull(startTime) && Objects.nonNull(endTime)){
+                conditionsBuilder.between("createTime",DateUtils.parse(startTime, DateUtils.YYYY_MM_DD_HH_MM_SS),DateUtils.parse(endTime, DateUtils.YYYY_MM_DD_HH_MM_SS));
+            }else if(Objects.nonNull(startTime)){
+                conditionsBuilder.ge("createTime",DateUtils.parse(startTime, DateUtils.YYYY_MM_DD_HH_MM_SS));
+            }else if(Objects.nonNull(endTime)){
+                conditionsBuilder.le("createTime",DateUtils.parse(endTime, DateUtils.YYYY_MM_DD_HH_MM_SS));
+            }
+        }
+        conditionsBuilder.orderBy("create_time desc");
+        Map<String, Object> paramMap = conditionsBuilder.build();
+        Pagination page = (Pagination)wmsIvTransactionDailyKnotService.selectCustomPage(pagination, paramMap);
+        InventoryChangePageQueryBussinessResponse response = new InventoryChangePageQueryBussinessResponse();
+        response.setPagination(page);
+        return response;
+    }
+
+    /**
+     * 库存变动列表(核验)
+     * @param request
+     * @return
+     */
+    public InventoryDeductBussinessResponse changeListInventory(InventoryChangeListBussinessRequest request) {
+        String curDate = DateUtils.formatUseYmd(request.getCreateTime());
+        String startCurdate= curDate + RANGE_TIME_START;
+        String endCurdate= curDate + RANGE_TIME_END;
+        ConditionsBuilder conditionsBuilder = ConditionsBuilder.create();
+        conditionsBuilder.between("createTime",startCurdate,endCurdate);
+        Map<String, Object> paramMap = conditionsBuilder.build();
+        List<WmsIvTransactionDailyKnot> list = wmsIvTransactionDailyKnotService.selectByCustomCondtions(paramMap);
+        InventoryDeductBussinessResponse response = new InventoryDeductBussinessResponse();
+        response.setList(list);
+        return response;
+    }
 }

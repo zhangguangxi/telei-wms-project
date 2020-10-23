@@ -46,7 +46,7 @@ public class LiftupAdjustStrategy implements IAdjustStrategy {
                 /***库存调整单明细记录*/
                 adjustStrategyFactory.createAdjtLine(wmsAdjtHeader, wmsAdjtLineList, inventory, null, "LIFTUP", ivQtyAdjt, lcCodeAdjt);
                 /**新增库存记录*/
-                WmsInventory inventoryAdd = adjustStrategyFactory.createInventory(wmsInventoryAddList, inventory, ivQtyAdjt, nowWithUtc);
+                WmsInventory inventoryAdd = adjustStrategyFactory.createInventory(wmsInventoryAddList, inventory, lcCodeAdjt,ivQtyAdjt, nowWithUtc);
                 /**库存拆分记录*/
                 adjustStrategyFactory.createSplit(wmsIvSplitList, ivQtyAdjt, inventory, ivQtyAfter, inventoryAdd);
                 break;
@@ -55,7 +55,7 @@ public class LiftupAdjustStrategy implements IAdjustStrategy {
             /**当前批次库存数 < 调整库存数*/
             deleteIvidList.add(inventory.getIvId());
             /**新增库存记录*/
-            WmsInventory wmsInventoryAdd = adjustStrategyFactory.createInventory(wmsInventoryAddList, inventory, ivQtyAdjt, nowWithUtc);
+            WmsInventory wmsInventoryAdd = adjustStrategyFactory.createInventory(wmsInventoryAddList, inventory, lcCodeAdjt,ivQtyAdjt, nowWithUtc);
             /**新增库存变更记录*/
             adjustStrategyFactory.createTransactionRecored(wmsIvTransactionList, inventory, lcCodeAdjt, "MOVE", ivQtyAdjt, userInfo, nowWithUtc);
             /***库存调整单明细记录*/

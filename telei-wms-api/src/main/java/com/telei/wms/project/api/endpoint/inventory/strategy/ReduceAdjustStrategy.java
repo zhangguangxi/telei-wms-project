@@ -44,7 +44,7 @@ public class ReduceAdjustStrategy implements IAdjustStrategy{
         List<WmsInventory> wmsInventories = DataConvertUtil.parseDataAsArray(WmsInventoryDbList, WmsInventory.class);
         BigDecimal totalIvQtyForLcCode = wmsInventories.stream().map(WmsInventory::getIvQty).reduce(BigDecimal.ZERO, BigDecimal::add);
         BigDecimal ivQtyAdjt = wmsAdjtHeader.getIvQtyAdjt();/**调整数量*/
-        String lcCodeAdjt = wmsAdjtHeader.getLcCodeAdjt(); /**调整库位*/
+        String lcCodeAdjt = wmsAdjtHeader.getLcCode(); /**调整库位*/
         List<WmsIvOut> wmsIvOuts = wmsIvOutService.selectAll();
 
         WmsInventory inventory = wmsInventories.get(0);

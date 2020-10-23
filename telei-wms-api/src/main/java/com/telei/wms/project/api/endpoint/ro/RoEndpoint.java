@@ -41,6 +41,7 @@ public class RoEndpoint {
     @ApiOperation("修改入库任务主单")
     @PostMapping(ServiceId.WMS_RO_HEADER_UPDATE)
     public RoCudBaseResponse updateRoHeader(@RequestBody @Valid RoHeaderUpdateRequest request) {
+        request.setIsSync(true);
         return roBussiness.updateRoHeader(request);
     }
 

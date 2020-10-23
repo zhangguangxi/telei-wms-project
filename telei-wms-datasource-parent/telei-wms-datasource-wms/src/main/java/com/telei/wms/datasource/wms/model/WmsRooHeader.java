@@ -39,7 +39,7 @@ public class WmsRooHeader implements Entity<Long> {
     private BigDecimal tmpPutawayQty;
     /** 上架数量 */
     private BigDecimal putawayQty;
-    /** 收货状态 01-制单，10-部分收货，20-收货成功，98-关闭 */
+    /** 收货状态 01-制单，10-部分收货，20-收货成功，30-待上架 40-已上架 98-关闭 */
     private String roStatus;
     /** 备注 */
     private String memo;

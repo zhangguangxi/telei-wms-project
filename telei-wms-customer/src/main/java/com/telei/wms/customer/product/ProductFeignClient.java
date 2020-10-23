@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.PostMapping;
  * @author gongrp
  * @date 2020/7/3 14:35
  */
-@FeignClient(value = "ProductFeignClient", url = "http://192.168.1.114:8811/")
+@FeignClient(value = "ProductFeignClient", url = "${customize.feign.cdm-url}")
 public interface ProductFeignClient {
 
     /**
@@ -20,7 +20,7 @@ public interface ProductFeignClient {
      * @return
      */
     @PostMapping("internal/010208")
-    ApiResponse getProductDetailByBarCode(ProductDetailRequest request);
+    ApiResponse getProductDetailByProductNo(ProductDetailRequest request);
 
     /**
      * 根据ids查询

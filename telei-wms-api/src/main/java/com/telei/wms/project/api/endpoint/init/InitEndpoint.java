@@ -63,4 +63,10 @@ public class InitEndpoint {
         return initBussiness.initHeaderDetail(request);
     }
 
+    @ApiOperation("删除库存初始化单")
+    @PostMapping(ServiceId.WMS_INIT_DELETE)
+    public InitHeaderDeleteResponse deleteInitHeader(@RequestBody @Valid InitHeaderDeleteRequest request) {
+        return initBussiness.deleteInitHeader(request);
+    }
+
 }

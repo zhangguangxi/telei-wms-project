@@ -36,12 +36,17 @@ public class MoveAdjustStrategy  implements IAdjustStrategy {
                                                                                           List<WmsIvSplit> wmsIvSplitList,UserInfo userInfo, Date nowWithUtc) {
 
         String lcCodeAdjt = wmsAdjtHeader.getLcCodeAdjt();/**调整库位(目标库位)*/
+
         WmsLocation wmsLocation = new WmsLocation();
         wmsLocation.setLcCode(lcCodeAdjt);
+        wmsLocation.setWarehouseId(wmsAdjtHeader.getWarehouseId());
         wmsLocation = wmsLocationService.selectOneByEntity(wmsLocation);
+
         if(Objects.isNull(wmsLocation)){
             ErrorCode.ADJT_ERROR_4017.throwError(wmsAdjtHeader.getLcCode(), JSON.toJSONString(wmsAdjtHeader.getProductId()),lcCodeAdjt,wmsAdjtHeader.getAdjhType());
         }
+
+
         BigDecimal ivQtyAdjt = wmsAdjtHeader.getIvQtyAdjt();/**库存调整数量*/
         List<WmsInventory> wmsInventories = DataConvertUtil.parseDataAsArray(WmsInventoryDbList, WmsInventory.class);
         BigDecimal totalIvQty = wmsInventories.stream().map(WmsInventory::getIvQty).reduce(BigDecimal.ZERO, BigDecimal::add);
@@ -58,7 +63,7 @@ public class MoveAdjustStrategy  implements IAdjustStrategy {
                 wmsInventoryUpdateList.add(inventory);
                 adjustStrategyFactory.createTransactionRecored(wmsIvTransactionList,inventory,lcCodeAdjt,"MOVE",ivQtyAdjt,userInfo, nowWithUtc);
                 /**新增库存记录*/
-                WmsInventory inventoryAdd = adjustStrategyFactory.createInventory(wmsInventoryAddList, inventory, ivQtyAdjt, nowWithUtc);
+                WmsInventory inventoryAdd = adjustStrategyFactory.createInventory(wmsInventoryAddList, inventory, lcCodeAdjt,ivQtyAdjt, nowWithUtc);
                 /***库存调整单明细记录*/
                 adjustStrategyFactory.createAdjtLine(wmsAdjtHeader, wmsAdjtLineList, inventory,inventoryAdd,"MOVE" ,ivQtyAdjt, lcCodeAdjt);
                 /**库存拆分记录*/
@@ -70,10 +75,9 @@ public class MoveAdjustStrategy  implements IAdjustStrategy {
             /**新增库存变更记录*/
             adjustStrategyFactory.createTransactionRecored(wmsIvTransactionList,inventory,lcCodeAdjt,"MOVE",ivQtyAdjt,userInfo, nowWithUtc);
             /**新增库存记录*/
-            adjustStrategyFactory.createInventory(wmsInventoryAddList, inventory, ivQtyAdjt, nowWithUtc);
+            adjustStrategyFactory.createInventory(wmsInventoryAddList, inventory, lcCodeAdjt,ivQtyAdjt, nowWithUtc);
             /***库存调整单明细记录*/
             adjustStrategyFactory.createAdjtLine(wmsAdjtHeader, wmsAdjtLineList, inventory,null,"MOVE" ,ivQtyAdjt, lcCodeAdjt);
-
             if(ivQty.compareTo(ivQtyAdjt) == 0){
                 break;
             }

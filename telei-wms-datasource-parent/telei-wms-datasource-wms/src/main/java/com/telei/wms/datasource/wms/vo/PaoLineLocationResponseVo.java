@@ -8,6 +8,8 @@ import lombok.Data;
 @Data
 public class PaoLineLocationResponseVo {
 
+    /** 库存id */
+    private Long ivId;
     /** 产品id */
     private Long productId;
     /** 库位编码 */

@@ -63,7 +63,7 @@ public class LiftWorkBussiness {
         wmsLiftWork.setCompanyId(CustomRequestContext.getUserInfo().getCompanyId());
         // 获取业务单号
         BusinessNumberRequest businessNumberRequest = new BusinessNumberRequest();
-        businessNumberRequest.setType("WMS");
+        businessNumberRequest.setType("SJH");
         ApiResponse apiResponse = businessNumberFeignClient.get(businessNumberRequest);
         BusinessNumberResponse businessNumberResponse = apiResponse.convertDataToObject(BusinessNumberResponse.class);
         if (StringUtils.isEmpty(businessNumberResponse.getBusinessNumber())) {
@@ -142,7 +142,7 @@ public class LiftWorkBussiness {
             businessRequest.setProductId(wmsLiftWork.getProductId());
             businessRequest.setWarehouseCode(wmsLiftWork.getWarehouseCode());
             businessRequest.setWarehouseId(wmsLiftWork.getWarehouseId());
-            if ("RISE".equals(request.getLiftType())) {
+            if ("RISE".equals(workCommonRequest.getLiftType())) {
                 /**
                  * 判断当前库位是否为空
                  * 为空继续 反之抛出异常
@@ -169,7 +169,7 @@ public class LiftWorkBussiness {
                 businessRequest.setIvQtyAdjt(wmsLiftWork.getLiftQty());
                 businessRequest.setReason("升降任务-升货处理");
                 inventoryBussiness.adjustInventory(businessRequest, "LIFTUP");
-            } else if ("DROP".equals(request.getLiftType())) {
+            } else if ("DROP".equals(workCommonRequest.getLiftType())) {
                 /**
                  * 判断当前库位是否为空
                  * 为空抛异常 反之继续

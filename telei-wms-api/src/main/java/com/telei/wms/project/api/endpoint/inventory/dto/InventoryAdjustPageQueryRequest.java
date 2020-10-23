@@ -11,10 +11,10 @@ import lombok.Data;
 @Data
 public class InventoryAdjustPageQueryRequest {
     private PageCommonRequest pageCommonRequest;
-    private InventoryPageQueryRequest.InventoryPageQueryCondition inventoryPageQueryCondition;
+    private InventoryAdjustPageQueryCondition inventoryPageQueryCondition;
 
     @Data
-    public static class InventoryPageQueryCondition {
+    public static class InventoryAdjustPageQueryCondition {
         @ApiModelProperty(value = "库位",example = "s11-12-13",position = 1)
         private String lcCode;
 

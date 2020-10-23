@@ -45,7 +45,7 @@ public class LiftdownAdjustStrategy implements IAdjustStrategy {
                 /***库存调整单明细记录*/
                 adjustStrategyFactory.createAdjtLine(wmsAdjtHeader, wmsAdjtLineList, inventory, null, "LIFTDOWN", ivQtyAdjt, lcCodeAdjt);
                 /**库存记录*/
-                WmsInventory inventoryAdd = adjustStrategyFactory.createInventory(wmsInventoryAddList, inventory, ivQtyAdjt, nowWithUtc);
+                WmsInventory inventoryAdd = adjustStrategyFactory.createInventory(wmsInventoryAddList, inventory,lcCodeAdjt, ivQtyAdjt, nowWithUtc);
                 /**库存拆分记录*/
                 adjustStrategyFactory.createSplit(wmsIvSplitList, ivQtyAdjt, inventory, ivQtyAfter, inventoryAdd);
                 break;
@@ -53,7 +53,7 @@ public class LiftdownAdjustStrategy implements IAdjustStrategy {
 
             deleteIvidList.add(inventory.getIvId());
             /**库存记录*/
-            WmsInventory inventoryAdd = adjustStrategyFactory.createInventory(wmsInventoryAddList, inventory, ivQtyAdjt, nowWithUtc);
+            WmsInventory inventoryAdd = adjustStrategyFactory.createInventory(wmsInventoryAddList, inventory,lcCodeAdjt, ivQtyAdjt, nowWithUtc);
             /**库存变更记录*/
             adjustStrategyFactory.createTransactionRecored(wmsIvTransactionList, inventory, lcCodeAdjt, "MOVE", ivQtyAdjt, userInfo, nowWithUtc);
             /***库存调整单明细记录*/

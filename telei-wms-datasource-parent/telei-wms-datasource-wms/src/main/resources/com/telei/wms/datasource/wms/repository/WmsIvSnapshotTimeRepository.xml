@@ -34,7 +34,7 @@
         select
         <include refid="Base_Column_List" />
         from wms_iv_snapshot_time
-        where date(snapshot_lc_time) between ${leftSnapshotTime} and ${rightSnapshotTime}
+        where date(snapshot_lc_time) between #{leftSnapshotTime} and #{rightSnapshotTime}
         order by snapshot_time
     </select>
 

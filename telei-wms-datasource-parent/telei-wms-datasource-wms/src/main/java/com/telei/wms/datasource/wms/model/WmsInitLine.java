@@ -31,4 +31,6 @@ public class WmsInitLine implements Entity<Long> {
     private Date ivEffectiveDate;
     /** 客户指定批次号 */
     private String batchNo;
+
+    private Long companyId;
 }

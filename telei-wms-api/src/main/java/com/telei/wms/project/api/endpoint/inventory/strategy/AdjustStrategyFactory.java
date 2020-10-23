@@ -6,6 +6,8 @@ import com.telei.infrastructure.component.commons.dto.UserInfo;
 import com.telei.infrastructure.component.idgenerator.contract.Id;
 import com.telei.wms.customer.amqp.inventoryChangeWriteBack.OmsInventoryChangeWriteBack;
 import com.telei.wms.datasource.wms.model.*;
+import com.telei.wms.datasource.wms.service.WmsLocationService;
+import com.telei.wms.project.api.ErrorCode;
 import com.telei.wms.project.api.utils.DataConvertUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,6 +28,9 @@ import java.util.Objects;
 public class AdjustStrategyFactory {
     @Autowired
     private Id idGenerator;
+
+    @Autowired
+    private WmsLocationService wmsLocationService;
 
     /**
      * 通过库存调整类型获取其策略的实现
@@ -83,9 +88,18 @@ public class AdjustStrategyFactory {
      * @param ivQtyAdjt
      * @return
      */
-    public   WmsInventory createInventory(List<WmsInventory> wmsInventoryAddList, WmsInventory wmsInventory, BigDecimal ivQtyAdjt, Date nowWithUtc) {
+    public   WmsInventory createInventory(List<WmsInventory> wmsInventoryAddList, WmsInventory wmsInventory,String lcCodeAdjt, BigDecimal ivQtyAdjt, Date nowWithUtc) {
         WmsInventory wmsInventoryAdd = DataConvertUtil.parseDataAsObject(wmsInventory, WmsInventory.class);
         wmsInventoryAdd.setIvId(idGenerator.getUnique());
+        wmsInventoryAdd.setLcCode(lcCodeAdjt);//库位编码
+        WmsLocation wmsLocation = new WmsLocation();
+        wmsLocation.setLcCode(lcCodeAdjt);
+        wmsLocation.setWarehouseId(wmsInventory.getWarehouseId());
+        wmsLocation = wmsLocationService.selectOneByEntity(wmsLocation);
+        if(Objects.isNull(wmsLocation)){
+            ErrorCode.ADJT_ERROR_4019.throwError(wmsInventory.getWarehouseId(),JSON.toJSONString(lcCodeAdjt));
+        }
+        wmsInventoryAdd.setLcType(wmsLocation.getLcType());//库位类型
         wmsInventoryAdd.setIvQty(ivQtyAdjt); /**库存数量(调整数)*/
         wmsInventoryAdd.setBigBagQty(ivQtyAdjt.multiply(new BigDecimal(wmsInventoryAdd.getBigBagRate())));/**大包数量*/
         wmsInventoryAdd.setBigBagExtraQty(ivQtyAdjt.divideAndRemainder(new BigDecimal(wmsInventoryAdd.getBigBagRate()))[1]);/**大包剩余数量*/

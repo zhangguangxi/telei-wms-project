@@ -10,13 +10,13 @@ import org.springframework.web.bind.annotation.PostMapping;
  * @Auther: leo
  * @Date: 2020/6/18 10:00
  */
-@FeignClient(value = "CdmFeignClient", url = "${customize.feign.wms-url}")
+@FeignClient(value = "CdmFeignClient", url = "${customize.feign.cdm-url}")
 public interface SyncPermissionFeignClient {
     /**
      * 令牌校验
      *
      * @return
      */
-    @PostMapping("internal/012701")
+    @PostMapping("internal/012801")
     ApiResponse syncPermissions(SyncPermissionFeignRequest request);
 }

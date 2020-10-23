@@ -60,7 +60,15 @@
         do.ship_detailed_species_qty,
         do.order_type,
         do.ie_type,
-        do.order_status,
+        CASE
+            WHEN do.order_status = '98' THEN '98'
+            WHEN do.order_status = '40' THEN '40'
+            WHEN do.had_check = '1' THEN '2'
+            WHEN do.order_status = '30' THEN '30'
+            WHEN do.order_status = '25' THEN '25'
+            WHEN do.order_status = '20' THEN '20'
+            WHEN do.has_plo = '0' THEN '1'
+        END order_status,
         do.check_time,
         do.check_user,
         do.has_plo,
@@ -84,7 +92,8 @@
         LEFT JOIN cdm.cdm_warehouse cw ON cw.warehouse_id = do.warehouse_id
         LEFT JOIN cdm.cdm_customer cc ON cc.customer_id = do.customer_id
         LEFT JOIN oms.oms_ship_plan osp ON osp.sp_id = do.sp_id
-        LEFT JOIN cdm.cdm_sys_account csa ON csa.account_id = osp.owner_user
+        LEFT JOIN oms.oms_sale_order oso ON oso.so_id = do.so_id
+        LEFT JOIN cdm.cdm_sys_account csa ON csa.account_id = oso.owner_user
         <where>
             <if test="id != null">
                 and do.doh_id ${id}
@@ -252,6 +261,9 @@
             </if>
             <if test="productBarcode != null">
                 and p.product_barcode ${productBarcode}
+            </if>
+            <if test="productCategoryId != null">
+                and p.product_category_id ${productCategoryId}
             </if>
             <if test="supplierName != null">
                 and su.supplier_name ${supplierName}

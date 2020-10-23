@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.PostMapping;
  * @author gongrp
  * @date 2020/7/3 14:35
  */
-@FeignClient(value = "SupplierFeignClient", url = "http://localhost:8811/")
+@FeignClient(value = "SupplierFeignClient", url = "${customize.feign.cdm-url}")
 public interface SupplierFeignClient {
 
     /**

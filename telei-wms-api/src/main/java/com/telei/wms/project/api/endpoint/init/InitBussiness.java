@@ -63,6 +63,9 @@ public class InitBussiness {
     private WmsInitLineService wmsInitLineService;
 
     @Autowired
+    private WmsLocationService wmsLocationService;
+
+    @Autowired
     private WmsIvAttributebatchService wmsIvAttributebatchService;
 
     @Autowired
@@ -84,7 +87,7 @@ public class InitBussiness {
         if (Objects.isNull(wmsInitHeader.getId())) {
             // 获取业务单号
             BusinessNumberRequest businessNumberRequest = new BusinessNumberRequest();
-            businessNumberRequest.setType("WMS");
+            businessNumberRequest.setType("KCS");
             ApiResponse apiResponse = businessNumberFeignClient.get(businessNumberRequest);
             BusinessNumberResponse businessNumberResponse = apiResponse.convertDataToObject(BusinessNumberResponse.class);
             if (StringUtils.isEmpty(businessNumberResponse.getBusinessNumber())) {
@@ -110,6 +113,8 @@ public class InitBussiness {
                 //订单不存在
                 ErrorCode.INIT_NOT_EXIST_4001.throwError();
             }
+            initHeader.setMemo(wmsInitHeader.getMemo());
+            wmsInitHeaderService.updateByPrimaryKeySelective(initHeader);
             // 删除库存初始化明细
             WmsInitLine wmsInitLine = new WmsInitLine();
             wmsInitLine.setIvihId(ivihId);
@@ -137,21 +142,6 @@ public class InitBussiness {
                     ErrorCode.BUSINESS_NUMBER_ERROR_4001.throwError();
                 }
             }
-            // 通过供应商名字查询供应商列表
-            Map<String, SupplierResponse> supplierMap = new HashMap<>();
-            List<String> supplierNameList = request.getInitLines().stream().map(InitLineAddRequest::getSupplierName).collect(Collectors.toList());
-            SupplierRequest supplierRequest = new SupplierRequest();
-            supplierRequest.setSupplierNames(supplierNameList);
-            supplierRequest.setCompanyId(CustomRequestContext.getUserInfo().getCompanyId());
-            try {
-                ApiResponse supplierResponse = supplierFeignClient.getSupplierListByName(supplierRequest);
-                SupplierListResponse response = JSON.parseObject(JSON.toJSONString(supplierResponse.getData()), SupplierListResponse.class);
-                if (StringUtils.isNotNull(response)) {
-                    supplierMap = response.getSupplierList().stream().collect(Collectors.toMap(SupplierResponse::getSupplierName, Function.identity()));
-                }
-            } catch (Exception e) {
-                ErrorCode.BUSINESS_NUMBER_ERROR_4001.throwError();
-            }
             for (InitLineAddRequest initLine : request.getInitLines()) {
                 // 库存初始化明细
                 initLine.setId(idGenerator.getUnique());
@@ -159,13 +149,13 @@ public class InitBussiness {
                 if (Objects.isNull(productDetailResponse)) {
                     ErrorCode.INIT_ADD_ERROR_4002.throwError();
                 }
-                SupplierResponse supplierResponse = supplierMap.get(initLine.getSupplierName());
-                if (Objects.isNull(supplierResponse)) {
-                    ErrorCode.INIT_ADD_ERROR_4002.throwError();
-                }
                 initLine.setProductId(productDetailResponse.getProductId());
-                initLine.setSupplierId(supplierResponse.getId());
                 initLine.setIvihId(ivihId);
+                // 判断货位是否存在
+                WmsLocation wmsLocation = wmsLocationService.getCompanyLcCodeByLocation(initLine.getLcCode(), wmsInitHeader.getWarehouseId());
+                if (Objects.isNull(wmsLocation)) {
+                    ErrorCode.WMS_LOCATION_NOT_EXIST_4002.throwError();
+                }
             }
             List<WmsInitLine> wmsInitLines = DataConvertUtil.parseDataAsArray(request.getInitLines(), WmsInitLine.class);
             int initLineCount = wmsInitLineService.insertBatch(wmsInitLines);
@@ -195,6 +185,9 @@ public class InitBussiness {
         wmsInitHeader.setIvihStatus("10");
         wmsInitHeader.setAuditUser(CustomRequestContext.getUserInfo().getUserName());
         wmsInitHeader.setAuditTime(DateUtils.nowWithUTC());
+        if (StringUtils.isNoneBlank(request.getMemo())) {
+            wmsInitHeader.setMemo(request.getMemo());
+        }
         WmsInitLine wmsInitLine = new WmsInitLine();
         wmsInitLine.setIvihId(request.getId());
         List<WmsInitLine> initLineList = wmsInitLineService.selectByEntity(wmsInitLine);
@@ -220,18 +213,9 @@ public class InitBussiness {
                 wmsIvAttributebatch.setId(iabId);
                 wmsIvAttributebatch.setWarehouseId(wmsInitHeader.getWarehouseId());
                 wmsIvAttributebatch.setWarehouseCode(wmsInitHeader.getWarehouseCode());
-                // 获取业务单号
-                BusinessNumberRequest businessNumberRequest = new BusinessNumberRequest();
-                businessNumberRequest.setType("WMS");
-                ApiResponse apiResponse = businessNumberFeignClient.get(businessNumberRequest);
-                BusinessNumberResponse businessNumberResponse = apiResponse.convertDataToObject(BusinessNumberResponse.class);
-                if (StringUtils.isEmpty(businessNumberResponse.getBusinessNumber())) {
-                    // 未获取到业务单号
-                    ErrorCode.BUSINESS_NUMBER_ERROR_4001.throwError();
-                }
                 wmsIvAttributebatch.setQsCode("GD");
                 wmsIvAttributebatch.setApCode("ADJT");
-                wmsIvAttributebatch.setDocumentCode(businessNumberResponse.getBusinessNumber());
+                wmsIvAttributebatch.setDocumentCode(wmsInitHeader.getIvihCode());
                 wmsIvAttributebatch.setIabDocumentId(request.getId());
                 wmsIvAttributebatch.setIabDocumentlineId(initLine.getId());
                 wmsIvAttributebatch.setCompanyId(wmsInitHeader.getCompanyId());
@@ -245,6 +229,14 @@ public class InitBussiness {
                     wmsIvAttributebatch.setProductNo(productResponse.getProductNo());
                     wmsIvAttributebatch.setProductName(productResponse.getProductName());
                     wmsIvAttributebatch.setProductNameLocal(productResponse.getProductNameLocal());
+                    wmsIvAttributebatch.setProductBarcode(productResponse.getProductBarcode());
+                    wmsIvAttributebatch.setProductUpcCode(productResponse.getProductUpcCode());
+                    wmsIvAttributebatch.setSpecType(productResponse.getSpecType());
+                    wmsIvAttributebatch.setProductWidth(productResponse.getProductWidth());
+                    wmsIvAttributebatch.setProductLength(productResponse.getProductLength());
+                    wmsIvAttributebatch.setProductHeight(productResponse.getProductHeight());
+                    wmsIvAttributebatch.setProductColor(productResponse.getProductColor());
+                    wmsIvAttributebatch.setProductSize(productResponse.getProductSize());
                     wmsIvAttributebatch.setProductCategoryId(productResponse.getProductCategoryId());
                     wmsIvAttributebatch.setStockUnit(productResponse.getStockUnit());
                     wmsIvAttributebatch.setProductColor(productResponse.getProductColor());
@@ -266,6 +258,7 @@ public class InitBussiness {
                     wmsIvAttributebatch.setBigBagVol(productResponse.getBigBagVol());
                     wmsIvAttributebatch.setBigBagWeight(productResponse.getBigBagWeight());
                     wmsIvAttributebatch.setBigBagWidth(productResponse.getBigBagWidth());
+                    wmsIvAttributebatch.setVol(productResponse.getUnitVol());
                     // 组装库存表
                     WmsInventory wmsInventory = new WmsInventory();
                     wmsInventory.setId(idGenerator.getUnique());
@@ -301,6 +294,7 @@ public class InitBussiness {
                     wmsInventory.setBizDate(DateUtils.nowWithUTC());
                     wmsInventory.setIvCreatetime(DateUtils.nowWithUTC());
                     wmsInventory.setIvTranstime(DateUtils.nowWithUTC());
+                    wmsInventory.setIvFifoTime(DateUtils.nowWithUTC());
                     wmsInventory.setApCodeDc("ADJT");
                     wmsInventory.setIvDocumentCode(wmsInitHeader.getIvihCode());
                     wmsInventory.setIvDocumentId(wmsInitHeader.getId());
@@ -355,13 +349,33 @@ public class InitBussiness {
             ErrorCode.INIT_NOT_EXIST_4001.throwError();
         }
         InitHeaderDetailResponse response = DataConvertUtil.parseDataAsObject(wmsInitHeader, InitHeaderDetailResponse.class);
-        WmsInitLine wmsInitLine = new WmsInitLine();
-        wmsInitLine.setIvihId(request.getId());
         // 应展示商品字段
-        List<WmsInitLineVO> wmsInitLineList = wmsInitLineService.selectInitLinesByEntity(wmsInitLine);
+        List<WmsInitLineVO> wmsInitLineList = wmsInitLineService.selectInitLinesByEntity(request.getId(), wmsInitHeader.getCompanyId());
         if (!wmsInitLineList.isEmpty()) {
             response.setInitLines(wmsInitLineList);
         }
+        return response;
+    }
+
+    /**
+     * 订单删除
+     *
+     * @param request
+     * @return
+     */
+    public InitHeaderDeleteResponse deleteInitHeader(InitHeaderDeleteRequest request) {
+        WmsInitHeader wmsInitHeader = DataConvertUtil.parseDataAsObject(request, WmsInitHeader.class);
+        WmsInitHeader initHeader = wmsInitHeaderService.selectByPrimaryKey(wmsInitHeader.getId());
+        if (Objects.isNull(initHeader)) {
+            ErrorCode.INIT_NOT_EXIST_4001.throwError();
+        }
+        if ("10".equals(initHeader.getIvihStatus())) {
+            ErrorCode.INIT_DELETE_ERROR_4004.throwError();
+        }
+        wmsInitHeader.setIvihStatus("98");
+        int count = wmsInitHeaderService.updateByPrimaryKeySelective(wmsInitHeader);
+        InitHeaderDeleteResponse response = new InitHeaderDeleteResponse();
+        response.setIsSuccess(count > 0);
         return response;
     }
 
@@ -392,6 +406,7 @@ public class InitBussiness {
         if (StringUtils.isNotBlank(request.getWarehouseCode())) {
             conditionsBuilder.like("warehouseCode", request.getWarehouseCode());
         }
+        conditionsBuilder.eq("companyId", CustomRequestContext.getUserInfo().getCompanyId());
         Map<String, Object> paramMap = conditionsBuilder.build();
         Pagination page = (Pagination) wmsInitHeaderService.selectPage(pagination, paramMap);
         InitHeaderBusinessPageQueryResponse response = new InitHeaderBusinessPageQueryResponse();

@@ -24,7 +24,7 @@ public class WmsLocation implements Entity<Long> {
     private String lcX;
     private String lcY;
     private String lcZ;
-    /** 库位类型，数据字典，S 样品库位、E 高架库位 等 */
+    /** 库位类型，数据字典，S 样品库位、Z 高架库位 等 */
     private String lcType;
     /** 长(CM) */
     private BigDecimal lcLength;

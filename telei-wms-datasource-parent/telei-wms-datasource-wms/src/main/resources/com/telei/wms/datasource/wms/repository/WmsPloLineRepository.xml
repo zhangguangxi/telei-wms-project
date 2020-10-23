@@ -85,7 +85,7 @@
             WHERE
                 warehouse_id=#{warehouseId,jdbcType=BIGINT}
             AND product_id IN
-            <foreach close=")" collection="productIds" item="item" open="(" separator=",">
+            <foreach collection="productIds" item="item" open="(" separator="," close=")">
                 #{item}
             </foreach>
             GROUP BY

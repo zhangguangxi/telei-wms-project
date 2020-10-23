@@ -74,6 +74,10 @@
             <groupId>com.telei</groupId>
             <version>${version}</version>
         </dependency>
+        <dependency>
+            <groupId>org.aspectj</groupId>
+            <artifactId>aspectjweaver</artifactId>
+        </dependency>
 
     </dependencies>
 

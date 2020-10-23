@@ -1,6 +1,5 @@
 package com.telei.wms.schedule.task.schedule;
 
-import com.nuochen.framework.component.task.TaskCron;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
@@ -17,7 +16,7 @@ public class IvTransactionDailyKnotSchedule {
     @Autowired
     private IvTransactionDailyKnotScheduleHandler ivTransactionDailyKnotScheduleHandler;
 
-    @Scheduled(cron = TaskCron.EVERY_DAY_6)
+    @Scheduled(cron = "0 20 1 * * ?")
     public void doIvTransactionDailyKnotSchedule(){
         ivTransactionDailyKnotScheduleHandler.run();
     }

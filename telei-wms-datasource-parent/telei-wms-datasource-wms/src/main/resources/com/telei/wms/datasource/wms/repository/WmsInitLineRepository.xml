@@ -57,34 +57,13 @@
             cs.supplier_name
         from wms_init_line wil
         LEFT JOIN cdm.cdm_product cp ON cp.product_id = wil.product_id
+        <if test="companyId != null">
+            and cp.company_id = #{companyId}
+        </if>
         LEFT JOIN cdm.cdm_supplier cs ON cs.supplier_id = wil.supplier_id
         <where>
-            <if test="id != null">
-                and wil.ivil_id = #{id}
-            </if>
             <if test="ivihId != null">
                 and wil.ivih_id = #{ivihId}
-            </if>
-            <if test="productId != null">
-                and wil.product_id = #{productId}
-            </if>
-            <if test="lcCode != null">
-                and wil.lc_code = #{lcCode}
-            </if>
-            <if test="ivFifoTime != null">
-                and wil.iv_fifo_time = #{ivFifoTime}
-            </if>
-            <if test="ivQty != null">
-                and wil.iv_qty = #{ivQty}
-            </if>
-            <if test="productDate != null">
-                and wil.product_date = #{productDate}
-            </if>
-            <if test="ivEffectiveDate != null">
-                and wil.iv_effective_date = #{ivEffectiveDate}
-            </if>
-            <if test="batchNo != null">
-                and wil.batch_no = #{batchNo}
             </if>
         </where>
     </select>

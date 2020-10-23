@@ -76,7 +76,7 @@ public class LiftTaskBussiness {
                 wmsLiftWork.setWarehouseCode(responseVo.getWarehouseCode());
                 // 获取业务单号
                 BusinessNumberRequest businessNumberRequest = new BusinessNumberRequest();
-                businessNumberRequest.setType("WMS");
+                businessNumberRequest.setType("SJH");
                 ApiResponse apiResponse = businessNumberFeignClient.get(businessNumberRequest);
                 BusinessNumberResponse businessNumberResponse = apiResponse.convertDataToObject(BusinessNumberResponse.class);
                 if (StringUtils.isEmpty(businessNumberResponse.getBusinessNumber())) {
@@ -114,6 +114,7 @@ public class LiftTaskBussiness {
                         wmsLiftWork.setBigBagExtraQty(big[1]);
                     }
                 }
+                wmsLiftWork.setLiftType(responseVo.getLcType());
                 wmsLiftWork.setPrepLcCode(prepLcCode);
                 wmsLiftWork.setCreateTime(DateUtils.nowWithUTC());
                 wmsLiftWork.setCreateUser(CustomRequestContext.getUserInfo().getUserName());

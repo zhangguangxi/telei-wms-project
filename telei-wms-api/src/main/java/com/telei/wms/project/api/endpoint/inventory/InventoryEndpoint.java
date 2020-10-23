@@ -105,4 +105,21 @@ public class InventoryEndpoint {
         InventoryDeductBussinessResponse bussinessResponse = inventoryBussiness.deductInventory(bussinessRequest);
         return DataConvertUtil.parseDataAsObject(bussinessResponse, InventoryDeductResponse.class);
     }
+
+    @ApiOperation("库存变动分页")
+    @PostMapping(ServiceId.WMS_INVENTORY_CHANGE_PAGE_QUERY)
+    public InventoryChangePageQueryResponse changePageQueryInventory(@Valid @RequestBody InventoryChangePageQueryRequest request){
+        InventoryChangePageQueryBussinessRequest bussinessRequest = DataConvertUtil.parseDataAsObject(request, InventoryChangePageQueryBussinessRequest.class);
+        InventoryChangePageQueryBussinessResponse bussinessResponse = inventoryBussiness.changePageQueryInventory(bussinessRequest);
+        return DataConvertUtil.parseDataAsObject(bussinessResponse, InventoryChangePageQueryResponse.class);
+    }
+
+
+    @ApiOperation("库存变动详情列表")
+    @PostMapping(ServiceId.WMS_INVENTORY_CHANGE_LIST)
+    public InventoryChangeListResponse changeListInventory(@Valid @RequestBody InventoryChangeListRequest request){
+        InventoryChangeListBussinessRequest bussinessRequest = DataConvertUtil.parseDataAsObject(request, InventoryChangeListBussinessRequest.class);
+        InventoryDeductBussinessResponse bussinessResponse = inventoryBussiness.changeListInventory(bussinessRequest);
+        return DataConvertUtil.parseDataAsObject(bussinessResponse, InventoryChangeListResponse.class);
+    }
 }

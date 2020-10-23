@@ -15,6 +15,9 @@ public class InventoryPageQueryRequest {
 
     @Data
     public static class InventoryPageQueryCondition {
+        @ApiModelProperty(value = "仓库ID",example = "123412341",position = 0)
+        private String warehouseId;
+
         @ApiModelProperty(value = "库位",example = "s11-12-13",position = 1)
         private String lcCode;
 
@@ -29,5 +32,8 @@ public class InventoryPageQueryRequest {
 
         @ApiModelProperty(value = "库位类型",example = "S",position = 5)
         private String lcType;
+
+        @ApiModelProperty(value = "是否有货 全部：不传 是：Y 否：N",example = "Y",position = 6)
+        private String hasLcType;
     }
 }

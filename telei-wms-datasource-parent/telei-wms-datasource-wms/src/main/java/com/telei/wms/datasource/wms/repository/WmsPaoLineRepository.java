@@ -15,4 +15,8 @@ public interface WmsPaoLineRepository extends BaseRepository<WmsPaoLine,Long> {
     List<PaoLinePageQueryResponseVo> findAll(@Param("paoId") Long paoId, @Param("companyId") Long companyId);
 
     List<PaoLineLocationResponseVo> findLocationAll(@Param("warehouseId") Long warehouseId, @Param("productIds") List<Long> productIds);
+
+    List<PaoLineLocationResponseVo> findHistoryLocationAll(@Param("warehouseId") Long warehouseId, @Param("productIds") List<Long> productIds);
+
+    List<PaoLineLocationResponseVo> findExistLocationAll(List<String> lcCodes);
 }

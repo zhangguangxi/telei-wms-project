@@ -9,14 +9,8 @@ import com.telei.wms.commons.utils.StringUtils;
 import com.telei.wms.customer.businessNumber.BusinessNumberFeignClient;
 import com.telei.wms.customer.businessNumber.dto.BusinessNumberRequest;
 import com.telei.wms.customer.businessNumber.dto.BusinessNumberResponse;
-import com.telei.wms.datasource.wms.model.WmsPaoHeader;
-import com.telei.wms.datasource.wms.model.WmsPaoLine;
-import com.telei.wms.datasource.wms.model.WmsRooHeader;
-import com.telei.wms.datasource.wms.model.WmsRooLine;
-import com.telei.wms.datasource.wms.service.WmsPaoHeaderService;
-import com.telei.wms.datasource.wms.service.WmsPaoLineService;
-import com.telei.wms.datasource.wms.service.WmsRooHeaderService;
-import com.telei.wms.datasource.wms.service.WmsRooLineService;
+import com.telei.wms.datasource.wms.model.*;
+import com.telei.wms.datasource.wms.service.*;
 import com.telei.wms.datasource.wms.vo.PaoHeaderPageQueryRequestVo;
 import com.telei.wms.datasource.wms.vo.PaoLineLocationResponseVo;
 import com.telei.wms.datasource.wms.vo.PaoLinePageQueryResponseVo;
@@ -199,18 +193,58 @@ public class PaoBussiness {
      */
     private void makeLineLocation(Long warehouseId, List<WmsPaoLine> wmsPaoLines) {
         List<Long> productIds = wmsPaoLines.stream().map(WmsPaoLine::getProductId).collect(Collectors.toList());
-        //获取推荐货位集合
-        List<PaoLineLocationResponseVo> paoLineLocationResponseVos = wmsPaoLineService.findLocationAll(warehouseId, productIds);
+        //从库存获取
+        List<PaoLineLocationResponseVo> locationResponseVos = wmsPaoLineService.findLocationAll(warehouseId, productIds);
         Map<Long, String> paoLineLocation = new HashMap<>();
-        for (PaoLineLocationResponseVo paoLineLocationResponseVo : paoLineLocationResponseVos) {
-            paoLineLocation.put(paoLineLocationResponseVo.getProductId(), paoLineLocationResponseVo.getLcCode());
+        for (PaoLineLocationResponseVo locationResponseVo : locationResponseVos) {
+            paoLineLocation.put(locationResponseVo.getProductId(), locationResponseVo.getLcCode());
         }
+        //需要去历史库存获取的产品
+        List<Long> historyProductIds = new ArrayList<>();
         for (WmsPaoLine wmsPaoLine : wmsPaoLines) {
             String lcCode = paoLineLocation.get(wmsPaoLine.getProductId());
             if (Objects.isNull(lcCode)) {
-                continue;
+                historyProductIds.add(wmsPaoLine.getProductId());
+            } else {
+                wmsPaoLine.setPrepLcCode(lcCode);
             }
-            wmsPaoLine.setPrepLcCode(lcCode);
+        }
+        if (! historyProductIds.isEmpty()) {
+            //从历史库存获取
+            List<PaoLineLocationResponseVo> historyLocationResponseVos = wmsPaoLineService.findHistoryLocationAll(warehouseId, historyProductIds);
+            if (historyLocationResponseVos.isEmpty()) {
+                return;
+            }
+            Map<Long, List<String>> historyLocationMap = new HashMap<>();
+            List<String> lcCodeAll = new ArrayList<>();
+            for (PaoLineLocationResponseVo locationResponseVo : historyLocationResponseVos) {
+                List<String> lcCodes = historyLocationMap.get(locationResponseVo.getProductId());
+                if (Objects.isNull(lcCodes)) {
+                    lcCodes = new ArrayList<>();
+                }
+                lcCodes.add(locationResponseVo.getLcCode());
+                lcCodeAll.add(locationResponseVo.getLcCode());
+                historyLocationMap.put(locationResponseVo.getProductId(), lcCodes);
+            }
+            Map<String, Long> existLocationMap = new HashMap<>();
+            //获取已经存在的库位
+            List<PaoLineLocationResponseVo> existLocationAll = wmsPaoLineService.findExistLocationAll(lcCodeAll);
+            for (PaoLineLocationResponseVo locationResponseVo : existLocationAll) {
+                existLocationMap.put(locationResponseVo.getLcCode(), locationResponseVo.getProductId());
+            }
+            for (WmsPaoLine wmsPaoLine : wmsPaoLines) {
+                if (! Objects.isNull(wmsPaoLine.getLcCode())) {
+                    continue;
+                }
+                List<String> lcCodes = historyLocationMap.get(wmsPaoLine.getProductId());
+                for (String lcCode : lcCodes) {
+                    if (Objects.isNull(existLocationMap.get(lcCode))) {
+                        wmsPaoLine.setPrepLcCode(lcCode);
+                        existLocationMap.put(lcCode, wmsPaoLine.getProductId());
+                        break;
+                    }
+                }
+            }
         }
     }
 
@@ -298,6 +332,7 @@ public class PaoBussiness {
             WmsRooHeader updateWmsRooHeader = new WmsRooHeader();
             updateWmsRooHeader.setId(wmsRooHeader.getId());
             updateWmsRooHeader.setTmpPutawayQty(wmsRooHeader.getTmpPutawayQty().subtract(wmsPaoHeaderInfo.getTotalQty()));
+            updateWmsRooHeader.setRoStatus("20");
             //获取收货单明细
             WmsRooLine wmsRooLineEntity = new WmsRooLine();
             wmsRooLineEntity.setRooId(wmsPaoHeaderInfo.getRooId());

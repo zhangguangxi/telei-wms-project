@@ -42,6 +42,4 @@ public class WmsInventoryPageQueryResponseVo {
     private BigDecimal qty;
     /**成本单价*/
     private BigDecimal costReference;
-    /**库存金额(成本单价 * 数量)*/
-    private BigDecimal inventoryAmount;
 }

@@ -23,4 +23,12 @@ public class WmsPaoLineService extends BaseService<WmsPaoLineRepository,WmsPaoLi
     public List<PaoLineLocationResponseVo> findLocationAll(Long warehouseId, List<Long> productIds) {
         return wmsPaoLineRepository.findLocationAll(warehouseId, productIds);
     }
+
+    public List<PaoLineLocationResponseVo> findHistoryLocationAll(Long warehouseId, List<Long> productIds) {
+        return wmsPaoLineRepository.findHistoryLocationAll(warehouseId, productIds);
+    }
+
+    public List<PaoLineLocationResponseVo> findExistLocationAll(List<String> lcCodes) {
+        return wmsPaoLineRepository.findExistLocationAll(lcCodes);
+    }
 }

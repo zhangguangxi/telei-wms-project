@@ -20,8 +20,6 @@ public class InitLineAddRequest {
     private Long supplierId;
     /** 供应商id */
     private String productBarcode;
-    /** 供应商名称 */
-    private String supplierName;
     /** 库位编码 */
     private String lcCode;
     /** 先进先出时间 */

@@ -10,9 +10,10 @@ import org.springframework.scheduling.annotation.EnableScheduling;
  * @Date: 2020/6/11 15:52
  */
 @SpringBootApplication(scanBasePackages = {"com.nuochen","com.telei"})
+//@EnableTransactionManagement
 @EnableScheduling
 public class TeleiWmsScheduleApplication {
     public static void main(String[] args) {
-        SpringApplication.run(TeleiWmsScheduleApplication.class);
+        SpringApplication.run(TeleiWmsScheduleApplication.class,args);
     }
 }

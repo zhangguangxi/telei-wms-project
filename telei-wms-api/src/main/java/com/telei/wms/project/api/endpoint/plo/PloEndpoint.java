@@ -30,7 +30,7 @@ public class PloEndpoint {
 
     @ApiOperation("新增拣货单")
     @PostMapping(ServiceId.WMS_PLO_ADD)
-    public PloCudBaseResponse addPlo(@RequestBody @Valid PloHeaderAddRequest request) {
+    public PloAddResponse addPlo(@RequestBody @Valid PloHeaderAddRequest request) {
         return ploBussiness.addPlo(request);
     }
 
@@ -62,5 +62,17 @@ public class PloEndpoint {
     @PostMapping(ServiceId.WMS_PLO_FINISH)
     public PloCudBaseResponse ploFinish(@RequestBody @Valid PloFinishRequest request) {
         return ploBussiness.ploFinish(request);
+    }
+
+    @ApiOperation("取消拣货单")
+    @PostMapping(ServiceId.WMS_PLO_CANCEL_HEADER)
+    public PloCudBaseResponse cancelPloHeader(@RequestBody @Valid PloHeaderCancelRequest request) {
+        return ploBussiness.cancelPloHeader(request);
+    }
+
+    @ApiOperation("取消拣货记录")
+    @PostMapping(ServiceId.WMS_PLO_CANCEL_DETAIL)
+    public PloCudBaseResponse cancelPloDetail(@RequestBody @Valid PloDetailCancelRequest request) {
+        return ploBussiness.cancelPloDetail(request);
     }
 }

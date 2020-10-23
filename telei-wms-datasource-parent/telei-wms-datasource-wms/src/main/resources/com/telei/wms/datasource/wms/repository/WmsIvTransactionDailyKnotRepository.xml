@@ -1,5 +1,30 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.telei.wms.datasource.wms.repository.WmsIvTransactionDailyKnotRepository">
+    <select id="selectByCustomConditions" resultMap="BaseResultMap">
+        select
+            <include refid="Base_Column_List"/>
+        from wms_iv_transaction_daily_knot
+            <if test="createTime != null">
+                and create_time ${createTime}
+            </if>
+            group by company_id,warehouse_id
+            <if test="orderBy != null">
+                order by ${orderBy}
+            </if>
+    </select>
+
+    <select id="selectByCustomCondtions" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from wms_iv_transaction_daily_knot
+        <where>
+            <if test="createTime != null">
+                and create_time ${createTime}
+            </if>
+        </where>
+        group by company_id,warehouse_id,product_id
+        order by create_time asc
+    </select>
 </mapper>
 

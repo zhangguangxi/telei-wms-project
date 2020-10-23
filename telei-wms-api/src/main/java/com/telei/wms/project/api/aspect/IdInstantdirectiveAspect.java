@@ -55,7 +55,7 @@ public class IdInstantdirectiveAspect {
             } else if (methodName.startsWith("update")) {
                 operationCode = "MOD";
             }
-
+            boolean flag = true;
             if (! Objects.isNull(operationCode)) {
                 //获取参数类型
                 List<ParamType> paramTypes = new ArrayList<>();
@@ -64,18 +64,25 @@ public class IdInstantdirectiveAspect {
                     paramType.setType(object.getClass().getSimpleName());
                     if (object instanceof Collection) {
                         List list = (List) object;
+                        if (list.isEmpty()) {
+                            flag = false;
+                            logger.warn("数据同步出现参数类型为空。" + JSON.toJSONString(joinPoint.getArgs()));
+                            break;
+                        }
                         paramType.setGenericType(list.get(0).getClass().getSimpleName());
                     }
                     paramTypes.add(paramType);
                 }
-                OrderContext orderContext = new OrderContext();
-                orderContext.setClassName(className);
-                orderContext.setMethodName(methodName);
-                orderContext.setParamTypes(paramTypes);
-                orderContext.setBody(joinPoint.getArgs());
-                logger.debug("orderContext：" + JSON.toJSONString(orderContext));
-                //添加数据同步指令
-                idInstantdirectiveBussiness.add(idTable, operationCode, orderContext);
+                if (flag) {
+                    OrderContext orderContext = new OrderContext();
+                    orderContext.setClassName(className);
+                    orderContext.setMethodName(methodName);
+                    orderContext.setParamTypes(paramTypes);
+                    orderContext.setBody(joinPoint.getArgs());
+                    logger.debug("orderContext：" + JSON.toJSONString(orderContext));
+                    //添加数据同步指令
+                    idInstantdirectiveBussiness.add(idTable, operationCode, orderContext);
+                }
             }
         }
     }

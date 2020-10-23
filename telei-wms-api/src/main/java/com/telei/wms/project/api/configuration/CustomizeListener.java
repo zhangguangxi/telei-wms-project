@@ -9,7 +9,6 @@ import org.springframework.boot.context.event.ApplicationFailedEvent;
 import org.springframework.boot.context.event.ApplicationReadyEvent;
 import org.springframework.context.ApplicationEvent;
 import org.springframework.context.ApplicationListener;
-import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
@@ -41,18 +40,17 @@ public class CustomizeListener implements ApplicationListener {
     }
 
     private void onReady(ApplicationReadyEvent event) {
-        final ConfigurableApplicationContext context = event.getApplicationContext();
         MoreExecutors.listeningDecorator(Executors.newSingleThreadExecutor()).submit(()->{
+            Boolean autoSync = customizeProperties.getPermissionSwitch().getAutoSync();
+            if(!autoSync){
+                return;
+            }
             //权限项初始化
             PermissionInit();
         });
     }
 
     private void PermissionInit(){
-        Boolean autoSync = customizeProperties.getPermissionSwitch().getAutoSync();
-        if(!autoSync){
-            return;
-        }
         List<Map<String, Object>> resourceRights = null;
         try {
             resourceRights = getResourceRights(ServiceId.class);
@@ -70,5 +68,10 @@ public class CustomizeListener implements ApplicationListener {
     }
 
     private void onFailed(ApplicationFailedEvent event) {
+    }
+
+
+    public static void main(String[] args) {
+
     }
 }

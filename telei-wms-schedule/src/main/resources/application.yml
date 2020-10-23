@@ -26,20 +26,19 @@ logging:
   file:
     name: logs/${spring.application.name}.log
 
-
+#id生成配置
+id-generator:
+  machine-id: 1
 
 ##########################################profile options######################################
 ---
 spring:
   profiles: dev
 
-id-generator:
-  machine-id: 1
-
 #数据同步配置
 id-instantdirective:
   #当前server名称
-  server-name: HANGZHOU
+  server-name: HANGHZHOU
   #当前系统
   system: WMS
 
@@ -61,7 +60,7 @@ datasource:
     testWhileIdle: true
     timeBetweenEvictionRunsMillis: 60000
     type: com.alibaba.druid.pool.DruidDataSource
-    url: jdbc:mysql://192.168.1.114:3306/wms?characterEncoding=utf8&allowMultiQueries=true&useSSL=false
+    url: jdbc:mysql://192.168.1.127:3306/wms?characterEncoding=utf8&allowMultiQueries=true&useSSL=false
     username: root
     password: admin1314
 #    url: jdbc:mysql://127.0.0.1:3306/wms_db?characterEncoding=utf8&allowMultiQueries=true
@@ -72,9 +71,6 @@ datasource:
 ---
 spring:
   profiles: test
-
-id-generator:
-  machine-id: 1
 
 #数据同步配置
 id-instantdirective:
@@ -104,4 +100,71 @@ datasource:
     url: jdbc:mysql://192.168.1.114:3306/wms?characterEncoding=utf8&allowMultiQueries=true&useSSL=false
     username: root
     password: admin1314
+    validationQuery:  'x'
+
+---
+#线上环境配置（修改时要注意）
+spring:
+  profiles: prod
+
+#数据同步配置
+id-instantdirective:
+  #当前server名称
+  server-name: HANGHZHOU
+  #当前系统
+  system: WMS
+  #数据埋点配置
+  data-dependencies:
+    WmsAdjtHeaderService: wms_adjt_header
+    WmsAdjtLineService: wms_adjt_line
+    WmsDoHeaderService: wms_do_header
+    WmsDoLineService: wms_do_line
+    WmsInitHeaderService: wms_init_header
+    WmsInitLineService: wms_init_line
+    WmsInventoryService: wms_inventory
+    WmsInventoryHistoryService: wms_inventory_history
+    WmsIvAttributebatchService: wms_iv_attributebatch
+    WmsIvOutService: wms_iv_out
+    WmsIvOutConfirmService: wms_iv_out_confirm
+    WmsIvOutHistoryService: wms_iv_out_history
+    WmsIvSnapshotService: wms_iv_snapshot
+    WmsIvSnapshotDailyKnotService: wms_iv_snapshot_daily_knot
+    WmsIvSnapshotTimeService: wms_iv_snapshot_time
+    WmsIvSplitService: wms_iv_split
+    WmsIvTransactionService: wms_iv_transaction
+    WmsIvTransactionDailyKnotService: wms_iv_transaction_daily_knot
+    WmsLiftWorkService: wms_lift_work
+    WmsLocationService: wms_location
+    WmsPaoHeaderService: wms_pao_header
+    WmsPaoLineService: wms_pao_line
+    WmsPloDetailService: wms_plo_detail
+    WmsPloHeaderService: wms_plo_header
+    WmsPloLineService: wms_plo_line
+    WmsProductSampleService: wms_product_sample
+    WmsRoHeaderService: wms_ro_header
+    WmsRoLineService: wms_ro_line
+    WmsRooHeaderService: wms_roo_header
+    WmsRooLineService: wms_roo_line
+
+#datasource:
+datasource:
+  wms:
+    driverClassName: com.mysql.jdbc.Driver
+    filters: stat
+    initialSize: 1
+    maxActive: 40
+    maxOpenPreparedStatements: 20
+    maxPoolPreparedStatementPerConnectionSize: 20
+    maxWait: 10000
+    minEvictableIdleTimeMillis: 300000
+    minIdle: 1
+    poolPreparedStatements: true
+    testOnBorrow: true
+    testOnReturn: true
+    testWhileIdle: true
+    timeBetweenEvictionRunsMillis: 60000
+    type: com.alibaba.druid.pool.DruidDataSource
+    url: jdbc:mysql://rm-bp161h93ngd4vy9pp.mysql.rds.aliyuncs.com:3306/wms?characterEncoding=utf8&allowMultiQueries=true&useUnicode=true&useSSL=false
+    username: muser
+    password: Tel202020
     validationQuery:  'x'

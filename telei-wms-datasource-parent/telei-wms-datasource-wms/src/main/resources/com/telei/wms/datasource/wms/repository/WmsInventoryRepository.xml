@@ -4,27 +4,26 @@
 
     <resultMap id="PageQueryResultMap" extends="BaseResultMap" type="com.telei.wms.datasource.wms.vo.WmsInventoryVo">
         <result column="lc_code" jdbcType="VARCHAR" property="lcCode"/>
-        <result column="iv_qty" jdbcType="DECIMAL" property="qty"/>
+        <result column="qty" jdbcType="DECIMAL" property="qty"/>
     </resultMap>
 
     <sql id="Custom_Base_Column_List">
         wi.company_id,
         wi.warehouse_id,
         wi.warehouse_code,
-        wi.lc_code,
+        wl.lc_code,
         wi.product_id,
-        wi.lc_type,
+        wl.lc_type,
         cp.product_no,
         cp.product_name,
         cp.product_barcode,
         cp.mid_bag_qty as mid_bag_rate,
         cp.big_bag_qty as big_bag_rate,
-        cp.big_bag_qty  as box_qty,
-        cp.big_bag_vol,
-        cp.big_bag_weight,
-        wi.iv_qty as qty,
-        cp.cost_reference as costReference,
-        (wi.iv_qty * cp.cost_reference) as inventoryAmount
+        cp.big_bag_qty  as boxQty,
+        cp.big_bag_vol as big_bagVol,
+        cp.big_bag_weight as big_bag_weight,
+        sum(wi.iv_qty) as qty,
+        cp.cost_reference as cost_reference
     </sql>
 
     <select id="doIvSnapshotSchedule" statementType="CALLABLE">
@@ -47,11 +46,18 @@
     <select id="selectCustomPage" resultType="com.telei.wms.datasource.wms.vo.WmsInventoryPageQueryResponseVo">
         select
         <include refid="Custom_Base_Column_List"></include>
-        from wms_inventory wi
-        left join cdm.cdm_product cp on wi.product_id = cp.product_id
+        from wms_location wl
+        left join wms_inventory wi ON wi.lc_code = wl.lc_code
+        <if test="warehouseId != null">
+            and wi.warehouse_id ${warehouseId}
+        </if>
+        <if test="companyId != null">
+            and wi.company_id ${companyId}
+        </if>
+        left join cdm.cdm_product cp on wi.product_id = cp.product_id and wi.company_id = cp.company_id
         <where>
             <if test="lcCode != null">
-                and wi.lc_code ${lcCode}
+                and wl.lc_code ${lcCode}
             </if>
 
             <if test="productNo != null">
@@ -67,19 +73,23 @@
             </if>
 
             <if test="lcType != null">
-                and wi.lc_type ${lcType}
+                and wl.lc_type ${lcType}
+            </if>
+
+            <if test="hasLcType == 'Y'.toString()">
+                AND wi.lc_code IS NOT NULL
+            </if>
+
+            <if test="hasLcType == 'N'.toString()">
+                AND wi.lc_code IS NULL
             </if>
 
             <if test="warehouseId != null">
-                 and wi.warehouse_id ${warehouseId}
+                and wl.warehouse_id ${warehouseId}
             </if>
 
-            <if test="companyId != null">
-                and wi.company_id ${companyId}
-                and wi.company_id = cp.company_id
-            </if>
         </where>
-
+         GROUP BY wl.lc_code,cp.product_no
         <if test="orderBy != null">
             order by ${orderBy}
         </if>
@@ -94,7 +104,7 @@
     </select>
 
     <select id="getLcCodeByInventory" resultMap="PageQueryResultMap">
-        SELECT a.lc_code,sum(iv_qty) iv_qty FROM wms_inventory a
+        SELECT a.lc_code,sum(iv_qty) qty FROM wms_inventory a
         WHERE a.company_id = #{companyId} AND a.warehouse_id = #{warehouseId}
         AND a.product_id = #{productId} AND a.lc_type = 'Z'
         GROUP BY a.lc_code
@@ -117,18 +127,18 @@
             iab.big_bag_vol,
             iab.big_bag_weight,
             iv.lc_code,
-            lc.lc_vol/1000000 location_volume,
-            lc.lc_vol/1000000*0.85 storage_volume,
-            ROUND(lc.lc_vol/1000000*0.85/iab.big_bag_vol) number_large_package,
+            lc.lc_vol location_volume,
+            lc.lc_vol*0.85 storage_volume,
+            ROUND(lc.lc_vol*0.85/iab.big_bag_vol) number_large_package,
             SUM(iv.iv_qty) iv_qty,
             ROUND(SUM(iv.iv_qty)/iab.big_bag_rate) big_count,
             ROUND(MOD(SUM(iv.iv_qty),iab.big_bag_rate) / iab.mid_bag_rate) middle_count,
             MOD(SUM(iv.iv_qty),iab.mid_bag_rate) small_count,
             IFNULL(ps.ceiling_multiple,2) ceiling_multiple,
             IFNULL(ps.limit_multiple,0.2) limit_multiple,
-            ROUND(IFNULL(ps.ceiling_multiple,2)* ROUND(lc.lc_vol/1000000*0.85/iab.big_bag_vol)) inventory_ceiling_big_count,
-            ROUND(IFNULL(ps.limit_multiple,0.2)* ROUND(lc.lc_vol/1000000*0.85/iab.big_bag_vol)) inventory_limit_big_count,
-            CASE WHEN ROUND(SUM(iv.iv_qty)/iab.big_bag_rate) > ROUND(IFNULL(ps.ceiling_multiple,2)* ROUND(lc.lc_vol/1000000*0.85/iab.big_bag_vol)) THEN 'RISE' WHEN ROUND(SUM(iv.iv_qty)/iab.big_bag_rate) &lt; ROUND(IFNULL(ps.limit_multiple,0.2)* ROUND(lc.lc_vol/1000000*0.85/iab.big_bag_vol)) THEN 'DROP' ELSE '-' END lc_type
+            ROUND(IFNULL(ps.ceiling_multiple,2)* ROUND(lc.lc_vol*0.85/iab.big_bag_vol)) inventory_ceiling_big_count,
+            ROUND(IFNULL(ps.limit_multiple,0.2)* ROUND(lc.lc_vol*0.85/iab.big_bag_vol)) inventory_limit_big_count,
+            CASE WHEN ROUND(SUM(iv.iv_qty)/iab.big_bag_rate) > ROUND(IFNULL(ps.ceiling_multiple,2)* ROUND(lc.lc_vol*0.85/iab.big_bag_vol)) THEN 'RISE' WHEN ROUND(SUM(iv.iv_qty)/iab.big_bag_rate) &lt; ROUND(IFNULL(ps.limit_multiple,0.2)* ROUND(lc.lc_vol*0.85/iab.big_bag_vol)) THEN 'DROP' ELSE '-' END lc_type
             FROM wms_inventory iv
             LEFT JOIN wms_iv_attributebatch iab ON iv.iab_id = iab.iab_id
             LEFT JOIN wms_location lc ON iv.lc_code = lc.lc_code

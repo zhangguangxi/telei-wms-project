@@ -2,6 +2,12 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.telei.wms.datasource.wms.repository.WmsLocationRepository">
 
+    <resultMap id="PageQueryResultMap" extends="BaseResultMap" type="com.telei.wms.datasource.wms.vo.WmsLocationVo">
+        <result column="warehouse_name" jdbcType="VARCHAR" property="warehouseName"/>
+        <result column="product_count" jdbcType="INTEGER" property="productCount"/>
+        <result column="qty" jdbcType="INTEGER" property="qty"/>
+    </resultMap>
+
     <select id="getLcCodeByLocation" resultType="java.lang.String">
         SELECT a.lc_code FROM wms_location a LEFT outer JOIN
         (SELECT warehouse_code,lc_code,lc_type FROM wms_inventory) as b
@@ -19,5 +25,179 @@
             #{item}
         </foreach>
     </select>
+
+    <select id="getCompanyLcCodeByLocation"  resultMap="BaseResultMap">
+        select
+            <include refid="Base_Column_List"/>
+        from wms_location
+        <where>
+            <if test="warehouseId != null">
+                and warehouse_id = #{warehouseId}
+            </if>
+            <if test="lcCode != null">
+                and lc_code = #{lcCode}
+            </if>
+        </where>
+    </select>
+
+    <select id="findAll" resultMap="PageQueryResultMap">
+        select
+            wl.location_id,
+            wl.lc_code,
+            wl.warehouse_id,
+            wl.warehouse_code,
+            wl.lc_aisle,
+            wl.lc_x,
+            wl.lc_y,
+            wl.lc_z,
+            wl.lc_type,
+            wl.lc_length,
+            wl.lc_width,
+            wl.lc_height,
+            wl.lc_vol,
+            wl.lc_sustainweight,
+            wl.lc_putawaylock,
+            wl.lc_pickinglock,
+            wl.memo,
+            cw.warehouse_name
+        from wms_location wl
+        left join cdm.cdm_warehouse cw on wl.warehouse_id = cw.warehouse_id and wl.warehouse_code = cw.warehouse_code
+        <where>
+            <if test="locationId != null">
+                and wl.location_id ${locationId}
+            </if>
+            <if test="lcCode != null">
+                and wl.lc_code ${lcCode}
+            </if>
+            <if test="warehouseId != null">
+                and wl.warehouse_id ${warehouseId}
+            </if>
+            <if test="warehouseCode != null">
+                and wl.warehouse_code ${warehouseCode}
+            </if>
+            <if test="lcAisle != null">
+                and wl.lc_aisle ${lcAisle}
+            </if>
+            <if test="lcX != null">
+                and wl.lc_x ${lcX}
+            </if>
+            <if test="lcY != null">
+                and wl.lc_y ${lcY}
+            </if>
+            <if test="lcZ != null">
+                and wl.lc_z ${lcZ}
+            </if>
+            <if test="lcType != null">
+                and wl.lc_type ${lcType}
+            </if>
+            <if test="lcLength != null">
+                and wl.lc_length ${lcLength}
+            </if>
+            <if test="lcWidth != null">
+                and wl.lc_width ${lcWidth}
+            </if>
+            <if test="lcHeight != null">
+                and wl.lc_height ${lcHeight}
+            </if>
+            <if test="lcVol != null">
+                and wl.lc_vol ${lcVol}
+            </if>
+            <if test="lcSustainweight != null">
+                and wl.lc_sustainweight ${lcSustainweight}
+            </if>
+            <if test="lcPutawaylock != null">
+                and wl.lc_putawaylock ${lcPutawaylock}
+            </if>
+            <if test="lcPickinglock != null">
+                and wl.lc_pickinglock ${lcPickinglock}
+            </if>
+            <if test="memo != null">
+                and wl.memo ${memo}
+            </if>
+            <if test="lcLock != null and lcLock == 'NO'">
+                and (wl.lc_putawaylock = 0 and wl.lc_pickinglock = 0)
+            </if>
+            <if test="lcLock != null and lcLock == 'YES'">
+                and (wl.lc_putawaylock = 1 or wl.lc_pickinglock = 1)
+            </if>
+            <if test="lcLock != null and lcLock == 'PUTAWAY'">
+                and wl.lc_putawaylock = 1
+            </if>
+            <if test="lcLock != null and lcLock == 'PICKING'">
+                and wl.lc_pickinglock = 1
+            </if>
+        </where>
+        <if test="orderBy != null">
+            order by ${orderBy}
+        </if>
+    </select>
+
+    <select id="selectLcAisleByEntity" resultMap="BaseResultMap">
+        select
+            distinct wl.lc_aisle,
+            wl.warehouse_id,
+            wl.warehouse_code,
+            wl.location_id
+        from wms_location wl
+        <where>
+            <if test="warehouseId != null">
+                and wl.warehouse_id ${warehouseId}
+            </if>
+            <if test="warehouseCode != null">
+                and wl.warehouse_code ${warehouseCode}
+            </if>
+        </where>
+        GROUP BY wl.lc_aisle
+        <if test="orderBy != null">
+            order by ${orderBy}
+        </if>
+    </select>
+
+    <select id="queryLcLocationByLcAisle" resultMap="PageQueryResultMap">
+        select
+            wl.location_id,
+            wl.lc_code,
+            wl.warehouse_id,
+            wl.warehouse_code,
+            wl.lc_aisle,
+            wl.lc_x,
+            wl.lc_y,
+            wl.lc_z,
+            wl.lc_type,
+            wl.lc_length,
+            wl.lc_width,
+            wl.lc_height,
+            wl.lc_vol,
+            wl.lc_sustainweight,
+            wl.lc_putawaylock,
+            wl.lc_pickinglock,
+            wl.memo,
+            COUNT(wi.product_id) product_count,
+            SUM(wi.iv_qty) AS qty
+        from wms_location wl
+        LEFT join wms_inventory wi ON wi.lc_code = wl.lc_code
+        <if test="warehouseId != null">
+            and wi.warehouse_id ${warehouseId}
+        </if>
+        <if test="companyId != null">
+            and wi.company_id ${companyId}
+        </if>
+        <where>
+            <if test="warehouseId != null">
+                and wl.warehouse_id ${warehouseId}
+            </if>
+            <if test="warehouseCode != null">
+                and wl.warehouse_code ${warehouseCode}
+            </if>
+            <if test="lcAisle != null">
+                and wl.lc_aisle ${lcAisle}
+            </if>
+        </where>
+        GROUP BY wl.lc_code,wl.warehouse_id
+        <if test="orderBy != null">
+            order by ${orderBy}
+        </if>
+    </select>
+
 </mapper>
 

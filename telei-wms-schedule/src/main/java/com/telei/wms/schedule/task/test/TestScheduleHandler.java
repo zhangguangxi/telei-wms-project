@@ -3,7 +3,11 @@ package com.telei.wms.schedule.task.test;
 
 import com.nuochen.framework.component.task.TaskContext;
 import com.nuochen.framework.component.task.TaskHandler;
+import com.nuochen.framework.component.task.TaskSync;
+import com.telei.infrastructure.component.idgenerator.contract.Id;
+import com.telei.wms.schedule.task.service.GoodsBussiness;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 /**
@@ -14,13 +18,20 @@ import org.springframework.stereotype.Component;
 @Slf4j
 @Component
 public class TestScheduleHandler extends TaskHandler {
+    @Autowired
+    private GoodsBussiness goodsBussiness;
+
+    @Autowired
+    private Id idGenerator;
 
     protected TestScheduleHandler() {
         super("test1");
     }
 
     @Override
+    @TaskSync
     protected void handle(TaskContext context) {
-        System.out.println("TestScheduleHandler handle in 1115");
+
+        goodsBussiness.addGoods();
     }
 }

@@ -83,4 +83,6 @@ public class DoHeaderDetailResponse {
     private Date shippingTime;
 
     private List<DoLineDetailResponse> doLines;
+
+    private Long ploId;
 }
