@@ -41,4 +41,6 @@ public class LiftWorkInfoResponse extends LiftWorkCommonResponse {
     private String sampleLcCode;
     /** 推荐库位 */
     private String prepLcCode;
+    /** 推荐数量 */
+    private BigDecimal qty;
 }

@@ -31,7 +31,6 @@ public class TestScheduleHandler extends TaskHandler {
     @Override
     @TaskSync
     protected void handle(TaskContext context) {
-
         goodsBussiness.addGoods();
     }
 }

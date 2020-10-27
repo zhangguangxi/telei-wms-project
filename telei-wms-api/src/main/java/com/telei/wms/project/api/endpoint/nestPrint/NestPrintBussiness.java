@@ -176,10 +176,12 @@ public class NestPrintBussiness {
         recoreds.stream().forEach(item->{
             NestLiftWorkPrintDetailBussinessResponse.NestLiftWorkPrintDetailLine line = new NestLiftWorkPrintDetailBussinessResponse.NestLiftWorkPrintDetailLine();
             line.setLiftType(item.getLiftType());
-            line.setBigBagQty(item.getBigBagQty().intValue());
+            line.setBigBagQty(Objects.isNull(item.getBigBagQty())?0:item.getBigBagQty().intValue());
             line.setProductNo(item.getProductNo());
             line.setPrepLcCode(item.getPrepLcCode());
             line.setSampleLcCode(item.getSampleLcCode());
+            line.setOrderId(item.getId());
+            line.setOrderCode(item.getLiftCode());
             list.add(line);
         });
         NestLiftWorkPrintDetailBussinessResponse response = new NestLiftWorkPrintDetailBussinessResponse();

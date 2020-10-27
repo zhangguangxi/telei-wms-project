@@ -30,5 +30,9 @@ public class NestLiftWorkPrintDetailResponse {
         private String sampleLcCode;
         @ApiModelProperty(value = "推荐库位",position = 5)
         private String prepLcCode;
+        @ApiModelProperty(value = "单据ID",position = 6)
+        private Long orderId;
+        @ApiModelProperty(value = "单据编号",position = 7)
+        private String orderCode;
     }
 }

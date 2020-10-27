@@ -70,7 +70,7 @@
             <if test="companyId != null and companyId != ''">
                 AND wph.company_id=#{companyId}
             </if>
-            AND wph.order_status!='99'
+            AND wph.order_status!='99' AND wph.order_status!='98'
         </where>
         GROUP BY wph.plo_id
         ORDER BY wph.plo_id DESC

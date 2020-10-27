@@ -5,16 +5,12 @@ import com.nuochen.framework.component.task.TaskHandler;
 import com.telei.infrastructure.component.idgenerator.IdSecondGenerator;
 import com.telei.wms.commons.utils.DateUtils;
 import com.telei.wms.commons.utils.StringUtils;
+import com.telei.wms.datasource.wms.model.WmsIvSnapshotDailyKnot;
 import com.telei.wms.datasource.wms.model.WmsIvSnapshotTime;
 import com.telei.wms.datasource.wms.model.WmsIvTransaction;
 import com.telei.wms.datasource.wms.model.WmsIvTransactionDailyKnot;
-import com.telei.wms.datasource.wms.repository.WmsIvSnapshotDailyKnotRepository;
-import com.telei.wms.datasource.wms.repository.WmsIvSnapshotTimeRepository;
-import com.telei.wms.datasource.wms.repository.WmsIvTransactionDailyKnotRepository;
-import com.telei.wms.datasource.wms.repository.WmsIvTransactionRepository;
-import com.telei.wms.datasource.wms.vo.WmsIvSnapshotDailyKnotVO;
+import com.telei.wms.datasource.wms.repository.*;
 import com.telei.wms.datasource.wms.vo.WmsIvTransactionDailyKnotVO;
-import com.telei.wms.schedule.utils.DataConvertUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -23,6 +19,7 @@ import java.math.BigDecimal;
 import java.text.ParsePosition;
 import java.text.SimpleDateFormat;
 import java.util.*;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 
 /**
@@ -40,6 +37,9 @@ public class IvTransactionDailyKnotScheduleHandler extends TaskHandler {
 
     @Autowired
     private WmsIvTransactionRepository wmsIvTransactionRepository;
+
+    @Autowired
+    private WmsIvSnapshotRepository wmsIvSnapshotRepository;
 
     @Autowired
     private WmsIvSnapshotTimeRepository wmsIvSnapshotTimeRepository;
@@ -61,7 +61,6 @@ public class IvTransactionDailyKnotScheduleHandler extends TaskHandler {
          * 无符合条件 不执行定时任务
          * 符合条件
          * 2.过滤wms_iv_transaction表的创建时间 create_time >= 期初快照时间 and create_time < 期末快照时间
-         * 3.
          */
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
         /**
@@ -71,31 +70,51 @@ public class IvTransactionDailyKnotScheduleHandler extends TaskHandler {
         String rightSnapshotTime = sdf.format(DateUtils.nowWithDate());
         List<WmsIvSnapshotTime> snapshotTimeList = wmsIvSnapshotTimeRepository.selectEntityByTime(leftSnapshotTime, rightSnapshotTime);
         if (StringUtils.isNotNull(snapshotTimeList) && snapshotTimeList.size() == 2) {
+            // 获取库存快照时间表信息
             Long leftIvstId = snapshotTimeList.get(0).getId();
             Long rightIvstId = snapshotTimeList.get(1).getId();
             Date leftTime = snapshotTimeList.get(0).getSnapshotTime();
             Date rightTime = snapshotTimeList.get(1).getSnapshotTime();
             String snapshotLcTime = snapshotTimeList.get(1).getSnapshotLcTime();
-            /**
-             * 查询wms_iv_transaction表符合条件的数据【create_time >= leftTime and create_time < rightTime】
+
+            // 开始id
+            Long ivtIdFrom = 0L;
+            // 结束id
+            Long ivtIdEnd = 0L;
+            // 产品前一天数量集合
+            Map<String, BigDecimal> leftDailyKnotVOMap = new HashMap<>();
+            // 产品当天数量集合
+            Map<String, BigDecimal> rightDailyKnotVOMap = new HashMap<>();
+            // 产品库存变动集合
+            Map<String, WmsIvTransactionDailyKnotVO> ivTransactionMap = new HashMap<>();
+
+            /*
+             * 根据筛选条件【create_time >= leftTime and create_time < rightTime】
+             * 查询wms_iv_transaction表库存变动记录
              */
             List<WmsIvTransactionDailyKnotVO> transactionList = wmsIvTransactionRepository.selectByTime(leftTime, rightTime);
-            Long ivtIdFrom = 0L;
-            Long ivtIdEnd = 0L;
+            if (StringUtils.isNotNull(transactionList) && !transactionList.isEmpty()) {
+                ivTransactionMap = transactionList.stream().collect(Collectors.toMap(dailyKnotVO -> dailyKnotVO.getProductId().toString() + dailyKnotVO.getCompanyId().toString() + dailyKnotVO.getWarehouseId().toString(), Function.identity()));
+            }
 
-            Map<String, BigDecimal> leftDailyKnotVOMap = new HashMap<>();
-            Map<String, BigDecimal> rightDailyKnotVOMap = new HashMap<>();
             /**
-             * 根据leftIvstId rightIvstId查询出产品前一天数量 以及当天数量
+             * 根据leftIvstId查询出产品前一天库存快照日结信息
+             * 根据rightIvstId查询出产品天库存快照日结信息
              */
-            List<WmsIvSnapshotDailyKnotVO> leftDailyKnotList = wmsIvSnapshotDailyKnotRepository.selectAllByIvstId(leftIvstId);
+            WmsIvSnapshotDailyKnot leftSnapshotDailyKnot = new WmsIvSnapshotDailyKnot();
+            leftSnapshotDailyKnot.setIvstId(leftIvstId);
+            List<WmsIvSnapshotDailyKnot> leftDailyKnotList = wmsIvSnapshotDailyKnotRepository.selectByEntity(leftSnapshotDailyKnot);
             if (StringUtils.isNotNull(leftDailyKnotList) && !leftDailyKnotList.isEmpty()) {
-                leftDailyKnotVOMap = leftDailyKnotList.stream().collect(Collectors.toMap(WmsIvSnapshotDailyKnotVO::getUniqueKey, WmsIvSnapshotDailyKnotVO::getIvQty));
+                leftDailyKnotVOMap = leftDailyKnotList.stream().collect(Collectors.toMap(dailyKnotVO -> dailyKnotVO.getProductId().toString() + dailyKnotVO.getCompanyId().toString() + dailyKnotVO.getWarehouseId().toString(), WmsIvSnapshotDailyKnot::getIvQty));
             }
-            List<WmsIvSnapshotDailyKnotVO> rightDailyKnotList = wmsIvSnapshotDailyKnotRepository.selectAllByIvstId(rightIvstId);
+
+            WmsIvSnapshotDailyKnot rightSnapshotDailyKnot = new WmsIvSnapshotDailyKnot();
+            rightSnapshotDailyKnot.setIvstId(rightIvstId);
+            List<WmsIvSnapshotDailyKnot> rightDailyKnotList = wmsIvSnapshotDailyKnotRepository.selectByEntity(rightSnapshotDailyKnot);
             if (StringUtils.isNotNull(rightDailyKnotList) && !rightDailyKnotList.isEmpty()) {
-                rightDailyKnotVOMap = rightDailyKnotList.stream().collect(Collectors.toMap(WmsIvSnapshotDailyKnotVO::getUniqueKey, WmsIvSnapshotDailyKnotVO::getIvQty));
+                rightDailyKnotVOMap = rightDailyKnotList.stream().collect(Collectors.toMap(dailyKnotVO -> dailyKnotVO.getProductId().toString() + dailyKnotVO.getCompanyId().toString() + dailyKnotVO.getWarehouseId().toString(), WmsIvSnapshotDailyKnot::getIvQty));
             }
+
             /**
              * 根据时间查询出符合条件的id列表从中取出开始以及结束id
              */
@@ -105,59 +124,83 @@ public class IvTransactionDailyKnotScheduleHandler extends TaskHandler {
                 ivtIdFrom = ids.get(0);
                 ivtIdEnd = ids.get(ids.size() - 1);
             }
+
             List<WmsIvTransactionDailyKnot> transactionDailyKnotList = new ArrayList<>();
-            if (StringUtils.isNotNull(transactionList) && !transactionList.isEmpty()) {
-                long idNumber = idSecondGenerator.getUnique();
-                for (WmsIvTransactionDailyKnotVO dailyKnotVO : transactionList) {
-                    dailyKnotVO.setId(idNumber);
+            long idNumber = idSecondGenerator.getUnique();
+            if (StringUtils.isNotNull(leftDailyKnotList) && !leftDailyKnotList.isEmpty()) {
+                for (WmsIvSnapshotDailyKnot dailyKnot : leftDailyKnotList) {
+                    String uniqueKey = dailyKnot.getProductId().toString() + dailyKnot.getCompanyId().toString() + dailyKnot.getWarehouseId().toString();
+                    WmsIvTransactionDailyKnot wmsIvSnapshotDailyKnot = new WmsIvTransactionDailyKnot();
+                    wmsIvSnapshotDailyKnot.setId(idNumber);
+                    wmsIvSnapshotDailyKnot.setProductId(dailyKnot.getProductId());
+                    wmsIvSnapshotDailyKnot.setCompanyId(dailyKnot.getCompanyId());
+                    wmsIvSnapshotDailyKnot.setWarehouseId(dailyKnot.getWarehouseId());
+                    wmsIvSnapshotDailyKnot.setWarehouseCode(dailyKnot.getWarehouseCode());
+                    wmsIvSnapshotDailyKnot.setCustomerId(dailyKnot.getCustomerId());
+
                     // 出库数量
-                    BigDecimal ivtQtyOut = dailyKnotVO.getIvtQtyOut();
+                    BigDecimal ivtQtyOut;
                     // 入库数量
-                    BigDecimal ivtQtyIn = dailyKnotVO.getIvtQtyIn();
+                    BigDecimal ivtQtyIn;
                     // 大包转换数
-                    Integer bigBagQty = dailyKnotVO.getBigBagQty();
+                    Integer bigBagQty;
                     // 单位毛重
-                    BigDecimal unitGrossWeight = dailyKnotVO.getUnitGrossWeight();
-                    // 单位体积
-                    BigDecimal unitVol = dailyKnotVO.getUnitVol();
+                    BigDecimal unitGrossWeight;
+                    // 单位毛重
+                    BigDecimal unitVol;
                     // 出库大包数量
-                    int bigBagQtyOut = ivtQtyOut.intValue() / bigBagQty;
+                    int bigBagQtyOut = 0;
                     // 入库大包数量
-                    int bigBagQtyIn = ivtQtyIn.intValue() / bigBagQty;
+                    int bigBagQtyIn = 0;
                     // 出库毛重
-                    BigDecimal weightOut = unitGrossWeight.multiply(ivtQtyOut);
+                    BigDecimal weightOut = BigDecimal.ZERO;
                     // 入库毛重
-                    BigDecimal weightIn = unitGrossWeight.multiply(ivtQtyIn);
+                    BigDecimal weightIn = BigDecimal.ZERO;
                     // 出库体积
-                    BigDecimal volOut = unitVol.multiply(ivtQtyOut);
+                    BigDecimal volOut = BigDecimal.ZERO;
                     // 入库体积
-                    BigDecimal volIn = unitVol.multiply(ivtQtyIn);
-                    dailyKnotVO.setBigBagQtyOut(new BigDecimal(bigBagQtyOut));
-                    dailyKnotVO.setWeightOut(weightOut);
-                    dailyKnotVO.setNetWeightOut(weightOut);
-                    dailyKnotVO.setVolOut(volOut);
-                    dailyKnotVO.setBigBagQtyIn(new BigDecimal(bigBagQtyIn));
-                    dailyKnotVO.setWeightIn(weightIn);
-                    dailyKnotVO.setNetWeightIn(weightIn);
-                    dailyKnotVO.setVolIn(volIn);
-                    dailyKnotVO.setTrayCountChange(BigDecimal.ZERO);
+                    BigDecimal volIn = BigDecimal.ZERO;
+                    WmsIvTransactionDailyKnotVO knotVO = ivTransactionMap.get(uniqueKey);
+                    if (Objects.nonNull(knotVO)) {
+                        ivtQtyOut = knotVO.getIvtQtyOut();
+                        ivtQtyIn = knotVO.getIvtQtyIn();
+                        bigBagQty = knotVO.getBigBagQty();
+                        unitGrossWeight = knotVO.getUnitGrossWeight();
+                        unitVol = knotVO.getUnitVol();
+                        bigBagQtyOut = ivtQtyOut.intValue() / bigBagQty;
+                        bigBagQtyIn = ivtQtyIn.intValue() / bigBagQty;
+                        weightOut = unitGrossWeight.multiply(ivtQtyOut);
+                        weightIn = unitGrossWeight.multiply(ivtQtyIn);
+                        volOut = unitVol.multiply(ivtQtyOut);
+                        volIn = unitVol.multiply(ivtQtyIn);
+                    }
+                    wmsIvSnapshotDailyKnot.setBigBagQtyOut(new BigDecimal(bigBagQtyOut));
+                    wmsIvSnapshotDailyKnot.setWeightOut(weightOut);
+                    wmsIvSnapshotDailyKnot.setNetWeightOut(weightOut);
+                    wmsIvSnapshotDailyKnot.setVolOut(volOut);
+                    wmsIvSnapshotDailyKnot.setBigBagQtyIn(new BigDecimal(bigBagQtyIn));
+                    wmsIvSnapshotDailyKnot.setWeightIn(weightIn);
+                    wmsIvSnapshotDailyKnot.setNetWeightIn(weightIn);
+                    wmsIvSnapshotDailyKnot.setVolIn(volIn);
+                    wmsIvSnapshotDailyKnot.setTrayCountChange(BigDecimal.ZERO);
                     SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
                     ParsePosition pos = new ParsePosition(0);
-                    dailyKnotVO.setKnotLcDate(DateUtils.getNowDate());
-                    dailyKnotVO.setKnotDate(DateUtils.nowWithUTC());
-                    dailyKnotVO.setSnapshotDate(rightTime);
-                    dailyKnotVO.setSnapshotLcDate(formatter.parse(snapshotLcTime, pos));
-                    dailyKnotVO.setCreateTimeLc(DateUtils.getNowDate());
-                    dailyKnotVO.setCreateTime(DateUtils.nowWithUTC());
-                    dailyKnotVO.setIvtIdFrom(ivtIdFrom);
-                    dailyKnotVO.setIvtIdEnd(ivtIdEnd);
-                    String uniqueKey = dailyKnotVO.getCompanyId() + dailyKnotVO.getWarehouseId() + dailyKnotVO.getWarehouseCode() + dailyKnotVO.getCustomerId() + dailyKnotVO.getProductId();
-                    dailyKnotVO.setKnotBeginQty(leftDailyKnotVOMap.get(uniqueKey));
-                    dailyKnotVO.setKnotEndQty(rightDailyKnotVOMap.get(uniqueKey));
+                    wmsIvSnapshotDailyKnot.setKnotLcDate(DateUtils.getNowDate());
+                    wmsIvSnapshotDailyKnot.setKnotDate(DateUtils.nowWithUTC());
+                    wmsIvSnapshotDailyKnot.setSnapshotDate(rightTime);
+                    wmsIvSnapshotDailyKnot.setSnapshotLcDate(formatter.parse(snapshotLcTime, pos));
+                    wmsIvSnapshotDailyKnot.setCreateTimeLc(DateUtils.getNowDate());
+                    wmsIvSnapshotDailyKnot.setCreateTime(DateUtils.nowWithUTC());
+                    wmsIvSnapshotDailyKnot.setIvtIdFrom(ivtIdFrom);
+                    wmsIvSnapshotDailyKnot.setIvtIdEnd(ivtIdEnd);
+                    wmsIvSnapshotDailyKnot.setKnotBeginQty(leftDailyKnotVOMap.get(uniqueKey));
+                    wmsIvSnapshotDailyKnot.setKnotEndQty(rightDailyKnotVOMap.get(uniqueKey));
+                    transactionDailyKnotList.add(wmsIvSnapshotDailyKnot);
+
                     idNumber++;
-                    WmsIvTransactionDailyKnot ivTransactionDailyKnot = DataConvertUtil.parseDataAsObject(dailyKnotVO, WmsIvTransactionDailyKnot.class);
-                    transactionDailyKnotList.add(ivTransactionDailyKnot);
                 }
+            }
+            if (transactionDailyKnotList.size() > 0) {
                 wmsIvTransactionDailyKnotRepository.insertBatch(transactionDailyKnotList);
             }
         }

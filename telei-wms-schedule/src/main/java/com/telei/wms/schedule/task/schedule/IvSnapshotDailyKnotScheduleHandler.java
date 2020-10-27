@@ -5,7 +5,6 @@ import com.nuochen.framework.component.task.TaskHandler;
 import com.telei.infrastructure.component.idgenerator.IdSecondGenerator;
 import com.telei.wms.commons.utils.DateUtils;
 import com.telei.wms.commons.utils.StringUtils;
-import com.telei.wms.datasource.wms.model.WmsIvSnapshot;
 import com.telei.wms.datasource.wms.model.WmsIvSnapshotDailyKnot;
 import com.telei.wms.datasource.wms.model.WmsIvSnapshotTime;
 import com.telei.wms.datasource.wms.repository.WmsIvSnapshotDailyKnotRepository;

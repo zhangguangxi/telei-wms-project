@@ -29,5 +29,9 @@ public class NestLiftWorkPrintDetailBussinessResponse {
         private String sampleLcCode;
         /**推荐库位*/
         private String prepLcCode;
+        /**单据id*/
+        private Long orderId;
+        /**单据编号*/
+        private String orderCode;
     }
 }

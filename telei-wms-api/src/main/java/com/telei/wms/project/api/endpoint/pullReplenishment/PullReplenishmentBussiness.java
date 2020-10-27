@@ -1,6 +1,7 @@
 package com.telei.wms.project.api.endpoint.pullReplenishment;
 
 import com.alibaba.fastjson.JSON;
+import com.google.common.collect.Lists;
 import com.nuochen.framework.app.api.ApiResponse;
 import com.nuochen.framework.autocoding.domain.Pagination;
 import com.nuochen.framework.autocoding.domain.condition.ConditionsBuilder;
@@ -62,7 +63,7 @@ public class PullReplenishmentBussiness {
             } else {
                 // 根据产品id列表获取产品列表信息
                 ProductCategoryRequest productCategoryRequest = new ProductCategoryRequest();
-                productCategoryRequest.setPCategoryId(request.getProductCategoryId());
+                productCategoryRequest.setPCategoryIds(Lists.newArrayList(request.getProductCategoryId()));
                 ApiResponse detailResponse = productFeignClient.productCategoryListQuery(productCategoryRequest);
                 ProductCategoryResponse response = JSON.parseObject(JSON.toJSONString(detailResponse.getData()), ProductCategoryResponse.class);
                 if (response.getPCategoryIds().size() > 0) {
@@ -120,7 +121,7 @@ public class PullReplenishmentBussiness {
             } else {
                 // 根据产品id列表获取产品列表信息
                 ProductCategoryRequest productCategoryRequest = new ProductCategoryRequest();
-                productCategoryRequest.setPCategoryId(businessPageQueryRequest.getProductCategoryId());
+                productCategoryRequest.setPCategoryIds(Lists.newArrayList(businessPageQueryRequest.getProductCategoryId()));
                 ApiResponse detailResponse = productFeignClient.productCategoryListQuery(productCategoryRequest);
                 ProductCategoryResponse response = JSON.parseObject(JSON.toJSONString(detailResponse.getData()), ProductCategoryResponse.class);
                 if (response.getPCategoryIds().size() > 0) {

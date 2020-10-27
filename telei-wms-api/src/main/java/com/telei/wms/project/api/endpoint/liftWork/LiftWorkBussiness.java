@@ -262,8 +262,7 @@ public class LiftWorkBussiness {
     public LiftWorkBusinessResponse getLiftWorkInfo(LiftWorkBusinessRequest request) {
         /**
          * 查询当前商品的样品库位
-         *  0/n个抛出异常
-         *  拿到当前样品库位计算推荐库位
+         *  0/n个抛出异常 拿到当前样品库位计算推荐库位
          */
         WmsInventory wmsInventory = new WmsInventory();
         wmsInventory.setProductId(request.getProductId());
