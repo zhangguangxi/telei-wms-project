@@ -156,10 +156,12 @@ public class AdjustStrategyFactory {
      * @param list
      * @param inventory
      */
-    public  void  createOmsInventoryChangeWriteBackCondition(BigDecimal ivQtyAdjt, List<OmsInventoryChangeWriteBack.OmsInventoryChangeWriteBackCondition> list, WmsInventory inventory, int type) {
+    public  void  createOmsInventoryChangeWriteBackCondition(BigDecimal ivQtyAdjt, List<OmsInventoryChangeWriteBack.OmsInventoryChangeWriteBackCondition> list, WmsInventory inventory, int type,WmsAdjtHeader wmsAdjtHeader) {
         OmsInventoryChangeWriteBack.OmsInventoryChangeWriteBackCondition omsInventoryChangeWriteBackCondition = DataConvertUtil.parseDataAsObject(inventory, OmsInventoryChangeWriteBack.OmsInventoryChangeWriteBackCondition.class);
         omsInventoryChangeWriteBackCondition.setType(type);
         omsInventoryChangeWriteBackCondition.setQty(ivQtyAdjt);
+        omsInventoryChangeWriteBackCondition.setBussinessId(wmsAdjtHeader.getAdjhId());
+        omsInventoryChangeWriteBackCondition.setBussinessCode(wmsAdjtHeader.getAdjhCode());
         log.info("\n +++++++++++++++++++++ 库存调整::创建回写oms库存记录 -> {} ++++++++++++++++++++ \n ",JSON.toJSONString(omsInventoryChangeWriteBackCondition));
         list.add(omsInventoryChangeWriteBackCondition);
     }

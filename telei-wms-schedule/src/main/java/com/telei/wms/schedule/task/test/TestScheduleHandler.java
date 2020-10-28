@@ -3,7 +3,6 @@ package com.telei.wms.schedule.task.test;
 
 import com.nuochen.framework.component.task.TaskContext;
 import com.nuochen.framework.component.task.TaskHandler;
-import com.nuochen.framework.component.task.TaskSync;
 import com.telei.infrastructure.component.idgenerator.contract.Id;
 import com.telei.wms.schedule.task.service.GoodsBussiness;
 import lombok.extern.slf4j.Slf4j;
@@ -29,7 +28,6 @@ public class TestScheduleHandler extends TaskHandler {
     }
 
     @Override
-    @TaskSync
     protected void handle(TaskContext context) {
         goodsBussiness.addGoods();
     }

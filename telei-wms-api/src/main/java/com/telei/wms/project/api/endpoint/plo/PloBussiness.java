@@ -434,7 +434,13 @@ public class PloBussiness {
         updateWmsPloHeader.setPickingWeight(wmsPloHeader.getPickingWeight().subtract(totalWeight));
         updateWmsPloHeader.setPickingVol(wmsPloHeader.getPickingVol().subtract(totalVol));
         if (Objects.isNull(wmsPloDetailIsExist)) {
-            updateWmsPloHeader.setOrderStatus("01");
+            updateWmsPloHeader.setOrderStatus(SAVE_STATUS);
+            //更新出库任务
+            WmsDoHeader updateWmsDoHeader = new WmsDoHeader();
+            updateWmsDoHeader.setId(wmsPloHeader.getDohId());
+            updateWmsDoHeader.setOrderStatus("20");
+            updateWmsDoHeader.setLastupdateTime(DateUtils.nowWithUTC());
+            wmsDoHeaderService.updateByPrimaryKeySelective(updateWmsDoHeader);
         }
         if (Objects.nonNull(CustomRequestContext.getUserInfo())) {
             updateWmsPloHeader.setLastUpdateUser(CustomRequestContext.getUserInfo().getUserName());

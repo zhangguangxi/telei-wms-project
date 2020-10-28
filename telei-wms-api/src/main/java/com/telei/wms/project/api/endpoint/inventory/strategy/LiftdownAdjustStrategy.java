@@ -26,8 +26,14 @@ public class LiftdownAdjustStrategy implements IAdjustStrategy {
                                                                                           List<WmsInventory> wmsInventoryAddList, List<WmsInventory> wmsInventoryUpdateList,
                                                                                           List<Long> deleteIvidList, List<WmsIvTransaction> wmsIvTransactionList,
                                                                                           List<WmsIvSplit> wmsIvSplitList, UserInfo userInfo, Date nowWithUtc) {
-        BigDecimal ivQtyAdjt = wmsAdjtHeader.getIvQtyAdjt();/**库存调整数量*/
-        String lcCodeAdjt = wmsAdjtHeader.getLcCodeAdjt();/**调整库位(目标库位)*/
+        WmsInventory wmsInventory = WmsInventoryDbList.get(0);
+        BigDecimal ivQtyAdjt = wmsAdjtHeader.getIvQtyAdjt();/**降任务 库存调整数量*/
+        String lcCodeAdjt = wmsAdjtHeader.getLcCodeAdjt();/**降任务 调整库位(目标库位)*/
+
+        wmsAdjtHeader.setLcCodeAdjt(lcCodeAdjt);/**升降任务-目标库位*/
+        wmsAdjtHeader.setBigBagRate(wmsInventory.getBigBagRate());/**大包转换率*/
+        wmsAdjtHeader.setMidBagRate(wmsInventory.getMidBagRate());/**中包转换率*/
+
         List<WmsInventory> wmsInventories = DataConvertUtil.parseDataAsArray(WmsInventoryDbList, WmsInventory.class);
         BigDecimal totalIvQty = wmsInventories.stream().map(WmsInventory::getIvQty).reduce(BigDecimal.ZERO, BigDecimal::add);
         if (totalIvQty.compareTo(ivQtyAdjt) < 0) {

@@ -28,10 +28,11 @@ public class IncreaseAdjustStrategy implements IAdjustStrategy{
                                                                                           List<WmsIvSplit> wmsIvSplitList, UserInfo userInfo, Date nowWithUtc) {
         WmsInventory wmsInventory = WmsInventoryDbList.get(0);
         BigDecimal ivQtyAdjt = wmsAdjtHeader.getIvQtyAdjt();/**库存调整数*/
-        String lcCodeAdjt = wmsAdjtHeader.getLcCode(); /**调整库位*/
+        String lcCodeAdjt = wmsAdjtHeader.getLcCode(); /**库位编码*/
 
-        wmsAdjtHeader.setBigBagRate(wmsInventory.getBigBagRate());//大包转换率
-        wmsAdjtHeader.setMidBagRate(wmsInventory.getMidBagRate());//中包转换率
+        wmsAdjtHeader.setLcCodeAdjt(lcCodeAdjt);/**调整库位*/
+        wmsAdjtHeader.setBigBagRate(wmsInventory.getBigBagRate());/**大包转换率*/
+        wmsAdjtHeader.setMidBagRate(wmsInventory.getMidBagRate());/**中包转换率*/
 
 
         /**新增库存记录*/
@@ -45,7 +46,8 @@ public class IncreaseAdjustStrategy implements IAdjustStrategy{
 
         /**OMS库存同步*/
         List<OmsInventoryChangeWriteBack.OmsInventoryChangeWriteBackCondition> list = Lists.newArrayList();
-        adjustStrategyFactory.createOmsInventoryChangeWriteBackCondition(ivQtyAdjt, list, wmsInventory,1);
+
+        adjustStrategyFactory.createOmsInventoryChangeWriteBackCondition(ivQtyAdjt, list, wmsInventory,1,wmsAdjtHeader);
         return list;
     }
 }

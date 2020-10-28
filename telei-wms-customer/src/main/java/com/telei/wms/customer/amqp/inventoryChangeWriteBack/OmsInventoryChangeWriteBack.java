@@ -25,5 +25,9 @@ public class OmsInventoryChangeWriteBack {
         private BigDecimal qty;
         /**调整类型 1:调多 2:调少*/
         private Integer type;
+        /**单据id*/
+        private Long bussinessId;
+        /**单据编码*/
+        private String bussinessCode;
     }
 }

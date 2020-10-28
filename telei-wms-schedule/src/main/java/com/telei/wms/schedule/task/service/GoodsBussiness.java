@@ -37,9 +37,8 @@ public class GoodsBussiness {
     public void addGoods(){
         Goods goods = new Goods();
         goods.setName("aa");
-
         goods.setId(idGenerator.getUnique());
-        int a = 1/0;
         goodsService.insertSelective(goods);
+//        int a = 1/0;;
     }
 }

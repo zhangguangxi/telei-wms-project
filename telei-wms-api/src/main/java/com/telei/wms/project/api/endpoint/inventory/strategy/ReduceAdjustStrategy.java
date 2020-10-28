@@ -41,10 +41,16 @@ public class ReduceAdjustStrategy implements IAdjustStrategy{
                                                                                     List<WmsInventory> wmsInventoryAddList, List<WmsInventory> wmsInventoryUpdateList, List<Long> deleteIvidList,
                                                                                     List<WmsIvTransaction> wmsIvTransactionList,
                                                                                     List<WmsIvSplit> wmsIvSplitList,UserInfo userInfo, Date nowWithUtc) {
+        WmsInventory wmsInventory = WmsInventoryDbList.get(0);
+        BigDecimal ivQtyAdjt = wmsAdjtHeader.getIvQtyAdjt();/**库存调整数*/
+        String lcCode = wmsAdjtHeader.getLcCode(); /**库位编码*/
+
+        wmsAdjtHeader.setLcCodeAdjt(lcCode);/**调整库位*/
+        wmsAdjtHeader.setBigBagRate(wmsInventory.getBigBagRate());/**大包转换率*/
+        wmsAdjtHeader.setMidBagRate(wmsInventory.getMidBagRate());/**中包转换率*/
+
         List<WmsInventory> wmsInventories = DataConvertUtil.parseDataAsArray(WmsInventoryDbList, WmsInventory.class);
         BigDecimal totalIvQtyForLcCode = wmsInventories.stream().map(WmsInventory::getIvQty).reduce(BigDecimal.ZERO, BigDecimal::add);
-        BigDecimal ivQtyAdjt = wmsAdjtHeader.getIvQtyAdjt();/**调整数量*/
-        String lcCodeAdjt = wmsAdjtHeader.getLcCode(); /**调整库位*/
         List<WmsIvOut> wmsIvOuts = wmsIvOutService.selectAll();
 
         WmsInventory inventory = wmsInventories.get(0);
@@ -81,21 +87,21 @@ public class ReduceAdjustStrategy implements IAdjustStrategy{
                 /**库存记录更新*/
                 wmsInventoryUpdateList.add(item);
                 /**库存变更记录新增*/
-                adjustStrategyFactory.createTransactionRecored(wmsIvTransactionList,item,lcCodeAdjt,"LESS",ivQtyAdjt,userInfo, nowWithUtc);
+                adjustStrategyFactory.createTransactionRecored(wmsIvTransactionList,item,lcCode,"LESS",ivQtyAdjt,userInfo, nowWithUtc);
                 /***oms库存记回写录*/
-                adjustStrategyFactory.createOmsInventoryChangeWriteBackCondition(ivQtyAdjt, list, item,2);
+                adjustStrategyFactory.createOmsInventoryChangeWriteBackCondition(ivQtyAdjt, list, item,2,wmsAdjtHeader);
                 /***库存调整单明细记录*/
-                adjustStrategyFactory.createAdjtLine(wmsAdjtHeader, wmsAdjtLineList, item,null,"REDUCE" ,ivQtyAdjt, lcCodeAdjt);
+                adjustStrategyFactory.createAdjtLine(wmsAdjtHeader, wmsAdjtLineList, item,null,"REDUCE" ,ivQtyAdjt, lcCode);
                 break;
             }
 
             deleteIvidList.add(item.getIvId());
             /**库存变更记录*/
-            adjustStrategyFactory.createTransactionRecored(wmsIvTransactionList,item,lcCodeAdjt,"LESS",ivQtyAdjt,userInfo, nowWithUtc);
+            adjustStrategyFactory.createTransactionRecored(wmsIvTransactionList,item,lcCode,"LESS",ivQtyAdjt,userInfo, nowWithUtc);
             /**OMS库存回写记录*/
-            adjustStrategyFactory.createOmsInventoryChangeWriteBackCondition(ivQtyAdjt, list, item,2);
+            adjustStrategyFactory.createOmsInventoryChangeWriteBackCondition(ivQtyAdjt, list, item,2,wmsAdjtHeader);
             /***库存调整单明细记录*/
-            adjustStrategyFactory.createAdjtLine(wmsAdjtHeader, wmsAdjtLineList, item,null,"REDUCE" ,ivQtyAdjt, lcCodeAdjt);
+            adjustStrategyFactory.createAdjtLine(wmsAdjtHeader, wmsAdjtLineList, item,null,"REDUCE" ,ivQtyAdjt, lcCode);
 
             if(ivQty.compareTo(ivQtyAdjt) == 0){
                 break;
