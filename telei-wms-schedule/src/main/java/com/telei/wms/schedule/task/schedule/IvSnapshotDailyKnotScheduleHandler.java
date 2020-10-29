@@ -7,9 +7,9 @@ import com.telei.wms.commons.utils.DateUtils;
 import com.telei.wms.commons.utils.StringUtils;
 import com.telei.wms.datasource.wms.model.WmsIvSnapshotDailyKnot;
 import com.telei.wms.datasource.wms.model.WmsIvSnapshotTime;
-import com.telei.wms.datasource.wms.repository.WmsIvSnapshotDailyKnotRepository;
-import com.telei.wms.datasource.wms.repository.WmsIvSnapshotRepository;
-import com.telei.wms.datasource.wms.repository.WmsIvSnapshotTimeRepository;
+import com.telei.wms.datasource.wms.service.WmsIvSnapshotDailyKnotService;
+import com.telei.wms.datasource.wms.service.WmsIvSnapshotService;
+import com.telei.wms.datasource.wms.service.WmsIvSnapshotTimeService;
 import com.telei.wms.datasource.wms.vo.WmsIvSnapshotDailyKnotVO;
 import com.telei.wms.schedule.utils.DataConvertUtil;
 import lombok.extern.slf4j.Slf4j;
@@ -38,13 +38,13 @@ public class IvSnapshotDailyKnotScheduleHandler extends TaskHandler {
     private IdSecondGenerator idSecondGenerator;
 
     @Autowired
-    private WmsIvSnapshotTimeRepository wmsIvSnapshotTimeRepository;
+    private WmsIvSnapshotTimeService wmsIvSnapshotTimeService;
 
     @Autowired
-    private WmsIvSnapshotRepository wmsIvSnapshotRepository;
+    private WmsIvSnapshotService wmsIvSnapshotService;
 
     @Autowired
-    private WmsIvSnapshotDailyKnotRepository wmsIvSnapshotDailyKnotRepository;
+    private WmsIvSnapshotDailyKnotService wmsIvSnapshotDailyKnotService;
 
     protected IvSnapshotDailyKnotScheduleHandler() {
         super("库存快照日结");
@@ -60,9 +60,9 @@ public class IvSnapshotDailyKnotScheduleHandler extends TaskHandler {
          * 		取wms_iv_snapshot_time表snapshot_time倒序最新的一条数据
          */
         // 获取库存快照日结算表主键id最大的一条数据
-        WmsIvSnapshotDailyKnot wmsIvSnapshotDailyKnot = wmsIvSnapshotDailyKnotRepository.selectMaxId();
+        WmsIvSnapshotDailyKnot wmsIvSnapshotDailyKnot = wmsIvSnapshotDailyKnotService.selectMaxId();
         // 库存快照时间表最新的一条记录
-        WmsIvSnapshotTime wmsIvSnapshotTime = wmsIvSnapshotTimeRepository.selectNewEntity();
+        WmsIvSnapshotTime wmsIvSnapshotTime = wmsIvSnapshotTimeService.selectNewEntity();
         SimpleDateFormat sd = new SimpleDateFormat("yyyy-MM-dd");
         // 是否存在日结数据
         boolean isExist = false;
@@ -85,7 +85,7 @@ public class IvSnapshotDailyKnotScheduleHandler extends TaskHandler {
         }
         if (!isExist) {
             // 查询库存快照表【wms_iv_snapshot】
-            List<WmsIvSnapshotDailyKnotVO> dailyKnotVOList = wmsIvSnapshotRepository.selectByStatistics(wmsIvSnapshotTime.getId());
+            List<WmsIvSnapshotDailyKnotVO> dailyKnotVOList = wmsIvSnapshotService.selectByStatistics(wmsIvSnapshotTime.getId());
             if (StringUtils.isNotNull(dailyKnotVOList) && !dailyKnotVOList.isEmpty()) {
                 List<WmsIvSnapshotDailyKnot> snapshotDailyKnotList = new ArrayList<>();
                 Long idNumber = idSecondGenerator.getUnique();
@@ -110,7 +110,7 @@ public class IvSnapshotDailyKnotScheduleHandler extends TaskHandler {
                     snapshotDailyKnotList.add(snapshotDailyKnot);
                     idNumber++;
                 }
-                wmsIvSnapshotDailyKnotRepository.insertBatch(snapshotDailyKnotList);
+                wmsIvSnapshotDailyKnotService.insertBatch(snapshotDailyKnotList);
             }
         }
     }

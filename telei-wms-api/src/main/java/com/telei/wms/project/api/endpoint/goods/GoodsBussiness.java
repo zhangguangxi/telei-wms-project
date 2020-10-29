@@ -3,7 +3,6 @@ package com.telei.wms.project.api.endpoint.goods;
 import com.alibaba.fastjson.JSON;
 import com.nuochen.framework.autocoding.domain.Pagination;
 import com.nuochen.framework.autocoding.domain.condition.ConditionsBuilder;
-import com.telei.infrastructure.component.datapermission.meta.DataPermissionFilter;
 import com.telei.wms.datasource.wms.model.Goods;
 import com.telei.wms.datasource.wms.service.GoodsService;
 import com.telei.wms.project.api.endpoint.goods.dto.*;
@@ -98,7 +97,7 @@ public class GoodsBussiness {
      * @param request
      * @return
      */
-    @DataPermissionFilter
+//    @DataPermissionFilter
     public GoodsBusinessPageQueryResponse pageQueryGoods(GoodsBusinessPageQueryRequest request) {
         Pagination pagination = new Pagination(request.getPageNumber(), request.getPageSize());
         ConditionsBuilder conditionsBuilder = ConditionsBuilder.create();

@@ -14,4 +14,11 @@ public class LiftTaskUpdateRequest {
 
     private List<WmsProductSampleCommonRequest> updateRequestList;
 
+    /**
+     * 设置上下限类型
+     * limit 下限
+     * ceiling 上限
+     */
+    private String liftTaskType;
+
 }

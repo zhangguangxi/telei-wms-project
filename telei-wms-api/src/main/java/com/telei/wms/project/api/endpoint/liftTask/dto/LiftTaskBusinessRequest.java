@@ -36,4 +36,6 @@ public class LiftTaskBusinessRequest {
 
     public List<LiftTaskPageQueryResponseVo> addLiftWorkList;
 
+    private String liftTaskType;
+
 }

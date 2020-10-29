@@ -9,7 +9,10 @@ import com.telei.wms.datasource.wms.model.WmsIvSnapshotDailyKnot;
 import com.telei.wms.datasource.wms.model.WmsIvSnapshotTime;
 import com.telei.wms.datasource.wms.model.WmsIvTransaction;
 import com.telei.wms.datasource.wms.model.WmsIvTransactionDailyKnot;
-import com.telei.wms.datasource.wms.repository.*;
+import com.telei.wms.datasource.wms.service.WmsIvSnapshotDailyKnotService;
+import com.telei.wms.datasource.wms.service.WmsIvSnapshotTimeService;
+import com.telei.wms.datasource.wms.service.WmsIvTransactionDailyKnotService;
+import com.telei.wms.datasource.wms.service.WmsIvTransactionService;
 import com.telei.wms.datasource.wms.vo.WmsIvTransactionDailyKnotVO;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,19 +39,16 @@ public class IvTransactionDailyKnotScheduleHandler extends TaskHandler {
     private IdSecondGenerator idSecondGenerator;
 
     @Autowired
-    private WmsIvTransactionRepository wmsIvTransactionRepository;
+    private WmsIvTransactionService wmsIvTransactionService;
 
     @Autowired
-    private WmsIvSnapshotRepository wmsIvSnapshotRepository;
+    private WmsIvSnapshotTimeService wmsIvSnapshotTimeService;
 
     @Autowired
-    private WmsIvSnapshotTimeRepository wmsIvSnapshotTimeRepository;
+    private WmsIvSnapshotDailyKnotService wmsIvSnapshotDailyKnotService;
 
     @Autowired
-    private WmsIvSnapshotDailyKnotRepository wmsIvSnapshotDailyKnotRepository;
-
-    @Autowired
-    private WmsIvTransactionDailyKnotRepository wmsIvTransactionDailyKnotRepository;
+    private WmsIvTransactionDailyKnotService wmsIvTransactionDailyKnotService;
 
     protected IvTransactionDailyKnotScheduleHandler() {
         super("库存变动记录日结");
@@ -68,7 +68,7 @@ public class IvTransactionDailyKnotScheduleHandler extends TaskHandler {
          */
         String leftSnapshotTime = sdf.format(DateUtils.leftWithDate());
         String rightSnapshotTime = sdf.format(DateUtils.nowWithDate());
-        List<WmsIvSnapshotTime> snapshotTimeList = wmsIvSnapshotTimeRepository.selectEntityByTime(leftSnapshotTime, rightSnapshotTime);
+        List<WmsIvSnapshotTime> snapshotTimeList = wmsIvSnapshotTimeService.selectEntityByTime(leftSnapshotTime, rightSnapshotTime);
         if (StringUtils.isNotNull(snapshotTimeList) && snapshotTimeList.size() == 2) {
             // 获取库存快照时间表信息
             Long leftIvstId = snapshotTimeList.get(0).getId();
@@ -92,7 +92,7 @@ public class IvTransactionDailyKnotScheduleHandler extends TaskHandler {
              * 根据筛选条件【create_time >= leftTime and create_time < rightTime】
              * 查询wms_iv_transaction表库存变动记录
              */
-            List<WmsIvTransactionDailyKnotVO> transactionList = wmsIvTransactionRepository.selectByTime(leftTime, rightTime);
+            List<WmsIvTransactionDailyKnotVO> transactionList = wmsIvTransactionService.selectByTime(leftTime, rightTime);
             if (StringUtils.isNotNull(transactionList) && !transactionList.isEmpty()) {
                 ivTransactionMap = transactionList.stream().collect(Collectors.toMap(dailyKnotVO -> dailyKnotVO.getProductId().toString() + dailyKnotVO.getCompanyId().toString() + dailyKnotVO.getWarehouseId().toString(), Function.identity()));
             }
@@ -103,14 +103,14 @@ public class IvTransactionDailyKnotScheduleHandler extends TaskHandler {
              */
             WmsIvSnapshotDailyKnot leftSnapshotDailyKnot = new WmsIvSnapshotDailyKnot();
             leftSnapshotDailyKnot.setIvstId(leftIvstId);
-            List<WmsIvSnapshotDailyKnot> leftDailyKnotList = wmsIvSnapshotDailyKnotRepository.selectByEntity(leftSnapshotDailyKnot);
+            List<WmsIvSnapshotDailyKnot> leftDailyKnotList = wmsIvSnapshotDailyKnotService.selectByEntity(leftSnapshotDailyKnot);
             if (StringUtils.isNotNull(leftDailyKnotList) && !leftDailyKnotList.isEmpty()) {
                 leftDailyKnotVOMap = leftDailyKnotList.stream().collect(Collectors.toMap(dailyKnotVO -> dailyKnotVO.getProductId().toString() + dailyKnotVO.getCompanyId().toString() + dailyKnotVO.getWarehouseId().toString(), WmsIvSnapshotDailyKnot::getIvQty));
             }
 
             WmsIvSnapshotDailyKnot rightSnapshotDailyKnot = new WmsIvSnapshotDailyKnot();
             rightSnapshotDailyKnot.setIvstId(rightIvstId);
-            List<WmsIvSnapshotDailyKnot> rightDailyKnotList = wmsIvSnapshotDailyKnotRepository.selectByEntity(rightSnapshotDailyKnot);
+            List<WmsIvSnapshotDailyKnot> rightDailyKnotList = wmsIvSnapshotDailyKnotService.selectByEntity(rightSnapshotDailyKnot);
             if (StringUtils.isNotNull(rightDailyKnotList) && !rightDailyKnotList.isEmpty()) {
                 rightDailyKnotVOMap = rightDailyKnotList.stream().collect(Collectors.toMap(dailyKnotVO -> dailyKnotVO.getProductId().toString() + dailyKnotVO.getCompanyId().toString() + dailyKnotVO.getWarehouseId().toString(), WmsIvSnapshotDailyKnot::getIvQty));
             }
@@ -118,7 +118,7 @@ public class IvTransactionDailyKnotScheduleHandler extends TaskHandler {
             /**
              * 根据时间查询出符合条件的id列表从中取出开始以及结束id
              */
-            List<WmsIvTransaction> ivTransactionList = wmsIvTransactionRepository.selectByCreateTime(leftTime, rightTime);
+            List<WmsIvTransaction> ivTransactionList = wmsIvTransactionService.selectByCreateTime(leftTime, rightTime);
             if (StringUtils.isNotNull(ivTransactionList) && !ivTransactionList.isEmpty()) {
                 List<Long> ids = ivTransactionList.stream().map(WmsIvTransaction::getId).collect(Collectors.toList());
                 ivtIdFrom = ids.get(0);
@@ -201,7 +201,7 @@ public class IvTransactionDailyKnotScheduleHandler extends TaskHandler {
                 }
             }
             if (transactionDailyKnotList.size() > 0) {
-                wmsIvTransactionDailyKnotRepository.insertBatch(transactionDailyKnotList);
+                wmsIvTransactionDailyKnotService.insertBatch(transactionDailyKnotList);
             }
         }
     }

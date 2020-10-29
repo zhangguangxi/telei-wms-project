@@ -55,6 +55,7 @@ public class DoHeaderBussiness {
 
     /**
      * 新增
+     *
      * @param request
      * @return
      */
@@ -71,6 +72,7 @@ public class DoHeaderBussiness {
 
     /**
      * 订单详细
+     *
      * @param request
      * @return
      */
@@ -85,11 +87,13 @@ public class DoHeaderBussiness {
         List<DoLineDetailResponse> doLineDetailResponses = DataConvertUtil.parseDataAsArray(wmsDoLineList, DoLineDetailResponse.class);
         response.setDoLines(doLineDetailResponses);
         // 查询拣货单id
-        WmsPloHeader wmsPloHeader = new WmsPloHeader();
-        wmsPloHeader.setDohId(wmsDoHeader.getId());
-        wmsPloHeader.setDohCode(wmsDoHeader.getDohCode());
-        WmsPloHeader ploHeader = wmsPloHeaderService.selectOneByEntity(wmsPloHeader);
-        if(Objects.nonNull(ploHeader)){
+        ConditionsBuilder conditionsBuilder = ConditionsBuilder.create();
+        conditionsBuilder.eq("dohCode", wmsDoHeader.getDohCode());
+        conditionsBuilder.eq("dohId", wmsDoHeader.getId());
+        conditionsBuilder.ne("orderStatus", "98");
+        Map<String, Object> paramMap = conditionsBuilder.build();
+        WmsPloHeader ploHeader = wmsPloHeaderService.selectOneByConditions(paramMap);
+        if (Objects.nonNull(ploHeader)) {
             response.setPloId(ploHeader.getId());
         }
         return response;
@@ -97,6 +101,7 @@ public class DoHeaderBussiness {
 
     /**
      * 分页查询主单
+     *
      * @param request
      * @return
      */
@@ -111,16 +116,16 @@ public class DoHeaderBussiness {
             conditionsBuilder.like("dohCode", request.getDohCode());
         }
         if (StringUtils.isNoneBlank(request.getOrderStatus())) {
-            if("01".equals(request.getOrderStatus())){
+            if ("01".equals(request.getOrderStatus())) {
                 conditionsBuilder.eq("hasPlo", "0");
-            } else if("02".equals(request.getOrderStatus())){
+            } else if ("02".equals(request.getOrderStatus())) {
                 conditionsBuilder.eq("hadCheck", "1");
-            } else if("30".equals(request.getOrderStatus())){
+            } else if ("30".equals(request.getOrderStatus())) {
                 conditionsBuilder.eq("orderStatus", "30");
-            } else if("40".equals(request.getOrderStatus())){
+            } else if ("40".equals(request.getOrderStatus())) {
                 conditionsBuilder.eq("orderStatus", "40");
             }
-        }else{
+        } else {
             conditionsBuilder.notIn("orderStatus", orderStatuss);
         }
         if (StringUtils.isNotNull(request.getCompanyId())) {
@@ -144,6 +149,7 @@ public class DoHeaderBussiness {
 
     /**
      * 取消出库任务
+     *
      * @param request
      * @return
      */
@@ -191,6 +197,7 @@ public class DoHeaderBussiness {
 
     /**
      * 核验
+     *
      * @param request
      * @return
      */
@@ -210,6 +217,7 @@ public class DoHeaderBussiness {
 
     /**
      * 出库
+     *
      * @param request
      * @return
      */

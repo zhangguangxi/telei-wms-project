@@ -1134,14 +1134,15 @@ public class InventoryBussiness {
         Pagination pagination = new Pagination(request.getPageCommonRequest().getPageNumber(), request.getPageCommonRequest().getPageSize());
         ConditionsBuilder conditionsBuilder = ConditionsBuilder.create();
         if(Objects.nonNull(request.getInventoryChangePageQueryCondition())){
-            String startTime = request.getInventoryChangePageQueryCondition().getStartTime();
-            String endTime = request.getInventoryChangePageQueryCondition().getEndTime();
+            String startTime = request.getInventoryChangePageQueryCondition().getStartTime().split(" ")[0]+ RANGE_TIME_START;
+            String endTime = request.getInventoryChangePageQueryCondition().getEndTime().split(" ")[0] + RANGE_TIME_END;
+
             if(Objects.nonNull(startTime) && Objects.nonNull(endTime)){
-                conditionsBuilder.between("createTime",DateUtils.parse(startTime, DateUtils.YYYY_MM_DD_HH_MM_SS),DateUtils.parse(endTime, DateUtils.YYYY_MM_DD_HH_MM_SS));
+                conditionsBuilder.between("createTime",startTime,endTime);
             }else if(Objects.nonNull(startTime)){
-                conditionsBuilder.ge("createTime",DateUtils.parse(startTime, DateUtils.YYYY_MM_DD_HH_MM_SS));
+                conditionsBuilder.ge("createTime",startTime);
             }else if(Objects.nonNull(endTime)){
-                conditionsBuilder.le("createTime",DateUtils.parse(endTime, DateUtils.YYYY_MM_DD_HH_MM_SS));
+                conditionsBuilder.le("createTime",endTime);
             }
         }
         conditionsBuilder.orderBy("create_time desc");

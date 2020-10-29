@@ -399,6 +399,8 @@ public class InitBussiness {
         }
         if (StringUtils.isNotBlank(request.getIvihStatus())) {
             conditionsBuilder.eq("ivihStatus", request.getIvihStatus());
+        } else {
+            conditionsBuilder.ne("ivihStatus", "98");
         }
         if (StringUtils.isNotNull(request.getWarehouseId())) {
             conditionsBuilder.eq("warehouseId", request.getWarehouseId());

@@ -27,4 +27,9 @@ public class WmsIvTransactionDailyKnotService extends BaseService<WmsIvTransacti
     public List<WmsIvTransactionDailyKnot> selectByCustomCondtions(Map conditions) {
         return wmsIvTransactionDailyKnotRepository.selectByCustomCondtions(conditions);
     }
+
+    public List<WmsIvTransactionDailyKnot> selectByCustomConditions(Map<String, Object> conditions) {
+        return wmsIvTransactionDailyKnotRepository.selectByCustomConditions(conditions);
+    }
+
 }

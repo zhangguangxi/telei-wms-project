@@ -10,8 +10,8 @@ import com.telei.wms.commons.utils.StringUtils;
 import com.telei.wms.datasource.wms.model.SnapshotMaxId;
 import com.telei.wms.datasource.wms.model.WmsIvSnapshot;
 import com.telei.wms.datasource.wms.model.WmsIvSnapshotTime;
-import com.telei.wms.datasource.wms.repository.WmsInventoryRepository;
 import com.telei.wms.datasource.wms.service.SnapshotMaxIdService;
+import com.telei.wms.datasource.wms.service.WmsInventoryService;
 import com.telei.wms.datasource.wms.service.WmsIvSnapshotService;
 import com.telei.wms.datasource.wms.service.WmsIvSnapshotTimeService;
 import com.telei.wms.schedule.configuration.IdInstantdirectiveConfig;
@@ -38,7 +38,7 @@ import java.util.List;
 public class IvSnapshotScheduleHandler extends TaskHandler {
 
     @Autowired
-    private WmsInventoryRepository wmsInventoryRepository;
+    private WmsInventoryService wmsInventoryService;
 
     @Autowired
     private IdSecondGenerator idSecondGenerator;
@@ -70,7 +70,7 @@ public class IvSnapshotScheduleHandler extends TaskHandler {
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         String snapshotTime = sdf.format(DateUtils.nowWithUTC());
         String snapshotLcTime = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
-        wmsInventoryRepository.doIvSnapshotSchedule(idNumber, serverNo, snapshotTime, snapshotLcTime);
+        wmsInventoryService.doIvSnapshotSchedule(idNumber, serverNo, snapshotTime, snapshotLcTime);
         // 写入库存快照指令表
         ParamType snapParamType = new ParamType();
         snapParamType.setType("List");
@@ -86,6 +86,7 @@ public class IvSnapshotScheduleHandler extends TaskHandler {
                 spId = maxIdList.get(0).getId();
                 spMaxId = maxIdList.get(0).getSpMaxId();
             }
+            // 每次查询500条
             snapshotList = wmsIvSnapshotService.findAll(idNumber + 1, spMaxId);
             if (StringUtils.isNotNull(snapshotList) && !snapshotList.isEmpty()) {
                 spMaxId = snapshotList.get(snapshotList.size() - 1).getId();
@@ -100,13 +101,15 @@ public class IvSnapshotScheduleHandler extends TaskHandler {
                 snapshotMaxId.setSpMaxId(spMaxId);
                 snapshotMaxIdService.insert(snapshotMaxId);
             }
-        } while (snapshotList.size() > 0);
-        OrderContext snapOrderContext = new OrderContext();
-        snapOrderContext.setClassName("WmsIvSnapshotService");
-        snapOrderContext.setMethodName("insertBatch");
-        snapOrderContext.setParamTypes(snapParamTypeList);
-        snapOrderContext.setBody(new Object[]{snapshotList});
-        idInstantdirectiveBussiness.add("wms_iv_snapshot", "ADD", snapOrderContext);
+            if(StringUtils.isNotNull(snapshotList) && !snapshotList.isEmpty()){
+                OrderContext snapOrderContext = new OrderContext();
+                snapOrderContext.setClassName("WmsIvSnapshotService");
+                snapOrderContext.setMethodName("insertBatch");
+                snapOrderContext.setParamTypes(snapParamTypeList);
+                snapOrderContext.setBody(new Object[]{snapshotList});
+                idInstantdirectiveBussiness.add("wms_iv_snapshot", "ADD", snapOrderContext);
+            }
+        } while (snapshotList.size() >= 500);
         // 写入库存快照时间指令表
         ParamType paramType = new ParamType();
         paramType.setType("List");

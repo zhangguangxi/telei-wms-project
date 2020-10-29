@@ -48,4 +48,8 @@ public class WmsInventoryService extends BaseService<WmsInventoryRepository,WmsI
         return page;
     }
 
+    public void doIvSnapshotSchedule(Long idNumber, String serverNo, String snapshotTime, String snapshotLcTime){
+        wmsInventoryRepository.doIvSnapshotSchedule(idNumber, serverNo, snapshotTime, snapshotLcTime);
+    }
+
 }

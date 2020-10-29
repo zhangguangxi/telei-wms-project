@@ -141,20 +141,45 @@ public class LiftTaskBussiness {
             List<WmsProductSample> productSampleAddList = new ArrayList<>();
             for (WmsProductSampleCommonRequest commonRequest : updateRequestList) {
                 WmsProductSample wmsProductSample = DataConvertUtil.parseDataAsObject(commonRequest, WmsProductSample.class);
-                if(StringUtils.isNotNull(wmsProductSample.getId())){
+                if ("ceiling".equalsIgnoreCase(request.getLiftTaskType())) {
+                    //上限限制
+                    if (commonRequest.getCeilingMultiple().compareTo(BigDecimal.valueOf(2)) > 0 || commonRequest.getCeilingMultiple().compareTo(BigDecimal.valueOf(0.2)) < 0) {
+                        ErrorCode.LIFT_TASK_COMMON_ERROR_4003.throwError("样品库位上限倍数范围为【0.2~2】");
+                    }
+                } else if ("limit".equalsIgnoreCase(request.getLiftTaskType())) {
+                    //下限限制
+                    if (commonRequest.getLimitMultiple().compareTo(BigDecimal.valueOf(2)) > 0 || commonRequest.getLimitMultiple().compareTo(BigDecimal.valueOf(0.2)) < 0) {
+                        ErrorCode.LIFT_TASK_COMMON_ERROR_4003.throwError("样品库位下限倍数范围为【0.2~2】");
+                    }
+                }
+                if (StringUtils.isNotNull(wmsProductSample.getId())) {
+                    WmsProductSample productSample = wmsProductSampleService.selectByPrimaryKey(wmsProductSample.getId());
+                    if ("ceiling".equalsIgnoreCase(request.getLiftTaskType())) {
+                        if (StringUtils.isNotNull(productSample.getLimitMultiple())) {
+                            if (commonRequest.getCeilingMultiple().compareTo(productSample.getLimitMultiple()) < 0) {
+                                ErrorCode.LIFT_TASK_COMMON_ERROR_4003.throwError("样品库位上限倍数不能小于下限倍数");
+                            }
+                        }
+                    } else if ("limit".equalsIgnoreCase(request.getLiftTaskType())) {
+                        if (StringUtils.isNotNull(productSample.getCeilingMultiple())) {
+                            if (commonRequest.getLimitMultiple().compareTo(productSample.getCeilingMultiple()) > 0) {
+                                ErrorCode.LIFT_TASK_COMMON_ERROR_4003.throwError("样品库位下限倍数不能高于上限倍数");
+                            }
+                        }
+                    }
                     productSampleUpdateList.add(wmsProductSample);
-                }else {
+                } else {
                     wmsProductSample.setId(idGenerator.getUnique());
                     productSampleAddList.add(wmsProductSample);
                 }
             }
-            if(productSampleUpdateList.size() > 0){
+            if (productSampleUpdateList.size() > 0) {
                 int count = wmsProductSampleService.updateBatch(productSampleUpdateList);
                 if (count <= 0) {
                     ErrorCode.LIFT_TASK_UPDATE_ERROR_4001.throwError();
                 }
             }
-            if(productSampleAddList.size() > 0){
+            if (productSampleAddList.size() > 0) {
                 int count = wmsProductSampleService.insertBatch(productSampleAddList);
                 if (count <= 0) {
                     ErrorCode.LIFT_TASK_UPDATE_ERROR_4001.throwError();
