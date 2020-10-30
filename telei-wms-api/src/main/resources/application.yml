@@ -43,6 +43,7 @@ customize:
   feign:
     auth-url: http://127.0.0.1:20010
     cdm-url: http://127.0.0.1:8811
+    oms-url: http://127.0.0.1:8812
 #    auth-url: http://192.168.1.114:20010
 #    cdm-url: http://192.168.1.114:8811
   permission-switch:

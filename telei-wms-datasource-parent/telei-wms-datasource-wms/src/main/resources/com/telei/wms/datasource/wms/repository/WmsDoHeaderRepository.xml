@@ -278,5 +278,13 @@
         GROUP BY p.company_id, p.product_id
     </select>
 
+    <select id="findPoId" resultType="java.lang.String">
+        SELECT
+        cust_order_no
+        FROM wms_do_header wdh
+        INNER JOIN oms.oms_sale_order oso ON oso.so_id = wdh.so_id
+        WHERE wdh.doh_id = #{dohId}
+    </select>
+
 </mapper>
 

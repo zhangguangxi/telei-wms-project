@@ -41,4 +41,7 @@ public class WmsDoHeaderService extends BaseService<WmsDoHeaderRepository,WmsDoH
         return wmsDoHeaderRepository.pullReplenishmentPageQuery(paramMap);
     }
 
+    public String findPoId(Long dohId) {
+        return wmsDoHeaderRepository.findPoId(dohId);
+    }
 }

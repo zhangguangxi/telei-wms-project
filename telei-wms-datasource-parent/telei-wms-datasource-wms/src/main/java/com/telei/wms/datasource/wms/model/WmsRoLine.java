@@ -1,8 +1,9 @@
 package com.telei.wms.datasource.wms.model;
 
 import com.nuochen.framework.autocoding.domain.Entity;
-import java.math.BigDecimal;
 import lombok.Data;
+
+import java.math.BigDecimal;
 
 /**
  * wms_ro_line 入库计划明细
@@ -42,7 +43,7 @@ public class WmsRoLine implements Entity<Long> {
     /** 参考成本 */
     private BigDecimal costReference;
     /** 成本币种 */
-    private Integer costReferenceCurrencyId;
+    private Long costReferenceCurrencyId;
     /** 采购单价 */
     private BigDecimal unitPrice;
     /** 计划入库数量 */
@@ -54,7 +55,7 @@ public class WmsRoLine implements Entity<Long> {
     /** 采购金额 */
     private BigDecimal amount;
     /** 采购币种 */
-    private Integer unitPriceCurrencyId;
+    private Long unitPriceCurrencyId;
     /** 备注 */
     private String memo;
 }

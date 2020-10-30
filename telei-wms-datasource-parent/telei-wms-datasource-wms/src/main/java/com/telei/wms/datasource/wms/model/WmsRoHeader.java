@@ -46,7 +46,7 @@ public class WmsRoHeader implements Entity<Long> {
     /** 总金额 */
     private BigDecimal totalAmount;
     /** 币种 */
-    private Integer currencyId;
+    private Long currencyId;
     /** 货品种类数量 */
     private Integer speciesQty;
     /** 收货数量 */

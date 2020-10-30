@@ -6,6 +6,7 @@ import com.telei.infrastructure.component.commons.CustomRequestContext;
 import com.telei.wms.commons.utils.DateUtils;
 import com.telei.wms.commons.utils.StringUtils;
 import com.telei.wms.customer.amqp.shipPlan.OmsShipPlan;
+import com.telei.wms.customer.recovicePlan.dto.RecovicePlanAddByDoRequest;
 import com.telei.wms.datasource.wms.model.WmsDoHeader;
 import com.telei.wms.datasource.wms.model.WmsDoLine;
 import com.telei.wms.datasource.wms.model.WmsIdInstantdirective;
@@ -15,6 +16,7 @@ import com.telei.wms.datasource.wms.service.WmsDoLineService;
 import com.telei.wms.datasource.wms.service.WmsPloHeaderService;
 import com.telei.wms.datasource.wms.vo.DoLineResponseVo;
 import com.telei.wms.project.api.ErrorCode;
+import com.telei.wms.project.api.amqp.producer.WmsOmsRecovicePlanAddByDoProducer;
 import com.telei.wms.project.api.amqp.producer.WmsOmsShipPlanCancelCallbackProducer;
 import com.telei.wms.project.api.endpoint.doHeader.dto.*;
 import com.telei.wms.project.api.endpoint.wmsIdInstantdirective.WmsIdInstantdirectiveBussiness;
@@ -52,6 +54,9 @@ public class DoHeaderBussiness {
 
     @Autowired
     private WmsOmsShipPlanCancelCallbackProducer wmsOmsShipPlanCancelCallbackProducer;
+
+    @Autowired
+    private WmsOmsRecovicePlanAddByDoProducer wmsOmsRecovicePlanAddByDoProducer;
 
     /**
      * 新增
@@ -221,10 +226,25 @@ public class DoHeaderBussiness {
      * @param request
      * @return
      */
+    @Transactional(rollbackFor = Exception.class)
     public DoCudBaseResponse doShip(DoHeaderUpdateRequest request) {
-        WmsDoHeader wmsDoHeaderIsExist = wmsDoHeaderService.selectByPrimaryKey(request.getId());
-        if (Objects.isNull(wmsDoHeaderIsExist)) {
+        WmsDoHeader wmsDoHeaderInfo = wmsDoHeaderService.selectByPrimaryKey(request.getId());
+        if (Objects.isNull(wmsDoHeaderInfo)) {
             ErrorCode.DO_NOT_EXIST_4001.throwError();
+        }
+        if ("03".equals(wmsDoHeaderInfo.getOrderType())) {
+            //内部供应商自动创建的单据类型
+            String poId = wmsDoHeaderService.findPoId(wmsDoHeaderInfo.getId());
+            if (StringUtils.isEmpty(poId)) {
+                //未找到关联的单据id
+                ErrorCode.DO_ERROR_4002.throwError();
+            }
+            RecovicePlanAddByDoRequest recovicePlanAddByDoRequest = new RecovicePlanAddByDoRequest();
+            recovicePlanAddByDoRequest.setPoId(Long.valueOf(poId));
+            //添加数据交互指令
+            WmsIdInstantdirective wmsIdInstantdirective = wmsIdInstantdirectiveBussiness.add("PUTON", "", recovicePlanAddByDoRequest);
+            //发送消息到队列
+            wmsOmsRecovicePlanAddByDoProducer.send(wmsIdInstantdirective);
         }
         WmsDoHeader wmsDoHeader = DataConvertUtil.parseDataAsObject(request, WmsDoHeader.class);
         wmsDoHeader.setOrderStatus("40");

@@ -16,4 +16,5 @@ public interface WmsDoHeaderRepository extends BaseRepository<WmsDoHeader,Long> 
 
     List<PullReplenishmentPageQueryResponseVo> pullReplenishmentPageQuery(Map<String, Object> paramMap);
 
+    String findPoId(Long dohId);
 }

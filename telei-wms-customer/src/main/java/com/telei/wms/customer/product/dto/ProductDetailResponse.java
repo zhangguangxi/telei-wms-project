@@ -58,7 +58,7 @@ public class ProductDetailResponse {
     /** 参考成本 */
     private BigDecimal costReference;
     /** 成本币种 */
-    private Integer currencyId;
+    private Long currencyId;
     /** 建议售价 */
     private BigDecimal sellingPriceReference;
     /** 售价币种 */

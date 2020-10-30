@@ -273,7 +273,9 @@ public class LiftWorkBussiness {
         if (StringUtils.isNull(wmsInventoryList) || wmsInventoryList.isEmpty()) {
             ErrorCode.INVENTORY_ERROR_PRODUCT_NOT_EXIST_40041.throwError();
         }
-        if (wmsInventoryList.size() > 1) {
+        List<String> lcCodeList = wmsInventoryList.stream().map(WmsInventory::getLcCode).collect(Collectors.toList());
+        lcCodeList = lcCodeList.stream().distinct().collect(Collectors.toList());
+        if (lcCodeList.size() > 1) {
             ErrorCode.INVENTORY_ERROR_PRODUCT_IS_MULTIPLE_40042.throwError();
         }
         String lcCode = wmsInventoryList.get(0).getLcCode();

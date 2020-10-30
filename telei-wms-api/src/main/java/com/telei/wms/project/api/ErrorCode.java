@@ -23,6 +23,7 @@ public enum ErrorCode {
      * 出库任务
      */
     DO_NOT_EXIST_4001,
+    DO_ERROR_4002,
 
     /**
      * 业务单据

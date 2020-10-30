@@ -743,7 +743,7 @@ public class InventoryBussiness {
         }
         conditionsBuilder.eq("companyId", CustomRequestContext.getUserInfo().getCompanyId());
         conditionsBuilder.eq("warehouseId", request.getInventoryPageQueryCondition().getWarehouseId());
-        conditionsBuilder.orderBy("wl.location_id DESC");
+        conditionsBuilder.orderBy(" cp.product_no DESC");
         Map<String, Object> paramMap = conditionsBuilder.build();
         if (StringUtils.isNoneBlank(request.getInventoryPageQueryCondition().getHasLcType())) {
             paramMap.put("hasLcType", request.getInventoryPageQueryCondition().getHasLcType());

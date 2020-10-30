@@ -89,7 +89,7 @@
             </if>
 
         </where>
-         GROUP BY wl.lc_code,cp.product_no
+         GROUP BY cp.product_no,wl.lc_code
         <if test="orderBy != null">
             order by ${orderBy}
         </if>
@@ -104,7 +104,7 @@
     </select>
 
     <select id="getLcCodeByInventory" resultMap="PageQueryResultMap">
-        SELECT a.lc_code,sum(iv_qty) qty FROM wms_inventory a
+        SELECT a.lc_code,sum(big_bag_qty) qty FROM wms_inventory a
         WHERE a.company_id = #{companyId} AND a.warehouse_id = #{warehouseId}
         AND a.product_id = #{productId} AND a.lc_type = 'Z'
         GROUP BY a.lc_code

@@ -42,7 +42,7 @@ public class RoLineAddRequest {
     /** 参考成本 */
     private BigDecimal costReference;
     /** 成本币种 */
-    private Integer costReferenceCurrencyId;
+    private Long costReferenceCurrencyId;
     /** 采购单价 */
     private BigDecimal unitPrice;
     /** 计划入库数量 */
@@ -54,7 +54,7 @@ public class RoLineAddRequest {
     /** 采购金额 */
     private BigDecimal amount;
     /** 采购币种 */
-    private Integer unitPriceCurrencyId;
+    private Long unitPriceCurrencyId;
     /** 备注 */
     private String memo;
 }
