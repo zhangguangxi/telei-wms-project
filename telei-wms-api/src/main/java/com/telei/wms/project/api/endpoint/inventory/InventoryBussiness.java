@@ -1133,16 +1133,28 @@ public class InventoryBussiness {
     public InventoryChangePageQueryBussinessResponse changePageQueryInventory(InventoryChangePageQueryBussinessRequest request) {
         Pagination pagination = new Pagination(request.getPageCommonRequest().getPageNumber(), request.getPageCommonRequest().getPageSize());
         ConditionsBuilder conditionsBuilder = ConditionsBuilder.create();
-        if(Objects.nonNull(request.getInventoryChangePageQueryCondition())){
-            String startTime = request.getInventoryChangePageQueryCondition().getStartTime().split(" ")[0]+ RANGE_TIME_START;
-            String endTime = request.getInventoryChangePageQueryCondition().getEndTime().split(" ")[0] + RANGE_TIME_END;
+        InventoryChangePageQueryBussinessRequest.InventoryChangePageQueryCondition queryCondition = request.getInventoryChangePageQueryCondition();
+        if(Objects.nonNull(queryCondition)){
+            String startTime = queryCondition.getStartTime();
+            String endTime = queryCondition.getEndTime();
+            if(Objects.nonNull(startTime) && StringUtils.isNoneBlank(startTime) &&
+                Objects.nonNull(endTime) && StringUtils.isNoneBlank(endTime)
+            )
 
-            if(Objects.nonNull(startTime) && Objects.nonNull(endTime)){
+            {
+                startTime = startTime.split(" ")[0]+ RANGE_TIME_START;
+                endTime = endTime.split(" ")[0] + RANGE_TIME_END;
                 conditionsBuilder.between("createTime",startTime,endTime);
-            }else if(Objects.nonNull(startTime)){
-                conditionsBuilder.ge("createTime",startTime);
-            }else if(Objects.nonNull(endTime)){
-                conditionsBuilder.le("createTime",endTime);
+            }
+
+            if(Objects.nonNull(startTime) && StringUtils.isNoneBlank(startTime)){
+                 startTime = startTime.split(" ")[0]+ RANGE_TIME_START;
+                 conditionsBuilder.ge("createTime",startTime);
+            }
+
+            if(Objects.nonNull(endTime) && StringUtils.isNoneBlank(endTime)){
+                 endTime = endTime.split(" ")[0] + RANGE_TIME_END;
+                 conditionsBuilder.le("createTime",endTime);
             }
         }
         conditionsBuilder.orderBy("create_time desc");

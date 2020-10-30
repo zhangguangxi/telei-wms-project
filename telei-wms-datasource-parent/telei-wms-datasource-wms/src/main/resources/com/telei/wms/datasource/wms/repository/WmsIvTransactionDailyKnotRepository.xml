@@ -5,9 +5,11 @@
         select
             <include refid="Base_Column_List"/>
         from wms_iv_transaction_daily_knot
+            <where>
             <if test="createTime != null">
-                and create_time ${createTime}
+                 create_time ${createTime}
             </if>
+            </where>
             group by company_id,warehouse_id
             <if test="orderBy != null">
                 order by ${orderBy}
