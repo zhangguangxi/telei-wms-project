@@ -35,4 +35,9 @@ public class WmsAdjustHeaderPageQueryResponseVo {
     private String ivQtyAfter;
     /**备注(reason)*/
     private String reason;
+    /**
+     * 调增：调增、盘盈
+     * 调减：调减、盘亏、销毁、报损
+     * */
+    private String adjhDetailType;
 }

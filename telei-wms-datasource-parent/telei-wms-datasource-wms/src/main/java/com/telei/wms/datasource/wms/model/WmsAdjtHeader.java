@@ -23,6 +23,11 @@ public class WmsAdjtHeader implements Entity<Long> {
     private String warehouseCode;
     /** 调整类型，MOVE	移位，INCREASE 调增，REDUCE	调减，LIFTUP 升任务，LIFTDOWN 降任务 */
     private String adjhType;
+    /**
+     * 调增：调增、盘盈
+     * 调减：调减、盘亏、销毁、报损
+     * */
+    private String adjhDetailType;
     /** 库存调整状态 01-制单，20-审核，98-关闭，不展示 */
     private String ivihStatus;
     /** 业务日期 */

@@ -44,4 +44,8 @@ public class InventoryIncreaseRequest {
     @ApiModelProperty(value = "调整数量",example = "2343",position = 9)
     @Check
     private BigDecimal ivQtyAdjt;
+
+    @ApiModelProperty(value = "调整明细类型(下拉框)",example = "调增、盘盈",position = 10)
+    @Check
+    private String adjhDetailType;
 }

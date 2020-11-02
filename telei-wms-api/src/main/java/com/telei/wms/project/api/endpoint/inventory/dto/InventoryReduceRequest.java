@@ -44,4 +44,8 @@ public class InventoryReduceRequest {
     @ApiModelProperty(value = "调整数量",example = "2343",position = 9)
     @Check
     private BigDecimal ivQtyAdjt;
+
+    @ApiModelProperty(value = "调整明细类型(下拉框)",example = "调减、盘亏、销毁、报损",position = 10)
+    @Check
+    private String adjhDetailType;
 }

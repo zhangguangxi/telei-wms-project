@@ -28,4 +28,6 @@ public class InventoryReduceBussinessRequest {
     private String lcCodeAdjt;
     /** 调整数量 */
     private BigDecimal ivQtyAdjt;
+    /**调减、盘亏、销毁、报损*/
+    private String adjhDetailType;
 }

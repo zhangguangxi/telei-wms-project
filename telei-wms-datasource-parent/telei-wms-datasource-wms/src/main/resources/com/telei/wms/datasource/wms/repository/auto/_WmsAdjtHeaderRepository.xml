@@ -8,6 +8,7 @@
         <result column="warehouse_id" jdbcType="BIGINT" property="warehouseId"/>
         <result column="warehouse_code" jdbcType="VARCHAR" property="warehouseCode"/>
         <result column="adjh_type" jdbcType="VARCHAR" property="adjhType"/>
+        <result column="adjh_detail_type" jdbcType="VARCHAR" property="adjhDetailType"/>
         <result column="ivih_status" jdbcType="VARCHAR" property="ivihStatus"/>
         <result column="biz_date" jdbcType="TIMESTAMP" property="bizDate"/>
         <result column="reason" jdbcType="VARCHAR" property="reason"/>
@@ -29,12 +30,12 @@
     </resultMap>
 
     <sql id="Base_Column_List">
-        adjh_id,adjh_code,company_id,warehouse_id,warehouse_code,adjh_type,ivih_status,biz_date,reason,product_id,lc_code,iv_qty,lc_code_adjt,iv_qty_adjt,product_name,product_name_local,product_barcode,product_upc_code,big_bag_rate,mid_bag_rate,create_time,create_user,audit_time,audit_user
+        adjh_id,adjh_code,company_id,warehouse_id,warehouse_code,adjh_type,adjh_detail_type,ivih_status,biz_date,reason,product_id,lc_code,iv_qty,lc_code_adjt,iv_qty_adjt,product_name,product_name_local,product_barcode,product_upc_code,big_bag_rate,mid_bag_rate,create_time,create_user,audit_time,audit_user
     </sql>
 
     <insert id="insert">
-        insert into wms_adjt_header (adjh_id,adjh_code,company_id,warehouse_id,warehouse_code,adjh_type,ivih_status,biz_date,reason,product_id,lc_code,iv_qty,lc_code_adjt,iv_qty_adjt,product_name,product_name_local,product_barcode,product_upc_code,big_bag_rate,mid_bag_rate,create_time,create_user,audit_time,audit_user)
-        values (#{adjhId,jdbcType=BIGINT},#{adjhCode,jdbcType=VARCHAR},#{companyId,jdbcType=BIGINT},#{warehouseId,jdbcType=BIGINT},#{warehouseCode,jdbcType=VARCHAR},#{adjhType,jdbcType=VARCHAR},#{ivihStatus,jdbcType=VARCHAR},#{bizDate,jdbcType=TIMESTAMP},#{reason,jdbcType=VARCHAR},#{productId,jdbcType=BIGINT},#{lcCode,jdbcType=VARCHAR},#{ivQty,jdbcType=DECIMAL},#{lcCodeAdjt,jdbcType=VARCHAR},#{ivQtyAdjt,jdbcType=DECIMAL},#{productName,jdbcType=VARCHAR},#{productNameLocal,jdbcType=VARCHAR},#{productBarcode,jdbcType=VARCHAR},#{productUpcCode,jdbcType=VARCHAR},#{bigBagRate,jdbcType=INTEGER},#{midBagRate,jdbcType=INTEGER},#{createTime,jdbcType=TIMESTAMP},#{createUser,jdbcType=VARCHAR},#{auditTime,jdbcType=TIMESTAMP},#{auditUser,jdbcType=VARCHAR})
+        insert into wms_adjt_header (adjh_id,adjh_code,company_id,warehouse_id,warehouse_code,adjh_type,adjh_detail_type,ivih_status,biz_date,reason,product_id,lc_code,iv_qty,lc_code_adjt,iv_qty_adjt,product_name,product_name_local,product_barcode,product_upc_code,big_bag_rate,mid_bag_rate,create_time,create_user,audit_time,audit_user)
+        values (#{adjhId,jdbcType=BIGINT},#{adjhCode,jdbcType=VARCHAR},#{companyId,jdbcType=BIGINT},#{warehouseId,jdbcType=BIGINT},#{warehouseCode,jdbcType=VARCHAR},#{adjhType,jdbcType=VARCHAR},#{adjhDetailType,jdbcType=VARCHAR},#{ivihStatus,jdbcType=VARCHAR},#{bizDate,jdbcType=TIMESTAMP},#{reason,jdbcType=VARCHAR},#{productId,jdbcType=BIGINT},#{lcCode,jdbcType=VARCHAR},#{ivQty,jdbcType=DECIMAL},#{lcCodeAdjt,jdbcType=VARCHAR},#{ivQtyAdjt,jdbcType=DECIMAL},#{productName,jdbcType=VARCHAR},#{productNameLocal,jdbcType=VARCHAR},#{productBarcode,jdbcType=VARCHAR},#{productUpcCode,jdbcType=VARCHAR},#{bigBagRate,jdbcType=INTEGER},#{midBagRate,jdbcType=INTEGER},#{createTime,jdbcType=TIMESTAMP},#{createUser,jdbcType=VARCHAR},#{auditTime,jdbcType=TIMESTAMP},#{auditUser,jdbcType=VARCHAR})
     </insert>
 
     <insert id="insertSelective">
@@ -57,6 +58,9 @@
             </if>
             <if test="adjhType != null">
                 adjh_type,
+            </if>
+            <if test="adjhDetailType != null">
+                adjh_detail_type,
             </if>
             <if test="ivihStatus != null">
                 ivih_status,
@@ -132,6 +136,9 @@
             <if test="adjhType != null">
                 #{adjhType,jdbcType=VARCHAR},
             </if>
+            <if test="adjhDetailType != null">
+                #{adjhDetailType,jdbcType=VARCHAR},
+            </if>
             <if test="ivihStatus != null">
                 #{ivihStatus,jdbcType=VARCHAR},
             </if>
@@ -190,7 +197,7 @@
     </insert>
 
     <insert id="insertBatch">
-        insert into wms_adjt_header (adjh_id,adjh_code,company_id,warehouse_id,warehouse_code,adjh_type,ivih_status,biz_date,reason,product_id,lc_code,iv_qty,lc_code_adjt,iv_qty_adjt,product_name,product_name_local,product_barcode,product_upc_code,big_bag_rate,mid_bag_rate,create_time,create_user,audit_time,audit_user) values
+        insert into wms_adjt_header (adjh_id,adjh_code,company_id,warehouse_id,warehouse_code,adjh_type,adjh_detail_type,ivih_status,biz_date,reason,product_id,lc_code,iv_qty,lc_code_adjt,iv_qty_adjt,product_name,product_name_local,product_barcode,product_upc_code,big_bag_rate,mid_bag_rate,create_time,create_user,audit_time,audit_user) values
         <foreach collection="list" item="item" separator=",">
             (
             #{item.adjhId,jdbcType=BIGINT},
@@ -199,6 +206,7 @@
             #{item.warehouseId,jdbcType=BIGINT},
             #{item.warehouseCode,jdbcType=VARCHAR},
             #{item.adjhType,jdbcType=VARCHAR},
+            #{item.adjhDetailType,jdbcType=VARCHAR},
             #{item.ivihStatus,jdbcType=VARCHAR},
             #{item.bizDate,jdbcType=TIMESTAMP},
             #{item.reason,jdbcType=VARCHAR},
@@ -241,6 +249,7 @@
             warehouse_id = #{warehouseId,jdbcType=BIGINT},
             warehouse_code = #{warehouseCode,jdbcType=VARCHAR},
             adjh_type = #{adjhType,jdbcType=VARCHAR},
+            adjh_detail_type = #{adjhDetailType,jdbcType=VARCHAR},
             ivih_status = #{ivihStatus,jdbcType=VARCHAR},
             biz_date = #{bizDate,jdbcType=TIMESTAMP},
             reason = #{reason,jdbcType=VARCHAR},
@@ -280,6 +289,9 @@
             </if>
             <if test="adjhType != null">
                 adjh_type = #{adjhType,jdbcType=VARCHAR},
+            </if>
+            <if test="adjhDetailType != null">
+                adjh_detail_type = #{adjhDetailType,jdbcType=VARCHAR},
             </if>
             <if test="ivihStatus != null">
                 ivih_status = #{ivihStatus,jdbcType=VARCHAR},
@@ -357,6 +369,9 @@
                 </if>
                 <if test="item.adjhType != null">
                     adjh_type = #{item.adjhType,jdbcType=VARCHAR},
+                </if>
+                <if test="item.adjhDetailType != null">
+                    adjh_detail_type = #{item.adjhDetailType,jdbcType=VARCHAR},
                 </if>
                 <if test="item.ivihStatus != null">
                     ivih_status = #{item.ivihStatus,jdbcType=VARCHAR},
@@ -463,6 +478,9 @@
             <if test="adjhType != null">
                 and adjh_type=#{adjhType,jdbcType=VARCHAR}
             </if>
+            <if test="adjhDetailType != null">
+                and adjh_detail_type=#{adjhDetailType,jdbcType=VARCHAR}
+            </if>
             <if test="ivihStatus != null">
                 and ivih_status=#{ivihStatus,jdbcType=VARCHAR}
             </if>
@@ -542,6 +560,9 @@
             </if>
             <if test="adjhType != null">
                 and adjh_type ${adjhType}
+            </if>
+            <if test="adjhDetailType != null">
+                and adjh_detail_type ${adjhDetailType}
             </if>
             <if test="ivihStatus != null">
                 and ivih_status ${ivihStatus}

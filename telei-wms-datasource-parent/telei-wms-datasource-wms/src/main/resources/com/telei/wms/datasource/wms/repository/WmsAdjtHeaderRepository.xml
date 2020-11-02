@@ -6,6 +6,7 @@
         wa.create_time,
         wa.adjh_code,
         wa.adjh_type,
+        wa.adjh_detail_type,
         cp.product_no,
         cp.product_name,
         cp.product_barcode,
