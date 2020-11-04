@@ -56,19 +56,14 @@ public class PullReplenishmentBussiness {
         if (StringUtils.isNotNull(request.getWarehouseId())) {
             conditionsBuilder.eq("warehouseId", request.getWarehouseId());
         }
-        if (StringUtils.isNotNull(request.getProductCategoryId())) {
-            // 1=未分类
-            if (request.getProductCategoryId().equals(1L)) {
-                conditionsBuilder.eq("productCategoryId", 1);
-            } else {
-                // 根据产品id列表获取产品列表信息
-                ProductCategoryRequest productCategoryRequest = new ProductCategoryRequest();
-                productCategoryRequest.setPCategoryIds(Lists.newArrayList(request.getProductCategoryId()));
-                ApiResponse detailResponse = productFeignClient.productCategoryListQuery(productCategoryRequest);
-                ProductCategoryResponse response = JSON.parseObject(JSON.toJSONString(detailResponse.getData()), ProductCategoryResponse.class);
-                if (response.getPCategoryIds().size() > 0) {
-                    conditionsBuilder.in("productCategoryId", response.getPCategoryIds());
-                }
+        if (StringUtils.isNotNull(request.getProductCategoryIds())) {
+            // 根据产品id列表获取产品列表信息
+            ProductCategoryRequest productCategoryRequest = new ProductCategoryRequest();
+            productCategoryRequest.setProductCategoryIds(request.getProductCategoryIds());
+            ApiResponse detailResponse = productFeignClient.productCategoryListQuery(productCategoryRequest);
+            ProductCategoryResponse response = JSON.parseObject(JSON.toJSONString(detailResponse.getData()), ProductCategoryResponse.class);
+            if (response.getPCategoryIds().size() > 0) {
+                conditionsBuilder.in("productCategoryId", response.getPCategoryIds());
             }
         }
         if (StringUtils.isNoneBlank(request.getProductName())) {
@@ -114,19 +109,14 @@ public class PullReplenishmentBussiness {
         if (StringUtils.isNotNull(businessPageQueryRequest.getWarehouseId())) {
             conditionsBuilder.eq("warehouseId", businessPageQueryRequest.getWarehouseId());
         }
-        if (StringUtils.isNotNull(businessPageQueryRequest.getProductCategoryId())) {
-            // 1=未分类
-            if (businessPageQueryRequest.getProductCategoryId().equals(1L)) {
-                conditionsBuilder.eq("productCategoryId", 1);
-            } else {
-                // 根据产品id列表获取产品列表信息
-                ProductCategoryRequest productCategoryRequest = new ProductCategoryRequest();
-                productCategoryRequest.setPCategoryIds(Lists.newArrayList(businessPageQueryRequest.getProductCategoryId()));
-                ApiResponse detailResponse = productFeignClient.productCategoryListQuery(productCategoryRequest);
-                ProductCategoryResponse response = JSON.parseObject(JSON.toJSONString(detailResponse.getData()), ProductCategoryResponse.class);
-                if (response.getPCategoryIds().size() > 0) {
-                    conditionsBuilder.in("productCategoryId", response.getPCategoryIds());
-                }
+        if (StringUtils.isNotNull(businessPageQueryRequest.getProductCategoryIds())) {
+            // 根据产品id列表获取产品列表信息
+            ProductCategoryRequest productCategoryRequest = new ProductCategoryRequest();
+            productCategoryRequest.setProductCategoryIds(Lists.newArrayList(businessPageQueryRequest.getProductCategoryIds()));
+            ApiResponse detailResponse = productFeignClient.productCategoryListQuery(productCategoryRequest);
+            ProductCategoryResponse response = JSON.parseObject(JSON.toJSONString(detailResponse.getData()), ProductCategoryResponse.class);
+            if (response.getPCategoryIds().size() > 0) {
+                conditionsBuilder.in("productCategoryId", response.getPCategoryIds());
             }
         }
         if (StringUtils.isNoneBlank(businessPageQueryRequest.getProductName())) {

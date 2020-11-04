@@ -1,5 +1,6 @@
 package com.telei.wms.project.api.endpoint.doHeader;
 
+import com.alibaba.fastjson.JSON;
 import com.nuochen.framework.autocoding.domain.Pagination;
 import com.nuochen.framework.autocoding.domain.condition.ConditionsBuilder;
 import com.telei.infrastructure.component.commons.CustomRequestContext;
@@ -21,6 +22,7 @@ import com.telei.wms.project.api.amqp.producer.WmsOmsShipPlanCancelCallbackProdu
 import com.telei.wms.project.api.endpoint.doHeader.dto.*;
 import com.telei.wms.project.api.endpoint.wmsIdInstantdirective.WmsIdInstantdirectiveBussiness;
 import com.telei.wms.project.api.utils.DataConvertUtil;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -35,6 +37,7 @@ import static com.telei.infrastructure.component.commons.utils.LockMapUtil.*;
  * @Date: 2020/8/19 17:05
  */
 @Service
+@Slf4j
 public class DoHeaderBussiness {
 
     //删除
@@ -228,6 +231,7 @@ public class DoHeaderBussiness {
      */
     @Transactional(rollbackFor = Exception.class)
     public DoCudBaseResponse doShip(DoHeaderUpdateRequest request) {
+        log.debug("*************doShip" + JSON.toJSONString(request));
         WmsDoHeader wmsDoHeaderInfo = wmsDoHeaderService.selectByPrimaryKey(request.getId());
         if (Objects.isNull(wmsDoHeaderInfo)) {
             ErrorCode.DO_NOT_EXIST_4001.throwError();
@@ -241,6 +245,7 @@ public class DoHeaderBussiness {
             }
             RecovicePlanAddByDoRequest recovicePlanAddByDoRequest = new RecovicePlanAddByDoRequest();
             recovicePlanAddByDoRequest.setPoId(Long.valueOf(poId));
+            log.debug("*************recovicePlanAddByDoRequest" + JSON.toJSONString(recovicePlanAddByDoRequest));
             //添加数据交互指令
             WmsIdInstantdirective wmsIdInstantdirective = wmsIdInstantdirectiveBussiness.add("PUTON", "", recovicePlanAddByDoRequest);
             //发送消息到队列

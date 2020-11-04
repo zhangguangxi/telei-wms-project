@@ -11,6 +11,6 @@ import java.util.List;
 @Data
 public class ProductCategoryRequest {
 
-    private List<Long> pCategoryIds;
+    private List<Long> productCategoryIds;
 
 }

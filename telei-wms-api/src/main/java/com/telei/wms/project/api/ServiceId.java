@@ -215,6 +215,9 @@ public class ServiceId {
     @RightResource(rightSystem = "wms", rightItem = "升降任务", rightFunction = "查询产品对应库位信息")
     public static final String WMS_LIFT_WORK_INFO = "1031005";
 
+    @RightResource(rightSystem = "wms", rightItem = "升降任务", rightFunction = "批量新增升降任务")
+    public static final String WMS_LIFT_WORK_BATCH_ADD = "1031006";
+
     /**
      * 升降任务
      * 11

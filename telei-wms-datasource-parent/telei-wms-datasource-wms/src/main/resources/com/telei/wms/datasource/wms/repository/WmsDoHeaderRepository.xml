@@ -280,10 +280,11 @@
 
     <select id="findPoId" resultType="java.lang.String">
         SELECT
-        cust_order_no
+        oso.cust_order_no
         FROM wms_do_header wdh
         INNER JOIN oms.oms_sale_order oso ON oso.so_id = wdh.so_id
         WHERE wdh.doh_id = #{dohId}
+        LIMIT 1
     </select>
 
 </mapper>

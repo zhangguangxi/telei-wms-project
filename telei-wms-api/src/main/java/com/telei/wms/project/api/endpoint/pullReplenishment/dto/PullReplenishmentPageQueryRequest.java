@@ -3,6 +3,8 @@ package com.telei.wms.project.api.endpoint.pullReplenishment.dto;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 
+import java.util.List;
+
 /**
  * 拉式补货分页查询Request
  */
@@ -27,8 +29,8 @@ public class PullReplenishmentPageQueryRequest {
     @ApiModelProperty(value = "供应商", example = "供应商")
     private String supplierName;
 
-    @ApiModelProperty(value = "产品分类id", example = "1")
-    private Long productCategoryId;
+    @ApiModelProperty(value = "产品分类id", example = "[1,1]")
+    private List<Long> productCategoryIds;
 
     @ApiModelProperty(value = "产品分类名称", example = "1")
     private String productCategoryName;

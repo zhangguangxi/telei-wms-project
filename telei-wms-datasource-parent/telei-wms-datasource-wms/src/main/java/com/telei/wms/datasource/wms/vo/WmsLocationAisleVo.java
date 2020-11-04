@@ -12,22 +12,30 @@ public class WmsLocationAisleVo {
     private String lcX1;
     private String lcY1;
     private String lcZ1;
+    /**产品分类数量*/
     private Integer productCount1;
+    /**产品库存*/
     private Integer qty1;
-    private String realLc1;
+    /**库存类型 S：样品库位 Z：高库位*/
+    private String lcType1;
 
     private String lcX2;
     private String lcY2;
     private String lcZ2;
+    /**产品分类数量*/
     private Integer productCount2;
+    /**产品库存*/
     private Integer qty2;
-    private String realLc2;
+    /**库存类型 S：样品库位 Z：高库位*/
+    private String lcType2;
 
     private String lcX3;
     private String lcY3;
     private String lcZ3;
+    /**产品分类数量*/
     private Integer productCount3;
+    /**产品库存*/
     private Integer qty3;
-    private String realLc3;
-
+    /**库存类型 S：样品库位 Z：高库位*/
+    private String lcType3;
 }

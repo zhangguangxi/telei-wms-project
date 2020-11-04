@@ -63,4 +63,6 @@ public class LiftWorkBusinessRequest {
 
     private List<LiftWorkCommonRequest> updateRequestList;
 
+    private List<LiftWorkCommonRequest> addRequestList;
+
 }

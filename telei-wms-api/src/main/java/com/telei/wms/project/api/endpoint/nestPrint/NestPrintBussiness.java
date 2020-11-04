@@ -26,8 +26,6 @@ import java.math.BigDecimal;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
-import java.util.function.Function;
-import java.util.stream.Collectors;
 
 /**
  * @author: leo
@@ -230,19 +228,12 @@ public class NestPrintBussiness {
             ErrorCode.DO_NOT_EXIST_4001.throwError();
         }
         List<DoLineResponseVo> wmsDoLineList = wmsDoLineService.findAll(request.getId(), wmsDoHeader.getCompanyId());
-        List<Long> idList = wmsDoLineList.stream().map(DoLineResponseVo::getId).collect(Collectors.toList());
-        List<WmsPloLine> wmsPloLines = wmsPloLineService.selectByDolIdList(idList);
-        if(Objects.isNull(wmsPloLines) || wmsPloLines.isEmpty()){
-            ErrorCode.NEST_CHECK_PRINT_4002.throwError(JSON.toJSONString(request.getId()),JSON.toJSONString(idList));
-        }
-        Map<Long, WmsPloLine> paolineMap = wmsPloLines.stream().collect(Collectors.toMap(WmsPloLine::getDolId, Function.identity()));
         List<NestCheckPrintDetailBussinessResponse.NestDoPrintDetailLine> list = Lists.newArrayList();
         wmsDoLineList.stream().forEach(item->{
             NestCheckPrintDetailBussinessResponse.NestDoPrintDetailLine line = new NestCheckPrintDetailBussinessResponse.NestDoPrintDetailLine();
             line.setProductNo(item.getProductNo());
             line.setBigBagQty(item.getBigBagQty().intValue());
             line.setBigBagRate(item.getBigBagRate().intValue());
-            line.setLcCode(paolineMap.get(item.getId()).getLcCode());
             list.add(line);
         });
         NestCheckPrintDetailBussinessResponse response = new NestCheckPrintDetailBussinessResponse();

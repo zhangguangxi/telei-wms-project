@@ -47,15 +47,15 @@ public class LiftWorkCommonRequest {
     @ApiModelProperty(value = "UPC码",example = "12345678",position = 7)
     private String productUpcCode;
 
+    @ApiModelProperty(value = "大包转换数",example = "12345678",position = 7)
+    @Check
+    private BigDecimal bigBagRate;
+
     @ApiModelProperty(value = "数量",example = "12345678",position = 7)
     private BigDecimal liftQty;
 
     @ApiModelProperty(value = "大包数量",example = "12345678",position = 7)
     private BigDecimal bigBagQty;
-
-    @ApiModelProperty(value = "大包转换数",example = "12345678",position = 7)
-    @Check
-    private BigDecimal bigBagRate;
 
     @ApiModelProperty(value = "大包剩余数量",example = "12345678",position = 7)
     private BigDecimal bigBagExtraQty;

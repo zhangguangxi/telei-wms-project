@@ -11,7 +11,8 @@
     <select id="getLcCodeByLocation" resultType="java.lang.String">
         SELECT a.lc_code FROM wms_location a LEFT outer JOIN
         (SELECT warehouse_code,lc_code,lc_type FROM wms_inventory) as b
-        ON a.lc_code=b.lc_code where b.lc_code IS NULL AND a.lc_type = 'Z'
+        ON a.lc_code=b.lc_code where b.lc_code IS NULL AND a.warehouse_id = #{warehouseId} AND a.lc_type = 'Z'
+        AND a.lc_code NOT in (SELECT distinct wlw.sample_lc_code FROM wms_lift_work wlw WHERE wlw.lift_status = 10)
         GROUP BY a.lc_code
         ORDER BY ABS(CONVERT(replace(replace(a.lc_code,'Z',''),'-',''), SIGNED)-#{lcCode})
         LIMIT 1;

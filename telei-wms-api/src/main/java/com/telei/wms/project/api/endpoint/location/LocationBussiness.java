@@ -324,7 +324,7 @@ public class LocationBussiness {
         if (StringUtils.isNoneBlank(businessRequest.getLcAisle())) {
             conditionsBuilder.eq("lcAisle", businessRequest.getLcAisle());
         }
-        conditionsBuilder.eq("companyId", CustomRequestContext.getUserInfo().getCompanyId());
+        conditionsBuilder.eq("companyId", 1030901707577493504L);//CustomRequestContext.getUserInfo().getCompanyId()
         Map<String, Object> paramMap = conditionsBuilder.build();
         paramMap.put("orderBy", " wl.lc_aisle,wl.lc_x,wl.lc_y,wl.lc_z");
         List<WmsLocationVo> locationList = wmsLocationService.queryLcLocationByLcAisle(paramMap);
@@ -339,8 +339,8 @@ public class LocationBussiness {
          * 组装通道个数
          * 默认还原通道示意图
          */
-        int lcxcount = 64;
-        for (int i = 0; i < lcxcount; i++) {
+        int lcxCount = 64;
+        for (int i = 0; i < lcxCount; i++) {
             if (i < 9) {
                 lcxlist.add("0" + (i + 1));
             } else {
@@ -383,21 +383,21 @@ public class LocationBussiness {
                                     locationAisleVo.setLcZ1(wmsLocationVos.get(0).getLcZ());
                                     locationAisleVo.setProductCount1(wmsLocationVos.get(0).getProductCount());
                                     locationAisleVo.setQty1(wmsLocationVos.get(0).getQty());
-                                    locationAisleVo.setRealLc1("Y");
+                                    locationAisleVo.setLcType1(wmsLocationVos.get(0).getLcCode());
 
                                     locationAisleVo.setLcX2(lcxlist.get(j));
                                     locationAisleVo.setLcY2("" + i);
                                     locationAisleVo.setLcZ2(wmsLocationVos.get(1).getLcZ());
                                     locationAisleVo.setProductCount2(wmsLocationVos.get(1).getProductCount());
                                     locationAisleVo.setQty2(wmsLocationVos.get(1).getQty());
-                                    locationAisleVo.setRealLc2("Y");
+                                    locationAisleVo.setLcType2(wmsLocationVos.get(1).getLcCode());
 
                                     locationAisleVo.setLcX3(lcxlist.get(j));
                                     locationAisleVo.setLcY3("" + i);
                                     locationAisleVo.setLcZ3(wmsLocationVos.get(2).getLcZ());
                                     locationAisleVo.setProductCount3(wmsLocationVos.get(2).getProductCount());
                                     locationAisleVo.setQty3(wmsLocationVos.get(2).getQty());
-                                    locationAisleVo.setRealLc3("Y");
+                                    locationAisleVo.setLcType3(wmsLocationVos.get(2).getLcCode());
                                     locationAisleVoList.add(locationAisleVo);
                                 }
                             }
@@ -411,21 +411,21 @@ public class LocationBussiness {
                                     locationAisleVo.setLcZ1(wmsLocationVos.get(0).getLcZ());
                                     locationAisleVo.setProductCount1(wmsLocationVos.get(0).getProductCount());
                                     locationAisleVo.setQty1(wmsLocationVos.get(0).getQty());
-                                    locationAisleVo.setRealLc1("Y");
+                                    locationAisleVo.setLcType1(wmsLocationVos.get(0).getLcCode());
 
                                     locationAisleVo.setLcX2(lcxlist.get(j));
                                     locationAisleVo.setLcY2("" + i);
                                     locationAisleVo.setLcZ2(wmsLocationVos.get(1).getLcZ());
                                     locationAisleVo.setProductCount2(wmsLocationVos.get(1).getProductCount());
                                     locationAisleVo.setQty2(wmsLocationVos.get(1).getQty());
-                                    locationAisleVo.setRealLc2("Y");
+                                    locationAisleVo.setLcType2(wmsLocationVos.get(1).getLcCode());
 
                                     locationAisleVo.setLcX3(lcxlist.get(j));
                                     locationAisleVo.setLcY3("" + i);
                                     locationAisleVo.setLcZ3(wmsLocationVos.get(2).getLcZ());
                                     locationAisleVo.setProductCount3(wmsLocationVos.get(2).getProductCount());
                                     locationAisleVo.setQty3(wmsLocationVos.get(2).getQty());
-                                    locationAisleVo.setRealLc3("Y");
+                                    locationAisleVo.setLcType3(wmsLocationVos.get(2).getLcCode());
                                     locationAisleVoList.add(locationAisleVo);
                                 }
                             }
@@ -457,51 +457,59 @@ public class LocationBussiness {
         if (index % 2 == 0) {
             for (int i = 5; i > 0; i--) {
                 WmsLocationAisleVo locationAisleVo = new WmsLocationAisleVo();
+                String lcType = "Z";
+                if (i < 4) {
+                    lcType = "S";
+                }
                 locationAisleVo.setLcX1(lcX);
                 locationAisleVo.setLcY1("" + i);
                 locationAisleVo.setLcZ1("1");
                 locationAisleVo.setProductCount1(0);
                 locationAisleVo.setQty1(0);
-                locationAisleVo.setRealLc1("N");
+                locationAisleVo.setLcType1(lcType);
 
                 locationAisleVo.setLcX2(lcX);
                 locationAisleVo.setLcY2("" + i);
                 locationAisleVo.setLcZ2("2");
                 locationAisleVo.setProductCount2(0);
                 locationAisleVo.setQty2(0);
-                locationAisleVo.setRealLc2("N");
+                locationAisleVo.setLcType2(lcType);
 
                 locationAisleVo.setLcX3(lcX);
                 locationAisleVo.setLcY3("" + i);
                 locationAisleVo.setLcZ3("3");
                 locationAisleVo.setProductCount3(0);
                 locationAisleVo.setQty3(0);
-                locationAisleVo.setRealLc3("N");
+                locationAisleVo.setLcType3(lcType);
                 locationAisleVoList.add(locationAisleVo);
             }
         } else {
             for (int i = 1; i <= 5; i++) {
+                String lcType = "Z";
+                if (i < 4) {
+                    lcType = "S";
+                }
                 WmsLocationAisleVo locationAisleVo = new WmsLocationAisleVo();
                 locationAisleVo.setLcX1(lcX);
                 locationAisleVo.setLcY1("" + i);
                 locationAisleVo.setLcZ1("1");
                 locationAisleVo.setProductCount1(0);
                 locationAisleVo.setQty1(0);
-                locationAisleVo.setRealLc1("N");
+                locationAisleVo.setLcType1(lcType);
 
                 locationAisleVo.setLcX2(lcX);
                 locationAisleVo.setLcY2("" + i);
                 locationAisleVo.setLcZ2("2");
                 locationAisleVo.setProductCount2(0);
                 locationAisleVo.setQty2(0);
-                locationAisleVo.setRealLc2("N");
+                locationAisleVo.setLcType2(lcType);
 
                 locationAisleVo.setLcX3(lcX);
                 locationAisleVo.setLcY3("" + i);
                 locationAisleVo.setLcZ3("3");
                 locationAisleVo.setProductCount3(0);
                 locationAisleVo.setQty3(0);
-                locationAisleVo.setRealLc3("N");
+                locationAisleVo.setLcType3(lcType);
                 locationAisleVoList.add(locationAisleVo);
             }
         }

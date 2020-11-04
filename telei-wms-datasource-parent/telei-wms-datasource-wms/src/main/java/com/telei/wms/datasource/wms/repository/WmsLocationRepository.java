@@ -12,7 +12,7 @@ import java.util.Map;
 @Repository
 public interface WmsLocationRepository extends BaseRepository<WmsLocation,Long> {
 
-    String getLcCodeByLocation(Integer lcCode);
+    String getLcCodeByLocation(@Param("warehouseId") Long warehouseId, @Param("lcCode") Integer lcCode);
 
     WmsLocation getCompanyLcCodeByLocation(@Param("lcCode") String lcCode, @Param("warehouseId") Long warehouseId);
 

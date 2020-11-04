@@ -98,20 +98,16 @@ public class LiftTaskBussiness {
                 String prepLcCode = "";
                 int lcCodeNumber = Integer.parseInt(lcCode.replace("-", "").replace("S", ""));
                 if ("RISE".equals(responseVo.getLcType())) {
-                    prepLcCode = wmsLocationService.getLcCodeByLocation(lcCodeNumber);
+                    prepLcCode = wmsLocationService.getLcCodeByLocation(responseVo.getWarehouseId(), lcCodeNumber);
                     if (StringUtils.isBlank(prepLcCode)) {
-                        ErrorCode.LIFT_WORK_PREP_LC_CODE_IS_NULL_4005.throwError();
+                        ErrorCode.LIFT_WORK_PREP_LC_CODE_IS_NULL_4005.throwError("升货");
                     }
                 } else if ("DROP".equals(responseVo.getLcType())) {
                     WmsInventoryVo inventoryVo = wmsInventoryService.getLcCodeByInventory(responseVo.getProductId(), responseVo.getWarehouseId(), CustomRequestContext.getUserInfo().getCompanyId(), lcCodeNumber);
                     if (inventoryVo == null) {
-                        ErrorCode.LIFT_WORK_PREP_LC_CODE_IS_NULL_4005.throwError();
+                        ErrorCode.LIFT_WORK_PREP_LC_CODE_IS_NULL_4005.throwError("降货");
                     } else {
                         prepLcCode = inventoryVo.getLcCode();
-                        wmsLiftWork.setLiftQty(inventoryVo.getQty());
-                        BigDecimal[] big = inventoryVo.getQty().divideAndRemainder(responseVo.getBigBagRate());
-                        wmsLiftWork.setBigBagQty(big[0]);
-                        wmsLiftWork.setBigBagExtraQty(big[1]);
                     }
                 }
                 wmsLiftWork.setLiftType(responseVo.getLcType());

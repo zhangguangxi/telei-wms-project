@@ -3,6 +3,8 @@ package com.telei.wms.project.api.endpoint.pullReplenishment.dto;
 
 import lombok.Data;
 
+import java.util.List;
+
 /**
  * @author gongrp
  * @date 2020/6/10 16:52
@@ -37,7 +39,7 @@ public class PullReplenishmentBusinessPageQueryRequest {
     /**
      * 产品分类id
      */
-    private Long productCategoryId;
+    private List<Long> productCategoryIds;
 
     /**
      * 产品分类名称

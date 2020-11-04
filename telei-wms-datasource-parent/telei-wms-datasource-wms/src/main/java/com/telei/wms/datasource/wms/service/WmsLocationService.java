@@ -14,16 +14,16 @@ import java.util.List;
 import java.util.Map;
 
 @Service
-public class WmsLocationService extends BaseService<WmsLocationRepository,WmsLocation,Long> {
+public class WmsLocationService extends BaseService<WmsLocationRepository, WmsLocation, Long> {
 
     @Autowired
     private WmsLocationRepository wmsLocationRepository;
 
-    public String getLcCodeByLocation(Integer lcCode){
-        return wmsLocationRepository.getLcCodeByLocation(lcCode);
+    public String getLcCodeByLocation(Long warehouseId, Integer lcCode) {
+        return wmsLocationRepository.getLcCodeByLocation(warehouseId, lcCode);
     }
 
-    public WmsLocation getCompanyLcCodeByLocation(String lcCode, Long warehouseId){
+    public WmsLocation getCompanyLcCodeByLocation(String lcCode, Long warehouseId) {
         return wmsLocationRepository.getCompanyLcCodeByLocation(lcCode, warehouseId);
     }
 
