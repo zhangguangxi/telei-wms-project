@@ -7,6 +7,7 @@ import com.nuochen.framework.autocoding.domain.Pagination;
 import com.nuochen.framework.autocoding.domain.mybatis.BaseService;
 import com.telei.wms.datasource.wms.model.WmsInventory;
 import com.telei.wms.datasource.wms.repository.WmsInventoryRepository;
+import com.telei.wms.datasource.wms.vo.InventoryLocationResponseVo;
 import com.telei.wms.datasource.wms.vo.LiftTaskPageQueryResponseVo;
 import com.telei.wms.datasource.wms.vo.WmsInventoryPageQueryResponseVo;
 import com.telei.wms.datasource.wms.vo.WmsInventoryVo;
@@ -52,4 +53,19 @@ public class WmsInventoryService extends BaseService<WmsInventoryRepository,WmsI
         wmsInventoryRepository.doIvSnapshotSchedule(idNumber, serverNo, snapshotTime, snapshotLcTime);
     }
 
+    public List<InventoryLocationResponseVo> findExistLocationByLcCode(List<String> lcCodes) {
+        return wmsInventoryRepository.findExistLocationByLcCode(lcCodes);
+    }
+
+    public List<InventoryLocationResponseVo> findLocationAll(Long companyId, Long warehouseId, List<Long> productIds) {
+        return wmsInventoryRepository.findLocationAll(companyId, warehouseId, productIds);
+    }
+
+    public List<InventoryLocationResponseVo> findHistoryLocationAll(Long companyId, Long warehouseId, List<Long> productIds) {
+        return wmsInventoryRepository.findHistoryLocationAll(companyId, warehouseId, productIds);
+    }
+
+    public List<InventoryLocationResponseVo> findExistLocationByProductId(Long companyId, Long warehouseId, List<Long> productIds) {
+        return wmsInventoryRepository.findExistLocationByProductId(companyId, warehouseId, productIds);
+    }
 }

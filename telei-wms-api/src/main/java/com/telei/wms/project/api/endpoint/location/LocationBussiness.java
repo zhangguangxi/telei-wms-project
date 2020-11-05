@@ -156,16 +156,15 @@ public class LocationBussiness {
         if (StringUtils.isNoneBlank(request.getLcType())) {
             conditionsBuilder.eq("lcType", request.getLcType());
         }
-        if (StringUtils.isNoneBlank(request.getWarehouseCode())) {
+        Pagination page = new Pagination(request.getPageNumber(), request.getPageSize());
+        if (StringUtils.isNoneBlank(request.getWarehouseCode()) && StringUtils.isNotNull(request.getWarehouseId())) {
             conditionsBuilder.eq("warehouseCode", request.getWarehouseCode());
-        }
-        if (StringUtils.isNotNull(request.getWarehouseId())) {
             conditionsBuilder.eq("warehouseId", request.getWarehouseId());
+            Map<String, Object> paramMap = conditionsBuilder.build();
+            paramMap.put("orderBy", " location_id DESC");
+            paramMap.put("lcLock", request.getLcLock());
+            page = (Pagination) wmsLocationService.findAll(pagination, paramMap);
         }
-        Map<String, Object> paramMap = conditionsBuilder.build();
-        paramMap.put("orderBy", " location_id DESC");
-        paramMap.put("lcLock", request.getLcLock());
-        Pagination page = (Pagination) wmsLocationService.findAll(pagination, paramMap);
         LocationBusinessPageQueryResponse response = new LocationBusinessPageQueryResponse();
         response.setPage(page);
         return response;
@@ -324,7 +323,7 @@ public class LocationBussiness {
         if (StringUtils.isNoneBlank(businessRequest.getLcAisle())) {
             conditionsBuilder.eq("lcAisle", businessRequest.getLcAisle());
         }
-        conditionsBuilder.eq("companyId", 1030901707577493504L);//CustomRequestContext.getUserInfo().getCompanyId()
+        conditionsBuilder.eq("companyId", CustomRequestContext.getUserInfo().getCompanyId());
         Map<String, Object> paramMap = conditionsBuilder.build();
         paramMap.put("orderBy", " wl.lc_aisle,wl.lc_x,wl.lc_y,wl.lc_z");
         List<WmsLocationVo> locationList = wmsLocationService.queryLcLocationByLcAisle(paramMap);
@@ -349,96 +348,54 @@ public class LocationBussiness {
         }
         List<WmsLocationVo> wmsLocationVoList = new ArrayList<>();
         if (Objects.nonNull(locationList) && !locationList.isEmpty()) {
+            // 循环64个通道
             for (int j = 0; j < lcxlist.size(); j++) {
                 WmsLocationVo wmsLocationVo = new WmsLocationVo();
                 wmsLocationVo.setLcX(lcxlist.get(j));
                 List<WmsLocationAisleVo> locationAisleVoList = new ArrayList<>();
-                for (WmsLocationVo locationVo : locationList) {
-                    if (locationVo.getLcX().equals(lcxlist.get(j))) {
-                        List<WmsLocationVo> locationVoList = loListMap.get(locationVo.getLcX());
-                        // 将相同层的数据拼接成新数组 每3个一循环
-                        String lcY = locationVoList.get(0).getLcY();
-                        Map<String, List<WmsLocationVo>> lcymap = new HashMap<>();
-                        List<WmsLocationVo> lcylist = new ArrayList<>();
-                        for (int i = 0; i < locationVoList.size(); i++) {
-                            if (locationVoList.get(i).getLcY().equals(lcY)) {
-                                lcylist.add(locationVoList.get(i));
-                                if (i == locationVoList.size() - 1) {
-                                    lcymap.put(lcY, lcylist);
-                                }
-                            } else {
+                // 获取当前通道的数据
+                List<WmsLocationVo> locationVoList = loListMap.get(lcxlist.get(j));
+                if (!locationVoList.isEmpty()) {
+                    // 将相同层的数据拼接成新数组 每3个一循环
+                    String lcY = locationVoList.get(0).getLcY();
+                    Map<String, List<WmsLocationVo>> lcymap = new HashMap<>();
+                    List<WmsLocationVo> lcylist = new ArrayList<>();
+                    for (int i = 0; i < locationVoList.size(); i++) {
+                        // 判断是否为相同层 相同层的数据放在一个Map
+                        if (locationVoList.get(i).getLcY().equals(lcY)) {
+                            lcylist.add(locationVoList.get(i));
+                            // 判断是否为最后一个数据
+                            if (i == locationVoList.size() - 1) {
                                 lcymap.put(lcY, lcylist);
-                                lcylist = new ArrayList<>();
-                                lcylist.add(locationVoList.get(i));
-                                lcY = locationVoList.get(i).getLcY();
-                            }
-                        }
-                        if (j % 2 == 0) {
-                            for (int i = 5; i > 0; i--) {
-                                List<WmsLocationVo> wmsLocationVos = lcymap.get("" + i);
-                                if (wmsLocationVos.size() == 3) {
-                                    WmsLocationAisleVo locationAisleVo = new WmsLocationAisleVo();
-                                    locationAisleVo.setLcX1(lcxlist.get(j));
-                                    locationAisleVo.setLcY1("" + i);
-                                    locationAisleVo.setLcZ1(wmsLocationVos.get(0).getLcZ());
-                                    locationAisleVo.setProductCount1(wmsLocationVos.get(0).getProductCount());
-                                    locationAisleVo.setQty1(wmsLocationVos.get(0).getQty());
-                                    locationAisleVo.setLcType1(wmsLocationVos.get(0).getLcCode());
-
-                                    locationAisleVo.setLcX2(lcxlist.get(j));
-                                    locationAisleVo.setLcY2("" + i);
-                                    locationAisleVo.setLcZ2(wmsLocationVos.get(1).getLcZ());
-                                    locationAisleVo.setProductCount2(wmsLocationVos.get(1).getProductCount());
-                                    locationAisleVo.setQty2(wmsLocationVos.get(1).getQty());
-                                    locationAisleVo.setLcType2(wmsLocationVos.get(1).getLcCode());
-
-                                    locationAisleVo.setLcX3(lcxlist.get(j));
-                                    locationAisleVo.setLcY3("" + i);
-                                    locationAisleVo.setLcZ3(wmsLocationVos.get(2).getLcZ());
-                                    locationAisleVo.setProductCount3(wmsLocationVos.get(2).getProductCount());
-                                    locationAisleVo.setQty3(wmsLocationVos.get(2).getQty());
-                                    locationAisleVo.setLcType3(wmsLocationVos.get(2).getLcCode());
-                                    locationAisleVoList.add(locationAisleVo);
-                                }
                             }
                         } else {
-                            for (int i = 1; i <= 5; i++) {
-                                List<WmsLocationVo> wmsLocationVos = lcymap.get("" + i);
-                                if (wmsLocationVos.size() == 3) {
-                                    WmsLocationAisleVo locationAisleVo = new WmsLocationAisleVo();
-                                    locationAisleVo.setLcX1(lcxlist.get(j));
-                                    locationAisleVo.setLcY1("" + i);
-                                    locationAisleVo.setLcZ1(wmsLocationVos.get(0).getLcZ());
-                                    locationAisleVo.setProductCount1(wmsLocationVos.get(0).getProductCount());
-                                    locationAisleVo.setQty1(wmsLocationVos.get(0).getQty());
-                                    locationAisleVo.setLcType1(wmsLocationVos.get(0).getLcCode());
-
-                                    locationAisleVo.setLcX2(lcxlist.get(j));
-                                    locationAisleVo.setLcY2("" + i);
-                                    locationAisleVo.setLcZ2(wmsLocationVos.get(1).getLcZ());
-                                    locationAisleVo.setProductCount2(wmsLocationVos.get(1).getProductCount());
-                                    locationAisleVo.setQty2(wmsLocationVos.get(1).getQty());
-                                    locationAisleVo.setLcType2(wmsLocationVos.get(1).getLcCode());
-
-                                    locationAisleVo.setLcX3(lcxlist.get(j));
-                                    locationAisleVo.setLcY3("" + i);
-                                    locationAisleVo.setLcZ3(wmsLocationVos.get(2).getLcZ());
-                                    locationAisleVo.setProductCount3(wmsLocationVos.get(2).getProductCount());
-                                    locationAisleVo.setQty3(wmsLocationVos.get(2).getQty());
-                                    locationAisleVo.setLcType3(wmsLocationVos.get(2).getLcCode());
-                                    locationAisleVoList.add(locationAisleVo);
-                                }
+                            lcymap.put(lcY, lcylist);
+                            lcylist = new ArrayList<>();
+                            lcylist.add(locationVoList.get(i));
+                            lcY = locationVoList.get(i).getLcY();
+                        }
+                    }
+                    if (j % 2 == 0) {
+                        for (int k = 5; k > 0; k--) {
+                            List<WmsLocationVo> wmsLocationVos = lcymap.get("" + k);
+                            if (wmsLocationVos.size() == 3) {
+                                doLocationAisleVoList(lcxlist.get(j), "" + k, wmsLocationVos.get(0).getLcZ(), wmsLocationVos.get(0).getProductCount(), wmsLocationVos.get(0).getQty(), wmsLocationVos.get(0).getLcCode(), wmsLocationVos.get(1).getLcZ(), wmsLocationVos.get(1).getProductCount(), wmsLocationVos.get(1).getQty(), wmsLocationVos.get(1).getLcCode(), wmsLocationVos.get(2).getLcZ(), wmsLocationVos.get(2).getProductCount(), wmsLocationVos.get(2).getQty(), wmsLocationVos.get(2).getLcCode(), locationAisleVoList);
                             }
                         }
                     } else {
-                        locationAisleVoList = this.dealLocationList(lcxlist.get(j), j);
-                        locationVo.setLcX(lcxlist.get(j));
+                        for (int k = 1; k <= 5; k++) {
+                            List<WmsLocationVo> wmsLocationVos = lcymap.get("" + k);
+                            if (wmsLocationVos.size() == 3) {
+                                doLocationAisleVoList(lcxlist.get(j), "" + k, wmsLocationVos.get(0).getLcZ(), wmsLocationVos.get(0).getProductCount(), wmsLocationVos.get(0).getQty(), wmsLocationVos.get(0).getLcCode(), wmsLocationVos.get(1).getLcZ(), wmsLocationVos.get(1).getProductCount(), wmsLocationVos.get(1).getQty(), wmsLocationVos.get(1).getLcCode(), wmsLocationVos.get(2).getLcZ(), wmsLocationVos.get(2).getProductCount(), wmsLocationVos.get(2).getQty(), wmsLocationVos.get(2).getLcCode(), locationAisleVoList);
+                            }
+                        }
                     }
+                } else {
+                    locationAisleVoList = this.dealLocationList(lcxlist.get(j), j);
                 }
                 wmsLocationVo.setAisleVoList(locationAisleVoList);
                 wmsLocationVoList.add(wmsLocationVo);
             }
-            response.setLcCodeList(wmsLocationVoList);
         } else {
             for (int j = 0; j < lcxlist.size(); j++) {
                 List<WmsLocationAisleVo> locationAisleVoList = this.dealLocationList(lcxlist.get(j), j);
@@ -447,8 +404,8 @@ public class LocationBussiness {
                 wmsLocationVo.setAisleVoList(locationAisleVoList);
                 wmsLocationVoList.add(wmsLocationVo);
             }
-            response.setLcCodeList(wmsLocationVoList);
         }
+        response.setLcCodeList(wmsLocationVoList);
         return response;
     }
 
@@ -456,32 +413,11 @@ public class LocationBussiness {
         List<WmsLocationAisleVo> locationAisleVoList = new ArrayList<>();
         if (index % 2 == 0) {
             for (int i = 5; i > 0; i--) {
-                WmsLocationAisleVo locationAisleVo = new WmsLocationAisleVo();
                 String lcType = "Z";
                 if (i < 4) {
                     lcType = "S";
                 }
-                locationAisleVo.setLcX1(lcX);
-                locationAisleVo.setLcY1("" + i);
-                locationAisleVo.setLcZ1("1");
-                locationAisleVo.setProductCount1(0);
-                locationAisleVo.setQty1(0);
-                locationAisleVo.setLcType1(lcType);
-
-                locationAisleVo.setLcX2(lcX);
-                locationAisleVo.setLcY2("" + i);
-                locationAisleVo.setLcZ2("2");
-                locationAisleVo.setProductCount2(0);
-                locationAisleVo.setQty2(0);
-                locationAisleVo.setLcType2(lcType);
-
-                locationAisleVo.setLcX3(lcX);
-                locationAisleVo.setLcY3("" + i);
-                locationAisleVo.setLcZ3("3");
-                locationAisleVo.setProductCount3(0);
-                locationAisleVo.setQty3(0);
-                locationAisleVo.setLcType3(lcType);
-                locationAisleVoList.add(locationAisleVo);
+                doLocationAisleVoList(lcX, "" + i, "1", 0, 0, lcType, "2", 0, 0, lcType, "3", 0, 0, lcType, locationAisleVoList);
             }
         } else {
             for (int i = 1; i <= 5; i++) {
@@ -489,31 +425,35 @@ public class LocationBussiness {
                 if (i < 4) {
                     lcType = "S";
                 }
-                WmsLocationAisleVo locationAisleVo = new WmsLocationAisleVo();
-                locationAisleVo.setLcX1(lcX);
-                locationAisleVo.setLcY1("" + i);
-                locationAisleVo.setLcZ1("1");
-                locationAisleVo.setProductCount1(0);
-                locationAisleVo.setQty1(0);
-                locationAisleVo.setLcType1(lcType);
-
-                locationAisleVo.setLcX2(lcX);
-                locationAisleVo.setLcY2("" + i);
-                locationAisleVo.setLcZ2("2");
-                locationAisleVo.setProductCount2(0);
-                locationAisleVo.setQty2(0);
-                locationAisleVo.setLcType2(lcType);
-
-                locationAisleVo.setLcX3(lcX);
-                locationAisleVo.setLcY3("" + i);
-                locationAisleVo.setLcZ3("3");
-                locationAisleVo.setProductCount3(0);
-                locationAisleVo.setQty3(0);
-                locationAisleVo.setLcType3(lcType);
-                locationAisleVoList.add(locationAisleVo);
+                doLocationAisleVoList(lcX, "" + i, "1", 0, 0, lcType, "2", 0, 0, lcType, "3", 0, 0, lcType, locationAisleVoList);
             }
         }
         return locationAisleVoList;
+    }
+
+    public void doLocationAisleVoList(String lcX, String lcY, String lcZ1, Integer productCount1, Integer qty1, String lcType1, String lcZ2, Integer productCount2, Integer qty2, String lcType2, String lcZ3, Integer productCount3, Integer qty3, String lcType3, List<WmsLocationAisleVo> locationAisleVoList) {
+        WmsLocationAisleVo locationAisleVo = new WmsLocationAisleVo();
+        locationAisleVo.setLcX1(lcX);
+        locationAisleVo.setLcY1(lcY);
+        locationAisleVo.setLcZ1(lcZ1);
+        locationAisleVo.setProductCount1(productCount1);
+        locationAisleVo.setQty1(qty1);
+        locationAisleVo.setLcType1(lcType1);
+
+        locationAisleVo.setLcX2(lcX);
+        locationAisleVo.setLcY2(lcY);
+        locationAisleVo.setLcZ2(lcZ2);
+        locationAisleVo.setProductCount2(productCount2);
+        locationAisleVo.setQty2(qty2);
+        locationAisleVo.setLcType2(lcType2);
+
+        locationAisleVo.setLcX3(lcX);
+        locationAisleVo.setLcY3(lcY);
+        locationAisleVo.setLcZ3(lcZ3);
+        locationAisleVo.setProductCount3(productCount3);
+        locationAisleVo.setQty3(qty3);
+        locationAisleVo.setLcType3(lcType3);
+        locationAisleVoList.add(locationAisleVo);
     }
 
 }

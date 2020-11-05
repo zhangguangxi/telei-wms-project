@@ -176,5 +176,91 @@
         </if>
     </select>
 
+    <select id="findLocationAll" resultType="com.telei.wms.datasource.wms.vo.InventoryLocationResponseVo">
+        SELECT
+            product_id,
+            lc_code
+        FROM
+            wms_inventory
+        WHERE
+            iv_id IN (
+                SELECT
+                    max(iv_id)
+                FROM
+                    wms_inventory ih
+                WHERE
+                    company_id=#{companyId}
+                AND ih.warehouse_id=#{warehouseId}
+                AND ih.lc_type='S'
+                AND ih.product_id IN
+                <foreach collection="productIds" item="item" open="(" separator="," close=")">
+                    #{item}
+                </foreach>
+                GROUP BY
+                ih.product_id
+            )
+    </select>
+
+    <select id="findHistoryLocationAll" resultType="com.telei.wms.datasource.wms.vo.InventoryLocationResponseVo">
+        SELECT
+            iv_id,
+            product_id,
+            lc_code
+        FROM
+            wms_inventory_history
+        WHERE
+            iv_id IN (
+                SELECT
+                    max(iv_id)
+                FROM
+                    wms_inventory_history ih
+                WHERE
+                    company_id=#{companyId}
+                AND ih.warehouse_id=#{warehouseId}
+                AND ih.lc_type='S'
+                AND ih.product_id IN
+                <foreach collection="productIds" item="item" open="(" separator="," close=")">
+                    #{item}
+                </foreach>
+                GROUP BY
+                ih.product_id,
+                ih.lc_code
+            )
+        ORDER BY
+        iv_id DESC
+    </select>
+
+    <select id="findExistLocationByLcCode" resultType="com.telei.wms.datasource.wms.vo.InventoryLocationResponseVo">
+        SELECT
+            iv_id,
+            product_id,
+            lc_code
+        FROM
+            wms_inventory
+        WHERE
+            lc_code IN
+            <foreach collection="list" item="item" open="(" separator="," close=")">
+                #{item}
+            </foreach>
+        AND lc_type='S'
+    </select>
+
+    <select id="findExistLocationByProductId" resultType="com.telei.wms.datasource.wms.vo.InventoryLocationResponseVo">
+        SELECT
+            iv_id,
+            product_id,
+            lc_code
+        FROM
+            wms_inventory
+        WHERE
+            company_id=#{companyId}
+        AND warehouse_id=#{warehouseId}
+        AND lc_type='S'
+        AND product_id IN
+        <foreach collection="productIds" item="item" open="(" separator="," close=")">
+            #{item}
+        </foreach>
+    </select>
+
 </mapper>
 

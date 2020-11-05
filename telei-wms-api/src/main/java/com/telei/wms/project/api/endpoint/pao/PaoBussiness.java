@@ -9,10 +9,13 @@ import com.telei.wms.commons.utils.StringUtils;
 import com.telei.wms.customer.businessNumber.BusinessNumberFeignClient;
 import com.telei.wms.customer.businessNumber.dto.BusinessNumberRequest;
 import com.telei.wms.customer.businessNumber.dto.BusinessNumberResponse;
-import com.telei.wms.datasource.wms.model.*;
+import com.telei.wms.datasource.wms.model.WmsPaoHeader;
+import com.telei.wms.datasource.wms.model.WmsPaoLine;
+import com.telei.wms.datasource.wms.model.WmsRooHeader;
+import com.telei.wms.datasource.wms.model.WmsRooLine;
 import com.telei.wms.datasource.wms.service.*;
+import com.telei.wms.datasource.wms.vo.InventoryLocationResponseVo;
 import com.telei.wms.datasource.wms.vo.PaoHeaderPageQueryRequestVo;
-import com.telei.wms.datasource.wms.vo.PaoLineLocationResponseVo;
 import com.telei.wms.datasource.wms.vo.PaoLinePageQueryResponseVo;
 import com.telei.wms.project.api.ErrorCode;
 import com.telei.wms.project.api.endpoint.pao.dto.*;
@@ -59,6 +62,9 @@ public class PaoBussiness {
 
     @Autowired
     private BusinessNumberFeignClient businessNumberFeignClient;
+
+    @Autowired
+    private WmsInventoryService wmsInventoryService;
 
     /**
      * 新增
@@ -165,7 +171,7 @@ public class PaoBussiness {
                 wmsPaoHeaderService.insertSelective(wmsPaoHeader);
                 if (! wmsPaoLines.isEmpty()) {
                     //生成推荐库位
-                    makeLineLocation(wmsPaoHeader.getWarehouseId(), wmsPaoLines);
+                    makeLineLocation(wmsPaoHeader.getCompanyId(), wmsPaoHeader.getWarehouseId(), wmsPaoLines);
                     //保存上架单明细
                     wmsPaoLineService.insertBatch(wmsPaoLines);
                 }
@@ -191,12 +197,12 @@ public class PaoBussiness {
      * @param warehouseId
      * @param wmsPaoLines
      */
-    private void makeLineLocation(Long warehouseId, List<WmsPaoLine> wmsPaoLines) {
+    private void makeLineLocation(Long companyId, Long warehouseId, List<WmsPaoLine> wmsPaoLines) {
         List<Long> productIds = wmsPaoLines.stream().map(WmsPaoLine::getProductId).collect(Collectors.toList());
         //从库存获取
-        List<PaoLineLocationResponseVo> locationResponseVos = wmsPaoLineService.findLocationAll(warehouseId, productIds);
+        List<InventoryLocationResponseVo> locationResponseVos = wmsInventoryService.findLocationAll(companyId, warehouseId, productIds);
         Map<Long, String> paoLineLocation = new HashMap<>();
-        for (PaoLineLocationResponseVo locationResponseVo : locationResponseVos) {
+        for (InventoryLocationResponseVo locationResponseVo : locationResponseVos) {
             paoLineLocation.put(locationResponseVo.getProductId(), locationResponseVo.getLcCode());
         }
         //需要去历史库存获取的产品
@@ -211,13 +217,13 @@ public class PaoBussiness {
         }
         if (! historyProductIds.isEmpty()) {
             //从历史库存获取
-            List<PaoLineLocationResponseVo> historyLocationResponseVos = wmsPaoLineService.findHistoryLocationAll(warehouseId, historyProductIds);
+            List<InventoryLocationResponseVo> historyLocationResponseVos = wmsInventoryService.findHistoryLocationAll(companyId, warehouseId, historyProductIds);
             if (historyLocationResponseVos.isEmpty()) {
                 return;
             }
             Map<Long, List<String>> historyLocationMap = new HashMap<>();
             List<String> lcCodeAll = new ArrayList<>();
-            for (PaoLineLocationResponseVo locationResponseVo : historyLocationResponseVos) {
+            for (InventoryLocationResponseVo locationResponseVo : historyLocationResponseVos) {
                 List<String> lcCodes = historyLocationMap.get(locationResponseVo.getProductId());
                 if (Objects.isNull(lcCodes)) {
                     lcCodes = new ArrayList<>();
@@ -228,8 +234,8 @@ public class PaoBussiness {
             }
             Map<String, Long> existLocationMap = new HashMap<>();
             //获取已经存在的库位
-            List<PaoLineLocationResponseVo> existLocationAll = wmsPaoLineService.findExistLocationAll(lcCodeAll);
-            for (PaoLineLocationResponseVo locationResponseVo : existLocationAll) {
+            List<InventoryLocationResponseVo> existLocationAll = wmsInventoryService.findExistLocationByLcCode(lcCodeAll);
+            for (InventoryLocationResponseVo locationResponseVo : existLocationAll) {
                 existLocationMap.put(locationResponseVo.getLcCode(), locationResponseVo.getProductId());
             }
             for (WmsPaoLine wmsPaoLine : wmsPaoLines) {

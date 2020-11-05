@@ -9,6 +9,7 @@ import com.telei.infrastructure.component.commons.utils.DateUtils;
 import com.telei.infrastructure.component.idgenerator.contract.Id;
 import com.telei.wms.commons.utils.ExcelUtil;
 import com.telei.wms.commons.utils.StringUtils;
+import com.telei.wms.customer.amqp.inventoryInitWriteBack.OmsInventoryInitWriteBack;
 import com.telei.wms.customer.businessNumber.BusinessNumberFeignClient;
 import com.telei.wms.customer.businessNumber.dto.BusinessNumberRequest;
 import com.telei.wms.customer.businessNumber.dto.BusinessNumberResponse;
@@ -24,7 +25,12 @@ import com.telei.wms.datasource.wms.model.*;
 import com.telei.wms.datasource.wms.service.*;
 import com.telei.wms.datasource.wms.vo.WmsInitLineVO;
 import com.telei.wms.project.api.ErrorCode;
+import com.telei.wms.project.api.amqp.producer.WmsOmsInventoryInitWriteBackProducer;
 import com.telei.wms.project.api.endpoint.init.dto.*;
+import com.telei.wms.project.api.endpoint.inventory.InventoryBussiness;
+import com.telei.wms.project.api.endpoint.lcRecommend.LcRecommendBussiness;
+import com.telei.wms.project.api.endpoint.lcRecommend.dto.LcRecommendDeleteRequest;
+import com.telei.wms.project.api.endpoint.wmsIdInstantdirective.WmsIdInstantdirectiveBussiness;
 import com.telei.wms.project.api.utils.DataConvertUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -43,6 +49,9 @@ import java.util.stream.Collectors;
  */
 @Service
 public class InitBussiness {
+
+    @Autowired
+    private InventoryBussiness inventoryBussiness;
 
     @Autowired
     private Id idGenerator;
@@ -69,10 +78,22 @@ public class InitBussiness {
     private WmsIvAttributebatchService wmsIvAttributebatchService;
 
     @Autowired
+    private WmsIvTransactionService wmsIvTransactionService;
+
+    @Autowired
     private WmsInventoryService wmsInventoryService;
 
     @Autowired
     private WmsInventoryHistoryService wmsInventoryHistoryService;
+
+    @Autowired
+    private LcRecommendBussiness lcRecommendBussiness;
+
+    @Autowired
+    private WmsOmsInventoryInitWriteBackProducer wmsOmsInventoryInitWriteBackProducer;
+
+    @Autowired
+    private WmsIdInstantdirectiveBussiness wmsIdInstantdirectiveBussiness;
 
     /**
      * 新增&修改
@@ -156,6 +177,32 @@ public class InitBussiness {
                 if (Objects.isNull(wmsLocation)) {
                     ErrorCode.WMS_LOCATION_NOT_EXIST_4002.throwError();
                 }
+                // 判断当前货位是否有其他商品
+                WmsInventory wmsInventory = new WmsInventory();
+                wmsInventory.setLcCode(initLine.getLcCode());
+                wmsInventory.setCompanyId(CustomRequestContext.getUserInfo().getCompanyId());
+                wmsInventory.setWarehouseId(wmsInitHeader.getWarehouseId());
+                List<WmsInventory> inventoryList = wmsInventoryService.selectByEntity(wmsInventory);
+                if (inventoryList != null) {
+                    for (WmsInventory inventory : inventoryList) {
+                        if (!inventory.getProductId().equals(productDetailResponse.getProductId())){
+                            ErrorCode.WMS_LOCATION_EXIST_PRODUCT_4008.throwError(initLine.getLcCode());
+                        }
+                    }
+                }
+                // 判断当前商品是否存在其他库位
+                WmsInventory wmsInventory1 = new WmsInventory();
+                wmsInventory1.setProductId(productDetailResponse.getProductId());
+                wmsInventory1.setCompanyId(CustomRequestContext.getUserInfo().getCompanyId());
+                wmsInventory1.setWarehouseId(wmsInitHeader.getWarehouseId());
+                List<WmsInventory> wmsInventoryList = wmsInventoryService.selectByEntity(wmsInventory);
+                if (wmsInventoryList != null) {
+                    for (WmsInventory inventory1 : wmsInventoryList) {
+                        if (!inventory1.getLcCode().equals(initLine.getLcCode())){
+                            ErrorCode.WMS_LOCATION_EXIST_PRODUCT_BY_LOCODE_4009.throwError(inventory1.getLcCode());
+                        }
+                    }
+                }
             }
             List<WmsInitLine> wmsInitLines = DataConvertUtil.parseDataAsArray(request.getInitLines(), WmsInitLine.class);
             int initLineCount = wmsInitLineService.insertBatch(wmsInitLines);
@@ -194,6 +241,7 @@ public class InitBussiness {
         List<WmsInventory> wmsInventoryList = new ArrayList<>();
         List<WmsInventoryHistory> wmsInventoryHistoryList = new ArrayList<>();
         List<WmsIvAttributebatch> wmsIvAttributebatchList = new ArrayList<>();
+        List<WmsIvTransaction> wmsIvTransactionList = new ArrayList<>();
         if (!initLineList.isEmpty()) {
             List<Long> productIds = initLineList.stream().map(WmsInitLine::getProductId).collect(Collectors.toList());
             // 根据产品id列表获取产品列表信息
@@ -306,8 +354,31 @@ public class InitBussiness {
                     // 组装库存历史表
                     WmsInventoryHistory wmsInventoryHistory = DataConvertUtil.parseDataAsObject(wmsInventory, WmsInventoryHistory.class);
                     wmsInventoryHistoryList.add(wmsInventoryHistory);
+                    // 组装库存变动记录
+                    WmsIvTransaction wmsIvTransaction = new WmsIvTransaction();
+                    wmsIvTransaction.setId(idGenerator.getUnique());
+                    wmsIvTransaction.setApCode("INIT");
+                    wmsIvTransaction.setCompanyId(CustomRequestContext.getUserInfo().getCompanyId());
+                    wmsIvTransaction.setWarehouseCode(wmsInitHeader.getWarehouseCode());
+                    wmsIvTransaction.setWarehouseId(wmsInitHeader.getWarehouseId());
+                    wmsIvTransaction.setProductId(initLine.getProductId());
+                    wmsIvTransaction.setIvFifoTime(DateUtils.nowWithUTC());
+                    wmsIvTransaction.setIvQtyFrom(BigDecimal.ZERO);
+                    wmsIvTransaction.setLcCodeTo(initLine.getLcCode());
+                    wmsIvTransaction.setIvQtyTo(initLine.getIvQty());
+                    wmsIvTransaction.setIvtDocumentId(request.getId());
+                    wmsIvTransaction.setIvtDocumentlineId(initLine.getId());
+                    wmsIvTransaction.setIvtChangeType("INCR");
+                    wmsIvTransaction.setDcQty(initLine.getIvQty());
+                    wmsIvTransaction.setIvId(wmsInventory.getId());
+                    wmsIvTransaction.setIabId(iabId);
+                    wmsIvTransaction.setBizDate(DateUtils.nowWithUTC());
+                    wmsIvTransaction.setCreateTime(DateUtils.nowWithUTC());
+                    wmsIvTransaction.setCreateUser(CustomRequestContext.getUserInfo().getUserName());
+                    wmsIvTransactionList.add(wmsIvTransaction);
                 }
                 wmsIvAttributebatchList.add(wmsIvAttributebatch);
+
             }
         }
         int count = wmsInitHeaderService.updateByPrimaryKeySelective(wmsInitHeader);
@@ -319,6 +390,27 @@ public class InitBussiness {
             if (ibaCount <= 0) {
                 ErrorCode.INIT_AUDIT_ERROR_4003.throwError();
             }
+
+            /**
+             * 库存初始化回写OMS库存
+             */
+            List<OmsInventoryInitWriteBack.OmsInventory> omsInventoryList = new ArrayList<>();
+            for (WmsInventory wmsInventory : wmsInventoryList) {
+                OmsInventoryInitWriteBack.OmsInventory omsInventory = new OmsInventoryInitWriteBack.OmsInventory();
+                omsInventory.setQty(wmsInventory.getIvQty());
+                omsInventory.setCompanyId(wmsInventory.getCompanyId());
+                omsInventory.setProductId(wmsInventory.getProductId());
+                omsInventory.setWarehouseCode(wmsInventory.getWarehouseCode());
+                omsInventory.setWarehouseId(wmsInventory.getWarehouseId());
+                omsInventoryList.add(omsInventory);
+            }
+            OmsInventoryInitWriteBack omsInventoryInitWriteBack = new OmsInventoryInitWriteBack();
+            omsInventoryInitWriteBack.setOmsInventoryList(omsInventoryList);
+            omsInventoryInitWriteBack.setFromCode(wmsInitHeader.getIvihCode());
+            WmsIdInstantdirective wmsIdInstantdirective = wmsIdInstantdirectiveBussiness.add("PUTON", "", omsInventoryInitWriteBack);
+            // MQ发送指令
+            wmsOmsInventoryInitWriteBackProducer.send(wmsIdInstantdirective);
+
         }
         if (!wmsInventoryHistoryList.isEmpty()) {
             int ibaCount = wmsInventoryHistoryService.insertBatch(wmsInventoryHistoryList);
@@ -332,6 +424,20 @@ public class InitBussiness {
                 ErrorCode.INIT_AUDIT_ERROR_4003.throwError();
             }
         }
+        if (!wmsIvTransactionList.isEmpty()) {
+            int insertBatch = wmsIvTransactionService.insertBatch(wmsIvTransactionList);
+            if (insertBatch <= 0) {
+                ErrorCode.INIT_AUDIT_ERROR_4003.throwError();
+            }
+        }
+        //删除推荐库位埋点
+        List<Long> productIds = initLineList.stream().map(WmsInitLine::getProductId).collect(Collectors.toList());
+        LcRecommendDeleteRequest lcRecommendDeleteRequest = new LcRecommendDeleteRequest();
+        lcRecommendDeleteRequest.setCompanyId(wmsInitHeader.getCompanyId());
+        lcRecommendDeleteRequest.setWarehouseId(wmsInitHeader.getWarehouseId());
+        lcRecommendDeleteRequest.setOrderCode(wmsInitHeader.getIvihCode());
+        lcRecommendDeleteRequest.setProductIds(productIds);
+        lcRecommendBussiness.deleteLcRecommend(lcRecommendDeleteRequest);
         InitHeaderCudBaseResponse response = new InitHeaderCudBaseResponse();
         response.setIsSuccess(Boolean.TRUE);
         return response;

@@ -2,9 +2,7 @@ package com.telei.wms.datasource.wms.repository;
 
 import com.nuochen.framework.autocoding.domain.mybatis.BaseRepository;
 import com.telei.wms.datasource.wms.model.WmsInventory;
-import com.telei.wms.datasource.wms.vo.LiftTaskPageQueryResponseVo;
-import com.telei.wms.datasource.wms.vo.WmsInventoryPageQueryResponseVo;
-import com.telei.wms.datasource.wms.vo.WmsInventoryVo;
+import com.telei.wms.datasource.wms.vo.*;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
 
@@ -60,4 +58,11 @@ public interface WmsInventoryRepository extends BaseRepository<WmsInventory, Lon
      */
     WmsInventoryVo getLcCodeByInventory(@Param("productId") Long productId, @Param("warehouseId") Long warehouseId, @Param("companyId") Long companyId, @Param("lcCodeNumber") Integer lcCodeNumber);
 
+    List<InventoryLocationResponseVo> findExistLocationByLcCode(List<String> lcCodes);
+
+    List<InventoryLocationResponseVo> findLocationAll(@Param("companyId") Long companyId, @Param("warehouseId") Long warehouseId, @Param("productIds") List<Long> productIds);
+
+    List<InventoryLocationResponseVo> findHistoryLocationAll(@Param("companyId") Long companyId, @Param("warehouseId") Long warehouseId, @Param("productIds") List<Long> productIds);
+
+    List<InventoryLocationResponseVo> findExistLocationByProductId(@Param("companyId") Long companyId, @Param("warehouseId") Long warehouseId, @Param("productIds") List<Long> productIds);
 }

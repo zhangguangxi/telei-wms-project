@@ -91,6 +91,7 @@ public class AdjustStrategyFactory {
     public   WmsInventory createInventory(List<WmsInventory> wmsInventoryAddList, WmsInventory wmsInventory,String lcCodeAdjt, BigDecimal ivQtyAdjt, Date nowWithUtc) {
         WmsInventory wmsInventoryAdd = DataConvertUtil.parseDataAsObject(wmsInventory, WmsInventory.class);
         wmsInventoryAdd.setIvId(idGenerator.getUnique());
+        wmsInventoryAdd.setIvIdFrom(wmsInventory.getIvId());
         wmsInventoryAdd.setLcCode(lcCodeAdjt);//库位编码
         WmsLocation wmsLocation = new WmsLocation();
         wmsLocation.setLcCode(lcCodeAdjt);

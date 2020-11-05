@@ -1,0 +1,410 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.telei.wms.datasource.wms.repository.WmsLcRecommendBakRepository">
+    <resultMap id="BaseResultMap" type="com.telei.wms.datasource.wms.model.WmsLcRecommendBak">
+        <id column="lr_id" jdbcType="BIGINT" property="id"/>
+            <result column="company_id" jdbcType="BIGINT" property="companyId"/>
+            <result column="warehouse_id" jdbcType="BIGINT" property="warehouseId"/>
+            <result column="warehouse_code" jdbcType="VARCHAR" property="warehouseCode"/>
+            <result column="est_arrive_time" jdbcType="TIMESTAMP" property="estArriveTime"/>
+            <result column="product_id" jdbcType="BIGINT" property="productId"/>
+            <result column="lc_code" jdbcType="VARCHAR" property="lcCode"/>
+            <result column="create_time" jdbcType="TIMESTAMP" property="createTime"/>
+            <result column="create_user" jdbcType="VARCHAR" property="createUser"/>
+            <result column="last_update_time" jdbcType="TIMESTAMP" property="lastUpdateTime"/>
+            <result column="last_update_user" jdbcType="VARCHAR" property="lastUpdateUser"/>
+            <result column="del_time" jdbcType="TIMESTAMP" property="delTime"/>
+            <result column="del_lc_code" jdbcType="VARCHAR" property="delLcCode"/>
+            <result column="del_remark" jdbcType="VARCHAR" property="delRemark"/>
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        lr_id,company_id,warehouse_id,warehouse_code,est_arrive_time,product_id,lc_code,create_time,create_user,last_update_time,last_update_user,del_time,del_lc_code,del_remark
+    </sql>
+
+        <insert id="insert">
+            insert into wms_lc_recommend_bak (lr_id,company_id,warehouse_id,warehouse_code,est_arrive_time,product_id,lc_code,create_time,create_user,last_update_time,last_update_user,del_time,del_lc_code,del_remark)
+            values (#{id,jdbcType=BIGINT},#{companyId,jdbcType=BIGINT},#{warehouseId,jdbcType=BIGINT},#{warehouseCode,jdbcType=VARCHAR},#{estArriveTime,jdbcType=TIMESTAMP},#{productId,jdbcType=BIGINT},#{lcCode,jdbcType=VARCHAR},#{createTime,jdbcType=TIMESTAMP},#{createUser,jdbcType=VARCHAR},#{lastUpdateTime,jdbcType=TIMESTAMP},#{lastUpdateUser,jdbcType=VARCHAR},#{delTime,jdbcType=TIMESTAMP},#{delLcCode,jdbcType=VARCHAR},#{delRemark,jdbcType=VARCHAR})
+        </insert>
+
+        <insert id="insertSelective">
+            insert into wms_lc_recommend_bak
+            <trim prefix="(" suffix=")" suffixOverrides=",">
+                    <if test="id != null">
+                        lr_id,
+                    </if>
+                    <if test="companyId != null">
+                        company_id,
+                    </if>
+                    <if test="warehouseId != null">
+                        warehouse_id,
+                    </if>
+                    <if test="warehouseCode != null">
+                        warehouse_code,
+                    </if>
+                    <if test="estArriveTime != null">
+                        est_arrive_time,
+                    </if>
+                    <if test="productId != null">
+                        product_id,
+                    </if>
+                    <if test="lcCode != null">
+                        lc_code,
+                    </if>
+                    <if test="createTime != null">
+                        create_time,
+                    </if>
+                    <if test="createUser != null">
+                        create_user,
+                    </if>
+                    <if test="lastUpdateTime != null">
+                        last_update_time,
+                    </if>
+                    <if test="lastUpdateUser != null">
+                        last_update_user,
+                    </if>
+                    <if test="delTime != null">
+                        del_time,
+                    </if>
+                    <if test="delLcCode != null">
+                        del_lc_code,
+                    </if>
+                    <if test="delRemark != null">
+                        del_remark
+                    </if>
+            </trim>
+            <trim prefix="values (" suffix=")" suffixOverrides=",">
+                    <if test="id != null">
+                        #{id,jdbcType=BIGINT},
+                    </if>
+                    <if test="companyId != null">
+                        #{companyId,jdbcType=BIGINT},
+                    </if>
+                    <if test="warehouseId != null">
+                        #{warehouseId,jdbcType=BIGINT},
+                    </if>
+                    <if test="warehouseCode != null">
+                        #{warehouseCode,jdbcType=VARCHAR},
+                    </if>
+                    <if test="estArriveTime != null">
+                        #{estArriveTime,jdbcType=TIMESTAMP},
+                    </if>
+                    <if test="productId != null">
+                        #{productId,jdbcType=BIGINT},
+                    </if>
+                    <if test="lcCode != null">
+                        #{lcCode,jdbcType=VARCHAR},
+                    </if>
+                    <if test="createTime != null">
+                        #{createTime,jdbcType=TIMESTAMP},
+                    </if>
+                    <if test="createUser != null">
+                        #{createUser,jdbcType=VARCHAR},
+                    </if>
+                    <if test="lastUpdateTime != null">
+                        #{lastUpdateTime,jdbcType=TIMESTAMP},
+                    </if>
+                    <if test="lastUpdateUser != null">
+                        #{lastUpdateUser,jdbcType=VARCHAR},
+                    </if>
+                    <if test="delTime != null">
+                        #{delTime,jdbcType=TIMESTAMP},
+                    </if>
+                    <if test="delLcCode != null">
+                        #{delLcCode,jdbcType=VARCHAR},
+                    </if>
+                    <if test="delRemark != null">
+                        #{delRemark,jdbcType=VARCHAR}
+                    </if>
+            </trim>
+        </insert>
+
+        <insert id="insertBatch">
+            insert into wms_lc_recommend_bak (lr_id,company_id,warehouse_id,warehouse_code,est_arrive_time,product_id,lc_code,create_time,create_user,last_update_time,last_update_user,del_time,del_lc_code,del_remark) values
+            <foreach collection="list" item="item" separator=",">
+                (
+                    #{item.id,jdbcType=BIGINT},
+                    #{item.companyId,jdbcType=BIGINT},
+                    #{item.warehouseId,jdbcType=BIGINT},
+                    #{item.warehouseCode,jdbcType=VARCHAR},
+                    #{item.estArriveTime,jdbcType=TIMESTAMP},
+                    #{item.productId,jdbcType=BIGINT},
+                    #{item.lcCode,jdbcType=VARCHAR},
+                    #{item.createTime,jdbcType=TIMESTAMP},
+                    #{item.createUser,jdbcType=VARCHAR},
+                    #{item.lastUpdateTime,jdbcType=TIMESTAMP},
+                    #{item.lastUpdateUser,jdbcType=VARCHAR},
+                    #{item.delTime,jdbcType=TIMESTAMP},
+                    #{item.delLcCode,jdbcType=VARCHAR},
+                    #{item.delRemark,jdbcType=VARCHAR}
+                )
+            </foreach>
+        </insert>
+
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+        delete from wms_lc_recommend_bak
+        where lr_id = #{id,jdbcType=BIGINT}
+    </delete>
+
+    <delete id="deleteByPrimaryKeys">
+        delete from wms_lc_recommend_bak where lr_id in
+        <foreach close=")" collection="list" item="item" open="(" separator=",">
+            #{item}
+        </foreach>
+    </delete>
+
+    <update id="updateByPrimaryKey">
+        update wms_lc_recommend_bak
+        <set>
+                company_id = #{companyId,jdbcType=BIGINT},
+                warehouse_id = #{warehouseId,jdbcType=BIGINT},
+                warehouse_code = #{warehouseCode,jdbcType=VARCHAR},
+                est_arrive_time = #{estArriveTime,jdbcType=TIMESTAMP},
+                product_id = #{productId,jdbcType=BIGINT},
+                lc_code = #{lcCode,jdbcType=VARCHAR},
+                create_time = #{createTime,jdbcType=TIMESTAMP},
+                create_user = #{createUser,jdbcType=VARCHAR},
+                last_update_time = #{lastUpdateTime,jdbcType=TIMESTAMP},
+                last_update_user = #{lastUpdateUser,jdbcType=VARCHAR},
+                del_time = #{delTime,jdbcType=TIMESTAMP},
+                del_lc_code = #{delLcCode,jdbcType=VARCHAR},
+                del_remark = #{delRemark,jdbcType=VARCHAR}
+        </set>
+        where lr_id = #{id,jdbcType=BIGINT}
+    </update>
+
+    <update id="updateByPrimaryKeySelective">
+        update wms_lc_recommend_bak
+        <set>
+                <if test="companyId != null">
+                    company_id = #{companyId,jdbcType=BIGINT},
+                </if>
+                <if test="warehouseId != null">
+                    warehouse_id = #{warehouseId,jdbcType=BIGINT},
+                </if>
+                <if test="warehouseCode != null">
+                    warehouse_code = #{warehouseCode,jdbcType=VARCHAR},
+                </if>
+                <if test="estArriveTime != null">
+                    est_arrive_time = #{estArriveTime,jdbcType=TIMESTAMP},
+                </if>
+                <if test="productId != null">
+                    product_id = #{productId,jdbcType=BIGINT},
+                </if>
+                <if test="lcCode != null">
+                    lc_code = #{lcCode,jdbcType=VARCHAR},
+                </if>
+                <if test="createTime != null">
+                    create_time = #{createTime,jdbcType=TIMESTAMP},
+                </if>
+                <if test="createUser != null">
+                    create_user = #{createUser,jdbcType=VARCHAR},
+                </if>
+                <if test="lastUpdateTime != null">
+                    last_update_time = #{lastUpdateTime,jdbcType=TIMESTAMP},
+                </if>
+                <if test="lastUpdateUser != null">
+                    last_update_user = #{lastUpdateUser,jdbcType=VARCHAR},
+                </if>
+                <if test="delTime != null">
+                    del_time = #{delTime,jdbcType=TIMESTAMP},
+                </if>
+                <if test="delLcCode != null">
+                    del_lc_code = #{delLcCode,jdbcType=VARCHAR},
+                </if>
+                <if test="delRemark != null">
+                    del_remark = #{delRemark,jdbcType=VARCHAR}
+                </if>
+        </set>
+        where lr_id = #{id,jdbcType=BIGINT}
+    </update>
+
+    <update id="updateBatch">
+        <foreach close="" collection="list" item="item" open="" separator=";">
+            update wms_lc_recommend_bak
+            <set>
+                    <if test="item.companyId != null">
+                        company_id = #{item.companyId,jdbcType=BIGINT},
+                    </if>
+                    <if test="item.warehouseId != null">
+                        warehouse_id = #{item.warehouseId,jdbcType=BIGINT},
+                    </if>
+                    <if test="item.warehouseCode != null">
+                        warehouse_code = #{item.warehouseCode,jdbcType=VARCHAR},
+                    </if>
+                    <if test="item.estArriveTime != null">
+                        est_arrive_time = #{item.estArriveTime,jdbcType=TIMESTAMP},
+                    </if>
+                    <if test="item.productId != null">
+                        product_id = #{item.productId,jdbcType=BIGINT},
+                    </if>
+                    <if test="item.lcCode != null">
+                        lc_code = #{item.lcCode,jdbcType=VARCHAR},
+                    </if>
+                    <if test="item.createTime != null">
+                        create_time = #{item.createTime,jdbcType=TIMESTAMP},
+                    </if>
+                    <if test="item.createUser != null">
+                        create_user = #{item.createUser,jdbcType=VARCHAR},
+                    </if>
+                    <if test="item.lastUpdateTime != null">
+                        last_update_time = #{item.lastUpdateTime,jdbcType=TIMESTAMP},
+                    </if>
+                    <if test="item.lastUpdateUser != null">
+                        last_update_user = #{item.lastUpdateUser,jdbcType=VARCHAR},
+                    </if>
+                    <if test="item.delTime != null">
+                        del_time = #{item.delTime,jdbcType=TIMESTAMP},
+                    </if>
+                    <if test="item.delLcCode != null">
+                        del_lc_code = #{item.delLcCode,jdbcType=VARCHAR},
+                    </if>
+                    <if test="item.delRemark != null">
+                        del_remark = #{item.delRemark,jdbcType=VARCHAR}
+                    </if>
+            </set>
+            where lr_id = #{item.id,jdbcType=BIGINT}
+        </foreach>
+    </update>
+
+    <select id="selectByPrimaryKey" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List" />
+        from wms_lc_recommend_bak
+        where lr_id = #{id,jdbcType=BIGINT}
+    </select>
+
+    <select id="selectByPrimaryKeyWithLock" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List" />
+        from wms_lc_recommend_bak
+        where lr_id = #{id,jdbcType=BIGINT} for update
+    </select>
+
+    <select id="selectByPrimaryKeys" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List" />
+        from wms_lc_recommend_bak where lr_id in
+        <foreach close=")" collection="list" item="item" open="(" separator=",">
+            #{item}
+        </foreach>
+    </select>
+
+    <select id="selectByEntity" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from wms_lc_recommend_bak
+        <where>
+                <if test="id != null">
+                    and lr_id=#{id,jdbcType=BIGINT}
+                </if>
+                <if test="companyId != null">
+                    and company_id=#{companyId,jdbcType=BIGINT}
+                </if>
+                <if test="warehouseId != null">
+                    and warehouse_id=#{warehouseId,jdbcType=BIGINT}
+                </if>
+                <if test="warehouseCode != null">
+                    and warehouse_code=#{warehouseCode,jdbcType=VARCHAR}
+                </if>
+                <if test="estArriveTime != null">
+                    and est_arrive_time=#{estArriveTime,jdbcType=TIMESTAMP}
+                </if>
+                <if test="productId != null">
+                    and product_id=#{productId,jdbcType=BIGINT}
+                </if>
+                <if test="lcCode != null">
+                    and lc_code=#{lcCode,jdbcType=VARCHAR}
+                </if>
+                <if test="createTime != null">
+                    and create_time=#{createTime,jdbcType=TIMESTAMP}
+                </if>
+                <if test="createUser != null">
+                    and create_user=#{createUser,jdbcType=VARCHAR}
+                </if>
+                <if test="lastUpdateTime != null">
+                    and last_update_time=#{lastUpdateTime,jdbcType=TIMESTAMP}
+                </if>
+                <if test="lastUpdateUser != null">
+                    and last_update_user=#{lastUpdateUser,jdbcType=VARCHAR}
+                </if>
+                <if test="delTime != null">
+                    and del_time=#{delTime,jdbcType=TIMESTAMP}
+                </if>
+                <if test="delLcCode != null">
+                    and del_lc_code=#{delLcCode,jdbcType=VARCHAR}
+                </if>
+                <if test="delRemark != null">
+                    and del_remark=#{delRemark,jdbcType=VARCHAR}
+                </if>
+        </where>
+    </select>
+
+    <select id="selectByConditions" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from wms_lc_recommend_bak
+        <where>
+                <if test="id != null">
+                    and lr_id ${id}
+                </if>
+                <if test="companyId != null">
+                    and company_id ${companyId}
+                </if>
+                <if test="warehouseId != null">
+                    and warehouse_id ${warehouseId}
+                </if>
+                <if test="warehouseCode != null">
+                    and warehouse_code ${warehouseCode}
+                </if>
+                <if test="estArriveTime != null">
+                    and est_arrive_time ${estArriveTime}
+                </if>
+                <if test="productId != null">
+                    and product_id ${productId}
+                </if>
+                <if test="lcCode != null">
+                    and lc_code ${lcCode}
+                </if>
+                <if test="createTime != null">
+                    and create_time ${createTime}
+                </if>
+                <if test="createUser != null">
+                    and create_user ${createUser}
+                </if>
+                <if test="lastUpdateTime != null">
+                    and last_update_time ${lastUpdateTime}
+                </if>
+                <if test="lastUpdateUser != null">
+                    and last_update_user ${lastUpdateUser}
+                </if>
+                <if test="delTime != null">
+                    and del_time ${delTime}
+                </if>
+                <if test="delLcCode != null">
+                    and del_lc_code ${delLcCode}
+                </if>
+                <if test="delRemark != null">
+                    and del_remark ${delRemark}
+                </if>
+        </where>
+        <if test="orderBy != null">
+            order by ${orderBy}
+        </if>
+    </select>
+
+    <select id="selectAll" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from wms_lc_recommend_bak
+    </select>
+
+    <select id="count" resultType="java.lang.Long">
+        select count(*) from wms_lc_recommend_bak
+    </select>
+
+    <select id="selectByFunction">
+        select ${function}(${column}) from wms_lc_recommend_bak
+    </select>
+
+</mapper>

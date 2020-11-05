@@ -16,17 +16,19 @@ import com.telei.wms.datasource.wms.vo.RoLinePageQueryResponseVo;
 import com.telei.wms.project.api.ErrorCode;
 import com.telei.wms.project.api.amqp.producer.WmsOmsRecovicePlanCancelCallbackProducer;
 import com.telei.wms.project.api.amqp.producer.WmsOmsRecovicePlanUpdateProducer;
+import com.telei.wms.project.api.endpoint.lcRecommend.LcRecommendBussiness;
+import com.telei.wms.project.api.endpoint.lcRecommend.dto.LcRecommendAddRequest;
 import com.telei.wms.project.api.endpoint.ro.dto.*;
 import com.telei.wms.project.api.endpoint.wmsIdInstantdirective.WmsIdInstantdirectiveBussiness;
 import com.telei.wms.project.api.utils.DataConvertUtil;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Objects;
+import java.util.stream.Collectors;
 
 import static com.telei.infrastructure.component.commons.utils.LockMapUtil.*;
 
@@ -36,9 +38,8 @@ import static com.telei.infrastructure.component.commons.utils.LockMapUtil.*;
  * @Date: 2020/8/19 17:05
  */
 @Service
+@Slf4j
 public class RoBussiness {
-
-    private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
     //删除
     private static final String DELETE_STATUS = "99";
@@ -65,6 +66,9 @@ public class RoBussiness {
     @Autowired
     private WmsOmsRecovicePlanUpdateProducer wmsOmsRecovicePlanUpdateProducer;
 
+    @Autowired
+    private LcRecommendBussiness lcRecommendBussiness;
+
     /**
      * 新增
      * @param request
@@ -72,12 +76,13 @@ public class RoBussiness {
      */
     @Transactional(rollbackFor = Exception.class)
     public RoCudBaseResponse addRo(RoHeaderAddRequest request) {
+        log.debug("**********addRo" + JSON.toJSONString(request));
         RoCudBaseResponse response = new RoCudBaseResponse();
         WmsRoHeader wmsRoHeaderEntity = new WmsRoHeader();
         wmsRoHeaderEntity.setRpId(request.getRpId());
         WmsRoHeader wmsRoHeaderIsExist = wmsRoHeaderService.selectOneByEntity(wmsRoHeaderEntity);
         if (! Objects.isNull(wmsRoHeaderIsExist)) {
-            logger.warn("采购单不能重复生成入库任务，RoHeaderAddRequest：" + JSON.toJSONString(request));
+            log.warn("采购单不能重复生成入库任务，RoHeaderAddRequest：" + JSON.toJSONString(request));
             return response;
         }
         WmsRoHeader wmsRoHeader = DataConvertUtil.parseDataAsObject(request, WmsRoHeader.class);
@@ -85,6 +90,16 @@ public class RoBussiness {
         wmsRoHeader.setCreateTime(DateUtils.nowWithUTC());
         wmsRoHeaderService.insertSelective(wmsRoHeader);
         wmsRoLineService.insertBatch(wmsRoLines);
+        //添加新品分配推荐库位
+        List<Long> productIds = wmsRoLines.stream().map(WmsRoLine::getProductId).collect(Collectors.toList());
+        LcRecommendAddRequest lcRecommendAddRequest = new LcRecommendAddRequest();
+        lcRecommendAddRequest.setCompanyId(wmsRoHeader.getCompanyId());
+        lcRecommendAddRequest.setWarehouseId(wmsRoHeader.getWarehouseId());
+        lcRecommendAddRequest.setWarehouseCode(wmsRoHeader.getWarehouseCode());
+        lcRecommendAddRequest.setEstArriveTime(wmsRoHeader.getEstArriveTime());
+        lcRecommendAddRequest.setCreateUser(wmsRoHeader.getCreateUser());
+        lcRecommendAddRequest.setProductIds(productIds);
+        lcRecommendBussiness.addLcRecommend(lcRecommendAddRequest);
         return response;
     }
 

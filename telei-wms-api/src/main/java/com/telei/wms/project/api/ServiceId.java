@@ -298,4 +298,16 @@ public class ServiceId {
 
     @RightResource(rightSystem = "wms", rightItem = "库位", rightFunction = "根据通道查询库位列表")
     public static final String WMS_LOCATION_BY_LC_AISLE = "1031410";
+
+    /***
+     *
+     *  新品分配推荐库位
+     *  15
+     *
+     */
+    @RightResource(rightSystem = "wms", rightItem = "新品分配推荐库位", rightFunction = "更新库位")
+    public static final String WMS_LC_RECOMMEND_UPDATE = "1031501";
+
+    @RightResource(rightSystem = "wms", rightItem = "新品分配推荐库位", rightFunction = "分页查询")
+    public static final String WMS_LC_RECOMMEND_PAGE_QUERY = "1031502";
 }

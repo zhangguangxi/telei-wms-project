@@ -172,6 +172,8 @@ public enum ErrorCode {
     WMS_LOCATION_LC_CODE_EXIST_4005,
     WMS_LOCATION_DELETE_ERROR_4006,
     WMS_LOCATION_LIST_IS_NULL_4007,
+    WMS_LOCATION_EXIST_PRODUCT_4008,
+    WMS_LOCATION_EXIST_PRODUCT_BY_LOCODE_4009,
 
     /***
      *
@@ -180,6 +182,11 @@ public enum ErrorCode {
      */
     NEST_LIFT_WORK_PRINT_4001,
     NEST_CHECK_PRINT_4002,
+
+    /**
+     * 新品分配推荐库位
+     */
+    LC_RECOMMEND_NOT_EXIST_4001,
     ;
 
     private  String code;

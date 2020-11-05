@@ -18,6 +18,8 @@ import com.telei.wms.datasource.wms.service.WmsLocationService;
 import com.telei.wms.datasource.wms.vo.WmsInventoryVo;
 import com.telei.wms.project.api.ErrorCode;
 import com.telei.wms.project.api.endpoint.inventory.InventoryBussiness;
+import com.telei.wms.project.api.endpoint.lcRecommend.LcRecommendBussiness;
+import com.telei.wms.project.api.endpoint.lcRecommend.dto.LcRecommendDeleteRequest;
 import com.telei.wms.project.api.endpoint.liftWork.dto.*;
 import com.telei.wms.project.api.utils.DataConvertUtil;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,6 +27,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -52,6 +56,9 @@ public class LiftWorkBussiness {
 
     @Autowired
     private InventoryBussiness inventoryBussiness;
+
+    @Autowired
+    private LcRecommendBussiness lcRecommendBussiness;
 
     /**
      * 新增升降任务
@@ -216,6 +223,13 @@ public class LiftWorkBussiness {
                     ErrorCode.LIFT_WORK_UPDATE_ERROR_4004.throwError(wmsLiftWork.getProductName(), wmsLiftWork.getSampleLcCode(), wmsLiftWork.getPrepLcCode());
                 }
             }
+            //删除推荐库位埋点
+            LcRecommendDeleteRequest lcRecommendDeleteRequest = new LcRecommendDeleteRequest();
+            lcRecommendDeleteRequest.setCompanyId(workCommonRequest.getCompanyId());
+            lcRecommendDeleteRequest.setWarehouseId(workCommonRequest.getWarehouseId());
+            lcRecommendDeleteRequest.setOrderCode(workCommonRequest.getLiftCode());
+            lcRecommendDeleteRequest.setProductIds(Arrays.asList(workCommonRequest.getProductId()));
+            lcRecommendBussiness.deleteLcRecommend(lcRecommendDeleteRequest);
         }
         LiftWorkBusinessResponse businessResponse = new LiftWorkBusinessResponse();
         businessResponse.setIsSuccess(true);

@@ -33,6 +33,8 @@ import com.telei.wms.project.api.amqp.producer.WmsOmsIvOutWriteBackProducer;
 import com.telei.wms.project.api.endpoint.inventory.dto.*;
 import com.telei.wms.project.api.endpoint.inventory.strategy.AdjustStrategyFactory;
 import com.telei.wms.project.api.endpoint.inventory.strategy.IAdjustStrategy;
+import com.telei.wms.project.api.endpoint.lcRecommend.LcRecommendBussiness;
+import com.telei.wms.project.api.endpoint.lcRecommend.dto.LcRecommendDeleteRequest;
 import com.telei.wms.project.api.endpoint.wmsIdInstantdirective.WmsIdInstantdirectiveBussiness;
 import com.telei.wms.project.api.utils.DataConvertUtil;
 import lombok.extern.slf4j.Slf4j;
@@ -157,6 +159,8 @@ public class InventoryBussiness {
     @Autowired
     private WmsIvTransactionDailyKnotService wmsIvTransactionDailyKnotService;
 
+    @Autowired
+    private LcRecommendBussiness lcRecommendBussiness;
 
     /**
      * 入库(上架)
@@ -295,8 +299,10 @@ public class InventoryBussiness {
             if(Objects.nonNull(shiftList) && !shiftList.isEmpty()){
                     ErrorCode.INVENTORY_ADD_ERROR_PAO_LINE_ALREADY_SHIFT_23.throwError(JSON.toJSONString(shiftList));
             }
+            List<Long> productIds = new ArrayList<>();
             Map<Long, InventoryAddBussinessRequest.InventoryAddRequestCondition> paolId2EntityMap = requestList.stream().collect(Collectors.toMap(InventoryAddBussinessRequest.InventoryAddRequestCondition::getPaolId, Function.identity()));
             paoLineList.stream().forEach(item -> {
+                productIds.add(item.getProductId());
                 item.setPaolQty(paolId2EntityMap.get(item.getId()).getIvQty());
                 item.setPutawayTime(nowWithUTC);
                 item.setPutawayUser(userInfo.getUserName());
@@ -406,6 +412,13 @@ public class InventoryBussiness {
             //3、处理(状态数据变更)
             if (LockMapUtil.confirmLock(lockKey, lockValue)) {
                 inventoryDataProcess(inventoryList, wmsPaoHeader, paoLineList, rooHeaderList, roHeaderList, omsInventoryAddWriteBack, userInfo, nowWithUTC);
+                //删除推荐库位埋点
+                LcRecommendDeleteRequest lcRecommendDeleteRequest = new LcRecommendDeleteRequest();
+                lcRecommendDeleteRequest.setCompanyId(wmsPaoHeader.getCompanyId());
+                lcRecommendDeleteRequest.setWarehouseId(wmsPaoHeader.getWarehouseId());
+                lcRecommendDeleteRequest.setOrderCode(wmsPaoHeader.getPaoCode());
+                lcRecommendDeleteRequest.setProductIds(productIds);
+                lcRecommendBussiness.deleteLcRecommend(lcRecommendDeleteRequest);
             }
         } finally {
             LockMapUtil.cancelLock(lockKey, lockValue);
