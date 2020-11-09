@@ -27,10 +27,10 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 /**
@@ -66,6 +66,14 @@ public class LiftWorkBussiness {
     @Transactional(rollbackFor = Exception.class)
     public LiftWorkBusinessResponse addLiftWork(LiftWorkBusinessRequest request) {
         WmsLiftWork wmsLiftWork = DataConvertUtil.parseDataAsObject(request, WmsLiftWork.class);
+        // 校验当前商品是否存在待处理升降任务
+        WmsLiftWork liftWork = new WmsLiftWork();
+        liftWork.setProductId(wmsLiftWork.getProductId());
+        liftWork.setLiftStatus("10");
+        List<WmsLiftWork> liftWorkList = wmsLiftWorkService.selectByEntity(liftWork);
+        if (StringUtils.isNotNull(liftWorkList) && !liftWorkList.isEmpty()) {
+            ErrorCode.LIFT_WORK_EXIST_4010.throwError();
+        }
         wmsLiftWork.setId(idGenerator.getUnique());
         wmsLiftWork.setCompanyId(CustomRequestContext.getUserInfo().getCompanyId());
         // 获取业务单号
@@ -83,9 +91,11 @@ public class LiftWorkBussiness {
         wmsLiftWork.setLiftDocumentType("ADD");
         wmsLiftWork.setCreateTime(DateUtils.nowWithUTC());
         wmsLiftWork.setCreateUser(CustomRequestContext.getUserInfo().getUserName());
-        // 新增时默认不传数量以及大包数
-//        BigDecimal bigBagExtraQty = wmsLiftWork.getLiftQty().subtract(wmsLiftWork.getBigBagRate().multiply(wmsLiftWork.getBigBagQty()));
-//        wmsLiftWork.setBigBagExtraQty(bigBagExtraQty);
+        // 新增升降任务降货显示并传数量升货不变
+        if(StringUtils.isNotNull(wmsLiftWork.getLiftQty()) && StringUtils.isNotNull(wmsLiftWork.getBigBagQty())){
+            BigDecimal bigBagExtraQty = wmsLiftWork.getLiftQty().subtract(wmsLiftWork.getBigBagRate().multiply(wmsLiftWork.getBigBagQty()));
+            wmsLiftWork.setBigBagExtraQty(bigBagExtraQty);
+        }
         int count = wmsLiftWorkService.insert(wmsLiftWork);
         if (count <= 0) {
             ErrorCode.LIFT_WORK_ADD_ERROR_4002.throwError();
@@ -104,6 +114,14 @@ public class LiftWorkBussiness {
         if (liftWorkList.size() <= 0 || liftWorkList.size() != request.getIds().size()) {
             ErrorCode.LIFT_WORK_NOT_EXIST_4001.throwError();
         }
+        for (WmsLiftWork wmsLiftWork : liftWorkList) {
+            if("20".equals(wmsLiftWork.getLiftStatus())){
+                ErrorCode.LIFT_WORK_REVOKE_ERROR_4011.throwError("已处理");
+            }
+            if("98".equals(wmsLiftWork.getLiftStatus())){
+                ErrorCode.LIFT_WORK_REVOKE_ERROR_4011.throwError("关闭");
+            }
+        }
         int count = wmsLiftWorkService.revokeLiftWork(request.getIds());
         if (count <= 0) {
             ErrorCode.LIFT_WORK_REVOKE_ERROR_4003.throwError();
@@ -120,8 +138,10 @@ public class LiftWorkBussiness {
     public LiftWorkBusinessResponse updateLiftWork(LiftWorkBusinessRequest request) {
         List<LiftWorkCommonRequest> updateRequestList = request.getUpdateRequestList();
         List<Long> liftIds = updateRequestList.stream().map(LiftWorkCommonRequest::getId).collect(Collectors.toList());
+        liftIds = liftIds.stream().filter(Objects::nonNull).collect(Collectors.toList());
+        // 检查升降任务是否存在
         List<WmsLiftWork> liftWorkList = wmsLiftWorkService.selectByPrimaryKeys(liftIds);
-        if (liftWorkList.size() <= 0 || liftWorkList.size() != updateRequestList.size()) {
+        if (liftWorkList.size() <= 0 || liftWorkList.size() != liftIds.size()) {
             ErrorCode.LIFT_WORK_NOT_EXIST_4001.throwError();
         }
         for (LiftWorkCommonRequest workCommonRequest : updateRequestList) {
@@ -134,7 +154,7 @@ public class LiftWorkBussiness {
             wmsLiftWork.setLastupdateTime(DateUtils.nowWithUTC());
             wmsLiftWork.setLastupdateUser(CustomRequestContext.getUserInfo().getUserName());
             /**
-             * 检查当前库位是否为空
+             * 获取高库位信息
              * 有实际库位取实际库位 无实际库位取推荐库位
              */
             String lcCode = StringUtils.isNoneBlank(wmsLiftWork.getLcCode()) ? wmsLiftWork.getLcCode() : wmsLiftWork.getPrepLcCode();
@@ -150,11 +170,17 @@ public class LiftWorkBussiness {
             businessRequest.setWarehouseId(wmsLiftWork.getWarehouseId());
             if ("RISE".equals(workCommonRequest.getLiftType())) {
                 /**
-                 * 判断当前库位是否为空
-                 * 为空继续 反之抛出异常
+                 * 目标库位是否为空
+                 * 	为空
+                 * 		允许操作
+                 * 	不为空
+                 * 		判断当前库位的商品与目标库位的商品是否为同一个商品
                  */
                 if (StringUtils.isNotNull(inventoryList) && !inventoryList.isEmpty()) {
-                    ErrorCode.LIFT_WORK_LC_CODE_IS_NOT_NULL_4007.throwError();
+                    List<Long> productIds = inventoryList.stream().map(WmsInventory::getProductId).collect(Collectors.toList());
+                    if (!productIds.contains(wmsLiftWork.getProductId())) {
+                        ErrorCode.LIFT_WORK_PRODUCT_IS_NULL_EQUALS_4009.throwError();
+                    }
                 }
                 // 查询当前商品 当前库位 库存
                 WmsInventory inventory = new WmsInventory();
@@ -167,6 +193,9 @@ public class LiftWorkBussiness {
                 BigDecimal ivQty = BigDecimal.ZERO;
                 if (StringUtils.isNotNull(inventories) && !inventories.isEmpty()) {
                     ivQty = inventories.stream().map(WmsInventory::getIvQty).reduce(BigDecimal.ZERO, BigDecimal::add);
+                }
+                if(ivQty.compareTo(wmsLiftWork.getLiftQty()) < 0){
+                    ErrorCode.LIFT_WORK_LC_CODE_IS_NOT_NULL_4007.throwError("当前样品库位库存不足");
                 }
                 // 写入库存调整单
                 businessRequest.setLcCode(wmsLiftWork.getSampleLcCode());
@@ -182,7 +211,11 @@ public class LiftWorkBussiness {
                  * 判断样品库位与高库位是否为同一sku
                  */
                 if (StringUtils.isNull(inventoryList) || inventoryList.isEmpty()) {
-                    ErrorCode.LIFT_WORK_LC_CODE_IS_NULL_4006.throwError();
+                    ErrorCode.LIFT_WORK_LC_CODE_IS_NOT_NULL_4007.throwError("当前目标库位库存不足");
+                }
+                BigDecimal ivQty = inventoryList.stream().map(WmsInventory::getIvQty).reduce(BigDecimal.ZERO, BigDecimal::add);
+                if(ivQty.compareTo(wmsLiftWork.getLiftQty()) < 0){
+                    ErrorCode.LIFT_WORK_LC_CODE_IS_NOT_NULL_4007.throwError("当前目标库位库存不足");
                 }
                 List<Long> productIds = inventoryList.stream().map(WmsInventory::getProductId).collect(Collectors.toList());
                 if (!productIds.contains(wmsLiftWork.getProductId())) {
@@ -196,21 +229,22 @@ public class LiftWorkBussiness {
                 inventory.setWarehouseId(wmsLiftWork.getWarehouseId());
                 inventory.setLcCode(lcCode);
                 List<WmsInventory> inventories = wmsInventoryService.selectByEntity(inventory);
-                BigDecimal ivQty = BigDecimal.ZERO;
+                BigDecimal leftIvQty = BigDecimal.ZERO;
                 if (StringUtils.isNotNull(inventories) && !inventories.isEmpty()) {
-                    ivQty = inventories.stream().map(WmsInventory::getIvQty).reduce(BigDecimal.ZERO, BigDecimal::add);
+                    leftIvQty = inventories.stream().map(WmsInventory::getIvQty).reduce(BigDecimal.ZERO, BigDecimal::add);
                 }
                 // 写入库存调整单
                 businessRequest.setLcCode(lcCode);
-                businessRequest.setIvQty(ivQty);
+                businessRequest.setIvQty(leftIvQty);
                 businessRequest.setLcCodeAdjt(wmsLiftWork.getSampleLcCode());
                 businessRequest.setIvQtyAdjt(wmsLiftWork.getLiftQty());
                 businessRequest.setReason("升降任务-降货处理");
                 inventoryBussiness.adjustInventory(businessRequest, "LIFTDOWN");
             }
             if (StringUtils.isNotNull(wmsLiftWork.getBigBagRate())) {
-                BigDecimal bigBagExtraQty = wmsLiftWork.getLiftQty().subtract(wmsLiftWork.getBigBagQty().multiply(wmsLiftWork.getBigBagRate()));
-                wmsLiftWork.setBigBagExtraQty(bigBagExtraQty);
+                BigDecimal[] big = wmsLiftWork.getLiftQty().divideAndRemainder(wmsLiftWork.getBigBagRate());
+                wmsLiftWork.setBigBagQty(big[0]);
+                wmsLiftWork.setBigBagRate(big[1]);
             }
             if (StringUtils.isNotNull(wmsLiftWork.getId())) {
                 int count = wmsLiftWorkService.updateByPrimaryKeySelective(wmsLiftWork);
@@ -218,6 +252,8 @@ public class LiftWorkBussiness {
                     ErrorCode.LIFT_WORK_UPDATE_ERROR_4004.throwError(wmsLiftWork.getProductName(), wmsLiftWork.getSampleLcCode(), wmsLiftWork.getPrepLcCode());
                 }
             } else {
+                wmsLiftWork.setId(idGenerator.getUnique());
+                wmsLiftWork.setLiftDocumentType("ADD");
                 int count = wmsLiftWorkService.insert(wmsLiftWork);
                 if (count <= 0) {
                     ErrorCode.LIFT_WORK_UPDATE_ERROR_4004.throwError(wmsLiftWork.getProductName(), wmsLiftWork.getSampleLcCode(), wmsLiftWork.getPrepLcCode());

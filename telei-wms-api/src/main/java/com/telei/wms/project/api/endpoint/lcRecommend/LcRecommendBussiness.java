@@ -79,6 +79,7 @@ public class LcRecommendBussiness {
             //获取已经在使用的库位
             Map<String, Long> existLocationMap = new HashMap<>();
             List<InventoryLocationResponseVo> existLocationAll = wmsInventoryService.findExistLocationByLcCode(lcCodeAll);
+            log.debug("**********addLcRecommend*******existLocationAll" + JSON.toJSONString(existLocationAll));
             existLocationAll.stream().forEach(locationResponseVo -> {
                 existLocationMap.put(locationResponseVo.getLcCode(), locationResponseVo.getProductId());
             });

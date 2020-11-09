@@ -195,7 +195,7 @@ public class InitBussiness {
                 wmsInventory1.setProductId(productDetailResponse.getProductId());
                 wmsInventory1.setCompanyId(CustomRequestContext.getUserInfo().getCompanyId());
                 wmsInventory1.setWarehouseId(wmsInitHeader.getWarehouseId());
-                List<WmsInventory> wmsInventoryList = wmsInventoryService.selectByEntity(wmsInventory);
+                List<WmsInventory> wmsInventoryList = wmsInventoryService.selectByEntity(wmsInventory1);
                 if (wmsInventoryList != null) {
                     for (WmsInventory inventory1 : wmsInventoryList) {
                         if (!inventory1.getLcCode().equals(initLine.getLcCode())){
@@ -363,9 +363,11 @@ public class InitBussiness {
                     wmsIvTransaction.setWarehouseId(wmsInitHeader.getWarehouseId());
                     wmsIvTransaction.setProductId(initLine.getProductId());
                     wmsIvTransaction.setIvFifoTime(DateUtils.nowWithUTC());
+                    wmsIvTransaction.setLcCodeFrom(initLine.getLcCode());
                     wmsIvTransaction.setIvQtyFrom(BigDecimal.ZERO);
                     wmsIvTransaction.setLcCodeTo(initLine.getLcCode());
                     wmsIvTransaction.setIvQtyTo(initLine.getIvQty());
+                    wmsIvTransaction.setIvtDocumentCode(wmsInitHeader.getIvihCode());
                     wmsIvTransaction.setIvtDocumentId(request.getId());
                     wmsIvTransaction.setIvtDocumentlineId(initLine.getId());
                     wmsIvTransaction.setIvtChangeType("INCR");
@@ -516,6 +518,7 @@ public class InitBussiness {
         }
         conditionsBuilder.eq("companyId", CustomRequestContext.getUserInfo().getCompanyId());
         Map<String, Object> paramMap = conditionsBuilder.build();
+        paramMap.put("orderBy", " create_time DESC");
         Pagination page = (Pagination) wmsInitHeaderService.selectPage(pagination, paramMap);
         InitHeaderBusinessPageQueryResponse response = new InitHeaderBusinessPageQueryResponse();
         response.setPage(page);
@@ -615,8 +618,8 @@ public class InitBussiness {
                 initLineCheck.setReason("供应商不存在!");
             }
             WmsInventory inventory = inventoryMap.get(initLineCheck.getLcCode());
-            if (Objects.nonNull(inventory)) {
-                initLineCheck.setReason("当前库位不是空库位!");
+            if (Objects.nonNull(inventory) && !inventory.getLcCode().equals(initLineCheck.getLcCode())) {
+                initLineCheck.setReason("当前库位已存放其他商品!");
             }
         }
         return responseList;

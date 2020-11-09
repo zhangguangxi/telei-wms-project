@@ -86,4 +86,6 @@ public class LiftWorkCommonRequest {
     @ApiModelProperty(value = "公司id",example = "12345678",position = 7)
     private Long companyId;
 
+    private Long liftDocumentType;
+
 }
