@@ -39,7 +39,7 @@ public class LiftupAdjustStrategy implements IAdjustStrategy {
         BigDecimal totalIvQty = wmsInventories.stream().map(WmsInventory::getIvQty).reduce(BigDecimal.ZERO, BigDecimal::add);
 
         if (totalIvQty.compareTo(ivQtyAdjt) < 0) {
-            ErrorCode.ADJT_ERROR_4015.throwError(wmsAdjtHeader.getLcCode(), wmsAdjtHeader.getProductId(), ivQtyAdjt, totalIvQty, wmsAdjtHeader.getAdjhType());
+            ErrorCode.ADJT_ERROR_4015.throwError(wmsAdjtHeader.getLcCode(), ivQtyAdjt, totalIvQty);
         }
         for (WmsInventory inventory : wmsInventories) {
             BigDecimal ivQty = inventory.getIvQty();

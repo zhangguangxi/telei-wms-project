@@ -32,5 +32,3 @@ public class TestScheduleHandler extends TaskHandler {
         goodsBussiness.addGoods();
     }
 }
-
-
