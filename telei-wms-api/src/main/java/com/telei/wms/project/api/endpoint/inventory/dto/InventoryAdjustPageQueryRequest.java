@@ -29,5 +29,8 @@ public class InventoryAdjustPageQueryRequest {
 
         @ApiModelProperty(value = "库位类型",example = "库位类型，数据字典，S 样品库位、E 高架库位 等",position = 5)
         private String lcType;
+
+        @ApiModelProperty(value = "调整类型",example = "调整类型，MOVE-移位，INCREASE-调增，REDUCE-调减，LIFTUP-升任务，LIFTDOWN-降任务")
+        private String adjhType;
     }
 }

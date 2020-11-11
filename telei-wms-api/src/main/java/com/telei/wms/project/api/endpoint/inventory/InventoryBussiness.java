@@ -615,8 +615,8 @@ public class InventoryBussiness {
             List<OmsInventoryChangeWriteBack.OmsInventoryChangeWriteBackCondition>
                     omsInventoryChangeWriteBackConditions = adjustStrategy.process(wmsAdjtHeader, adjtLineList, wmsInventories,
                     inventoryAddList, inventoryUpdateList,
-                    deleteIvidList, ivTransactionList, ivSplitsList,
-                    userInfo, nowWithUTC);
+                    deleteIvidList, ivTransactionList, ivSplitsList, userInfo
+                    , nowWithUTC);
             /**库存调整-落库处理*/
             if (LockMapUtil.confirmLock(lockKey, lockValue)) {
                 log.info("\n +++++++++++++++++++++ 库存调整::获取锁的当前线程 -> {},lockKey -> {},lockValue -> {} ++++++++++++++++++++ \n ", Thread.currentThread().getName(), lockKey, lockValue);
@@ -824,6 +824,10 @@ public class InventoryBussiness {
 
         if (StringUtils.isNoneBlank(request.getInventoryPageQueryCondition().getProductBarcode())) {
             conditionsBuilder.like("productBarcode", request.getInventoryPageQueryCondition().getProductBarcode());
+        }
+
+        if(StringUtils.isNoneBlank(request.getInventoryPageQueryCondition().getAdjhType())){
+            conditionsBuilder.eq("adjhType",request.getInventoryPageQueryCondition().getAdjhType());
         }
 
         if (StringUtils.isNoneBlank(request.getInventoryPageQueryCondition().getLcType())) {

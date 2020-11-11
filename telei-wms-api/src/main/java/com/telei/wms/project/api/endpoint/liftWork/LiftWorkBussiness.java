@@ -92,9 +92,10 @@ public class LiftWorkBussiness {
         wmsLiftWork.setCreateTime(DateUtils.nowWithUTC());
         wmsLiftWork.setCreateUser(CustomRequestContext.getUserInfo().getUserName());
         // 新增升降任务降货显示并传数量升货不变
-        if(StringUtils.isNotNull(wmsLiftWork.getLiftQty()) && StringUtils.isNotNull(wmsLiftWork.getBigBagQty())){
-            BigDecimal bigBagExtraQty = wmsLiftWork.getLiftQty().subtract(wmsLiftWork.getBigBagRate().multiply(wmsLiftWork.getBigBagQty()));
-            wmsLiftWork.setBigBagExtraQty(bigBagExtraQty);
+        if(StringUtils.isNotNull(wmsLiftWork.getLiftQty()) && StringUtils.isNotNull(wmsLiftWork.getBigBagRate())){
+            BigDecimal[] bigBag = wmsLiftWork.getLiftQty().divideAndRemainder(wmsLiftWork.getBigBagRate());
+            wmsLiftWork.setBigBagQty(bigBag[0]);
+            wmsLiftWork.setBigBagExtraQty(bigBag[1]);
         }
         int count = wmsLiftWorkService.insert(wmsLiftWork);
         if (count <= 0) {
@@ -244,7 +245,7 @@ public class LiftWorkBussiness {
             if (StringUtils.isNotNull(wmsLiftWork.getBigBagRate())) {
                 BigDecimal[] big = wmsLiftWork.getLiftQty().divideAndRemainder(wmsLiftWork.getBigBagRate());
                 wmsLiftWork.setBigBagQty(big[0]);
-                wmsLiftWork.setBigBagRate(big[1]);
+                wmsLiftWork.setBigBagExtraQty(big[1]);
             }
             if (StringUtils.isNotNull(wmsLiftWork.getId())) {
                 int count = wmsLiftWorkService.updateByPrimaryKeySelective(wmsLiftWork);
@@ -254,6 +255,7 @@ public class LiftWorkBussiness {
             } else {
                 wmsLiftWork.setId(idGenerator.getUnique());
                 wmsLiftWork.setLiftDocumentType("ADD");
+                wmsLiftWork.setCreateTime(DateUtils.nowWithUTC());
                 int count = wmsLiftWorkService.insert(wmsLiftWork);
                 if (count <= 0) {
                     ErrorCode.LIFT_WORK_UPDATE_ERROR_4004.throwError(wmsLiftWork.getProductName(), wmsLiftWork.getSampleLcCode(), wmsLiftWork.getPrepLcCode());

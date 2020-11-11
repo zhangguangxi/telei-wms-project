@@ -24,5 +24,7 @@ public class InventoryAdjustPageQueryBussinessRequest {
         private String productBarcode;
         /**库位类型*/
         private String lcType;
+        /**调整类型*/
+        private String adjhType;
     };
 }

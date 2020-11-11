@@ -48,6 +48,11 @@
                 and wa.warehouse_id ${warehouseId}
             </if>
 
+            <if test="adjhType != null">
+                and wa.adjh_type ${adjhType}
+            </if>
+
+
             <if test="companyId != null">
                 and wa.company_id ${companyId}
                 and wa.company_id = cp.company_id

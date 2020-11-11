@@ -100,12 +100,14 @@ public class AdjustStrategyFactory {
         if(Objects.isNull(wmsLocation)){
             ErrorCode.ADJT_ERROR_4019.throwError(wmsInventory.getWarehouseId(),JSON.toJSONString(lcCodeAdjt));
         }
+        BigDecimal[] bigBag = ivQtyAdjt.divideAndRemainder(new BigDecimal(wmsInventoryAdd.getBigBagRate()));
+        BigDecimal[] midBag = ivQtyAdjt.divideAndRemainder(new BigDecimal(wmsInventoryAdd.getMidBagRate()));
         wmsInventoryAdd.setLcType(wmsLocation.getLcType());//库位类型
         wmsInventoryAdd.setIvQty(ivQtyAdjt); /**库存数量(调整数)*/
-        wmsInventoryAdd.setBigBagQty(ivQtyAdjt.multiply(new BigDecimal(wmsInventoryAdd.getBigBagRate())));/**大包数量*/
-        wmsInventoryAdd.setBigBagExtraQty(ivQtyAdjt.divideAndRemainder(new BigDecimal(wmsInventoryAdd.getBigBagRate()))[1]);/**大包剩余数量*/
-        wmsInventoryAdd.setMidBagQty(ivQtyAdjt.multiply(new BigDecimal(wmsInventoryAdd.getMidBagRate()))); /**中包数量*/
-        wmsInventoryAdd.setMidBagExtraQty(ivQtyAdjt.divideAndRemainder(new BigDecimal(wmsInventoryAdd.getMidBagRate()))[1]);/**中包剩余数量*/
+        wmsInventoryAdd.setBigBagQty(bigBag[0]);/**大包数量*/
+        wmsInventoryAdd.setBigBagExtraQty(bigBag[1]);/**大包剩余数量*/
+        wmsInventoryAdd.setMidBagQty(midBag[0]); /**中包数量*/
+        wmsInventoryAdd.setMidBagExtraQty(midBag[1]);/**中包剩余数量*/
         wmsInventoryAdd.setIvTranstime(nowWithUtc);
         wmsInventoryAdd.setIvCreatetime(nowWithUtc);
         wmsInventoryAdd.setBizDate(nowWithUtc);
