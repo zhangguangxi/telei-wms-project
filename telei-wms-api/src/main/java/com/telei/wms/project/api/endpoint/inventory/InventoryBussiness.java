@@ -2,6 +2,8 @@ package com.telei.wms.project.api.endpoint.inventory;
 
 import com.alibaba.fastjson.JSON;
 import com.google.common.collect.Lists;
+import com.google.common.collect.Maps;
+import com.google.common.collect.Sets;
 import com.nuochen.framework.app.api.ApiResponse;
 import com.nuochen.framework.autocoding.domain.Pagination;
 import com.nuochen.framework.autocoding.domain.condition.ConditionsBuilder;
@@ -954,13 +956,12 @@ public class InventoryBussiness {
             if (Objects.nonNull(ivIdIndexList) && !ivIdIndexList.isEmpty()) {
                 ivIdIndexMap = ivIdIndexList.stream().collect(Collectors.toMap(WmsDeductIvOutConfirmResponseVo::getIvId, WmsDeductIvOutConfirmResponseVo::getIvIdIndex));
             }
-            //库存分组(公司ID+仓库ID+库位编码)
+            //库存分组(公司ID+仓库ID+库位编码+产品ID)
             Map<String, List<WmsInventory>> inventoryMap = inventories.stream().collect(Collectors.groupingBy((item -> item.getCompanyId() + "#" + item.getWarehouseId() + "#" + item.getLcCode() + "#" + item.getProductId())));
-            /**库存分组统计库存数量(公司ID+仓库ID+库位编码)*/
+            /**库存分组统计库存数量(公司ID+仓库ID+库位编码+产品ID)*/
             Map<String, BigDecimal> requestCondition2QtyMap = inventoryDeductConditionList.stream().collect(Collectors.groupingBy((item -> item.getCompanyId() + "#" + item.getWarehouseId() + "#" + item.getLcCode() + "#" + item.getProductId()), CollectorsUtil.summingBigDecimal(WmsInventoryDeductConditionVo::getQty)));
-            //扣减库存分组处理(公司ID+仓库ID+库位编码)
+            //扣减库存分组处理(公司ID+仓库ID+库位编码+产品ID)
             Map<String, List<WmsInventoryDeductConditionVo>> requestCondition2EntityMap = inventoryDeductConditionList.stream().collect(Collectors.groupingBy((item -> item.getCompanyId() + "#" + item.getWarehouseId() + "#" + item.getLcCode() + "#" + item.getProductId())));
-
             //更新库存集合
             List<WmsInventory> updateInventoryList = Lists.newArrayList();
             //删除库存集合(id)
@@ -1198,5 +1199,57 @@ public class InventoryBussiness {
         InventoryDeductBussinessResponse response = new InventoryDeductBussinessResponse();
         response.setList(list);
         return response;
+    }
+
+    /**
+     * 多样品库位检查
+     *
+     * @param request
+     * @return
+     */
+    public InventoryMultiSampleLocationCheckBussinessResponse multiSampleLocationCheckInventory(InventoryMultiSampleLocationCheckBussinessRequest request) {
+        List<InventoryMultiSampleLocationCheckBussinessRequest.InventoryMultiSampleLocationCheckCondition> requestList = request.getList();
+        if(Objects.isNull(requestList) || requestList.isEmpty() ){
+            // TODO: 2020/11/13
+        }
+        List<Long> requestProductList = requestList.stream().map(InventoryMultiSampleLocationCheckBussinessRequest.InventoryMultiSampleLocationCheckCondition::getProductId).collect(toList());
+        if(Objects.isNull(requestProductList) || requestProductList.isEmpty()){
+            // TODO: 2020/11/13
+        }
+
+        ProductRequest productDetailRequest = new ProductRequest();
+        productDetailRequest.setProductIds(requestProductList);
+        productDetailRequest.setCompanyId(CustomRequestContext.getUserInfo().getCompanyId());
+        ApiResponse productListResponse = productFeignClient.getProductList(productDetailRequest);
+        ProductListResponse response = JSON.parseObject(JSON.toJSONString(productListResponse.getData()), ProductListResponse.class);
+        List<ProductDetailResponse> productList = response.getProductList();
+        if (Objects.isNull(productList) || productList.isEmpty()) {
+//            ErrorCode.INVENTORY_ADD_ERROR_PRODUCT_NOT_EXIST_4003.throwError(JSON.toJSONString(requestProductList));
+        }
+        Map<Long, String> productMap = productList.stream().collect(Collectors.toMap(ProductDetailResponse::getProductId, ProductDetailResponse::getProductName));
+        Map<String, List<InventoryMultiSampleLocationCheckBussinessRequest.InventoryMultiSampleLocationCheckCondition>> requestGroupMap = requestList.stream().collect(Collectors.groupingBy((item -> item.getCompanyId() + "#" + item.getWarehouseId() + "#" + item.getProductId())));
+        List<WmsInventory> dbList = wmsInventoryService.selectAll();
+        Map<String, String> lcCodeMap = Maps.newHashMap();
+        if(Objects.nonNull(dbList) && !dbList.isEmpty()){
+            Map<String, List<WmsInventory>> dbGroupMap = dbList.stream().collect(Collectors.groupingBy((item -> item.getCompanyId() + "#" + item.getWarehouseId() + "#" + item.getProductId())));
+
+            dbGroupMap.forEach((k,v)->{
+                Set<String> lcCodeSet = Sets.newConcurrentHashSet();
+                String productId = k.split("#")[2];
+                String productName = productMap.get(productId);
+                v.forEach(item ->{
+                    lcCodeSet.add(item.getLcCode());
+                });
+                if(lcCodeSet.size() > 1){
+                    lcCodeMap.put(productName,JSON.toJSONString(lcCodeSet));
+                }
+            });
+        }
+        if(Objects.nonNull(lcCodeMap) && !lcCodeMap.isEmpty()){
+            lcCodeMap.forEach((k,v)->{
+
+            });
+        }
+        return null;
     }
 }

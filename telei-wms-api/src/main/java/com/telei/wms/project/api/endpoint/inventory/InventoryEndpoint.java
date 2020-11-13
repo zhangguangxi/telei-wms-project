@@ -122,4 +122,12 @@ public class InventoryEndpoint {
         InventoryDeductBussinessResponse bussinessResponse = inventoryBussiness.changeListInventory(bussinessRequest);
         return DataConvertUtil.parseDataAsObject(bussinessResponse, InventoryChangeListResponse.class);
     }
+
+    @ApiOperation("多样品库位检查")
+    @PostMapping(ServiceId.WMS_INVENTORY_MULTI_SAMPLE_LOCATION_CHECK)
+    public InventoryMultiSampleLocationCheckResponse multiSampleLocationCheckInventory(@Valid @RequestBody InventoryMultiSampleLocationCheckRequest request) {
+        InventoryMultiSampleLocationCheckBussinessRequest bussinessRequest = DataConvertUtil.parseDataAsObject(request, InventoryMultiSampleLocationCheckBussinessRequest.class);
+        InventoryMultiSampleLocationCheckBussinessResponse bussinessResponse = inventoryBussiness.multiSampleLocationCheckInventory(bussinessRequest);
+        return DataConvertUtil.parseDataAsObject(bussinessResponse, InventoryMultiSampleLocationCheckResponse.class);
+    }
 }

@@ -106,6 +106,8 @@ public class ServiceId {
     public static final String WMS_INVENTORY_CHANGE_PAGE_QUERY = "1030511";
     @RightResource(rightSystem = "wms", rightItem = "库存管理", rightFunction = "库存变动详情列表")
     public static final String WMS_INVENTORY_CHANGE_LIST = "1030512";
+    @RightResource(rightSystem = "wms", rightItem = "库存管理", rightFunction = "多样品库位检查")
+    public static final String WMS_INVENTORY_MULTI_SAMPLE_LOCATION_CHECK = "1030513";
 
 
     /**
