@@ -17,8 +17,6 @@ public class InventoryMultiSampleLocationCheckBussinessRequest {
         private Long companyId;
         /**仓库id*/
         private Long warehouseId;
-        /**库位编码*/
-        private String lcCode;
         /**产品序列码*/
         private Long productId;
     }

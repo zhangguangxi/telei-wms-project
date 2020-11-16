@@ -23,10 +23,6 @@ public class InventoryMultiSampleLocationCheckRequest {
         @Check
         private Long warehouseId;
 
-        @ApiModelProperty(value = "库位编码",example = "12341234",position = 3)
-        @Check
-        private String lcCode;
-
         @ApiModelProperty(value = "产品序列码",example = "12341234123",position = 4)
         @Check
         private Long productId;

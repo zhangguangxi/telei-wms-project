@@ -12,15 +12,16 @@
         <result column="line_id" jdbcType="BIGINT" property="lineId"/>
         <result column="product_id" jdbcType="BIGINT" property="productId"/>
         <result column="qty" jdbcType="DECIMAL" property="qty"/>
+        <result column="real_qty" jdbcType="DECIMAL" property="realQty"/>
     </resultMap>
 
     <sql id="Base_Column_List">
-        ivo_id,company_id,warehouse_id,warehouse_code,plan_out_date,order_id,order_code,line_id,product_id,qty
+        ivo_id,company_id,warehouse_id,warehouse_code,plan_out_date,order_id,order_code,line_id,product_id,qty,real_qty
     </sql>
 
     <insert id="insert">
-        insert into wms_iv_out (ivo_id,company_id,warehouse_id,warehouse_code,plan_out_date,order_id,order_code,line_id,product_id,qty)
-        values (#{ivoId,jdbcType=BIGINT},#{companyId,jdbcType=BIGINT},#{warehouseId,jdbcType=BIGINT},#{warehouseCode,jdbcType=VARCHAR},#{planOutDate,jdbcType=TIMESTAMP},#{orderId,jdbcType=BIGINT},#{orderCode,jdbcType=VARCHAR},#{lineId,jdbcType=BIGINT},#{productId,jdbcType=BIGINT},#{qty,jdbcType=DECIMAL})
+        insert into wms_iv_out (ivo_id,company_id,warehouse_id,warehouse_code,plan_out_date,order_id,order_code,line_id,product_id,qty,real_qty)
+        values (#{ivoId,jdbcType=BIGINT},#{companyId,jdbcType=BIGINT},#{warehouseId,jdbcType=BIGINT},#{warehouseCode,jdbcType=VARCHAR},#{planOutDate,jdbcType=TIMESTAMP},#{orderId,jdbcType=BIGINT},#{orderCode,jdbcType=VARCHAR},#{lineId,jdbcType=BIGINT},#{productId,jdbcType=BIGINT},#{qty,jdbcType=DECIMAL},#{realQty,jdbcType=DECIMAL})
     </insert>
 
     <insert id="insertSelective">
@@ -54,7 +55,10 @@
                 product_id,
             </if>
             <if test="qty != null">
-                qty
+                qty,
+            </if>
+            <if test="realQty != null">
+                real_qty
             </if>
         </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
@@ -86,13 +90,16 @@
                 #{productId,jdbcType=BIGINT},
             </if>
             <if test="qty != null">
-                #{qty,jdbcType=DECIMAL}
+                #{qty,jdbcType=DECIMAL},
+            </if>
+            <if test="realQty != null">
+                #{realQty,jdbcType=DECIMAL}
             </if>
         </trim>
     </insert>
 
     <insert id="insertBatch">
-        insert into wms_iv_out (ivo_id,company_id,warehouse_id,warehouse_code,plan_out_date,order_id,order_code,line_id,product_id,qty) values
+        insert into wms_iv_out (ivo_id,company_id,warehouse_id,warehouse_code,plan_out_date,order_id,order_code,line_id,product_id,qty,real_qty) values
         <foreach collection="list" item="item" separator=",">
             (
             #{item.ivoId,jdbcType=BIGINT},
@@ -104,7 +111,8 @@
             #{item.orderCode,jdbcType=VARCHAR},
             #{item.lineId,jdbcType=BIGINT},
             #{item.productId,jdbcType=BIGINT},
-            #{item.qty,jdbcType=DECIMAL}
+            #{item.qty,jdbcType=DECIMAL},
+            #{item.realQty,jdbcType=DECIMAL}
             )
         </foreach>
     </insert>
@@ -132,7 +140,8 @@
             order_code = #{orderCode,jdbcType=VARCHAR},
             line_id = #{lineId,jdbcType=BIGINT},
             product_id = #{productId,jdbcType=BIGINT},
-            qty = #{qty,jdbcType=DECIMAL}
+            qty = #{qty,jdbcType=DECIMAL},
+            real_qty = #{realQty,jdbcType=DECIMAL}
         </set>
         where ivo_id = #{ivoId,jdbcType=BIGINT}
     </update>
@@ -165,7 +174,10 @@
                 product_id = #{productId,jdbcType=BIGINT},
             </if>
             <if test="qty != null">
-                qty = #{qty,jdbcType=DECIMAL}
+                qty = #{qty,jdbcType=DECIMAL},
+            </if>
+            <if test="realQty != null">
+                real_qty = #{realQty,jdbcType=DECIMAL}
             </if>
         </set>
         where ivo_id = #{ivoId,jdbcType=BIGINT}
@@ -200,7 +212,10 @@
                     product_id = #{item.productId,jdbcType=BIGINT},
                 </if>
                 <if test="item.qty != null">
-                    qty = #{item.qty,jdbcType=DECIMAL}
+                    qty = #{item.qty,jdbcType=DECIMAL},
+                </if>
+                <if test="item.realQty != null">
+                    real_qty = #{item.realQty,jdbcType=DECIMAL}
                 </if>
             </set>
             where ivo_id = #{item.ivoId,jdbcType=BIGINT}
@@ -265,6 +280,9 @@
             <if test="qty != null">
                 and qty=#{qty,jdbcType=DECIMAL}
             </if>
+            <if test="realQty != null">
+                and real_qty=#{realQty,jdbcType=DECIMAL}
+            </if>
         </where>
     </select>
 
@@ -302,6 +320,9 @@
             </if>
             <if test="qty != null">
                 and qty ${qty}
+            </if>
+            <if test="realQty != null">
+                and real_qty ${realQty}
             </if>
         </where>
         <if test="orderBy != null">

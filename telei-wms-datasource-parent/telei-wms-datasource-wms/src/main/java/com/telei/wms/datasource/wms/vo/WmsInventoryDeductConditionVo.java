@@ -30,6 +30,8 @@ public class WmsInventoryDeductConditionVo {
     private Long ivoId;
     /** 明细id */
     private Long lineId;
-    /**数量*/
+    /**计划扣减数量*/
     private BigDecimal qty;
+    /**实际扣减数量*/
+    private BigDecimal realQty;
 }

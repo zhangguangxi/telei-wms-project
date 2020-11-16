@@ -29,8 +29,10 @@ public class WmsIvOut implements Entity<Long> {
     private Long lineId;
     /** 产品id */
     private Long productId;
-    /** 数量 */
+    /** 计划数量 */
     private BigDecimal qty;
+    /** 实际扣减数量 */
+    private BigDecimal realQty;
     @Override
     public Long getId() {
         return ivoId;
