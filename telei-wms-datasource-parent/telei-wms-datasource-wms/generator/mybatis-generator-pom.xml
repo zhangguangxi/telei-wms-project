@@ -110,7 +110,10 @@
 <!--                        <table><tableName>wms_adjt_header</tableName></table>-->
 <!--                        <table><tableName>wms_adjt_line</tableName></table>-->
 <!--                        <table><tableName>wms_adjt_line</tableName></table>-->
-                            <table><tableName>wms_iv_out</tableName></table>
+<!--                        <table><tableName>wms_iv_out</tableName></table>-->
+                        <table><tableName>wms_backlc</tableName></table>
+                        <table><tableName>wms_backlc_list</tableName></table>
+
                     </tables>
                 </configuration>
 

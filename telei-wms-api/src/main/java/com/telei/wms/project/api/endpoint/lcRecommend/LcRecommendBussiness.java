@@ -172,7 +172,7 @@ public class LcRecommendBussiness {
         }
         WmsLcRecommend updateWmsLcRecommend = DataConvertUtil.parseDataAsObject(request, WmsLcRecommend.class);
         if (! Objects.isNull(CustomRequestContext.getUserInfo())) {
-            updateWmsLcRecommend.setLastUpdateUser(CustomRequestContext.getUserInfo().getUserName());
+            updateWmsLcRecommend.setLastUpdateUser(CustomRequestContext.getUserInfo().getEmployeeName());
         }
         updateWmsLcRecommend.setLastUpdateTime(DateUtils.nowWithUTC());
         int updateResult = wmsLcRecommendService.updateByPrimaryKeySelective(updateWmsLcRecommend);

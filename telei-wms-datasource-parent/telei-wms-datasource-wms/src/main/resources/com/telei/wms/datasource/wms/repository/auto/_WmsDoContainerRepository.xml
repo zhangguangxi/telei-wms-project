@@ -1,0 +1,494 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.telei.wms.datasource.wms.repository.WmsDoContainerRepository">
+    <resultMap id="BaseResultMap" type="com.telei.wms.datasource.wms.model.WmsDoContainer">
+        <id column="doc_id" jdbcType="BIGINT" property="id"/>
+            <result column="dol_id" jdbcType="BIGINT" property="dolId"/>
+            <result column="doh_id" jdbcType="BIGINT" property="dohId"/>
+            <result column="c_id" jdbcType="BIGINT" property="cId"/>
+            <result column="sp_id" jdbcType="BIGINT" property="spId"/>
+            <result column="so_id" jdbcType="BIGINT" property="soId"/>
+            <result column="product_id" jdbcType="BIGINT" property="productId"/>
+            <result column="big_bag_qty" jdbcType="DECIMAL" property="bigBagQty"/>
+            <result column="big_bag_rate" jdbcType="DECIMAL" property="bigBagRate"/>
+            <result column="mid_bag_qty" jdbcType="DECIMAL" property="midBagQty"/>
+            <result column="mid_bag_rate" jdbcType="DECIMAL" property="midBagRate"/>
+            <result column="small_bag_qty" jdbcType="DECIMAL" property="smallBagQty"/>
+            <result column="c_qty" jdbcType="DECIMAL" property="cQty"/>
+            <result column="c_weight" jdbcType="DECIMAL" property="cWeight"/>
+            <result column="c_vol" jdbcType="DECIMAL" property="cVol"/>
+            <result column="cost_reference" jdbcType="DECIMAL" property="costReference"/>
+            <result column="unit_price" jdbcType="DECIMAL" property="unitPrice"/>
+            <result column="c_amount" jdbcType="DECIMAL" property="cAmount"/>
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        doc_id,dol_id,doh_id,c_id,sp_id,so_id,product_id,big_bag_qty,big_bag_rate,mid_bag_qty,mid_bag_rate,small_bag_qty,c_qty,c_weight,c_vol,cost_reference,unit_price,c_amount
+    </sql>
+
+        <insert id="insert">
+            insert into wms_do_container (doc_id,dol_id,doh_id,c_id,sp_id,so_id,product_id,big_bag_qty,big_bag_rate,mid_bag_qty,mid_bag_rate,small_bag_qty,c_qty,c_weight,c_vol,cost_reference,unit_price,c_amount)
+            values (#{id,jdbcType=BIGINT},#{dolId,jdbcType=BIGINT},#{dohId,jdbcType=BIGINT},#{cId,jdbcType=BIGINT},#{spId,jdbcType=BIGINT},#{soId,jdbcType=BIGINT},#{productId,jdbcType=BIGINT},#{bigBagQty,jdbcType=DECIMAL},#{bigBagRate,jdbcType=DECIMAL},#{midBagQty,jdbcType=DECIMAL},#{midBagRate,jdbcType=DECIMAL},#{smallBagQty,jdbcType=DECIMAL},#{cQty,jdbcType=DECIMAL},#{cWeight,jdbcType=DECIMAL},#{cVol,jdbcType=DECIMAL},#{costReference,jdbcType=DECIMAL},#{unitPrice,jdbcType=DECIMAL},#{cAmount,jdbcType=DECIMAL})
+        </insert>
+
+        <insert id="insertSelective">
+            insert into wms_do_container
+            <trim prefix="(" suffix=")" suffixOverrides=",">
+                    <if test="id != null">
+                        doc_id,
+                    </if>
+                    <if test="dolId != null">
+                        dol_id,
+                    </if>
+                    <if test="dohId != null">
+                        doh_id,
+                    </if>
+                    <if test="cId != null">
+                        c_id,
+                    </if>
+                    <if test="spId != null">
+                        sp_id,
+                    </if>
+                    <if test="soId != null">
+                        so_id,
+                    </if>
+                    <if test="productId != null">
+                        product_id,
+                    </if>
+                    <if test="bigBagQty != null">
+                        big_bag_qty,
+                    </if>
+                    <if test="bigBagRate != null">
+                        big_bag_rate,
+                    </if>
+                    <if test="midBagQty != null">
+                        mid_bag_qty,
+                    </if>
+                    <if test="midBagRate != null">
+                        mid_bag_rate,
+                    </if>
+                    <if test="smallBagQty != null">
+                        small_bag_qty,
+                    </if>
+                    <if test="cQty != null">
+                        c_qty,
+                    </if>
+                    <if test="cWeight != null">
+                        c_weight,
+                    </if>
+                    <if test="cVol != null">
+                        c_vol,
+                    </if>
+                    <if test="costReference != null">
+                        cost_reference,
+                    </if>
+                    <if test="unitPrice != null">
+                        unit_price,
+                    </if>
+                    <if test="cAmount != null">
+                        c_amount
+                    </if>
+            </trim>
+            <trim prefix="values (" suffix=")" suffixOverrides=",">
+                    <if test="id != null">
+                        #{id,jdbcType=BIGINT},
+                    </if>
+                    <if test="dolId != null">
+                        #{dolId,jdbcType=BIGINT},
+                    </if>
+                    <if test="dohId != null">
+                        #{dohId,jdbcType=BIGINT},
+                    </if>
+                    <if test="cId != null">
+                        #{cId,jdbcType=BIGINT},
+                    </if>
+                    <if test="spId != null">
+                        #{spId,jdbcType=BIGINT},
+                    </if>
+                    <if test="soId != null">
+                        #{soId,jdbcType=BIGINT},
+                    </if>
+                    <if test="productId != null">
+                        #{productId,jdbcType=BIGINT},
+                    </if>
+                    <if test="bigBagQty != null">
+                        #{bigBagQty,jdbcType=DECIMAL},
+                    </if>
+                    <if test="bigBagRate != null">
+                        #{bigBagRate,jdbcType=DECIMAL},
+                    </if>
+                    <if test="midBagQty != null">
+                        #{midBagQty,jdbcType=DECIMAL},
+                    </if>
+                    <if test="midBagRate != null">
+                        #{midBagRate,jdbcType=DECIMAL},
+                    </if>
+                    <if test="smallBagQty != null">
+                        #{smallBagQty,jdbcType=DECIMAL},
+                    </if>
+                    <if test="cQty != null">
+                        #{cQty,jdbcType=DECIMAL},
+                    </if>
+                    <if test="cWeight != null">
+                        #{cWeight,jdbcType=DECIMAL},
+                    </if>
+                    <if test="cVol != null">
+                        #{cVol,jdbcType=DECIMAL},
+                    </if>
+                    <if test="costReference != null">
+                        #{costReference,jdbcType=DECIMAL},
+                    </if>
+                    <if test="unitPrice != null">
+                        #{unitPrice,jdbcType=DECIMAL},
+                    </if>
+                    <if test="cAmount != null">
+                        #{cAmount,jdbcType=DECIMAL}
+                    </if>
+            </trim>
+        </insert>
+
+        <insert id="insertBatch">
+            insert into wms_do_container (doc_id,dol_id,doh_id,c_id,sp_id,so_id,product_id,big_bag_qty,big_bag_rate,mid_bag_qty,mid_bag_rate,small_bag_qty,c_qty,c_weight,c_vol,cost_reference,unit_price,c_amount) values
+            <foreach collection="list" item="item" separator=",">
+                (
+                    #{item.id,jdbcType=BIGINT},
+                    #{item.dolId,jdbcType=BIGINT},
+                    #{item.dohId,jdbcType=BIGINT},
+                    #{item.cId,jdbcType=BIGINT},
+                    #{item.spId,jdbcType=BIGINT},
+                    #{item.soId,jdbcType=BIGINT},
+                    #{item.productId,jdbcType=BIGINT},
+                    #{item.bigBagQty,jdbcType=DECIMAL},
+                    #{item.bigBagRate,jdbcType=DECIMAL},
+                    #{item.midBagQty,jdbcType=DECIMAL},
+                    #{item.midBagRate,jdbcType=DECIMAL},
+                    #{item.smallBagQty,jdbcType=DECIMAL},
+                    #{item.cQty,jdbcType=DECIMAL},
+                    #{item.cWeight,jdbcType=DECIMAL},
+                    #{item.cVol,jdbcType=DECIMAL},
+                    #{item.costReference,jdbcType=DECIMAL},
+                    #{item.unitPrice,jdbcType=DECIMAL},
+                    #{item.cAmount,jdbcType=DECIMAL}
+                )
+            </foreach>
+        </insert>
+
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+        delete from wms_do_container
+        where doc_id = #{id,jdbcType=BIGINT}
+    </delete>
+
+    <delete id="deleteByPrimaryKeys">
+        delete from wms_do_container where doc_id in
+        <foreach close=")" collection="list" item="item" open="(" separator=",">
+            #{item}
+        </foreach>
+    </delete>
+
+    <update id="updateByPrimaryKey">
+        update wms_do_container
+        <set>
+                dol_id = #{dolId,jdbcType=BIGINT},
+                doh_id = #{dohId,jdbcType=BIGINT},
+                c_id = #{cId,jdbcType=BIGINT},
+                sp_id = #{spId,jdbcType=BIGINT},
+                so_id = #{soId,jdbcType=BIGINT},
+                product_id = #{productId,jdbcType=BIGINT},
+                big_bag_qty = #{bigBagQty,jdbcType=DECIMAL},
+                big_bag_rate = #{bigBagRate,jdbcType=DECIMAL},
+                mid_bag_qty = #{midBagQty,jdbcType=DECIMAL},
+                mid_bag_rate = #{midBagRate,jdbcType=DECIMAL},
+                small_bag_qty = #{smallBagQty,jdbcType=DECIMAL},
+                c_qty = #{cQty,jdbcType=DECIMAL},
+                c_weight = #{cWeight,jdbcType=DECIMAL},
+                c_vol = #{cVol,jdbcType=DECIMAL},
+                cost_reference = #{costReference,jdbcType=DECIMAL},
+                unit_price = #{unitPrice,jdbcType=DECIMAL},
+                c_amount = #{cAmount,jdbcType=DECIMAL}
+        </set>
+        where doc_id = #{id,jdbcType=BIGINT}
+    </update>
+
+    <update id="updateByPrimaryKeySelective">
+        update wms_do_container
+        <set>
+                <if test="dolId != null">
+                    dol_id = #{dolId,jdbcType=BIGINT},
+                </if>
+                <if test="dohId != null">
+                    doh_id = #{dohId,jdbcType=BIGINT},
+                </if>
+                <if test="cId != null">
+                    c_id = #{cId,jdbcType=BIGINT},
+                </if>
+                <if test="spId != null">
+                    sp_id = #{spId,jdbcType=BIGINT},
+                </if>
+                <if test="soId != null">
+                    so_id = #{soId,jdbcType=BIGINT},
+                </if>
+                <if test="productId != null">
+                    product_id = #{productId,jdbcType=BIGINT},
+                </if>
+                <if test="bigBagQty != null">
+                    big_bag_qty = #{bigBagQty,jdbcType=DECIMAL},
+                </if>
+                <if test="bigBagRate != null">
+                    big_bag_rate = #{bigBagRate,jdbcType=DECIMAL},
+                </if>
+                <if test="midBagQty != null">
+                    mid_bag_qty = #{midBagQty,jdbcType=DECIMAL},
+                </if>
+                <if test="midBagRate != null">
+                    mid_bag_rate = #{midBagRate,jdbcType=DECIMAL},
+                </if>
+                <if test="smallBagQty != null">
+                    small_bag_qty = #{smallBagQty,jdbcType=DECIMAL},
+                </if>
+                <if test="cQty != null">
+                    c_qty = #{cQty,jdbcType=DECIMAL},
+                </if>
+                <if test="cWeight != null">
+                    c_weight = #{cWeight,jdbcType=DECIMAL},
+                </if>
+                <if test="cVol != null">
+                    c_vol = #{cVol,jdbcType=DECIMAL},
+                </if>
+                <if test="costReference != null">
+                    cost_reference = #{costReference,jdbcType=DECIMAL},
+                </if>
+                <if test="unitPrice != null">
+                    unit_price = #{unitPrice,jdbcType=DECIMAL},
+                </if>
+                <if test="cAmount != null">
+                    c_amount = #{cAmount,jdbcType=DECIMAL}
+                </if>
+        </set>
+        where doc_id = #{id,jdbcType=BIGINT}
+    </update>
+
+    <update id="updateBatch">
+        <foreach close="" collection="list" item="item" open="" separator=";">
+            update wms_do_container
+            <set>
+                    <if test="item.dolId != null">
+                        dol_id = #{item.dolId,jdbcType=BIGINT},
+                    </if>
+                    <if test="item.dohId != null">
+                        doh_id = #{item.dohId,jdbcType=BIGINT},
+                    </if>
+                    <if test="item.cId != null">
+                        c_id = #{item.cId,jdbcType=BIGINT},
+                    </if>
+                    <if test="item.spId != null">
+                        sp_id = #{item.spId,jdbcType=BIGINT},
+                    </if>
+                    <if test="item.soId != null">
+                        so_id = #{item.soId,jdbcType=BIGINT},
+                    </if>
+                    <if test="item.productId != null">
+                        product_id = #{item.productId,jdbcType=BIGINT},
+                    </if>
+                    <if test="item.bigBagQty != null">
+                        big_bag_qty = #{item.bigBagQty,jdbcType=DECIMAL},
+                    </if>
+                    <if test="item.bigBagRate != null">
+                        big_bag_rate = #{item.bigBagRate,jdbcType=DECIMAL},
+                    </if>
+                    <if test="item.midBagQty != null">
+                        mid_bag_qty = #{item.midBagQty,jdbcType=DECIMAL},
+                    </if>
+                    <if test="item.midBagRate != null">
+                        mid_bag_rate = #{item.midBagRate,jdbcType=DECIMAL},
+                    </if>
+                    <if test="item.smallBagQty != null">
+                        small_bag_qty = #{item.smallBagQty,jdbcType=DECIMAL},
+                    </if>
+                    <if test="item.cQty != null">
+                        c_qty = #{item.cQty,jdbcType=DECIMAL},
+                    </if>
+                    <if test="item.cWeight != null">
+                        c_weight = #{item.cWeight,jdbcType=DECIMAL},
+                    </if>
+                    <if test="item.cVol != null">
+                        c_vol = #{item.cVol,jdbcType=DECIMAL},
+                    </if>
+                    <if test="item.costReference != null">
+                        cost_reference = #{item.costReference,jdbcType=DECIMAL},
+                    </if>
+                    <if test="item.unitPrice != null">
+                        unit_price = #{item.unitPrice,jdbcType=DECIMAL},
+                    </if>
+                    <if test="item.cAmount != null">
+                        c_amount = #{item.cAmount,jdbcType=DECIMAL}
+                    </if>
+            </set>
+            where doc_id = #{item.id,jdbcType=BIGINT}
+        </foreach>
+    </update>
+
+    <select id="selectByPrimaryKey" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List" />
+        from wms_do_container
+        where doc_id = #{id,jdbcType=BIGINT}
+    </select>
+
+    <select id="selectByPrimaryKeyWithLock" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List" />
+        from wms_do_container
+        where doc_id = #{id,jdbcType=BIGINT} for update
+    </select>
+
+    <select id="selectByPrimaryKeys" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List" />
+        from wms_do_container where doc_id in
+        <foreach close=")" collection="list" item="item" open="(" separator=",">
+            #{item}
+        </foreach>
+    </select>
+
+    <select id="selectByEntity" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from wms_do_container
+        <where>
+                <if test="id != null">
+                    and doc_id=#{id,jdbcType=BIGINT}
+                </if>
+                <if test="dolId != null">
+                    and dol_id=#{dolId,jdbcType=BIGINT}
+                </if>
+                <if test="dohId != null">
+                    and doh_id=#{dohId,jdbcType=BIGINT}
+                </if>
+                <if test="cId != null">
+                    and c_id=#{cId,jdbcType=BIGINT}
+                </if>
+                <if test="spId != null">
+                    and sp_id=#{spId,jdbcType=BIGINT}
+                </if>
+                <if test="soId != null">
+                    and so_id=#{soId,jdbcType=BIGINT}
+                </if>
+                <if test="productId != null">
+                    and product_id=#{productId,jdbcType=BIGINT}
+                </if>
+                <if test="bigBagQty != null">
+                    and big_bag_qty=#{bigBagQty,jdbcType=DECIMAL}
+                </if>
+                <if test="bigBagRate != null">
+                    and big_bag_rate=#{bigBagRate,jdbcType=DECIMAL}
+                </if>
+                <if test="midBagQty != null">
+                    and mid_bag_qty=#{midBagQty,jdbcType=DECIMAL}
+                </if>
+                <if test="midBagRate != null">
+                    and mid_bag_rate=#{midBagRate,jdbcType=DECIMAL}
+                </if>
+                <if test="smallBagQty != null">
+                    and small_bag_qty=#{smallBagQty,jdbcType=DECIMAL}
+                </if>
+                <if test="cQty != null">
+                    and c_qty=#{cQty,jdbcType=DECIMAL}
+                </if>
+                <if test="cWeight != null">
+                    and c_weight=#{cWeight,jdbcType=DECIMAL}
+                </if>
+                <if test="cVol != null">
+                    and c_vol=#{cVol,jdbcType=DECIMAL}
+                </if>
+                <if test="costReference != null">
+                    and cost_reference=#{costReference,jdbcType=DECIMAL}
+                </if>
+                <if test="unitPrice != null">
+                    and unit_price=#{unitPrice,jdbcType=DECIMAL}
+                </if>
+                <if test="cAmount != null">
+                    and c_amount=#{cAmount,jdbcType=DECIMAL}
+                </if>
+        </where>
+    </select>
+
+    <select id="selectByConditions" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from wms_do_container
+        <where>
+                <if test="id != null">
+                    and doc_id ${id}
+                </if>
+                <if test="dolId != null">
+                    and dol_id ${dolId}
+                </if>
+                <if test="dohId != null">
+                    and doh_id ${dohId}
+                </if>
+                <if test="cId != null">
+                    and c_id ${cId}
+                </if>
+                <if test="spId != null">
+                    and sp_id ${spId}
+                </if>
+                <if test="soId != null">
+                    and so_id ${soId}
+                </if>
+                <if test="productId != null">
+                    and product_id ${productId}
+                </if>
+                <if test="bigBagQty != null">
+                    and big_bag_qty ${bigBagQty}
+                </if>
+                <if test="bigBagRate != null">
+                    and big_bag_rate ${bigBagRate}
+                </if>
+                <if test="midBagQty != null">
+                    and mid_bag_qty ${midBagQty}
+                </if>
+                <if test="midBagRate != null">
+                    and mid_bag_rate ${midBagRate}
+                </if>
+                <if test="smallBagQty != null">
+                    and small_bag_qty ${smallBagQty}
+                </if>
+                <if test="cQty != null">
+                    and c_qty ${cQty}
+                </if>
+                <if test="cWeight != null">
+                    and c_weight ${cWeight}
+                </if>
+                <if test="cVol != null">
+                    and c_vol ${cVol}
+                </if>
+                <if test="costReference != null">
+                    and cost_reference ${costReference}
+                </if>
+                <if test="unitPrice != null">
+                    and unit_price ${unitPrice}
+                </if>
+                <if test="cAmount != null">
+                    and c_amount ${cAmount}
+                </if>
+        </where>
+        <if test="orderBy != null">
+            order by ${orderBy}
+        </if>
+    </select>
+
+    <select id="selectAll" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from wms_do_container
+    </select>
+
+    <select id="count" resultType="java.lang.Long">
+        select count(*) from wms_do_container
+    </select>
+
+    <select id="selectByFunction">
+        select ${function}(${column}) from wms_do_container
+    </select>
+
+</mapper>

@@ -113,7 +113,7 @@ public class LiftTaskBussiness {
                 wmsLiftWork.setLiftType(responseVo.getLcType());
                 wmsLiftWork.setPrepLcCode(prepLcCode);
                 wmsLiftWork.setCreateTime(DateUtils.nowWithUTC());
-                wmsLiftWork.setCreateUser(CustomRequestContext.getUserInfo().getUserName());
+                wmsLiftWork.setCreateUser(CustomRequestContext.getUserInfo().getEmployeeName());
                 wmsLiftWorkList.add(wmsLiftWork);
             }
             int count = wmsLiftWorkService.insertBatch(wmsLiftWorkList);

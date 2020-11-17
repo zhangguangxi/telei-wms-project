@@ -80,7 +80,7 @@ public class RooBussiness {
         WmsRooHeader wmsRooHeader = DataConvertUtil.parseDataAsObject(request, WmsRooHeader.class);
         // 收货单id
         long rooId = idGenerator.getUnique();
-        String userName = CustomRequestContext.getUserInfo().getUserName();
+        String userName = CustomRequestContext.getUserInfo().getEmployeeName();
         Long companyId = CustomRequestContext.getUserInfo().getCompanyId();
         Long accountId = CustomRequestContext.getUserInfo().getAccountId();
         // 获取业务单号

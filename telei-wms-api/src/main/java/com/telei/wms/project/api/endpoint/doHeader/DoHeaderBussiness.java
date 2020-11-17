@@ -126,10 +126,17 @@ public class DoHeaderBussiness {
         if (StringUtils.isNoneBlank(request.getOrderStatus())) {
             if ("01".equals(request.getOrderStatus())) {
                 conditionsBuilder.eq("hasPlo", "0");
+                conditionsBuilder.eq("hadCheck", "0");
             } else if ("02".equals(request.getOrderStatus())) {
                 conditionsBuilder.eq("hadCheck", "1");
+                conditionsBuilder.ne("orderStatus", "40");
+            }  else if ("20".equals(request.getOrderStatus())) {
+                conditionsBuilder.eq("orderStatus", "20");
+            }  else if ("25".equals(request.getOrderStatus())) {
+                conditionsBuilder.eq("orderStatus", "25");
             } else if ("30".equals(request.getOrderStatus())) {
                 conditionsBuilder.eq("orderStatus", "30");
+                conditionsBuilder.eq("hadCheck", "0");
             } else if ("40".equals(request.getOrderStatus())) {
                 conditionsBuilder.eq("orderStatus", "40");
             }

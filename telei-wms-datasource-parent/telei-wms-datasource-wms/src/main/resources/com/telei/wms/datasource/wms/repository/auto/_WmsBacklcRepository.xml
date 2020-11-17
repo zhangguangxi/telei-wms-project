@@ -1,0 +1,473 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.telei.wms.datasource.wms.repository.WmsBacklcRepository">
+    <resultMap id="BaseResultMap" type="com.telei.wms.datasource.wms.model.WmsBacklc">
+        <id column="bl_id" jdbcType="BIGINT" property="blId"/>
+        <result column="bl_code" jdbcType="VARCHAR" property="blCode"/>
+        <result column="company_id" jdbcType="BIGINT" property="companyId"/>
+        <result column="warehouse_id" jdbcType="BIGINT" property="warehouseId"/>
+        <result column="warehouse_code" jdbcType="VARCHAR" property="warehouseCode"/>
+        <result column="doh_id" jdbcType="BIGINT" property="dohId"/>
+        <result column="detailed_species_qty" jdbcType="INTEGER" property="detailedSpeciesQty"/>
+        <result column="big_bag_qty" jdbcType="DECIMAL" property="bigBagQty"/>
+        <result column="mid_bag_qty" jdbcType="DECIMAL" property="midBagQty"/>
+        <result column="small_bag_qty" jdbcType="DECIMAL" property="smallBagQty"/>
+        <result column="b_qty" jdbcType="DECIMAL" property="bQty"/>
+        <result column="weight" jdbcType="DECIMAL" property="weight"/>
+        <result column="vol" jdbcType="DECIMAL" property="vol"/>
+        <result column="print_qty" jdbcType="INTEGER" property="printQty"/>
+        <result column="memo" jdbcType="VARCHAR" property="memo"/>
+        <result column="create_time" jdbcType="TIMESTAMP" property="createTime"/>
+        <result column="create_user" jdbcType="VARCHAR" property="createUser"/>
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        bl_id,bl_code,company_id,warehouse_id,warehouse_code,doh_id,detailed_species_qty,big_bag_qty,mid_bag_qty,small_bag_qty,b_qty,weight,vol,print_qty,memo,create_time,create_user
+    </sql>
+
+    <insert id="insert">
+        insert into wms_backlc (bl_id,bl_code,company_id,warehouse_id,warehouse_code,doh_id,detailed_species_qty,big_bag_qty,mid_bag_qty,small_bag_qty,b_qty,weight,vol,print_qty,memo,create_time,create_user)
+        values (#{blId,jdbcType=BIGINT},#{blCode,jdbcType=VARCHAR},#{companyId,jdbcType=BIGINT},#{warehouseId,jdbcType=BIGINT},#{warehouseCode,jdbcType=VARCHAR},#{dohId,jdbcType=BIGINT},#{detailedSpeciesQty,jdbcType=INTEGER},#{bigBagQty,jdbcType=DECIMAL},#{midBagQty,jdbcType=DECIMAL},#{smallBagQty,jdbcType=DECIMAL},#{bQty,jdbcType=DECIMAL},#{weight,jdbcType=DECIMAL},#{vol,jdbcType=DECIMAL},#{printQty,jdbcType=INTEGER},#{memo,jdbcType=VARCHAR},#{createTime,jdbcType=TIMESTAMP},#{createUser,jdbcType=VARCHAR})
+    </insert>
+
+    <insert id="insertSelective">
+        insert into wms_backlc
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="blId != null">
+                bl_id,
+            </if>
+            <if test="blCode != null">
+                bl_code,
+            </if>
+            <if test="companyId != null">
+                company_id,
+            </if>
+            <if test="warehouseId != null">
+                warehouse_id,
+            </if>
+            <if test="warehouseCode != null">
+                warehouse_code,
+            </if>
+            <if test="dohId != null">
+                doh_id,
+            </if>
+            <if test="detailedSpeciesQty != null">
+                detailed_species_qty,
+            </if>
+            <if test="bigBagQty != null">
+                big_bag_qty,
+            </if>
+            <if test="midBagQty != null">
+                mid_bag_qty,
+            </if>
+            <if test="smallBagQty != null">
+                small_bag_qty,
+            </if>
+            <if test="bQty != null">
+                b_qty,
+            </if>
+            <if test="weight != null">
+                weight,
+            </if>
+            <if test="vol != null">
+                vol,
+            </if>
+            <if test="printQty != null">
+                print_qty,
+            </if>
+            <if test="memo != null">
+                memo,
+            </if>
+            <if test="createTime != null">
+                create_time,
+            </if>
+            <if test="createUser != null">
+                create_user
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="blId != null">
+                #{blId,jdbcType=BIGINT},
+            </if>
+            <if test="blCode != null">
+                #{blCode,jdbcType=VARCHAR},
+            </if>
+            <if test="companyId != null">
+                #{companyId,jdbcType=BIGINT},
+            </if>
+            <if test="warehouseId != null">
+                #{warehouseId,jdbcType=BIGINT},
+            </if>
+            <if test="warehouseCode != null">
+                #{warehouseCode,jdbcType=VARCHAR},
+            </if>
+            <if test="dohId != null">
+                #{dohId,jdbcType=BIGINT},
+            </if>
+            <if test="detailedSpeciesQty != null">
+                #{detailedSpeciesQty,jdbcType=INTEGER},
+            </if>
+            <if test="bigBagQty != null">
+                #{bigBagQty,jdbcType=DECIMAL},
+            </if>
+            <if test="midBagQty != null">
+                #{midBagQty,jdbcType=DECIMAL},
+            </if>
+            <if test="smallBagQty != null">
+                #{smallBagQty,jdbcType=DECIMAL},
+            </if>
+            <if test="bQty != null">
+                #{bQty,jdbcType=DECIMAL},
+            </if>
+            <if test="weight != null">
+                #{weight,jdbcType=DECIMAL},
+            </if>
+            <if test="vol != null">
+                #{vol,jdbcType=DECIMAL},
+            </if>
+            <if test="printQty != null">
+                #{printQty,jdbcType=INTEGER},
+            </if>
+            <if test="memo != null">
+                #{memo,jdbcType=VARCHAR},
+            </if>
+            <if test="createTime != null">
+                #{createTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="createUser != null">
+                #{createUser,jdbcType=VARCHAR}
+            </if>
+        </trim>
+    </insert>
+
+    <insert id="insertBatch">
+        insert into wms_backlc (bl_id,bl_code,company_id,warehouse_id,warehouse_code,doh_id,detailed_species_qty,big_bag_qty,mid_bag_qty,small_bag_qty,b_qty,weight,vol,print_qty,memo,create_time,create_user) values
+        <foreach collection="list" item="item" separator=",">
+            (
+            #{item.blId,jdbcType=BIGINT},
+            #{item.blCode,jdbcType=VARCHAR},
+            #{item.companyId,jdbcType=BIGINT},
+            #{item.warehouseId,jdbcType=BIGINT},
+            #{item.warehouseCode,jdbcType=VARCHAR},
+            #{item.dohId,jdbcType=BIGINT},
+            #{item.detailedSpeciesQty,jdbcType=INTEGER},
+            #{item.bigBagQty,jdbcType=DECIMAL},
+            #{item.midBagQty,jdbcType=DECIMAL},
+            #{item.smallBagQty,jdbcType=DECIMAL},
+            #{item.bQty,jdbcType=DECIMAL},
+            #{item.weight,jdbcType=DECIMAL},
+            #{item.vol,jdbcType=DECIMAL},
+            #{item.printQty,jdbcType=INTEGER},
+            #{item.memo,jdbcType=VARCHAR},
+            #{item.createTime,jdbcType=TIMESTAMP},
+            #{item.createUser,jdbcType=VARCHAR}
+            )
+        </foreach>
+    </insert>
+
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+        delete from wms_backlc
+        where bl_id = #{blId,jdbcType=BIGINT}
+    </delete>
+
+    <delete id="deleteByPrimaryKeys">
+        delete from wms_backlc where bl_id in
+        <foreach close=")" collection="list" item="item" open="(" separator=",">
+            #{item}
+        </foreach>
+    </delete>
+
+    <update id="updateByPrimaryKey">
+        update wms_backlc
+        <set>
+            bl_code = #{blCode,jdbcType=VARCHAR},
+            company_id = #{companyId,jdbcType=BIGINT},
+            warehouse_id = #{warehouseId,jdbcType=BIGINT},
+            warehouse_code = #{warehouseCode,jdbcType=VARCHAR},
+            doh_id = #{dohId,jdbcType=BIGINT},
+            detailed_species_qty = #{detailedSpeciesQty,jdbcType=INTEGER},
+            big_bag_qty = #{bigBagQty,jdbcType=DECIMAL},
+            mid_bag_qty = #{midBagQty,jdbcType=DECIMAL},
+            small_bag_qty = #{smallBagQty,jdbcType=DECIMAL},
+            b_qty = #{bQty,jdbcType=DECIMAL},
+            weight = #{weight,jdbcType=DECIMAL},
+            vol = #{vol,jdbcType=DECIMAL},
+            print_qty = #{printQty,jdbcType=INTEGER},
+            memo = #{memo,jdbcType=VARCHAR},
+            create_time = #{createTime,jdbcType=TIMESTAMP},
+            create_user = #{createUser,jdbcType=VARCHAR}
+        </set>
+        where bl_id = #{blId,jdbcType=BIGINT}
+    </update>
+
+    <update id="updateByPrimaryKeySelective">
+        update wms_backlc
+        <set>
+            <if test="blCode != null">
+                bl_code = #{blCode,jdbcType=VARCHAR},
+            </if>
+            <if test="companyId != null">
+                company_id = #{companyId,jdbcType=BIGINT},
+            </if>
+            <if test="warehouseId != null">
+                warehouse_id = #{warehouseId,jdbcType=BIGINT},
+            </if>
+            <if test="warehouseCode != null">
+                warehouse_code = #{warehouseCode,jdbcType=VARCHAR},
+            </if>
+            <if test="dohId != null">
+                doh_id = #{dohId,jdbcType=BIGINT},
+            </if>
+            <if test="detailedSpeciesQty != null">
+                detailed_species_qty = #{detailedSpeciesQty,jdbcType=INTEGER},
+            </if>
+            <if test="bigBagQty != null">
+                big_bag_qty = #{bigBagQty,jdbcType=DECIMAL},
+            </if>
+            <if test="midBagQty != null">
+                mid_bag_qty = #{midBagQty,jdbcType=DECIMAL},
+            </if>
+            <if test="smallBagQty != null">
+                small_bag_qty = #{smallBagQty,jdbcType=DECIMAL},
+            </if>
+            <if test="bQty != null">
+                b_qty = #{bQty,jdbcType=DECIMAL},
+            </if>
+            <if test="weight != null">
+                weight = #{weight,jdbcType=DECIMAL},
+            </if>
+            <if test="vol != null">
+                vol = #{vol,jdbcType=DECIMAL},
+            </if>
+            <if test="printQty != null">
+                print_qty = #{printQty,jdbcType=INTEGER},
+            </if>
+            <if test="memo != null">
+                memo = #{memo,jdbcType=VARCHAR},
+            </if>
+            <if test="createTime != null">
+                create_time = #{createTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="createUser != null">
+                create_user = #{createUser,jdbcType=VARCHAR}
+            </if>
+        </set>
+        where bl_id = #{blId,jdbcType=BIGINT}
+    </update>
+
+    <update id="updateBatch">
+        <foreach close="" collection="list" item="item" open="" separator=";">
+            update wms_backlc
+            <set>
+                <if test="item.blCode != null">
+                    bl_code = #{item.blCode,jdbcType=VARCHAR},
+                </if>
+                <if test="item.companyId != null">
+                    company_id = #{item.companyId,jdbcType=BIGINT},
+                </if>
+                <if test="item.warehouseId != null">
+                    warehouse_id = #{item.warehouseId,jdbcType=BIGINT},
+                </if>
+                <if test="item.warehouseCode != null">
+                    warehouse_code = #{item.warehouseCode,jdbcType=VARCHAR},
+                </if>
+                <if test="item.dohId != null">
+                    doh_id = #{item.dohId,jdbcType=BIGINT},
+                </if>
+                <if test="item.detailedSpeciesQty != null">
+                    detailed_species_qty = #{item.detailedSpeciesQty,jdbcType=INTEGER},
+                </if>
+                <if test="item.bigBagQty != null">
+                    big_bag_qty = #{item.bigBagQty,jdbcType=DECIMAL},
+                </if>
+                <if test="item.midBagQty != null">
+                    mid_bag_qty = #{item.midBagQty,jdbcType=DECIMAL},
+                </if>
+                <if test="item.smallBagQty != null">
+                    small_bag_qty = #{item.smallBagQty,jdbcType=DECIMAL},
+                </if>
+                <if test="item.bQty != null">
+                    b_qty = #{item.bQty,jdbcType=DECIMAL},
+                </if>
+                <if test="item.weight != null">
+                    weight = #{item.weight,jdbcType=DECIMAL},
+                </if>
+                <if test="item.vol != null">
+                    vol = #{item.vol,jdbcType=DECIMAL},
+                </if>
+                <if test="item.printQty != null">
+                    print_qty = #{item.printQty,jdbcType=INTEGER},
+                </if>
+                <if test="item.memo != null">
+                    memo = #{item.memo,jdbcType=VARCHAR},
+                </if>
+                <if test="item.createTime != null">
+                    create_time = #{item.createTime,jdbcType=TIMESTAMP},
+                </if>
+                <if test="item.createUser != null">
+                    create_user = #{item.createUser,jdbcType=VARCHAR}
+                </if>
+            </set>
+            where bl_id = #{item.blId,jdbcType=BIGINT}
+        </foreach>
+    </update>
+
+    <select id="selectByPrimaryKey" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List" />
+        from wms_backlc
+        where bl_id = #{blId,jdbcType=BIGINT}
+    </select>
+
+    <select id="selectByPrimaryKeyWithLock" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List" />
+        from wms_backlc
+        where bl_id = #{blId,jdbcType=BIGINT} for update
+    </select>
+
+    <select id="selectByPrimaryKeys" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List" />
+        from wms_backlc where bl_id in
+        <foreach close=")" collection="list" item="item" open="(" separator=",">
+            #{item}
+        </foreach>
+    </select>
+
+    <select id="selectByEntity" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from wms_backlc
+        <where>
+            <if test="blId != null">
+                and bl_id=#{blId,jdbcType=BIGINT}
+            </if>
+            <if test="blCode != null">
+                and bl_code=#{blCode,jdbcType=VARCHAR}
+            </if>
+            <if test="companyId != null">
+                and company_id=#{companyId,jdbcType=BIGINT}
+            </if>
+            <if test="warehouseId != null">
+                and warehouse_id=#{warehouseId,jdbcType=BIGINT}
+            </if>
+            <if test="warehouseCode != null">
+                and warehouse_code=#{warehouseCode,jdbcType=VARCHAR}
+            </if>
+            <if test="dohId != null">
+                and doh_id=#{dohId,jdbcType=BIGINT}
+            </if>
+            <if test="detailedSpeciesQty != null">
+                and detailed_species_qty=#{detailedSpeciesQty,jdbcType=INTEGER}
+            </if>
+            <if test="bigBagQty != null">
+                and big_bag_qty=#{bigBagQty,jdbcType=DECIMAL}
+            </if>
+            <if test="midBagQty != null">
+                and mid_bag_qty=#{midBagQty,jdbcType=DECIMAL}
+            </if>
+            <if test="smallBagQty != null">
+                and small_bag_qty=#{smallBagQty,jdbcType=DECIMAL}
+            </if>
+            <if test="bQty != null">
+                and b_qty=#{bQty,jdbcType=DECIMAL}
+            </if>
+            <if test="weight != null">
+                and weight=#{weight,jdbcType=DECIMAL}
+            </if>
+            <if test="vol != null">
+                and vol=#{vol,jdbcType=DECIMAL}
+            </if>
+            <if test="printQty != null">
+                and print_qty=#{printQty,jdbcType=INTEGER}
+            </if>
+            <if test="memo != null">
+                and memo=#{memo,jdbcType=VARCHAR}
+            </if>
+            <if test="createTime != null">
+                and create_time=#{createTime,jdbcType=TIMESTAMP}
+            </if>
+            <if test="createUser != null">
+                and create_user=#{createUser,jdbcType=VARCHAR}
+            </if>
+        </where>
+    </select>
+
+    <select id="selectByConditions" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from wms_backlc
+        <where>
+            <if test="blId != null">
+                and bl_id ${blId}
+            </if>
+            <if test="blCode != null">
+                and bl_code ${blCode}
+            </if>
+            <if test="companyId != null">
+                and company_id ${companyId}
+            </if>
+            <if test="warehouseId != null">
+                and warehouse_id ${warehouseId}
+            </if>
+            <if test="warehouseCode != null">
+                and warehouse_code ${warehouseCode}
+            </if>
+            <if test="dohId != null">
+                and doh_id ${dohId}
+            </if>
+            <if test="detailedSpeciesQty != null">
+                and detailed_species_qty ${detailedSpeciesQty}
+            </if>
+            <if test="bigBagQty != null">
+                and big_bag_qty ${bigBagQty}
+            </if>
+            <if test="midBagQty != null">
+                and mid_bag_qty ${midBagQty}
+            </if>
+            <if test="smallBagQty != null">
+                and small_bag_qty ${smallBagQty}
+            </if>
+            <if test="bQty != null">
+                and b_qty ${bQty}
+            </if>
+            <if test="weight != null">
+                and weight ${weight}
+            </if>
+            <if test="vol != null">
+                and vol ${vol}
+            </if>
+            <if test="printQty != null">
+                and print_qty ${printQty}
+            </if>
+            <if test="memo != null">
+                and memo ${memo}
+            </if>
+            <if test="createTime != null">
+                and create_time ${createTime}
+            </if>
+            <if test="createUser != null">
+                and create_user ${createUser}
+            </if>
+        </where>
+        <if test="orderBy != null">
+            order by ${orderBy}
+        </if>
+    </select>
+
+    <select id="selectAll" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from wms_backlc
+    </select>
+
+    <select id="count" resultType="java.lang.Long">
+        select count(*) from wms_backlc
+    </select>
+
+    <select id="selectByFunction">
+        select ${function}(${column}) from wms_backlc
+    </select>
+
+</mapper>

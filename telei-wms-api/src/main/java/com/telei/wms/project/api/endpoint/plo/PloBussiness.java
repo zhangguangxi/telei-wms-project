@@ -119,9 +119,9 @@ public class PloBussiness {
         wmsPloHeader.setPickedQty(BigDecimal.ZERO);
         wmsPloHeader.setPickingWeight(BigDecimal.ZERO);
         wmsPloHeader.setPickingVol(BigDecimal.ZERO);
-        wmsPloHeader.setCreateUser(CustomRequestContext.getUserInfo().getUserName());
+        wmsPloHeader.setCreateUser(CustomRequestContext.getUserInfo().getEmployeeName());
         wmsPloHeader.setCreateTime(DateUtils.nowWithUTC());
-        wmsPloHeader.setLastUpdateUser(CustomRequestContext.getUserInfo().getUserName());
+        wmsPloHeader.setLastUpdateUser(CustomRequestContext.getUserInfo().getEmployeeName());
         wmsPloHeader.setLastUpdateTime(DateUtils.nowWithUTC());
         WmsDoLine wmsDoLineEntity = new WmsDoLine();
         wmsDoLineEntity.setDohId(wmsDoHeader.getId());
@@ -443,7 +443,7 @@ public class PloBussiness {
             wmsDoHeaderService.updateByPrimaryKeySelective(updateWmsDoHeader);
         }
         if (Objects.nonNull(CustomRequestContext.getUserInfo())) {
-            updateWmsPloHeader.setLastUpdateUser(CustomRequestContext.getUserInfo().getUserName());
+            updateWmsPloHeader.setLastUpdateUser(CustomRequestContext.getUserInfo().getEmployeeName());
         }
         updateWmsPloHeader.setLastUpdateTime(DateUtils.nowWithUTC());
         wmsPloHeaderService.updateByPrimaryKeySelective(updateWmsPloHeader);
@@ -485,7 +485,7 @@ public class PloBussiness {
         updateWmsPloHeader.setId(wmsPloHeader.getId());
         updateWmsPloHeader.setOrderStatus(CANCEL_STATUS);
         if (Objects.nonNull(CustomRequestContext.getUserInfo())) {
-            updateWmsPloHeader.setLastUpdateUser(CustomRequestContext.getUserInfo().getUserName());
+            updateWmsPloHeader.setLastUpdateUser(CustomRequestContext.getUserInfo().getEmployeeName());
         }
         updateWmsPloHeader.setLastUpdateTime(DateUtils.nowWithUTC());
         int updateResult = wmsPloHeaderService.updateByPrimaryKeySelective(updateWmsPloHeader);
@@ -530,7 +530,7 @@ public class PloBussiness {
         updateWmsPloHeader.setId(wmsPloHeader.getId());
         updateWmsPloHeader.setOrderStatus(PICKING_FINISH_STATUS);
         updateWmsPloHeader.setPloTime(DateUtils.nowWithUTC());
-        updateWmsPloHeader.setLastUpdateUser(CustomRequestContext.getUserInfo().getUserName());
+        updateWmsPloHeader.setLastUpdateUser(CustomRequestContext.getUserInfo().getEmployeeName());
         updateWmsPloHeader.setLastUpdateTime(DateUtils.nowWithUTC());
         wmsPloHeaderService.updateByPrimaryKeySelective(updateWmsPloHeader);
         //更新出库任务单状态

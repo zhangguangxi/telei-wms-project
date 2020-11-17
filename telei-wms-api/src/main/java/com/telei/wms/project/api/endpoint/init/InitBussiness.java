@@ -121,7 +121,7 @@ public class InitBussiness {
             wmsInitHeader.setIvihCode(businessNumberResponse.getBusinessNumber());
             wmsInitHeader.setIvihStatus("01");
             wmsInitHeader.setCompanyId(CustomRequestContext.getUserInfo().getCompanyId());
-            wmsInitHeader.setCreateUser(CustomRequestContext.getUserInfo().getUserName());
+            wmsInitHeader.setCreateUser(CustomRequestContext.getUserInfo().getEmployeeName());
             wmsInitHeader.setCreateTime(DateUtils.nowWithUTC());
             int initHeaderCount = wmsInitHeaderService.insert(wmsInitHeader);
             if (initHeaderCount <= 0) {
@@ -230,7 +230,7 @@ public class InitBussiness {
             ErrorCode.INIT_NOT_EXIST_4001.throwError();
         }
         wmsInitHeader.setIvihStatus("10");
-        wmsInitHeader.setAuditUser(CustomRequestContext.getUserInfo().getUserName());
+        wmsInitHeader.setAuditUser(CustomRequestContext.getUserInfo().getEmployeeName());
         wmsInitHeader.setAuditTime(DateUtils.nowWithUTC());
         if (StringUtils.isNoneBlank(request.getMemo())) {
             wmsInitHeader.setMemo(request.getMemo());
@@ -376,7 +376,7 @@ public class InitBussiness {
                     wmsIvTransaction.setIabId(iabId);
                     wmsIvTransaction.setBizDate(DateUtils.nowWithUTC());
                     wmsIvTransaction.setCreateTime(DateUtils.nowWithUTC());
-                    wmsIvTransaction.setCreateUser(CustomRequestContext.getUserInfo().getUserName());
+                    wmsIvTransaction.setCreateUser(CustomRequestContext.getUserInfo().getEmployeeName());
                     wmsIvTransactionList.add(wmsIvTransaction);
                 }
                 wmsIvAttributebatchList.add(wmsIvAttributebatch);

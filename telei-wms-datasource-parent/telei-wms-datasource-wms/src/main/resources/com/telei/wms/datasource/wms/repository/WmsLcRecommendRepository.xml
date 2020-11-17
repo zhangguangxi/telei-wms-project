@@ -4,6 +4,17 @@
 
     <resultMap id="PageQueryResultMap" extends="BaseResultMap" type="com.telei.wms.datasource.wms.vo.LcRecommendPageQueryResponseVo">
         <result column="warehouse_name" jdbcType="VARCHAR" property="warehouseName"/>
+        <result column="product_no" jdbcType="VARCHAR" property="productNo"/>
+        <result column="product_barcode" jdbcType="VARCHAR" property="productBarcode"/>
+        <result column="product_name" jdbcType="VARCHAR" property="productName"/>
+        <result column="mid_bag_qty" jdbcType="INTEGER" property="midBagQty"/>
+        <result column="big_bag_qty" jdbcType="INTEGER" property="bigBagQty"/>
+        <result column="big_bag_weight" jdbcType="DECIMAL" property="bigBagWeight"/>
+        <result column="big_bag_vol" jdbcType="DECIMAL" property="bigBagVol"/>
+        <result column="category_name" jdbcType="VARCHAR" property="categoryName"/>
+        <result column="category_ename" jdbcType="VARCHAR" property="categoryEname"/>
+        <result column="image_path" jdbcType="VARCHAR" property="imagePath"/>
+        <result column="product_name_local" jdbcType="VARCHAR" property="productNameLocal"/>
     </resultMap>
 
     <sql id="Page_Query_Column_List">
@@ -18,7 +29,18 @@
         wlr.create_user,
         wlr.last_update_time,
         wlr.last_update_user,
-        cw.warehouse_name
+        cw.warehouse_name,
+        cp.product_no,
+        cp.product_barcode,
+        cp.product_name,
+        cp.mid_bag_qty,
+        cp.big_bag_qty,
+        cp.big_bag_weight,
+        cp.big_bag_vol,
+        cp.image_path,
+        cp.product_name_local,
+        cpc.category_name,
+        cpc.category_ename
     </sql>
 
     <select id="findAll" resultMap="PageQueryResultMap">
@@ -27,6 +49,7 @@
         FROM wms_lc_recommend wlr
         INNER JOIN cdm.cdm_warehouse cw ON cw.warehouse_id=wlr.warehouse_id
         LEFT JOIN cdm.cdm_product cp ON cp.product_id=wlr.product_id AND cp.company_id=#{companyId}
+        LEFT JOIN cdm.cdm_product_category cpc ON cpc.category_id=cp.product_category_id
         <where>
             <if test="createUser != null and createUser != ''">
                 wlr.create_user LIKE concat('%',#{createUser},'%')

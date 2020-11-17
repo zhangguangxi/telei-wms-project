@@ -7,6 +7,11 @@
         <result column="pl_time" jdbcType="VARCHAR" property="plTime"/>
     </resultMap>
 
+
+    <sql id="Custom_Column_List">
+        wpl.plol_id,wpl.plo_id,wpl.plo_code,wpl.dol_id,wpl.product_id,wpl.product_barcode,wpl.spec_type,wpl.media_id,wpl.product_no,wpl.product_name,wpl.product_name_local,wpl.product_upc_code,wpl.brand,wpl.unit_gross_weight,wpl.unit_vol,wpl.qty,wpl.weight,wpl.vol,wpl.big_bag_qty,wpl.big_bag_rate,wpl.mid_bag_qty,wpl.mid_bag_rate,wpl.small_bag_qty,wpl.picked_qty,wpl.picked_weight,wpl.picked_vol,wpl.lc_code,wpl.lc_aisle,wpl.lc_x,wpl.lc_y,wpl.lc_z,wpl.memo
+    </sql>
+
     <sql id="Page_Query_Column_List">
         wpl.plol_id,
         wpl.plo_id,
@@ -101,12 +106,15 @@
 
     <select id="selectByDolIdList" resultMap="BaseResultMap">
         select
-            <include refid="Base_Column_List"/>
-        from wms_plo_line
-        where dol_id in
+            <include refid="Custom_Column_List"/>
+        from wms_plo_line wpl
+        left join wms_plo_header wph
+         on wpl.plo_id = wph.plo_id
+        where wpl.dol_id in
         <foreach collection="list" item="item" open="(" separator="," close=")">
             #{item}
         </foreach>
+        and wph.order_status != 98
     </select>
 </mapper>
 

@@ -93,9 +93,9 @@ public class PaoBussiness {
         wmsPaoHeader.setOrderType("20");
         wmsPaoHeader.setPaoStatus(SAVE_STATUS);
         wmsPaoHeader.setCompanyId(CustomRequestContext.getUserInfo().getCompanyId());
-        wmsPaoHeader.setCreateUser(CustomRequestContext.getUserInfo().getUserName());
+        wmsPaoHeader.setCreateUser(CustomRequestContext.getUserInfo().getEmployeeName());
         wmsPaoHeader.setCreateTime(DateUtils.nowWithUTC());
-        wmsPaoHeader.setLastupdateUser(CustomRequestContext.getUserInfo().getUserName());
+        wmsPaoHeader.setLastupdateUser(CustomRequestContext.getUserInfo().getEmployeeName());
         wmsPaoHeader.setLastupdateTime(DateUtils.nowWithUTC());
         //总数量
         BigDecimal totalQty = BigDecimal.ZERO;
@@ -357,7 +357,7 @@ public class PaoBussiness {
             //获取上架单撤销状态
             WmsPaoHeader wmsPaoHeader = DataConvertUtil.parseDataAsObject(request, WmsPaoHeader.class);
             wmsPaoHeader.setPaoStatus(DELETE_STATUS);
-            wmsPaoHeader.setLastupdateUser(CustomRequestContext.getUserInfo().getUserName());
+            wmsPaoHeader.setLastupdateUser(CustomRequestContext.getUserInfo().getEmployeeName());
             wmsPaoHeader.setLastupdateTime(DateUtils.nowWithUTC());
             //确认锁
             if (confirmLock(lockKey, lockValue)) {

@@ -1,0 +1,410 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.telei.wms.datasource.wms.repository.WmsBacklcListRepository">
+    <resultMap id="BaseResultMap" type="com.telei.wms.datasource.wms.model.WmsBacklcList">
+        <id column="bll_id" jdbcType="BIGINT" property="bllId"/>
+        <result column="bl_id" jdbcType="BIGINT" property="blId"/>
+        <result column="dol_id" jdbcType="BIGINT" property="dolId"/>
+        <result column="doh_id" jdbcType="BIGINT" property="dohId"/>
+        <result column="product_id" jdbcType="BIGINT" property="productId"/>
+        <result column="lc_code" jdbcType="VARCHAR" property="lcCode"/>
+        <result column="big_bag_qty" jdbcType="DECIMAL" property="bigBagQty"/>
+        <result column="big_bag_rate" jdbcType="DECIMAL" property="bigBagRate"/>
+        <result column="mid_bag_qty" jdbcType="DECIMAL" property="midBagQty"/>
+        <result column="mid_bag_rate" jdbcType="DECIMAL" property="midBagRate"/>
+        <result column="small_bag_qty" jdbcType="DECIMAL" property="smallBagQty"/>
+        <result column="b_qty" jdbcType="DECIMAL" property="bQty"/>
+        <result column="b_weight" jdbcType="DECIMAL" property="bWeight"/>
+        <result column="b_vol" jdbcType="DECIMAL" property="bVol"/>
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        bll_id,bl_id,dol_id,doh_id,product_id,lc_code,big_bag_qty,big_bag_rate,mid_bag_qty,mid_bag_rate,small_bag_qty,b_qty,b_weight,b_vol
+    </sql>
+
+    <insert id="insert">
+        insert into wms_backlc_list (bll_id,bl_id,dol_id,doh_id,product_id,lc_code,big_bag_qty,big_bag_rate,mid_bag_qty,mid_bag_rate,small_bag_qty,b_qty,b_weight,b_vol)
+        values (#{bllId,jdbcType=BIGINT},#{blId,jdbcType=BIGINT},#{dolId,jdbcType=BIGINT},#{dohId,jdbcType=BIGINT},#{productId,jdbcType=BIGINT},#{lcCode,jdbcType=VARCHAR},#{bigBagQty,jdbcType=DECIMAL},#{bigBagRate,jdbcType=DECIMAL},#{midBagQty,jdbcType=DECIMAL},#{midBagRate,jdbcType=DECIMAL},#{smallBagQty,jdbcType=DECIMAL},#{bQty,jdbcType=DECIMAL},#{bWeight,jdbcType=DECIMAL},#{bVol,jdbcType=DECIMAL})
+    </insert>
+
+    <insert id="insertSelective">
+        insert into wms_backlc_list
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="bllId != null">
+                bll_id,
+            </if>
+            <if test="blId != null">
+                bl_id,
+            </if>
+            <if test="dolId != null">
+                dol_id,
+            </if>
+            <if test="dohId != null">
+                doh_id,
+            </if>
+            <if test="productId != null">
+                product_id,
+            </if>
+            <if test="lcCode != null">
+                lc_code,
+            </if>
+            <if test="bigBagQty != null">
+                big_bag_qty,
+            </if>
+            <if test="bigBagRate != null">
+                big_bag_rate,
+            </if>
+            <if test="midBagQty != null">
+                mid_bag_qty,
+            </if>
+            <if test="midBagRate != null">
+                mid_bag_rate,
+            </if>
+            <if test="smallBagQty != null">
+                small_bag_qty,
+            </if>
+            <if test="bQty != null">
+                b_qty,
+            </if>
+            <if test="bWeight != null">
+                b_weight,
+            </if>
+            <if test="bVol != null">
+                b_vol
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="bllId != null">
+                #{bllId,jdbcType=BIGINT},
+            </if>
+            <if test="blId != null">
+                #{blId,jdbcType=BIGINT},
+            </if>
+            <if test="dolId != null">
+                #{dolId,jdbcType=BIGINT},
+            </if>
+            <if test="dohId != null">
+                #{dohId,jdbcType=BIGINT},
+            </if>
+            <if test="productId != null">
+                #{productId,jdbcType=BIGINT},
+            </if>
+            <if test="lcCode != null">
+                #{lcCode,jdbcType=VARCHAR},
+            </if>
+            <if test="bigBagQty != null">
+                #{bigBagQty,jdbcType=DECIMAL},
+            </if>
+            <if test="bigBagRate != null">
+                #{bigBagRate,jdbcType=DECIMAL},
+            </if>
+            <if test="midBagQty != null">
+                #{midBagQty,jdbcType=DECIMAL},
+            </if>
+            <if test="midBagRate != null">
+                #{midBagRate,jdbcType=DECIMAL},
+            </if>
+            <if test="smallBagQty != null">
+                #{smallBagQty,jdbcType=DECIMAL},
+            </if>
+            <if test="bQty != null">
+                #{bQty,jdbcType=DECIMAL},
+            </if>
+            <if test="bWeight != null">
+                #{bWeight,jdbcType=DECIMAL},
+            </if>
+            <if test="bVol != null">
+                #{bVol,jdbcType=DECIMAL}
+            </if>
+        </trim>
+    </insert>
+
+    <insert id="insertBatch">
+        insert into wms_backlc_list (bll_id,bl_id,dol_id,doh_id,product_id,lc_code,big_bag_qty,big_bag_rate,mid_bag_qty,mid_bag_rate,small_bag_qty,b_qty,b_weight,b_vol) values
+        <foreach collection="list" item="item" separator=",">
+            (
+            #{item.bllId,jdbcType=BIGINT},
+            #{item.blId,jdbcType=BIGINT},
+            #{item.dolId,jdbcType=BIGINT},
+            #{item.dohId,jdbcType=BIGINT},
+            #{item.productId,jdbcType=BIGINT},
+            #{item.lcCode,jdbcType=VARCHAR},
+            #{item.bigBagQty,jdbcType=DECIMAL},
+            #{item.bigBagRate,jdbcType=DECIMAL},
+            #{item.midBagQty,jdbcType=DECIMAL},
+            #{item.midBagRate,jdbcType=DECIMAL},
+            #{item.smallBagQty,jdbcType=DECIMAL},
+            #{item.bQty,jdbcType=DECIMAL},
+            #{item.bWeight,jdbcType=DECIMAL},
+            #{item.bVol,jdbcType=DECIMAL}
+            )
+        </foreach>
+    </insert>
+
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+        delete from wms_backlc_list
+        where bll_id = #{bllId,jdbcType=BIGINT}
+    </delete>
+
+    <delete id="deleteByPrimaryKeys">
+        delete from wms_backlc_list where bll_id in
+        <foreach close=")" collection="list" item="item" open="(" separator=",">
+            #{item}
+        </foreach>
+    </delete>
+
+    <update id="updateByPrimaryKey">
+        update wms_backlc_list
+        <set>
+            bl_id = #{blId,jdbcType=BIGINT},
+            dol_id = #{dolId,jdbcType=BIGINT},
+            doh_id = #{dohId,jdbcType=BIGINT},
+            product_id = #{productId,jdbcType=BIGINT},
+            lc_code = #{lcCode,jdbcType=VARCHAR},
+            big_bag_qty = #{bigBagQty,jdbcType=DECIMAL},
+            big_bag_rate = #{bigBagRate,jdbcType=DECIMAL},
+            mid_bag_qty = #{midBagQty,jdbcType=DECIMAL},
+            mid_bag_rate = #{midBagRate,jdbcType=DECIMAL},
+            small_bag_qty = #{smallBagQty,jdbcType=DECIMAL},
+            b_qty = #{bQty,jdbcType=DECIMAL},
+            b_weight = #{bWeight,jdbcType=DECIMAL},
+            b_vol = #{bVol,jdbcType=DECIMAL}
+        </set>
+        where bll_id = #{bllId,jdbcType=BIGINT}
+    </update>
+
+    <update id="updateByPrimaryKeySelective">
+        update wms_backlc_list
+        <set>
+            <if test="blId != null">
+                bl_id = #{blId,jdbcType=BIGINT},
+            </if>
+            <if test="dolId != null">
+                dol_id = #{dolId,jdbcType=BIGINT},
+            </if>
+            <if test="dohId != null">
+                doh_id = #{dohId,jdbcType=BIGINT},
+            </if>
+            <if test="productId != null">
+                product_id = #{productId,jdbcType=BIGINT},
+            </if>
+            <if test="lcCode != null">
+                lc_code = #{lcCode,jdbcType=VARCHAR},
+            </if>
+            <if test="bigBagQty != null">
+                big_bag_qty = #{bigBagQty,jdbcType=DECIMAL},
+            </if>
+            <if test="bigBagRate != null">
+                big_bag_rate = #{bigBagRate,jdbcType=DECIMAL},
+            </if>
+            <if test="midBagQty != null">
+                mid_bag_qty = #{midBagQty,jdbcType=DECIMAL},
+            </if>
+            <if test="midBagRate != null">
+                mid_bag_rate = #{midBagRate,jdbcType=DECIMAL},
+            </if>
+            <if test="smallBagQty != null">
+                small_bag_qty = #{smallBagQty,jdbcType=DECIMAL},
+            </if>
+            <if test="bQty != null">
+                b_qty = #{bQty,jdbcType=DECIMAL},
+            </if>
+            <if test="bWeight != null">
+                b_weight = #{bWeight,jdbcType=DECIMAL},
+            </if>
+            <if test="bVol != null">
+                b_vol = #{bVol,jdbcType=DECIMAL}
+            </if>
+        </set>
+        where bll_id = #{bllId,jdbcType=BIGINT}
+    </update>
+
+    <update id="updateBatch">
+        <foreach close="" collection="list" item="item" open="" separator=";">
+            update wms_backlc_list
+            <set>
+                <if test="item.blId != null">
+                    bl_id = #{item.blId,jdbcType=BIGINT},
+                </if>
+                <if test="item.dolId != null">
+                    dol_id = #{item.dolId,jdbcType=BIGINT},
+                </if>
+                <if test="item.dohId != null">
+                    doh_id = #{item.dohId,jdbcType=BIGINT},
+                </if>
+                <if test="item.productId != null">
+                    product_id = #{item.productId,jdbcType=BIGINT},
+                </if>
+                <if test="item.lcCode != null">
+                    lc_code = #{item.lcCode,jdbcType=VARCHAR},
+                </if>
+                <if test="item.bigBagQty != null">
+                    big_bag_qty = #{item.bigBagQty,jdbcType=DECIMAL},
+                </if>
+                <if test="item.bigBagRate != null">
+                    big_bag_rate = #{item.bigBagRate,jdbcType=DECIMAL},
+                </if>
+                <if test="item.midBagQty != null">
+                    mid_bag_qty = #{item.midBagQty,jdbcType=DECIMAL},
+                </if>
+                <if test="item.midBagRate != null">
+                    mid_bag_rate = #{item.midBagRate,jdbcType=DECIMAL},
+                </if>
+                <if test="item.smallBagQty != null">
+                    small_bag_qty = #{item.smallBagQty,jdbcType=DECIMAL},
+                </if>
+                <if test="item.bQty != null">
+                    b_qty = #{item.bQty,jdbcType=DECIMAL},
+                </if>
+                <if test="item.bWeight != null">
+                    b_weight = #{item.bWeight,jdbcType=DECIMAL},
+                </if>
+                <if test="item.bVol != null">
+                    b_vol = #{item.bVol,jdbcType=DECIMAL}
+                </if>
+            </set>
+            where bll_id = #{item.bllId,jdbcType=BIGINT}
+        </foreach>
+    </update>
+
+    <select id="selectByPrimaryKey" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List" />
+        from wms_backlc_list
+        where bll_id = #{bllId,jdbcType=BIGINT}
+    </select>
+
+    <select id="selectByPrimaryKeyWithLock" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List" />
+        from wms_backlc_list
+        where bll_id = #{bllId,jdbcType=BIGINT} for update
+    </select>
+
+    <select id="selectByPrimaryKeys" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List" />
+        from wms_backlc_list where bll_id in
+        <foreach close=")" collection="list" item="item" open="(" separator=",">
+            #{item}
+        </foreach>
+    </select>
+
+    <select id="selectByEntity" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from wms_backlc_list
+        <where>
+            <if test="bllId != null">
+                and bll_id=#{bllId,jdbcType=BIGINT}
+            </if>
+            <if test="blId != null">
+                and bl_id=#{blId,jdbcType=BIGINT}
+            </if>
+            <if test="dolId != null">
+                and dol_id=#{dolId,jdbcType=BIGINT}
+            </if>
+            <if test="dohId != null">
+                and doh_id=#{dohId,jdbcType=BIGINT}
+            </if>
+            <if test="productId != null">
+                and product_id=#{productId,jdbcType=BIGINT}
+            </if>
+            <if test="lcCode != null">
+                and lc_code=#{lcCode,jdbcType=VARCHAR}
+            </if>
+            <if test="bigBagQty != null">
+                and big_bag_qty=#{bigBagQty,jdbcType=DECIMAL}
+            </if>
+            <if test="bigBagRate != null">
+                and big_bag_rate=#{bigBagRate,jdbcType=DECIMAL}
+            </if>
+            <if test="midBagQty != null">
+                and mid_bag_qty=#{midBagQty,jdbcType=DECIMAL}
+            </if>
+            <if test="midBagRate != null">
+                and mid_bag_rate=#{midBagRate,jdbcType=DECIMAL}
+            </if>
+            <if test="smallBagQty != null">
+                and small_bag_qty=#{smallBagQty,jdbcType=DECIMAL}
+            </if>
+            <if test="bQty != null">
+                and b_qty=#{bQty,jdbcType=DECIMAL}
+            </if>
+            <if test="bWeight != null">
+                and b_weight=#{bWeight,jdbcType=DECIMAL}
+            </if>
+            <if test="bVol != null">
+                and b_vol=#{bVol,jdbcType=DECIMAL}
+            </if>
+        </where>
+    </select>
+
+    <select id="selectByConditions" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from wms_backlc_list
+        <where>
+            <if test="bllId != null">
+                and bll_id ${bllId}
+            </if>
+            <if test="blId != null">
+                and bl_id ${blId}
+            </if>
+            <if test="dolId != null">
+                and dol_id ${dolId}
+            </if>
+            <if test="dohId != null">
+                and doh_id ${dohId}
+            </if>
+            <if test="productId != null">
+                and product_id ${productId}
+            </if>
+            <if test="lcCode != null">
+                and lc_code ${lcCode}
+            </if>
+            <if test="bigBagQty != null">
+                and big_bag_qty ${bigBagQty}
+            </if>
+            <if test="bigBagRate != null">
+                and big_bag_rate ${bigBagRate}
+            </if>
+            <if test="midBagQty != null">
+                and mid_bag_qty ${midBagQty}
+            </if>
+            <if test="midBagRate != null">
+                and mid_bag_rate ${midBagRate}
+            </if>
+            <if test="smallBagQty != null">
+                and small_bag_qty ${smallBagQty}
+            </if>
+            <if test="bQty != null">
+                and b_qty ${bQty}
+            </if>
+            <if test="bWeight != null">
+                and b_weight ${bWeight}
+            </if>
+            <if test="bVol != null">
+                and b_vol ${bVol}
+            </if>
+        </where>
+        <if test="orderBy != null">
+            order by ${orderBy}
+        </if>
+    </select>
+
+    <select id="selectAll" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from wms_backlc_list
+    </select>
+
+    <select id="count" resultType="java.lang.Long">
+        select count(*) from wms_backlc_list
+    </select>
+
+    <select id="selectByFunction">
+        select ${function}(${column}) from wms_backlc_list
+    </select>
+
+</mapper>

@@ -312,4 +312,40 @@ public class ServiceId {
 
     @RightResource(rightSystem = "wms", rightItem = "新品分配推荐库位", rightFunction = "分页查询")
     public static final String WMS_LC_RECOMMEND_PAGE_QUERY = "1031502";
+
+    /**
+     * 装柜
+     * 16
+     */
+    @RightResource(rightSystem = "wms", rightItem = "装柜", rightFunction = "OMS货柜管理-装柜信息")
+    public static final String WMS_DO_CONTAINER_DETAIL_BY_OMS = "1031601";
+
+    @RightResource(rightSystem = "wms", rightItem = "装柜", rightFunction = "查询货柜列表")
+    public static final String WMS_DO_CONTAINER_PAGE_QUERY = "1031602";
+
+    @RightResource(rightSystem = "wms", rightItem = "装柜", rightFunction = "新增装柜信息")
+    public static final String WMS_DO_CONTAINER_ADD = "1031603";
+
+    @RightResource(rightSystem = "wms", rightItem = "装柜", rightFunction = "WMS装柜信息")
+    public static final String WMS_DO_CONTAINER_DETAIL = "1031604";
+
+    @RightResource(rightSystem = "wms", rightItem = "装柜", rightFunction = "WMS装柜明细")
+    public static final String WMS_DO_CONTAINER_DETAIL_LIST = "1031605";
+
+    @RightResource(rightSystem = "wms", rightItem = "装柜", rightFunction = "撤销装柜信息")
+    public static final String WMS_DO_CONTAINER_REVOKE = "1031606";
+
+
+    /**
+     * 退库
+     * 17
+     */
+    @RightResource(rightSystem = "wms", rightItem = "退库", rightFunction = "新增退库记录")
+    public static final String WMS_BACKLC_ADD = "1031701";
+
+    @RightResource(rightSystem = "wms", rightItem = "退库", rightFunction = "退库记录列表")
+    public static final String WMS_BACKLC_LIST = "1031702";
+
+    @RightResource(rightSystem = "wms", rightItem = "退库", rightFunction = "已出库-柜记录列表")
+    public static final String WMS_OUT_STOCK_CONTAINER_LIST = "1031703";
 }

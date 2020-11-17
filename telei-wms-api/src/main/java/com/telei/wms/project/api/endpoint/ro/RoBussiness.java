@@ -152,7 +152,7 @@ public class RoBussiness {
         WmsRoHeader wmsRoHeader = DataConvertUtil.parseDataAsObject(request, WmsRoHeader.class);
         wmsRoHeader.setId(wmsRoHeaderInfo.getId());
         if (Objects.nonNull(CustomRequestContext.getUserInfo())) {
-            wmsRoHeader.setLastUpdateUser(CustomRequestContext.getUserInfo().getUserName());
+            wmsRoHeader.setLastUpdateUser(CustomRequestContext.getUserInfo().getEmployeeName());
         }
         wmsRoHeader.setLastUpdateTime(DateUtils.nowWithUTC());
         int updateResult = wmsRoHeaderService.updateByPrimaryKeySelective(wmsRoHeader);
@@ -267,7 +267,7 @@ public class RoBussiness {
             updateWmsRoHeader.setId(wmsRoHeader.getId());
             updateWmsRoHeader.setOrderStatus(CLOSE_STATUS);
             updateWmsRoHeader.setEnforcement(1);
-            wmsRoHeader.setLastUpdateUser(CustomRequestContext.getUserInfo().getUserName());
+            wmsRoHeader.setLastUpdateUser(CustomRequestContext.getUserInfo().getEmployeeName());
             wmsRoHeader.setLastUpdateTime(DateUtils.nowWithUTC());
             //确认锁
             if (confirmLock(lockKey, lockValue)) {

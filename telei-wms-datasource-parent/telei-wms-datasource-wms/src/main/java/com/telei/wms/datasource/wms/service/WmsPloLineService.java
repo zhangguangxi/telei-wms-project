@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Set;
 
 @Service
 public class WmsPloLineService extends BaseService<WmsPloLineRepository,WmsPloLine,Long> {
@@ -24,7 +25,7 @@ public class WmsPloLineService extends BaseService<WmsPloLineRepository,WmsPloLi
         return wmsPloLineRepository.findLocationAll(warehouseId, productIds);
     }
 
-    public List<WmsPloLine> selectByDolIdList(List<Long> dolIdList) {
+    public List<WmsPloLine> selectByDolIdSet(Set<Long> dolIdList) {
         return wmsPloLineRepository.selectByDolIdList(dolIdList);
     }
 }

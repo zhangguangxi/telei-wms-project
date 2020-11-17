@@ -30,7 +30,7 @@ public class DoHeaderPageQueryRequest {
     @ApiModelProperty(value = "公司id[默认不传]", example = "2525345353")
     private Long companyId;
 
-    @ApiModelProperty(value = "订单状态 01-待处理，02-已核验， 30-已拣货， 40-已出库", example = "01")
+    @ApiModelProperty(value = "出库任务订单状态 01-待处理，02-已核验， 20-未拣货， 25-部分拣货， 30-已拣货， 40-已出库", example = "01")
     private String orderStatus;
 
     @ApiModelProperty(value = "当前页", example = "1", required = true)

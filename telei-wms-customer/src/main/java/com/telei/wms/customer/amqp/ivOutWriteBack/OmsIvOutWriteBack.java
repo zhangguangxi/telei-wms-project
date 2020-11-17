@@ -35,7 +35,9 @@ public class OmsIvOutWriteBack {
         private Long ivoId;
         /** 明细id(出库任务) */
         private Long lineId;
-        /**数量*/
+        /**计划出库数量*/
         private BigDecimal qty;
+        /**实际扣减数量*/
+        private BigDecimal realQty;
     }
 }

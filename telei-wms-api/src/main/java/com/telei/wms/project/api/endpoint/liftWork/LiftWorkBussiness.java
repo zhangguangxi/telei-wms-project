@@ -12,6 +12,7 @@ import com.telei.wms.customer.businessNumber.dto.BusinessNumberRequest;
 import com.telei.wms.customer.businessNumber.dto.BusinessNumberResponse;
 import com.telei.wms.datasource.wms.model.WmsInventory;
 import com.telei.wms.datasource.wms.model.WmsLiftWork;
+import com.telei.wms.datasource.wms.model.WmsLocation;
 import com.telei.wms.datasource.wms.service.WmsInventoryService;
 import com.telei.wms.datasource.wms.service.WmsLiftWorkService;
 import com.telei.wms.datasource.wms.service.WmsLocationService;
@@ -27,10 +28,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
+import java.util.*;
 import java.util.stream.Collectors;
 
 /**
@@ -90,7 +88,7 @@ public class LiftWorkBussiness {
         wmsLiftWork.setLiftStatus("10");
         wmsLiftWork.setLiftDocumentType("ADD");
         wmsLiftWork.setCreateTime(DateUtils.nowWithUTC());
-        wmsLiftWork.setCreateUser(CustomRequestContext.getUserInfo().getUserName());
+        wmsLiftWork.setCreateUser(CustomRequestContext.getUserInfo().getEmployeeName());
         // 新增升降任务降货显示并传数量升货不变
         if(StringUtils.isNotNull(wmsLiftWork.getLiftQty()) && StringUtils.isNotNull(wmsLiftWork.getBigBagRate())){
             BigDecimal[] bigBag = wmsLiftWork.getLiftQty().divideAndRemainder(wmsLiftWork.getBigBagRate());
@@ -153,12 +151,19 @@ public class LiftWorkBussiness {
             wmsLiftWork.setLiftStatus("20");
             wmsLiftWork.setOperateTime(DateUtils.nowWithUTC());
             wmsLiftWork.setLastupdateTime(DateUtils.nowWithUTC());
-            wmsLiftWork.setLastupdateUser(CustomRequestContext.getUserInfo().getUserName());
+            wmsLiftWork.setLastupdateUser(CustomRequestContext.getUserInfo().getEmployeeName());
             /**
              * 获取高库位信息
              * 有实际库位取实际库位 无实际库位取推荐库位
              */
             String lcCode = StringUtils.isNoneBlank(wmsLiftWork.getLcCode()) ? wmsLiftWork.getLcCode() : wmsLiftWork.getPrepLcCode();
+            // 判断库位是否存在
+            List<String> lcCodes = new ArrayList<>();
+            lcCodes.add(lcCode);
+            List<WmsLocation> locationList = wmsLocationService.selectByLcCodes(lcCodes);
+            if(locationList.isEmpty()){
+                ErrorCode.LIFT_WORK_LC_CODE_NOT_EXIST_4006.throwError();
+            }
             WmsInventory wmsInventory = new WmsInventory();
             wmsInventory.setLcType("Z");
             wmsInventory.setLcCode(lcCode);
@@ -253,6 +258,18 @@ public class LiftWorkBussiness {
                     ErrorCode.LIFT_WORK_UPDATE_ERROR_4004.throwError(wmsLiftWork.getProductName(), wmsLiftWork.getSampleLcCode(), wmsLiftWork.getPrepLcCode());
                 }
             } else {
+                // 获取业务单号
+                BusinessNumberRequest businessNumberRequest = new BusinessNumberRequest();
+                businessNumberRequest.setType("SJH");
+                ApiResponse apiResponse = businessNumberFeignClient.get(businessNumberRequest);
+                BusinessNumberResponse businessNumberResponse = apiResponse.convertDataToObject(BusinessNumberResponse.class);
+                if (StringUtils.isEmpty(businessNumberResponse.getBusinessNumber())) {
+                    // 未获取到业务单号
+                    ErrorCode.BUSINESS_NUMBER_ERROR_4001.throwError();
+                }
+                // 升降任务
+                wmsLiftWork.setLiftCode(businessNumberResponse.getBusinessNumber());
+                wmsLiftWork.setCreateUser(CustomRequestContext.getUserInfo().getEmployeeName());
                 wmsLiftWork.setId(idGenerator.getUnique());
                 wmsLiftWork.setLiftDocumentType("ADD");
                 wmsLiftWork.setCreateTime(DateUtils.nowWithUTC());
