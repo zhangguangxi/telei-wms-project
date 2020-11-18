@@ -13,15 +13,20 @@ import java.util.List;
  */
 @Data
 public class BacklcAddRequest {
+    @Check
+    @ApiModelProperty(value = "出库任务id",example = "1234",position = 1)
+    private Long dohId;
+
+    @Check
+    @ApiModelProperty(value = "退库明细",position = 2)
     private List<BacklcAddRequestCondition> list;
     @Data
     public static  class BacklcAddRequestCondition {
         @Check
         @ApiModelProperty(value = "公司id",example = "1234123",position = 1)
         private Long companyId;
-        /** 仓库id */
         @Check
-        @ApiModelProperty(value = "公司id",example = "1234123",position = 2)
+        @ApiModelProperty(value = "仓库id",example = "1234123",position = 2)
         private Long warehouseId;
         @Check
         @ApiModelProperty(value = "仓库code",example = "1234123",position = 3)
@@ -29,9 +34,7 @@ public class BacklcAddRequest {
         @Check
         @ApiModelProperty(value = "出库任务明细id",example = "1234123",position = 4)
         private Long dolId;
-        @Check
-        @ApiModelProperty(value = "出库任务id",example = "1234",position = 5)
-        private Long dohId;
+
         @Check
         @ApiModelProperty(value = "产品id",example = "1234123",position = 6)
         private Long productId;

@@ -29,10 +29,10 @@ public class WmsBacklc implements Entity<Long> {
     private BigDecimal bigBagQty;
     /** 中包数量 */
     private BigDecimal midBagQty;
-    /** 小包数量 */
-    private BigDecimal smallBagQty;
     /** 退库数量 */
     private BigDecimal bQty;
+    /** 小包数量 */
+    private BigDecimal smallBagQty;
     /** 退库重量(KG) */
     private BigDecimal weight;
     /** 退库体积(CBM) */

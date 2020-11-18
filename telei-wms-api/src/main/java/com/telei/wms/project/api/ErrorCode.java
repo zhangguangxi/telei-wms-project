@@ -208,6 +208,19 @@ public enum ErrorCode {
     DO_CONTAINER_QTY_IS_NULL_4001,
     DO_CONTAINER_QTY_IS_MAX_4002,
 
+
+    /**
+     *
+     * 退库
+     */
+    BACK_LC_RECORD_IS_NULL_4001,
+    BACK_LC_PRODUCT_ID_IS_NULL_4002,
+    BACK_LC_LIST_ADD_FAILED_4003,
+    BACK_LC_ADD_FAILED_4004,
+    BACK_LC_UPDATE_FAILED_4005,
+    BACK_LC_LIST_IS_NULL_4006,
+    BACK_LC_LIST_PRODUCT_NOT_EXIST_4007,
+
     ;
 
     private  String code;

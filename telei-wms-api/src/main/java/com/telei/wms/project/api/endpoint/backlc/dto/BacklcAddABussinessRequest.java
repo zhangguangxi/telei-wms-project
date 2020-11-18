@@ -11,6 +11,7 @@ import java.util.List;
  */
 @Data
 public class BacklcAddABussinessRequest {
+    private Long dohId;
     private List<BacklcAddRequest.BacklcAddRequestCondition> list;
     @Data
     public static  class BacklcAddRequestCondition {
@@ -22,8 +23,6 @@ public class BacklcAddABussinessRequest {
         private String warehouseCode;
         /** 出库任务明细id */
         private Long dolId;
-        /** 出库任务id */
-        private Long dohId;
         /** 产品id */
         private Long productId;
         /** 库位编码 */
