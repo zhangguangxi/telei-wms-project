@@ -62,11 +62,9 @@ public class LocationCommonRequest {
     private Integer lcSustainweight;
 
     @ApiModelProperty(value = "上架锁",example = "1",position = 6)
-    @Check
     private String lcPutawaylock;
 
     @ApiModelProperty(value = "下架锁",example = "0",position = 6)
-    @Check
     private String lcPickinglock;
 
     @ApiModelProperty(value = "备注",example = "2",position = 6)

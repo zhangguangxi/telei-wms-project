@@ -180,6 +180,9 @@ public class InventoryBussiness {
     @Autowired
     private WarehouseFeignClient warehouseFeignClient;
 
+    @Autowired
+    private WmsDoContainerService wmsDoContainerService;
+
     /**
      * 入库(上架)
      *
@@ -1042,33 +1045,62 @@ public class InventoryBussiness {
             /**出库任务明细id->entity映射*/
             Map<Long, WmsDoLine> id2DoLineEntityMap = wmsDoLines.stream().collect(Collectors.toMap(WmsDoLine::getId, Function.identity()));
 
+
             /**遍历待出库存集合，组装扣减库存记录集合*/
             List<WmsIvOut> ivOutList = new ArrayList<>();
-            //当前仓库是否需要
-
-            wmsIvOutList.stream().filter(item -> requestProductList.contains(item.getProductId())).forEach(item -> {
-                String lcCode = dolId2LcCodeMap.get(item.getLineId());
-                if(requestLcCodeList.contains(lcCode)){
-                    ivOutList.add(item);
-                    WmsInventoryDeductConditionVo deductCondition = new WmsInventoryDeductConditionVo();
-                    Long productId = item.getProductId();
-                    deductCondition.setCompanyId(item.getCompanyId());//公司id
-                    deductCondition.setWarehouseId(item.getWarehouseId());//仓库id
-                    deductCondition.setProductId(productId);//产品id
-                    deductCondition.setIvoId(item.getIvoId());//待出库存id
-                    deductCondition.setLineId(item.getLineId());//出库单明细id
-                    deductCondition.setQty(item.getQty());//计划扣减-数量
-                    deductCondition.setRealQty(productIdAndLcCode2RealQty.get(productId+"#"+lcCode));//实际扣减数量
-                    deductCondition.setLcCode(lcCode);//库位
-                    deductCondition.setSpId(id2DoLineEntityMap.get(item.getLineId()).getSpId());//出库计划id
-                    deductCondition.setSpdId(id2DoLineEntityMap.get(item.getLineId()).getSpdId());//出库计划明细id
-                    deductCondition.setSoId(id2DoLineEntityMap.get(item.getLineId()).getSoId());//销售单id
-                    deductCondition.setSodId(id2DoLineEntityMap.get(item.getLineId()).getSodId());//销售单详情id
-                    inventoryDeductConditionList.add(deductCondition);
+            if(StringUtils.equalsIgnoreCase(categoryType,"Y")){
+                //根据dohId查询装柜列表
+                WmsDoContainer doContainerCondition = new WmsDoContainer();
+                doContainerCondition.setDohId(dohId);
+                List<WmsDoContainer> wmsDoContainers = wmsDoContainerService.selectByEntity(doContainerCondition);
+                if(Objects.isNull(wmsDoContainers) || wmsDoContainers.isEmpty()){
+                    // TODO: 2020/11/19
                 }
-            });
+                // TODO: 2020/11/19 反写wms_iv_out_confirm表
+                Map<Long, WmsIvOut> lineId2IvOutEntityMap = wmsIvOutList.stream().collect(Collectors.toMap(WmsIvOut::getLineId, Function.identity()));
+                wmsDoContainers.forEach(item ->{
+                    Long dolId = item.getDolId();//出库任务明细id
+                    String lcCode = dolId2LcCodeMap.get(dolId);
+                    WmsInventoryDeductConditionVo deductCondition = new WmsInventoryDeductConditionVo();
+                    WmsIvOut ivout = lineId2IvOutEntityMap.get(dolId);
+                    Long productId = item.getProductId();
+                    deductCondition.setProductId(productId);
+                    deductCondition.setCompanyId(companyId);
+                    deductCondition.setWarehouseId(warehouseId);
+                    deductCondition.setIvoId(ivout.getIvoId());//带出库存id
+                    deductCondition.setLineId(dolId);
+                    deductCondition.setQty(ivout.getQty());//计划扣减-数量
+//                  deductCondition.setRealQty();//实际扣减数量 todo 出柜数量  联表查询  出库计划id、库位、数量
+                    deductCondition.setLcCode(lcCode);//库位
+                    deductCondition.setSpId(id2DoLineEntityMap.get(dolId).getSpId());//出库计划id
+                    deductCondition.setSpdId(id2DoLineEntityMap.get(dolId).getSpdId());//出库计划明细id
+                    deductCondition.setSoId(id2DoLineEntityMap.get(dolId).getSoId());//销售单id
+                    deductCondition.setSodId(id2DoLineEntityMap.get(dolId).getSodId());//销售单详情id
+                });
 
-
+            }else{
+                wmsIvOutList.stream().filter(item -> requestProductList.contains(item.getProductId())).forEach(item -> {
+                    String lcCode = dolId2LcCodeMap.get(item.getLineId());
+                    if(requestLcCodeList.contains(lcCode)){
+                        ivOutList.add(item);
+                        WmsInventoryDeductConditionVo deductCondition = new WmsInventoryDeductConditionVo();
+                        Long productId = item.getProductId();
+                        deductCondition.setCompanyId(item.getCompanyId());//公司id
+                        deductCondition.setWarehouseId(item.getWarehouseId());//仓库id
+                        deductCondition.setProductId(productId);//产品id
+                        deductCondition.setIvoId(item.getIvoId());//待出库存id
+                        deductCondition.setLineId(item.getLineId());//出库单明细id
+                        deductCondition.setQty(item.getQty());//计划扣减-数量
+                        deductCondition.setRealQty(productIdAndLcCode2RealQty.get(productId+"#"+lcCode));//实际扣减数量
+                        deductCondition.setLcCode(lcCode);//库位
+                        deductCondition.setSpId(id2DoLineEntityMap.get(item.getLineId()).getSpId());//出库计划id
+                        deductCondition.setSpdId(id2DoLineEntityMap.get(item.getLineId()).getSpdId());//出库计划明细id
+                        deductCondition.setSoId(id2DoLineEntityMap.get(item.getLineId()).getSoId());//销售单id
+                        deductCondition.setSodId(id2DoLineEntityMap.get(item.getLineId()).getSodId());//销售单详情id
+                        inventoryDeductConditionList.add(deductCondition);
+                    }
+                });
+            }
             //扣减库存id与扣减次数最大值集合
             List<WmsDeductIvOutConfirmResponseVo> ivIdIndexList = wmsIvOutConfirmService.selectIvIdIndex();
             log.info("\n +++++++++++++++++++++ 出库扣减库存操作::查询锁定扣减记录-扣减次数最大值 -> {} ++++++++++++++++++++ \n ", JSON.toJSONString(ivIdIndexList));

@@ -62,10 +62,10 @@
             so_id,
             doh_id,
             c_id,
-            SUM(c_qty),
-            SUM(c_weight),
-            SUM(c_vol),
-            SUM(c_amount)
+            SUM(c_qty) c_qty,
+            SUM(c_weight) c_weight,
+            SUM(c_vol) c_vol,
+            SUM(c_amount) c_amount
         FROM wms_do_container
         <where>
             <if test="cId != null">
@@ -173,6 +173,7 @@
                 and wdc.c_id ${cId}
             </if>
         </where>
+        GROUP BY wdc.doh_id,wdc.c_id,wdc.product_id
         <if test="orderBy != null">
             order by ${orderBy}
         </if>

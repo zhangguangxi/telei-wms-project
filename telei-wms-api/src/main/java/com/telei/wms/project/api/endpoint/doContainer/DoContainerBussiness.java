@@ -30,8 +30,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-import static com.telei.infrastructure.component.commons.utils.LockMapUtil.tryLock;
-
 /**
  * @Description: 出库任务
  * @Auther: Dean
@@ -113,8 +111,8 @@ public class DoContainerBussiness {
             count = wmsDoContainerService.insertBatch(wmsDoContainers);
             if (count > 0) {
                 // 获取唯一锁标识
-                String lockKey = String.valueOf(omsContainerWriteBack.getDohId());
-                Object lockValue = tryLock(omsContainerWriteBack.getDohId());
+                Object lockKey = omsContainerWriteBack.getDohId();
+                Object lockValue = LockMapUtil.tryLock(lockKey);
                 if (LockMapUtil.confirmLock(lockKey, lockValue)) {
                     WmsDoHeader wmsDoHeader = wmsDoHeaderService.selectByPrimaryKey(omsContainerWriteBack.getDohId());
                     if (StringUtils.isNotNull(wmsDoHeader.getContainerQty())) {
