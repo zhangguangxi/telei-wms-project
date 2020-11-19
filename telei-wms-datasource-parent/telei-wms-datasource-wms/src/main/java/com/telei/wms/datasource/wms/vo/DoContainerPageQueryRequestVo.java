@@ -68,5 +68,7 @@ public class DoContainerPageQueryRequestVo {
     private BigDecimal costReference;
     /** 单价 */
     private BigDecimal unitPrice;
+    /** 库位编码 */
+    private String lcCode;
 
 }

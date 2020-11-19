@@ -5,6 +5,7 @@ import com.nuochen.framework.autocoding.domain.Pagination;
 import com.telei.infrastructure.component.commons.CustomRequestContext;
 import com.telei.infrastructure.component.commons.utils.DateUtils;
 import com.telei.infrastructure.component.idgenerator.contract.Id;
+import com.telei.wms.datasource.wms.model.WmsInventory;
 import com.telei.wms.datasource.wms.model.WmsLcRecommend;
 import com.telei.wms.datasource.wms.model.WmsLcRecommendBak;
 import com.telei.wms.datasource.wms.service.WmsInventoryService;
@@ -170,10 +171,24 @@ public class LcRecommendBussiness {
             //推荐库位不存在
             ErrorCode.LC_RECOMMEND_NOT_EXIST_4001.throwError();
         }
-        WmsLcRecommend updateWmsLcRecommend = DataConvertUtil.parseDataAsObject(request, WmsLcRecommend.class);
-        if (! Objects.isNull(CustomRequestContext.getUserInfo())) {
-            updateWmsLcRecommend.setLastUpdateUser(CustomRequestContext.getUserInfo().getEmployeeName());
+        WmsLcRecommend wmsLcRecommendEntity = new WmsLcRecommend();
+        wmsLcRecommendEntity.setCompanyId(CustomRequestContext.getUserInfo().getCompanyId());
+        wmsLcRecommendEntity.setLcCode(request.getLcCode());
+        WmsLcRecommend wmsLcRecommendIsExist = wmsLcRecommendService.selectOneByEntity(wmsLcRecommendEntity);
+        if (! Objects.isNull(wmsLcRecommendIsExist)) {
+            //推荐库位已经被占用
+            ErrorCode.LC_RECOMMEND_UPDATE_ERROR_4002.throwError();
         }
+        WmsInventory wmsInventoryEntity = new WmsInventory();
+        wmsInventoryEntity.setCompanyId(CustomRequestContext.getUserInfo().getCompanyId());
+        wmsInventoryEntity.setLcCode(request.getLcCode());
+        WmsInventory wmsInventoryIsExist = wmsInventoryService.selectOneByEntity(wmsInventoryEntity);
+        if (! Objects.isNull(wmsInventoryIsExist)) {
+            //推荐库位已经被占用
+            ErrorCode.LC_RECOMMEND_UPDATE_ERROR_4002.throwError();
+        }
+        WmsLcRecommend updateWmsLcRecommend = DataConvertUtil.parseDataAsObject(request, WmsLcRecommend.class);
+        updateWmsLcRecommend.setLastUpdateUser(CustomRequestContext.getUserInfo().getEmployeeName());
         updateWmsLcRecommend.setLastUpdateTime(DateUtils.nowWithUTC());
         int updateResult = wmsLcRecommendService.updateByPrimaryKeySelective(updateWmsLcRecommend);
         LcRecommendCudBaseResponse response = new LcRecommendCudBaseResponse();

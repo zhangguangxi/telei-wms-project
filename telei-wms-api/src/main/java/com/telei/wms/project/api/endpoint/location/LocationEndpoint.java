@@ -116,11 +116,18 @@ public class LocationEndpoint {
         return locationBussiness.listLcAisle(businessRequest);
     }
 
-    @ApiOperation("根据通道查询库位列表")
+    @ApiOperation("根据通道查询库位列表【库存】")
     @PostMapping(ServiceId.WMS_LOCATION_BY_LC_AISLE)
     public LocationListResponse queryLcLocationByLcAisle(@RequestBody @Valid LocationListRequest request){
         LocationBusinessPageQueryRequest businessRequest = DataConvertUtil.parseDataAsObject(request, LocationBusinessPageQueryRequest.class);
         return locationBussiness.queryLcLocationByLcAisle(businessRequest);
+    }
+
+    @ApiOperation("根据通道查询库位列表【库存+推荐库位】")
+    @PostMapping(ServiceId.WMS_LOCATION_BY_LC_AISLE_INVENTORY)
+    public LocationListResponse queryLcLocationByLcAisleAndInventory(@RequestBody @Valid LocationListRequest request){
+        LocationBusinessPageQueryRequest businessRequest = DataConvertUtil.parseDataAsObject(request, LocationBusinessPageQueryRequest.class);
+        return locationBussiness.queryLcLocationByLcAisleAndInventory(businessRequest);
     }
 
 }

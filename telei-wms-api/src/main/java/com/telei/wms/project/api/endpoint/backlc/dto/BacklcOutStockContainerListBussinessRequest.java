@@ -9,5 +9,9 @@ import lombok.Data;
 @Data
 public class BacklcOutStockContainerListBussinessRequest {
     /**出库任务id*/
-    private String dohId;
+    private Long dohId;
+    /**公司id*/
+    private Long companyId;
+    /**仓库id*/
+    private long warehouseId;
 }

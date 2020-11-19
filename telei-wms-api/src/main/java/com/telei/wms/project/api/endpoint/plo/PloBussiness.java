@@ -398,6 +398,11 @@ public class PloBussiness {
             updateWmsPloDetail.setPickVol(updateWmsPloDetail.getPickVol().add(wmsPloDetail.getPickVol()));
             wmsPloDetailMap.put(wmsPloDetail.getPlolId(), updateWmsPloDetail);
         }
+        WmsPloHeader wmsPloHeader = wmsPloHeaderService.selectByPrimaryKey(ploId);
+        if (PICKING_FINISH_STATUS.equals(wmsPloHeader.getOrderStatus())) {
+            //已经拣货完成不能取消
+            ErrorCode.PLO_CANCEL_ERROR_4018.throwError();
+        }
         //总数量
         BigDecimal totalQty = BigDecimal.ZERO;
         //总重量
@@ -427,7 +432,6 @@ public class PloBussiness {
         wmsPloDetailEntity.setPloId(ploId);
         WmsPloDetail wmsPloDetailIsExist = wmsPloDetailService.selectOneByEntity(wmsPloDetailEntity);
         //更新拣货主单
-        WmsPloHeader wmsPloHeader = wmsPloHeaderService.selectByPrimaryKey(ploId);
         WmsPloHeader updateWmsPloHeader = new WmsPloHeader();
         updateWmsPloHeader.setId(wmsPloHeader.getId());
         updateWmsPloHeader.setPickedQty(wmsPloHeader.getPickedQty().subtract(totalQty));
@@ -533,12 +537,25 @@ public class PloBussiness {
         updateWmsPloHeader.setLastUpdateUser(CustomRequestContext.getUserInfo().getEmployeeName());
         updateWmsPloHeader.setLastUpdateTime(DateUtils.nowWithUTC());
         wmsPloHeaderService.updateByPrimaryKeySelective(updateWmsPloHeader);
-        //更新出库任务单状态
+        //更新出库任务拣货信息
         WmsDoHeader updateWmsDoHeader = new WmsDoHeader();
         updateWmsDoHeader.setId(wmsPloHeader.getDohId());
+        updateWmsDoHeader.setPloQty(wmsPloHeader.getPickedQty());
         updateWmsDoHeader.setOrderStatus("30");
         updateWmsDoHeader.setLastupdateTime(DateUtils.nowWithUTC());
         wmsDoHeaderService.updateByPrimaryKeySelective(updateWmsDoHeader);
+        //更新任务明细拣货数量
+        WmsPloLine wmsPloLineEntity = new WmsPloLine();
+        wmsPloLineEntity.setPloId(wmsPloHeader.getId());
+        List<WmsPloLine> wmsPloLines = wmsPloLineService.selectByEntity(wmsPloLineEntity);
+        List<WmsDoLine> updateWmsDoLines = new ArrayList<>();
+        for (WmsPloLine wmsPloLine : wmsPloLines) {
+            WmsDoLine updateWmsDoLine = new WmsDoLine();
+            updateWmsDoLine.setId(wmsPloLine.getDolId());
+            updateWmsDoLine.setPloQty(wmsPloLine.getPickedQty());
+            updateWmsDoLines.add(updateWmsDoLine);
+        }
+        wmsDoLineService.updateBatch(updateWmsDoLines);
         PloCudBaseResponse response = new PloCudBaseResponse();
         return response;
     }

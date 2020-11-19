@@ -17,6 +17,7 @@
         <result column="doh_id" jdbcType="BIGINT" property="dohId"/>
         <result column="sp_id" jdbcType="BIGINT" property="spId"/>
         <result column="so_id" jdbcType="BIGINT" property="soId"/>
+        <result column="lc_code" jdbcType="VARCHAR" property="lcCode"/>
         <result column="media_id" jdbcType="VARCHAR" property="mediaId"/>
         <result column="product_id" jdbcType="BIGINT" property="productId"/>
         <result column="product_no" jdbcType="VARCHAR" property="productNo"/>
@@ -42,6 +43,17 @@
         <result column="big_bag_qty" jdbcType="DECIMAL" property="bigBagQty"/>
         <result column="mid_bag_qty" jdbcType="DECIMAL" property="midBagQty"/>
         <result column="small_bag_qty" jdbcType="DECIMAL" property="smallBagQty"/>
+    </resultMap>
+
+    <resultMap id="DoContainerDetailResponseVo" type="com.telei.wms.datasource.wms.vo.DoContainerDetailResponseVo">
+        <result column="doh_id" jdbcType="BIGINT" property="dohId"/>
+        <result column="order_status" jdbcType="VARCHAR" property="orderStatus"/>
+        <result column="load_time" jdbcType="TIMESTAMP" property="loadTime"/>
+        <result column="load_user" jdbcType="VARCHAR" property="loadUser"/>
+        <result column="shipment_code" jdbcType="VARCHAR" property="shipmentCode"/>
+        <result column="c_qty" jdbcType="DECIMAL" property="cQty"/>
+        <result column="c_weight" jdbcType="DECIMAL" property="cWeight"/>
+        <result column="c_vol" jdbcType="DECIMAL" property="cVol"/>
     </resultMap>
 
     <select id="findAll" resultMap="PageQueryResultMap">
@@ -103,6 +115,7 @@
             cp.mid_bag_vol,
             wpl.big_bag_rate,
             wpl.mid_bag_rate,
+            wpl.lc_code,
             SUM(wpl.picked_qty) picked_qty,
             SUM(wbl.b_qty) b_qty,
             SUM(wdo.c_qty) c_qty,
@@ -165,5 +178,26 @@
         </if>
     </select>
 
+    <select id="selectByCustomConditions" resultMap="DoContainerDetailResponseVo">
+        SELECT
+        wdh.order_status,
+        wdh.doh_id,
+        oc.load_time,
+        oc.load_user,
+        oc.shipment_code,
+        wdc.c_qty,
+        wdc.c_weight,
+        wdc.c_vol
+        FROM
+        wms_do_container wdc
+        LEFT JOIN oms.oms_container oc ON oc.c_id = wdc.c_id
+        LEFT JOIN wms_do_header wdh ON wdc.doh_id = wdh.doh_id
+        <where>
+        oc.company_id ${companyID}
+        AND oc.warehouse_id ${warehouseId}
+        AND wdh.order_status ${orderStatus}
+        AND  wdc.doh_id ${dohId}
+        </where>
+    </select>
 </mapper>
 

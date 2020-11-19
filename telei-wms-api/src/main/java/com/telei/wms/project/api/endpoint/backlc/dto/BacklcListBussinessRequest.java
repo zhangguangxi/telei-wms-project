@@ -10,4 +10,8 @@ import lombok.Data;
 public class BacklcListBussinessRequest {
     /**出库任务单头id*/
     private Long dohId;
+    /**公司id*/
+    private Long companyId;
+    /**仓库id*/
+    private Long warehouseId;
 }

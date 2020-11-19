@@ -1,9 +1,10 @@
 package com.telei.wms.datasource.wms.model;
 
 import com.nuochen.framework.autocoding.domain.Entity;
+import lombok.Data;
+
 import java.math.BigDecimal;
 import java.util.Date;
-import lombok.Data;
 
 /**
  * wms_do_header 出库任务单
@@ -52,9 +53,15 @@ public class WmsDoHeader implements Entity<Long> {
     private BigDecimal shipWeight;
     /** 出库体积(CBM) */
     private BigDecimal shipVol;
+    /** 拣货数量 */
+    private BigDecimal ploQty;
+    /** 装柜数量 */
+    private BigDecimal containerQty;
+    /** 退库数量 */
+    private BigDecimal backlcQty;
     /** 出库货品种类数量 */
     private Integer shipDetailedSpeciesQty;
-    /** 单据类型（01-线下订单 02-内部订单） */
+    /** 单据类型（01-线下订单 02-内部订单  08-采购退件） */
     private String orderType;
     /** 进出口类型 01-进口,02-出口, 03-本地销售 */
     private String ieType;

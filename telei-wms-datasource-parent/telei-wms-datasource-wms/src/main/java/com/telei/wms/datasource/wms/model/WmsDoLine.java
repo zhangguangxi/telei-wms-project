@@ -1,8 +1,9 @@
 package com.telei.wms.datasource.wms.model;
 
 import com.nuochen.framework.autocoding.domain.Entity;
-import java.math.BigDecimal;
 import lombok.Data;
+
+import java.math.BigDecimal;
 
 /**
  * wms_do_line 出库任务单信息
@@ -67,6 +68,12 @@ public class WmsDoLine implements Entity<Long> {
     private BigDecimal shipWeight;
     /** 出库体积(CBM) */
     private BigDecimal shipVol;
+    /** 拣货数量 */
+    private BigDecimal ploQty;
+    /** 装柜数量 */
+    private BigDecimal containerQty;
+    /** 退库数量 */
+    private BigDecimal backlcQty;
     /** 备注 */
     private String memo;
     /** 参考成本 */

@@ -24,6 +24,9 @@ import com.telei.wms.customer.product.ProductFeignClient;
 import com.telei.wms.customer.product.dto.ProductDetailResponse;
 import com.telei.wms.customer.product.dto.ProductListResponse;
 import com.telei.wms.customer.product.dto.ProductRequest;
+import com.telei.wms.customer.warehouse.WarehouseFeignClient;
+import com.telei.wms.customer.warehouse.dto.WarehouseDetailRequest;
+import com.telei.wms.customer.warehouse.dto.WarehouseDetailResponse;
 import com.telei.wms.datasource.wms.model.*;
 import com.telei.wms.datasource.wms.service.*;
 import com.telei.wms.datasource.wms.vo.WmsDeductIvOutConfirmResponseVo;
@@ -173,6 +176,9 @@ public class InventoryBussiness {
 
     @Autowired
     private WmsPloDetailService wmsPloDetailService;
+
+    @Autowired
+    private WarehouseFeignClient warehouseFeignClient;
 
     /**
      * 入库(上架)
@@ -913,6 +919,7 @@ public class InventoryBussiness {
             if(Objects.isNull(ploHeader)){
                 ErrorCode.INVENTORY_DEDUCT_PLO_HEADER_IS_NULL_40048.throwError(JSON.toJSONString(dohId));
             }
+
             if(!ploHeader.getOrderStatus().equalsIgnoreCase(PICK_FINISHED)){
                 ErrorCode.INVENTORY_DEDUCT_PLO_NOT_FINISHED_40049.throwError(JSON.toJSONString(dohId));
             }
@@ -928,6 +935,7 @@ public class InventoryBussiness {
                 ErrorCode.INVENTORY_DEDUCT_DO_LINE_NOT_EXIST_40029.throwError(JSON.toJSONString(dohId));
             }
             log.info("\n +++++++++++++++++++++ 出库扣减库存操作::根据出库任务单头ID -> {}，查询出库任务明细记录 ++++++++++++++++++++ \n ", JSON.toJSONString(dohId), JSON.toJSONString(wmsDoLines));
+
 
             /**根据订单id(出库任务id)查询wms_iv_out(待出库存-出库计划审核时生成)集合*/
             WmsIvOut wmsIvOut = new WmsIvOut();
@@ -945,6 +953,29 @@ public class InventoryBussiness {
             if (Objects.isNull(wmsPloLineList) || wmsPloLineList.isEmpty()) {
                 ErrorCode.INVENTORY_DEDUCT_PLO_LINE_NOT_EXIST_40031.throwError(JSON.toJSONString(wmsPloLineList));
             }
+
+            /**判断是否存在 拣货单数量  = 退库数量 + 装箱上数量*/
+
+            BigDecimal ploQty = wmsDoHeader.getPloQty();
+            BigDecimal shipQty = ploQty; //实际出库数量
+
+            WarehouseDetailRequest warehouseDetailRequest = new WarehouseDetailRequest();
+            warehouseDetailRequest.setCompanyId(CustomRequestContext.getUserInfo().getCompanyId());
+            ApiResponse productResponse = warehouseFeignClient.getCompanyWarehouse(warehouseDetailRequest);
+            WarehouseDetailResponse detailResponse = JSON.parseObject(JSON.toJSONString(productResponse.getData()), WarehouseDetailResponse.class);
+            if(Objects.isNull(detailResponse)){
+                // TODO: 2020/11/19  默认仓库不存在
+            }
+            String categoryType = detailResponse.getCategoryType();
+            if(StringUtils.equalsIgnoreCase(categoryType,"Y")){
+                BigDecimal backlcQty = wmsDoHeader.getBacklcQty();
+                BigDecimal containerQty = wmsDoHeader.getContainerQty();
+                if(!(ploQty.compareTo(backlcQty.add(containerQty))==0)){
+                    // TODO: 2020/11/19 存在未装柜或未退库的商品
+                }
+                shipQty = containerQty;//装柜数量
+            }
+
             Set<WmsPloLine> wmsPloLineSet = wmsPloLineList.stream().collect(
                     Collectors.collectingAndThen(
                             Collectors.toCollection(() -> new TreeSet<>(Comparator.comparing(WmsPloLine::getDolId))), HashSet::new)
@@ -968,8 +999,8 @@ public class InventoryBussiness {
             productDetailRequest.setProductIds(requestProductList);
             productDetailRequest.setCompanyId(CustomRequestContext.getUserInfo().getCompanyId());
             ApiResponse productListResponse = productFeignClient.getProductList(productDetailRequest);
-            ProductListResponse productResponse = JSON.parseObject(JSON.toJSONString(productListResponse.getData()), ProductListResponse.class);
-            List<ProductDetailResponse> productList = productResponse.getProductList();
+            ProductListResponse productFeignResponse = JSON.parseObject(JSON.toJSONString(productListResponse.getData()), ProductListResponse.class);
+            List<ProductDetailResponse> productList = productFeignResponse.getProductList();
             if (Objects.isNull(productList) || productList.isEmpty()) {
                 ErrorCode.INVENTORY_MULTI_SAMPLE_LC_CODE_CHECK_40047.throwError(JSON.toJSONString(requestProductList));
             }
@@ -1013,6 +1044,8 @@ public class InventoryBussiness {
 
             /**遍历待出库存集合，组装扣减库存记录集合*/
             List<WmsIvOut> ivOutList = new ArrayList<>();
+            //当前仓库是否需要
+
             wmsIvOutList.stream().filter(item -> requestProductList.contains(item.getProductId())).forEach(item -> {
                 String lcCode = dolId2LcCodeMap.get(item.getLineId());
                 if(requestLcCodeList.contains(lcCode)){
@@ -1082,6 +1115,13 @@ public class InventoryBussiness {
 
                 //商品库存按照批次id升序排列(db)
                 List<WmsInventory> sortedList = list.stream().sorted(Comparator.comparing(WmsInventory::getIabId)).collect(toList());
+                // TODO: 2020/11/19  根据当前doh_id  是否存在待装柜数量,存在给出相应提示，实际出库数量、出库时间、出库货品种类数量、出库数量、出库重量、出库体积
+                //实际出库数量，从货柜中取出,待装柜数量=拣货数量-装柜数量-退库数量 是否等于0 拣货数量=退库数量+装柜数量，满足这个条件才能出库
+
+
+                WmsDoContainer doContainerCondition = new WmsDoContainer();
+                doContainerCondition.setDohId(dohId);
+
 
                 BigDecimal requestIvQty = v;//请求扣减库存数
                 for (WmsInventory inventory : sortedList) {
@@ -1100,9 +1140,9 @@ public class InventoryBussiness {
                       /**删除库存记录*/
                       deleteInventoryList.add(inventory.getId());
                       /**创建库存变更记录*/
-                    createTransactionRecord(wmsDoHeader, requestCondition2EntityMap, addIvTransactionList, nowWithUTC, userInfo, k, requestIvQty, inventory, dbIvQty, BigDecimal.ZERO);
+                      createTransactionRecord(wmsDoHeader, requestCondition2EntityMap, addIvTransactionList, nowWithUTC, userInfo, k, requestIvQty, inventory, dbIvQty, BigDecimal.ZERO);
                       /**创建库存扣减记录*/
-                    createIvOutConfirmRecord(addIvOutConfirmList, wmsDoHeader, requestCondition2EntityMap, nowWithUTC, finalIvIdIndexMap, k, requestIvQty, inventory);
+                      createIvOutConfirmRecord(addIvOutConfirmList, wmsDoHeader, requestCondition2EntityMap, nowWithUTC, finalIvIdIndexMap, k, requestIvQty, inventory);
 
                     //当前库存记录商品数量 == 请求扣减
                     if (compareRet == 0) {

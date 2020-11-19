@@ -10,7 +10,13 @@ import lombok.Data;
  */
 @Data
 public class BacklcListRequest {
-    @ApiModelProperty(value = "出库任务单头id",example = "1234134")
     @Check
+    @ApiModelProperty(value = "出库任务单头id",example = "1234134",position = 1)
     private Long dohId;
+    @Check
+    @ApiModelProperty(value = "公司id",example = "13143",position = 2)
+    private Long companyId;
+    @Check
+    @ApiModelProperty(value = "仓库id",example = "1231234",position = 3)
+    private Long warehouseId;
 }

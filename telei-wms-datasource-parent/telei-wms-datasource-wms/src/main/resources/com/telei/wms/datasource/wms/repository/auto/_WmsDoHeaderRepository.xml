@@ -23,6 +23,9 @@
             <result column="ship_qty" jdbcType="DECIMAL" property="shipQty"/>
             <result column="ship_weight" jdbcType="DECIMAL" property="shipWeight"/>
             <result column="ship_vol" jdbcType="DECIMAL" property="shipVol"/>
+            <result column="plo_qty" jdbcType="DECIMAL" property="ploQty"/>
+            <result column="container_qty" jdbcType="DECIMAL" property="containerQty"/>
+            <result column="backlc_qty" jdbcType="DECIMAL" property="backlcQty"/>
             <result column="ship_detailed_species_qty" jdbcType="INTEGER" property="shipDetailedSpeciesQty"/>
             <result column="order_type" jdbcType="VARCHAR" property="orderType"/>
             <result column="ie_type" jdbcType="VARCHAR" property="ieType"/>
@@ -40,12 +43,12 @@
     </resultMap>
 
     <sql id="Base_Column_List">
-        doh_id,doh_code,sp_id,so_id,company_id,warehouse_id,warehouse_code,cust_order_no,supplier_id,customer_id,customer_contact_name,customer_contact_mobile,customer_contact_address,memo,total_qty,total_weight,total_vol,detailed_species_qty,ship_qty,ship_weight,ship_vol,ship_detailed_species_qty,order_type,ie_type,order_status,check_time,check_user,has_plo,had_print_check,had_check,had_print_load_list,old_date,create_time,lastupdate_time,shipping_time
+        doh_id,doh_code,sp_id,so_id,company_id,warehouse_id,warehouse_code,cust_order_no,supplier_id,customer_id,customer_contact_name,customer_contact_mobile,customer_contact_address,memo,total_qty,total_weight,total_vol,detailed_species_qty,ship_qty,ship_weight,ship_vol,plo_qty,container_qty,backlc_qty,ship_detailed_species_qty,order_type,ie_type,order_status,check_time,check_user,has_plo,had_print_check,had_check,had_print_load_list,old_date,create_time,lastupdate_time,shipping_time
     </sql>
 
         <insert id="insert">
-            insert into wms_do_header (doh_id,doh_code,sp_id,so_id,company_id,warehouse_id,warehouse_code,cust_order_no,supplier_id,customer_id,customer_contact_name,customer_contact_mobile,customer_contact_address,memo,total_qty,total_weight,total_vol,detailed_species_qty,ship_qty,ship_weight,ship_vol,ship_detailed_species_qty,order_type,ie_type,order_status,check_time,check_user,has_plo,had_print_check,had_check,had_print_load_list,old_date,create_time,lastupdate_time,shipping_time)
-            values (#{id,jdbcType=BIGINT},#{dohCode,jdbcType=VARCHAR},#{spId,jdbcType=BIGINT},#{soId,jdbcType=BIGINT},#{companyId,jdbcType=BIGINT},#{warehouseId,jdbcType=BIGINT},#{warehouseCode,jdbcType=VARCHAR},#{custOrderNo,jdbcType=VARCHAR},#{supplierId,jdbcType=BIGINT},#{customerId,jdbcType=BIGINT},#{customerContactName,jdbcType=VARCHAR},#{customerContactMobile,jdbcType=VARCHAR},#{customerContactAddress,jdbcType=VARCHAR},#{memo,jdbcType=VARCHAR},#{totalQty,jdbcType=DECIMAL},#{totalWeight,jdbcType=DECIMAL},#{totalVol,jdbcType=DECIMAL},#{detailedSpeciesQty,jdbcType=INTEGER},#{shipQty,jdbcType=DECIMAL},#{shipWeight,jdbcType=DECIMAL},#{shipVol,jdbcType=DECIMAL},#{shipDetailedSpeciesQty,jdbcType=INTEGER},#{orderType,jdbcType=VARCHAR},#{ieType,jdbcType=VARCHAR},#{orderStatus,jdbcType=VARCHAR},#{checkTime,jdbcType=TIMESTAMP},#{checkUser,jdbcType=VARCHAR},#{hasPlo,jdbcType=VARCHAR},#{hadPrintCheck,jdbcType=VARCHAR},#{hadCheck,jdbcType=VARCHAR},#{hadPrintLoadList,jdbcType=VARCHAR},#{oldDate,jdbcType=VARCHAR},#{createTime,jdbcType=TIMESTAMP},#{lastupdateTime,jdbcType=TIMESTAMP},#{shippingTime,jdbcType=TIMESTAMP})
+            insert into wms_do_header (doh_id,doh_code,sp_id,so_id,company_id,warehouse_id,warehouse_code,cust_order_no,supplier_id,customer_id,customer_contact_name,customer_contact_mobile,customer_contact_address,memo,total_qty,total_weight,total_vol,detailed_species_qty,ship_qty,ship_weight,ship_vol,plo_qty,container_qty,backlc_qty,ship_detailed_species_qty,order_type,ie_type,order_status,check_time,check_user,has_plo,had_print_check,had_check,had_print_load_list,old_date,create_time,lastupdate_time,shipping_time)
+            values (#{id,jdbcType=BIGINT},#{dohCode,jdbcType=VARCHAR},#{spId,jdbcType=BIGINT},#{soId,jdbcType=BIGINT},#{companyId,jdbcType=BIGINT},#{warehouseId,jdbcType=BIGINT},#{warehouseCode,jdbcType=VARCHAR},#{custOrderNo,jdbcType=VARCHAR},#{supplierId,jdbcType=BIGINT},#{customerId,jdbcType=BIGINT},#{customerContactName,jdbcType=VARCHAR},#{customerContactMobile,jdbcType=VARCHAR},#{customerContactAddress,jdbcType=VARCHAR},#{memo,jdbcType=VARCHAR},#{totalQty,jdbcType=DECIMAL},#{totalWeight,jdbcType=DECIMAL},#{totalVol,jdbcType=DECIMAL},#{detailedSpeciesQty,jdbcType=INTEGER},#{shipQty,jdbcType=DECIMAL},#{shipWeight,jdbcType=DECIMAL},#{shipVol,jdbcType=DECIMAL},#{ploQty,jdbcType=DECIMAL},#{containerQty,jdbcType=DECIMAL},#{backlcQty,jdbcType=DECIMAL},#{shipDetailedSpeciesQty,jdbcType=INTEGER},#{orderType,jdbcType=VARCHAR},#{ieType,jdbcType=VARCHAR},#{orderStatus,jdbcType=VARCHAR},#{checkTime,jdbcType=TIMESTAMP},#{checkUser,jdbcType=VARCHAR},#{hasPlo,jdbcType=VARCHAR},#{hadPrintCheck,jdbcType=VARCHAR},#{hadCheck,jdbcType=VARCHAR},#{hadPrintLoadList,jdbcType=VARCHAR},#{oldDate,jdbcType=VARCHAR},#{createTime,jdbcType=TIMESTAMP},#{lastupdateTime,jdbcType=TIMESTAMP},#{shippingTime,jdbcType=TIMESTAMP})
         </insert>
 
         <insert id="insertSelective">
@@ -113,6 +116,15 @@
                     </if>
                     <if test="shipVol != null">
                         ship_vol,
+                    </if>
+                    <if test="ploQty != null">
+                        plo_qty,
+                    </if>
+                    <if test="containerQty != null">
+                        container_qty,
+                    </if>
+                    <if test="backlcQty != null">
+                        backlc_qty,
                     </if>
                     <if test="shipDetailedSpeciesQty != null">
                         ship_detailed_species_qty,
@@ -221,6 +233,15 @@
                     <if test="shipVol != null">
                         #{shipVol,jdbcType=DECIMAL},
                     </if>
+                    <if test="ploQty != null">
+                        #{ploQty,jdbcType=DECIMAL},
+                    </if>
+                    <if test="containerQty != null">
+                        #{containerQty,jdbcType=DECIMAL},
+                    </if>
+                    <if test="backlcQty != null">
+                        #{backlcQty,jdbcType=DECIMAL},
+                    </if>
                     <if test="shipDetailedSpeciesQty != null">
                         #{shipDetailedSpeciesQty,jdbcType=INTEGER},
                     </if>
@@ -267,7 +288,7 @@
         </insert>
 
         <insert id="insertBatch">
-            insert into wms_do_header (doh_id,doh_code,sp_id,so_id,company_id,warehouse_id,warehouse_code,cust_order_no,supplier_id,customer_id,customer_contact_name,customer_contact_mobile,customer_contact_address,memo,total_qty,total_weight,total_vol,detailed_species_qty,ship_qty,ship_weight,ship_vol,ship_detailed_species_qty,order_type,ie_type,order_status,check_time,check_user,has_plo,had_print_check,had_check,had_print_load_list,old_date,create_time,lastupdate_time,shipping_time) values
+            insert into wms_do_header (doh_id,doh_code,sp_id,so_id,company_id,warehouse_id,warehouse_code,cust_order_no,supplier_id,customer_id,customer_contact_name,customer_contact_mobile,customer_contact_address,memo,total_qty,total_weight,total_vol,detailed_species_qty,ship_qty,ship_weight,ship_vol,plo_qty,container_qty,backlc_qty,ship_detailed_species_qty,order_type,ie_type,order_status,check_time,check_user,has_plo,had_print_check,had_check,had_print_load_list,old_date,create_time,lastupdate_time,shipping_time) values
             <foreach collection="list" item="item" separator=",">
                 (
                     #{item.id,jdbcType=BIGINT},
@@ -291,6 +312,9 @@
                     #{item.shipQty,jdbcType=DECIMAL},
                     #{item.shipWeight,jdbcType=DECIMAL},
                     #{item.shipVol,jdbcType=DECIMAL},
+                    #{item.ploQty,jdbcType=DECIMAL},
+                    #{item.containerQty,jdbcType=DECIMAL},
+                    #{item.backlcQty,jdbcType=DECIMAL},
                     #{item.shipDetailedSpeciesQty,jdbcType=INTEGER},
                     #{item.orderType,jdbcType=VARCHAR},
                     #{item.ieType,jdbcType=VARCHAR},
@@ -344,6 +368,9 @@
                 ship_qty = #{shipQty,jdbcType=DECIMAL},
                 ship_weight = #{shipWeight,jdbcType=DECIMAL},
                 ship_vol = #{shipVol,jdbcType=DECIMAL},
+                plo_qty = #{ploQty,jdbcType=DECIMAL},
+                container_qty = #{containerQty,jdbcType=DECIMAL},
+                backlc_qty = #{backlcQty,jdbcType=DECIMAL},
                 ship_detailed_species_qty = #{shipDetailedSpeciesQty,jdbcType=INTEGER},
                 order_type = #{orderType,jdbcType=VARCHAR},
                 ie_type = #{ieType,jdbcType=VARCHAR},
@@ -424,6 +451,15 @@
                 </if>
                 <if test="shipVol != null">
                     ship_vol = #{shipVol,jdbcType=DECIMAL},
+                </if>
+                <if test="ploQty != null">
+                    plo_qty = #{ploQty,jdbcType=DECIMAL},
+                </if>
+                <if test="containerQty != null">
+                    container_qty = #{containerQty,jdbcType=DECIMAL},
+                </if>
+                <if test="backlcQty != null">
+                    backlc_qty = #{backlcQty,jdbcType=DECIMAL},
                 </if>
                 <if test="shipDetailedSpeciesQty != null">
                     ship_detailed_species_qty = #{shipDetailedSpeciesQty,jdbcType=INTEGER},
@@ -534,6 +570,15 @@
                     </if>
                     <if test="item.shipVol != null">
                         ship_vol = #{item.shipVol,jdbcType=DECIMAL},
+                    </if>
+                    <if test="item.ploQty != null">
+                        plo_qty = #{item.ploQty,jdbcType=DECIMAL},
+                    </if>
+                    <if test="item.containerQty != null">
+                        container_qty = #{item.containerQty,jdbcType=DECIMAL},
+                    </if>
+                    <if test="item.backlcQty != null">
+                        backlc_qty = #{item.backlcQty,jdbcType=DECIMAL},
                     </if>
                     <if test="item.shipDetailedSpeciesQty != null">
                         ship_detailed_species_qty = #{item.shipDetailedSpeciesQty,jdbcType=INTEGER},
@@ -673,6 +718,15 @@
                 <if test="shipVol != null">
                     and ship_vol=#{shipVol,jdbcType=DECIMAL}
                 </if>
+                <if test="ploQty != null">
+                    and plo_qty=#{ploQty,jdbcType=DECIMAL}
+                </if>
+                <if test="containerQty != null">
+                    and container_qty=#{containerQty,jdbcType=DECIMAL}
+                </if>
+                <if test="backlcQty != null">
+                    and backlc_qty=#{backlcQty,jdbcType=DECIMAL}
+                </if>
                 <if test="shipDetailedSpeciesQty != null">
                     and ship_detailed_species_qty=#{shipDetailedSpeciesQty,jdbcType=INTEGER}
                 </if>
@@ -785,6 +839,15 @@
                 </if>
                 <if test="shipVol != null">
                     and ship_vol ${shipVol}
+                </if>
+                <if test="ploQty != null">
+                    and plo_qty ${ploQty}
+                </if>
+                <if test="containerQty != null">
+                    and container_qty ${containerQty}
+                </if>
+                <if test="backlcQty != null">
+                    and backlc_qty ${backlcQty}
                 </if>
                 <if test="shipDetailedSpeciesQty != null">
                     and ship_detailed_species_qty ${shipDetailedSpeciesQty}

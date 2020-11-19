@@ -52,4 +52,8 @@ public class WmsLocationService extends BaseService<WmsLocationRepository, WmsLo
         return wmsLocationRepository.queryLcLocationByLcAisle(paramMap);
     }
 
+    public List<WmsLocationVo> queryLcLocationByLcAisleAndInventory(Map<String, Object> paramMap) {
+        return wmsLocationRepository.queryLcLocationByLcAisleAndInventory(paramMap);
+    }
+
 }

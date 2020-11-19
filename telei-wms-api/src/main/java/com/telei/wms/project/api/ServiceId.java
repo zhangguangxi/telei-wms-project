@@ -301,6 +301,9 @@ public class ServiceId {
     @RightResource(rightSystem = "wms", rightItem = "库位", rightFunction = "根据通道查询库位列表")
     public static final String WMS_LOCATION_BY_LC_AISLE = "1031410";
 
+    @RightResource(rightSystem = "wms", rightItem = "库位", rightFunction = "根据通道查询库位列表")
+    public static final String WMS_LOCATION_BY_LC_AISLE_INVENTORY = "1031411";
+
     /***
      *
      *  新品分配推荐库位

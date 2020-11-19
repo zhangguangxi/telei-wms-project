@@ -4,6 +4,7 @@ import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 
 import java.math.BigDecimal;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -22,6 +23,12 @@ public class BacklcListResponse {
     private BigDecimal totalWeight;
     @ApiModelProperty(value = "总体积",position = 5)
     private BigDecimal toatalVol;
+    @ApiModelProperty(value = "录制日期",position = 6)
+    private Date createTime;
+    @ApiModelProperty(value = "录制人",position = 7)
+    private String createUser;
+    @ApiModelProperty(value = "单据编号",position = 8)
+    private String blCode;
 
 
     @Data

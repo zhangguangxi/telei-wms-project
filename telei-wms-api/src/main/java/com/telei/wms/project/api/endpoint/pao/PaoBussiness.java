@@ -1,5 +1,6 @@
 package com.telei.wms.project.api.endpoint.pao;
 
+import com.alibaba.fastjson.JSON;
 import com.nuochen.framework.app.api.ApiResponse;
 import com.nuochen.framework.autocoding.domain.Pagination;
 import com.telei.infrastructure.component.commons.CustomRequestContext;
@@ -9,10 +10,7 @@ import com.telei.wms.commons.utils.StringUtils;
 import com.telei.wms.customer.businessNumber.BusinessNumberFeignClient;
 import com.telei.wms.customer.businessNumber.dto.BusinessNumberRequest;
 import com.telei.wms.customer.businessNumber.dto.BusinessNumberResponse;
-import com.telei.wms.datasource.wms.model.WmsPaoHeader;
-import com.telei.wms.datasource.wms.model.WmsPaoLine;
-import com.telei.wms.datasource.wms.model.WmsRooHeader;
-import com.telei.wms.datasource.wms.model.WmsRooLine;
+import com.telei.wms.datasource.wms.model.*;
 import com.telei.wms.datasource.wms.service.*;
 import com.telei.wms.datasource.wms.vo.InventoryLocationResponseVo;
 import com.telei.wms.datasource.wms.vo.PaoHeaderPageQueryRequestVo;
@@ -20,6 +18,7 @@ import com.telei.wms.datasource.wms.vo.PaoLinePageQueryResponseVo;
 import com.telei.wms.project.api.ErrorCode;
 import com.telei.wms.project.api.endpoint.pao.dto.*;
 import com.telei.wms.project.api.utils.DataConvertUtil;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -36,6 +35,7 @@ import static com.telei.infrastructure.component.commons.utils.LockMapUtil.*;
  * @Date: 2020/8/31 9:25
  */
 @Service
+@Slf4j
 public class PaoBussiness {
 
     //删除
@@ -65,6 +65,9 @@ public class PaoBussiness {
 
     @Autowired
     private WmsInventoryService wmsInventoryService;
+
+    @Autowired
+    private WmsLcRecommendService wmsLcRecommendService;
 
     /**
      * 新增
@@ -199,56 +202,80 @@ public class PaoBussiness {
      */
     private void makeLineLocation(Long companyId, Long warehouseId, List<WmsPaoLine> wmsPaoLines) {
         List<Long> productIds = wmsPaoLines.stream().map(WmsPaoLine::getProductId).collect(Collectors.toList());
+        log.debug("***productIds1***" + JSON.toJSONString(productIds));
         //从库存获取
         List<InventoryLocationResponseVo> locationResponseVos = wmsInventoryService.findLocationAll(companyId, warehouseId, productIds);
-        Map<Long, String> paoLineLocation = new HashMap<>();
+        Map<Long, String> inventoryLocationMap = new HashMap<>();
         for (InventoryLocationResponseVo locationResponseVo : locationResponseVos) {
-            paoLineLocation.put(locationResponseVo.getProductId(), locationResponseVo.getLcCode());
+            inventoryLocationMap.put(locationResponseVo.getProductId(), locationResponseVo.getLcCode());
         }
         //需要去历史库存获取的产品
-        List<Long> historyProductIds = new ArrayList<>();
+        productIds = new ArrayList<>();
         for (WmsPaoLine wmsPaoLine : wmsPaoLines) {
-            String lcCode = paoLineLocation.get(wmsPaoLine.getProductId());
+            String lcCode = inventoryLocationMap.get(wmsPaoLine.getProductId());
             if (Objects.isNull(lcCode)) {
-                historyProductIds.add(wmsPaoLine.getProductId());
+                productIds.add(wmsPaoLine.getProductId());
             } else {
                 wmsPaoLine.setPrepLcCode(lcCode);
             }
         }
-        if (! historyProductIds.isEmpty()) {
+        log.debug("***productIds2***" + JSON.toJSONString(productIds));
+        if (! productIds.isEmpty()) {
             //从历史库存获取
-            List<InventoryLocationResponseVo> historyLocationResponseVos = wmsInventoryService.findHistoryLocationAll(companyId, warehouseId, historyProductIds);
-            if (historyLocationResponseVos.isEmpty()) {
+            List<InventoryLocationResponseVo> historyLocationResponseVos = wmsInventoryService.findHistoryLocationAll(companyId, warehouseId, productIds);
+            if (! historyLocationResponseVos.isEmpty()) {
+                Map<Long, List<String>> historyLocationMap = new HashMap<>();
+                List<String> lcCodeAll = new ArrayList<>();
+                for (InventoryLocationResponseVo locationResponseVo : historyLocationResponseVos) {
+                    List<String> lcCodes = historyLocationMap.get(locationResponseVo.getProductId());
+                    if (Objects.isNull(lcCodes)) {
+                        lcCodes = new ArrayList<>();
+                    }
+                    lcCodes.add(locationResponseVo.getLcCode());
+                    lcCodeAll.add(locationResponseVo.getLcCode());
+                    historyLocationMap.put(locationResponseVo.getProductId(), lcCodes);
+                }
+                Map<String, Long> existLocationMap = new HashMap<>();
+                //获取已经存在的库位
+                List<InventoryLocationResponseVo> existLocationAll = wmsInventoryService.findExistLocationByLcCode(lcCodeAll);
+                for (InventoryLocationResponseVo locationResponseVo : existLocationAll) {
+                    existLocationMap.put(locationResponseVo.getLcCode(), locationResponseVo.getProductId());
+                }
+                for (WmsPaoLine wmsPaoLine : wmsPaoLines) {
+                    if (! StringUtils.isEmpty(wmsPaoLine.getLcCode())) {
+                        continue;
+                    }
+                    List<String> lcCodes = historyLocationMap.get(wmsPaoLine.getProductId());
+                    for (String lcCode : lcCodes) {
+                        if (Objects.isNull(existLocationMap.get(lcCode))) {
+                            wmsPaoLine.setPrepLcCode(lcCode);
+                            existLocationMap.put(lcCode, wmsPaoLine.getProductId());
+                            productIds.remove(wmsPaoLine.getProductId());
+                            break;
+                        }
+                    }
+                }
+            }
+        }
+        log.debug("***productIds3***" + JSON.toJSONString(productIds));
+        if (! productIds.isEmpty()) {
+            //从新品分配推荐库位获取
+            List<WmsLcRecommend> wmsLcRecommends = wmsLcRecommendService.findByProductId(companyId, warehouseId, productIds);
+            log.debug("***wmsLcRecommends***" + JSON.toJSONString(wmsLcRecommends));
+            if (wmsLcRecommends.isEmpty()) {
                 return;
             }
-            Map<Long, List<String>> historyLocationMap = new HashMap<>();
-            List<String> lcCodeAll = new ArrayList<>();
-            for (InventoryLocationResponseVo locationResponseVo : historyLocationResponseVos) {
-                List<String> lcCodes = historyLocationMap.get(locationResponseVo.getProductId());
-                if (Objects.isNull(lcCodes)) {
-                    lcCodes = new ArrayList<>();
-                }
-                lcCodes.add(locationResponseVo.getLcCode());
-                lcCodeAll.add(locationResponseVo.getLcCode());
-                historyLocationMap.put(locationResponseVo.getProductId(), lcCodes);
-            }
-            Map<String, Long> existLocationMap = new HashMap<>();
-            //获取已经存在的库位
-            List<InventoryLocationResponseVo> existLocationAll = wmsInventoryService.findExistLocationByLcCode(lcCodeAll);
-            for (InventoryLocationResponseVo locationResponseVo : existLocationAll) {
-                existLocationMap.put(locationResponseVo.getLcCode(), locationResponseVo.getProductId());
+            Map<Long, String> lcRecommendMap = new HashMap<>();
+            for (WmsLcRecommend wmsLcRecommend : wmsLcRecommends) {
+                lcRecommendMap.put(wmsLcRecommend.getProductId(), wmsLcRecommend.getLcCode());
             }
             for (WmsPaoLine wmsPaoLine : wmsPaoLines) {
-                if (! Objects.isNull(wmsPaoLine.getLcCode())) {
+                if (! StringUtils.isEmpty(wmsPaoLine.getLcCode())) {
                     continue;
                 }
-                List<String> lcCodes = historyLocationMap.get(wmsPaoLine.getProductId());
-                for (String lcCode : lcCodes) {
-                    if (Objects.isNull(existLocationMap.get(lcCode))) {
-                        wmsPaoLine.setPrepLcCode(lcCode);
-                        existLocationMap.put(lcCode, wmsPaoLine.getProductId());
-                        break;
-                    }
+                String lcCode = lcRecommendMap.get(wmsPaoLine.getProductId());
+                if (! Objects.isNull(lcCode)) {
+                    wmsPaoLine.setPrepLcCode(lcCode);
                 }
             }
         }

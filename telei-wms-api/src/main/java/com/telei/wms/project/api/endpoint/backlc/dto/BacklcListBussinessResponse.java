@@ -3,6 +3,7 @@ package com.telei.wms.project.api.endpoint.backlc.dto;
 import lombok.Data;
 
 import java.math.BigDecimal;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -16,6 +17,9 @@ public class BacklcListBussinessResponse {
     private BigDecimal totalBigBagqty;
     private BigDecimal totalWeight;
     private BigDecimal toatalVol;
+    private Date createTime;
+    private String createUser;
+    private String blCode;
 
     @Data
     public static  class  BacklcListBussinessRecord{

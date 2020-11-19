@@ -24,4 +24,6 @@ public interface WmsLocationRepository extends BaseRepository<WmsLocation,Long> 
 
     List<WmsLocationVo> queryLcLocationByLcAisle(Map<String, Object> paramMap);
 
+    List<WmsLocationVo> queryLcLocationByLcAisleAndInventory(Map<String, Object> paramMap);
+
 }

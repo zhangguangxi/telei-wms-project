@@ -20,4 +20,6 @@ public class LcRecommendPageQueryRequestVo {
     private String warehouseCode;
     /** 公司id */
     private Long companyId;
+    /** 类型：0全部，1有库位，2没有库位 */
+    private Integer type;
 }

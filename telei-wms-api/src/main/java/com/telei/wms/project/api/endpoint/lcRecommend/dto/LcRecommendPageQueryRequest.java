@@ -25,6 +25,9 @@ public class LcRecommendPageQueryRequest {
     @ApiModelProperty(value = "仓库code", example = "2525345353")
     private String warehouseCode;
 
+    @ApiModelProperty(value = "类型：0全部，1有库位，2没有库位", example = "0")
+    private Integer type;
+
     @ApiModelProperty(value = "当前页", example = "1", required = true)
     @Check
     private Integer pageNumber;

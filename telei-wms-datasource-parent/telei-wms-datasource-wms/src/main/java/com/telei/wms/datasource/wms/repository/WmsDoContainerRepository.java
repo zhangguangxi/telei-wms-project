@@ -2,6 +2,7 @@ package com.telei.wms.datasource.wms.repository;
 
 import com.nuochen.framework.autocoding.domain.mybatis.BaseRepository;
 import com.telei.wms.datasource.wms.model.WmsDoContainer;
+import com.telei.wms.datasource.wms.vo.DoContainerDetailResponseVo;
 import com.telei.wms.datasource.wms.vo.DoContainerPageQueryRequestVo;
 import com.telei.wms.datasource.wms.vo.DoContainerResponseVo;
 import org.springframework.stereotype.Repository;
@@ -20,4 +21,5 @@ public interface WmsDoContainerRepository extends BaseRepository<WmsDoContainer,
 
     List<DoContainerPageQueryRequestVo> queryContainerDetailList(Map<String, Object> paramMap);
 
+    List<DoContainerDetailResponseVo> selectByCustomConditions(Map<String, Object> paramMap);
 }

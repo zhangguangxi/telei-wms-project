@@ -200,5 +200,58 @@
         </if>
     </select>
 
+    <select id="queryLcLocationByLcAisleAndInventory" resultMap="PageQueryResultMap">
+        select
+            wl.location_id,
+            wl.lc_code,
+            wl.warehouse_id,
+            wl.warehouse_code,
+            wl.lc_aisle,
+            wl.lc_x,
+            wl.lc_y,
+            wl.lc_z,
+            wl.lc_type,
+            wl.lc_length,
+            wl.lc_width,
+            wl.lc_height,
+            wl.lc_vol,
+            wl.lc_sustainweight,
+            wl.lc_putawaylock,
+            wl.lc_pickinglock,
+            wl.memo,
+            COUNT(wi.product_id) + COUNT(wlr.product_id) product_count,
+            SUM(wi.iv_qty) AS qty
+        from wms_location wl
+        LEFT join wms_inventory wi ON wi.lc_code = wl.lc_code
+        <if test="warehouseId != null">
+            and wi.warehouse_id ${warehouseId}
+        </if>
+        <if test="companyId != null">
+            and wi.company_id ${companyId}
+        </if>
+        LEFT JOIN wms_lc_recommend wlr ON wl.lc_code = wlr.lc_code
+        <if test="warehouseId != null">
+            and wlr.warehouse_id ${warehouseId}
+        </if>
+        <if test="companyId != null">
+            and wlr.company_id ${companyId}
+        </if>
+        <where>
+            <if test="warehouseId != null">
+                and wl.warehouse_id ${warehouseId}
+            </if>
+            <if test="warehouseCode != null">
+                and wl.warehouse_code ${warehouseCode}
+            </if>
+            <if test="lcAisle != null">
+                and wl.lc_aisle ${lcAisle}
+            </if>
+        </where>
+        GROUP BY wl.lc_code,wl.warehouse_id
+        <if test="orderBy != null">
+            order by ${orderBy}
+        </if>
+    </select>
+
 </mapper>
 

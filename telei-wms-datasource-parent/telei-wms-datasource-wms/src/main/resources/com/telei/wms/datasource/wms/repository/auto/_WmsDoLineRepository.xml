@@ -31,6 +31,9 @@
             <result column="ship_qty" jdbcType="DECIMAL" property="shipQty"/>
             <result column="ship_weight" jdbcType="DECIMAL" property="shipWeight"/>
             <result column="ship_vol" jdbcType="DECIMAL" property="shipVol"/>
+            <result column="plo_qty" jdbcType="DECIMAL" property="ploQty"/>
+            <result column="container_qty" jdbcType="DECIMAL" property="containerQty"/>
+            <result column="backlc_qty" jdbcType="DECIMAL" property="backlcQty"/>
             <result column="memo" jdbcType="VARCHAR" property="memo"/>
             <result column="cost_reference" jdbcType="DECIMAL" property="costReference"/>
             <result column="unit_price" jdbcType="DECIMAL" property="unitPrice"/>
@@ -38,12 +41,12 @@
     </resultMap>
 
     <sql id="Base_Column_List">
-        dol_id,doh_id,spd_id,sp_id,so_id,sod_id,product_id,product_barcode,spec_type,media_id,product_no,product_name,product_name_local,product_upc_code,brand,stock_unit,unit_gross_weight,unit_vol,qty,weight,vol,big_bag_qty,big_bag_rate,mid_bag_qty,mid_bag_rate,small_bag_qty,ship_qty,ship_weight,ship_vol,memo,cost_reference,unit_price,amount
+        dol_id,doh_id,spd_id,sp_id,so_id,sod_id,product_id,product_barcode,spec_type,media_id,product_no,product_name,product_name_local,product_upc_code,brand,stock_unit,unit_gross_weight,unit_vol,qty,weight,vol,big_bag_qty,big_bag_rate,mid_bag_qty,mid_bag_rate,small_bag_qty,ship_qty,ship_weight,ship_vol,plo_qty,container_qty,backlc_qty,memo,cost_reference,unit_price,amount
     </sql>
 
         <insert id="insert">
-            insert into wms_do_line (dol_id,doh_id,spd_id,sp_id,so_id,sod_id,product_id,product_barcode,spec_type,media_id,product_no,product_name,product_name_local,product_upc_code,brand,stock_unit,unit_gross_weight,unit_vol,qty,weight,vol,big_bag_qty,big_bag_rate,mid_bag_qty,mid_bag_rate,small_bag_qty,ship_qty,ship_weight,ship_vol,memo,cost_reference,unit_price,amount)
-            values (#{id,jdbcType=BIGINT},#{dohId,jdbcType=BIGINT},#{spdId,jdbcType=BIGINT},#{spId,jdbcType=BIGINT},#{soId,jdbcType=BIGINT},#{sodId,jdbcType=BIGINT},#{productId,jdbcType=BIGINT},#{productBarcode,jdbcType=VARCHAR},#{specType,jdbcType=VARCHAR},#{mediaId,jdbcType=VARCHAR},#{productNo,jdbcType=VARCHAR},#{productName,jdbcType=VARCHAR},#{productNameLocal,jdbcType=VARCHAR},#{productUpcCode,jdbcType=VARCHAR},#{brand,jdbcType=VARCHAR},#{stockUnit,jdbcType=BIGINT},#{unitGrossWeight,jdbcType=DECIMAL},#{unitVol,jdbcType=DECIMAL},#{qty,jdbcType=DECIMAL},#{weight,jdbcType=DECIMAL},#{vol,jdbcType=DECIMAL},#{bigBagQty,jdbcType=DECIMAL},#{bigBagRate,jdbcType=DECIMAL},#{midBagQty,jdbcType=DECIMAL},#{midBagRate,jdbcType=DECIMAL},#{smallBagQty,jdbcType=DECIMAL},#{shipQty,jdbcType=DECIMAL},#{shipWeight,jdbcType=DECIMAL},#{shipVol,jdbcType=DECIMAL},#{memo,jdbcType=VARCHAR},#{costReference,jdbcType=DECIMAL},#{unitPrice,jdbcType=DECIMAL},#{amount,jdbcType=DECIMAL})
+            insert into wms_do_line (dol_id,doh_id,spd_id,sp_id,so_id,sod_id,product_id,product_barcode,spec_type,media_id,product_no,product_name,product_name_local,product_upc_code,brand,stock_unit,unit_gross_weight,unit_vol,qty,weight,vol,big_bag_qty,big_bag_rate,mid_bag_qty,mid_bag_rate,small_bag_qty,ship_qty,ship_weight,ship_vol,plo_qty,container_qty,backlc_qty,memo,cost_reference,unit_price,amount)
+            values (#{id,jdbcType=BIGINT},#{dohId,jdbcType=BIGINT},#{spdId,jdbcType=BIGINT},#{spId,jdbcType=BIGINT},#{soId,jdbcType=BIGINT},#{sodId,jdbcType=BIGINT},#{productId,jdbcType=BIGINT},#{productBarcode,jdbcType=VARCHAR},#{specType,jdbcType=VARCHAR},#{mediaId,jdbcType=VARCHAR},#{productNo,jdbcType=VARCHAR},#{productName,jdbcType=VARCHAR},#{productNameLocal,jdbcType=VARCHAR},#{productUpcCode,jdbcType=VARCHAR},#{brand,jdbcType=VARCHAR},#{stockUnit,jdbcType=BIGINT},#{unitGrossWeight,jdbcType=DECIMAL},#{unitVol,jdbcType=DECIMAL},#{qty,jdbcType=DECIMAL},#{weight,jdbcType=DECIMAL},#{vol,jdbcType=DECIMAL},#{bigBagQty,jdbcType=DECIMAL},#{bigBagRate,jdbcType=DECIMAL},#{midBagQty,jdbcType=DECIMAL},#{midBagRate,jdbcType=DECIMAL},#{smallBagQty,jdbcType=DECIMAL},#{shipQty,jdbcType=DECIMAL},#{shipWeight,jdbcType=DECIMAL},#{shipVol,jdbcType=DECIMAL},#{ploQty,jdbcType=DECIMAL},#{containerQty,jdbcType=DECIMAL},#{backlcQty,jdbcType=DECIMAL},#{memo,jdbcType=VARCHAR},#{costReference,jdbcType=DECIMAL},#{unitPrice,jdbcType=DECIMAL},#{amount,jdbcType=DECIMAL})
         </insert>
 
         <insert id="insertSelective">
@@ -135,6 +138,15 @@
                     </if>
                     <if test="shipVol != null">
                         ship_vol,
+                    </if>
+                    <if test="ploQty != null">
+                        plo_qty,
+                    </if>
+                    <if test="containerQty != null">
+                        container_qty,
+                    </if>
+                    <if test="backlcQty != null">
+                        backlc_qty,
                     </if>
                     <if test="memo != null">
                         memo,
@@ -237,6 +249,15 @@
                     <if test="shipVol != null">
                         #{shipVol,jdbcType=DECIMAL},
                     </if>
+                    <if test="ploQty != null">
+                        #{ploQty,jdbcType=DECIMAL},
+                    </if>
+                    <if test="containerQty != null">
+                        #{containerQty,jdbcType=DECIMAL},
+                    </if>
+                    <if test="backlcQty != null">
+                        #{backlcQty,jdbcType=DECIMAL},
+                    </if>
                     <if test="memo != null">
                         #{memo,jdbcType=VARCHAR},
                     </if>
@@ -253,7 +274,7 @@
         </insert>
 
         <insert id="insertBatch">
-            insert into wms_do_line (dol_id,doh_id,spd_id,sp_id,so_id,sod_id,product_id,product_barcode,spec_type,media_id,product_no,product_name,product_name_local,product_upc_code,brand,stock_unit,unit_gross_weight,unit_vol,qty,weight,vol,big_bag_qty,big_bag_rate,mid_bag_qty,mid_bag_rate,small_bag_qty,ship_qty,ship_weight,ship_vol,memo,cost_reference,unit_price,amount) values
+            insert into wms_do_line (dol_id,doh_id,spd_id,sp_id,so_id,sod_id,product_id,product_barcode,spec_type,media_id,product_no,product_name,product_name_local,product_upc_code,brand,stock_unit,unit_gross_weight,unit_vol,qty,weight,vol,big_bag_qty,big_bag_rate,mid_bag_qty,mid_bag_rate,small_bag_qty,ship_qty,ship_weight,ship_vol,plo_qty,container_qty,backlc_qty,memo,cost_reference,unit_price,amount) values
             <foreach collection="list" item="item" separator=",">
                 (
                     #{item.id,jdbcType=BIGINT},
@@ -285,6 +306,9 @@
                     #{item.shipQty,jdbcType=DECIMAL},
                     #{item.shipWeight,jdbcType=DECIMAL},
                     #{item.shipVol,jdbcType=DECIMAL},
+                    #{item.ploQty,jdbcType=DECIMAL},
+                    #{item.containerQty,jdbcType=DECIMAL},
+                    #{item.backlcQty,jdbcType=DECIMAL},
                     #{item.memo,jdbcType=VARCHAR},
                     #{item.costReference,jdbcType=DECIMAL},
                     #{item.unitPrice,jdbcType=DECIMAL},
@@ -336,6 +360,9 @@
                 ship_qty = #{shipQty,jdbcType=DECIMAL},
                 ship_weight = #{shipWeight,jdbcType=DECIMAL},
                 ship_vol = #{shipVol,jdbcType=DECIMAL},
+                plo_qty = #{ploQty,jdbcType=DECIMAL},
+                container_qty = #{containerQty,jdbcType=DECIMAL},
+                backlc_qty = #{backlcQty,jdbcType=DECIMAL},
                 memo = #{memo,jdbcType=VARCHAR},
                 cost_reference = #{costReference,jdbcType=DECIMAL},
                 unit_price = #{unitPrice,jdbcType=DECIMAL},
@@ -430,6 +457,15 @@
                 </if>
                 <if test="shipVol != null">
                     ship_vol = #{shipVol,jdbcType=DECIMAL},
+                </if>
+                <if test="ploQty != null">
+                    plo_qty = #{ploQty,jdbcType=DECIMAL},
+                </if>
+                <if test="containerQty != null">
+                    container_qty = #{containerQty,jdbcType=DECIMAL},
+                </if>
+                <if test="backlcQty != null">
+                    backlc_qty = #{backlcQty,jdbcType=DECIMAL},
                 </if>
                 <if test="memo != null">
                     memo = #{memo,jdbcType=VARCHAR},
@@ -534,6 +570,15 @@
                     </if>
                     <if test="item.shipVol != null">
                         ship_vol = #{item.shipVol,jdbcType=DECIMAL},
+                    </if>
+                    <if test="item.ploQty != null">
+                        plo_qty = #{item.ploQty,jdbcType=DECIMAL},
+                    </if>
+                    <if test="item.containerQty != null">
+                        container_qty = #{item.containerQty,jdbcType=DECIMAL},
+                    </if>
+                    <if test="item.backlcQty != null">
+                        backlc_qty = #{item.backlcQty,jdbcType=DECIMAL},
                     </if>
                     <if test="item.memo != null">
                         memo = #{item.memo,jdbcType=VARCHAR},
@@ -667,6 +712,15 @@
                 <if test="shipVol != null">
                     and ship_vol=#{shipVol,jdbcType=DECIMAL}
                 </if>
+                <if test="ploQty != null">
+                    and plo_qty=#{ploQty,jdbcType=DECIMAL}
+                </if>
+                <if test="containerQty != null">
+                    and container_qty=#{containerQty,jdbcType=DECIMAL}
+                </if>
+                <if test="backlcQty != null">
+                    and backlc_qty=#{backlcQty,jdbcType=DECIMAL}
+                </if>
                 <if test="memo != null">
                     and memo=#{memo,jdbcType=VARCHAR}
                 </if>
@@ -773,6 +827,15 @@
                 </if>
                 <if test="shipVol != null">
                     and ship_vol ${shipVol}
+                </if>
+                <if test="ploQty != null">
+                    and plo_qty ${ploQty}
+                </if>
+                <if test="containerQty != null">
+                    and container_qty ${containerQty}
+                </if>
+                <if test="backlcQty != null">
+                    and backlc_qty ${backlcQty}
                 </if>
                 <if test="memo != null">
                     and memo ${memo}

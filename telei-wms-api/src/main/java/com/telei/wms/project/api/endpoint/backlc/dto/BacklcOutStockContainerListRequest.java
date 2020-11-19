@@ -12,5 +12,11 @@ import lombok.Data;
 public class BacklcOutStockContainerListRequest {
     @ApiModelProperty(value = "出库任务id",example = "1234123",position = 1)
     @Check
-    private String dohId;
+    private Long dohId;
+    @Check
+    @ApiModelProperty(value = "公司id",example = "132423",position = 2)
+    private Long companyId;
+    @Check
+    @ApiModelProperty(value = "仓库id",example = "3214124214",position = 3)
+    private long warehouseId;
 }

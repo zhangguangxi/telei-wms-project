@@ -2,9 +2,11 @@ package com.telei.wms.project.api.endpoint.backlc;
 
 import com.alibaba.fastjson.JSON;
 import com.nuochen.framework.app.api.ApiResponse;
+import com.nuochen.framework.autocoding.domain.condition.ConditionsBuilder;
 import com.telei.infrastructure.component.commons.CustomRequestContext;
 import com.telei.infrastructure.component.commons.dto.UserInfo;
 import com.telei.infrastructure.component.idgenerator.contract.Id;
+import com.telei.wms.commons.utils.DateUtils;
 import com.telei.wms.commons.utils.StringUtils;
 import com.telei.wms.customer.businessNumber.BusinessNumberFeignClient;
 import com.telei.wms.customer.businessNumber.dto.BusinessNumberRequest;
@@ -15,9 +17,10 @@ import com.telei.wms.customer.product.dto.ProductListResponse;
 import com.telei.wms.customer.product.dto.ProductRequest;
 import com.telei.wms.datasource.wms.model.WmsBacklc;
 import com.telei.wms.datasource.wms.model.WmsBacklcList;
-import com.telei.wms.datasource.wms.service.WmsBacklcListService;
-import com.telei.wms.datasource.wms.service.WmsBacklcService;
-import com.telei.wms.datasource.wms.service.WmsDoHeaderService;
+import com.telei.wms.datasource.wms.model.WmsDoHeader;
+import com.telei.wms.datasource.wms.model.WmsDoLine;
+import com.telei.wms.datasource.wms.service.*;
+import com.telei.wms.datasource.wms.vo.DoContainerDetailResponseVo;
 import com.telei.wms.project.api.ErrorCode;
 import com.telei.wms.project.api.endpoint.backlc.dto.*;
 import com.telei.wms.project.api.utils.DataConvertUtil;
@@ -27,10 +30,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
-import java.util.Set;
+import java.util.*;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
@@ -60,6 +60,12 @@ public class BaclcBussiness {
     @Autowired
     private ProductFeignClient productFeignClient;
 
+    @Autowired
+    private WmsDoContainerService wmsDoContainerService;
+
+    @Autowired
+    private WmsDoLineService wmsDoLineService;
+
 
     /**
      * 新增退库记录
@@ -77,20 +83,28 @@ public class BaclcBussiness {
         if(Objects.isNull(requestProductIdList) || requestProductIdList.isEmpty() || requestProductIdList.size() != requestList.size()){
             ErrorCode.BACK_LC_PRODUCT_ID_IS_NULL_4002.throwError();
         }
-
         /**单头id*/
         long blId = ideGenerator.getUnique();
         /**判断是否已经创建退库单头*/
         Long dohId = request.getDohId();
-        WmsBacklc backlcCondtion = new WmsBacklc();
-        backlcCondtion.setDohId(dohId);
-        List<WmsBacklc> wmsBacklcCollection = wmsBacklcService.selectByEntity(backlcCondtion);
+        WmsDoHeader doHeader = wmsDoHeaderService.selectByPrimaryKey(dohId);
+        if(Objects.isNull(doHeader)){
+            ErrorCode.BACK_LC_ADD_FAILED_4010.throwError(JSON.toJSONString(dohId));
 
+        }
+
+        if(!StringUtils.equals(doHeader.getHadCheck(),"1")){
+            ErrorCode.BACK_LC_ADD_FAILED_4011.throwError(JSON.toJSONString(dohId));
+        }
+
+        WmsDoLine doLineCondition = new WmsDoLine();
+        doLineCondition.setDohId(dohId);
         List<WmsBacklcList> wmsBacklcListList = DataConvertUtil.parseDataAsArray(requestList, WmsBacklcList.class);
         wmsBacklcListList.forEach(item ->{
             item.setDohId(dohId);//出库任务单头id
             item.setBlId(blId);//退库单头id
             item.setBllId(ideGenerator.getUnique());//退库明细id
+
         });
         int countForBackLcList = wmsBacklcListService.insertBatch(wmsBacklcListList);
         if(countForBackLcList <= 0){
@@ -114,10 +128,16 @@ public class BaclcBussiness {
         /**创建用户*/
         String createUser = CustomRequestContext.getUserInfo().getEmployeeName();
 
+
+        WmsBacklc backlcCondtion = new WmsBacklc();
+        backlcCondtion.setDohId(dohId);
+        List<WmsBacklc> wmsBacklcCollection = wmsBacklcService.selectByEntity(backlcCondtion);
+
         if(Objects.isNull(wmsBacklcCollection) || wmsBacklcCollection.isEmpty()){
             WmsBacklc wmsBacklc = DataConvertUtil.parseDataAsObject(requestList.get(0), WmsBacklc.class);
             wmsBacklc.setBlId(blId);
             wmsBacklc.setCreateUser(createUser);
+            wmsBacklc.setCreateTime(DateUtils.nowWithUTC());
             wmsBacklc.setBlCode(getBussinessNumber("TK"));
             wmsBacklc.setDetailedSpeciesQty(productIdSet.size());
             wmsBacklc.setSmallBagQty(totalSmallBagQty);
@@ -126,6 +146,8 @@ public class BaclcBussiness {
             wmsBacklc.setBigBagQty(totalBigBagQty);
             wmsBacklc.setVol(totalBVol);
             wmsBacklc.setWeight(totalBWeight);
+            wmsBacklc.setDohId(dohId);
+
             int countForBackLc = wmsBacklcService.insertSelective(wmsBacklc);
             if(countForBackLc < 0){
                 ErrorCode.BACK_LC_ADD_FAILED_4004.throwError();
@@ -133,8 +155,8 @@ public class BaclcBussiness {
             return new BacklcAddABussinessResponse();
         }
          if(wmsBacklcCollection.size() > 1){
-
-            }
+             ErrorCode.BACK_LC_ADD_FAILED_4009.throwError();
+         }
             WmsBacklcList wmsBacklcList = new WmsBacklcList();
             wmsBacklcList.setDohId(dohId);
             List<WmsBacklcList> wmsBacklcLists = wmsBacklcListService.selectByEntity(wmsBacklcList);
@@ -152,6 +174,21 @@ public class BaclcBussiness {
 
         if(updateForBackLc <= 0){
             ErrorCode.BACK_LC_UPDATE_FAILED_4005.throwError();
+        }
+        /**退库数量回写到出库任务单头(wms_do_header)与出库任务明细(wms_do_line)*/
+        Map<Long, BigDecimal> dolId2BqtyMap = wmsBacklcListList.stream().collect(Collectors.toMap(WmsBacklcList::getDolId, WmsBacklcList::getBQty));
+        List<WmsDoLine> wmsDoLines = wmsDoLineService.selectByEntity(doLineCondition);
+        for (WmsDoLine wmsDoLine : wmsDoLines) {
+            wmsDoLine.setBacklcQty(dolId2BqtyMap.get(wmsDoLine.getId()));
+        }
+        doHeader.setBacklcQty(totalBQty);
+        int countForDoHeader = wmsDoHeaderService.updateByPrimaryKeySelective(doHeader);
+        if(countForDoHeader <= 0){
+            ErrorCode.BACK_LC_ADD_FAILED_4012.throwError();
+        }
+        int countForDoLine = wmsDoLineService.updateBatch(wmsDoLines);
+        if(countForDoLine <= 0){
+            ErrorCode.BACK_LC_ADD_FAILED_4013.throwError();
         }
         return new BacklcAddABussinessResponse();
     }
@@ -171,6 +208,7 @@ public class BaclcBussiness {
         if(Objects.isNull(wmsBacklcLists) || wmsBacklcLists.isEmpty()){
             return new BacklcListBussinessResponse();
         }
+
         UserInfo userInfo = CustomRequestContext.getUserInfo();
         Set<Long> productIdSet = wmsBacklcLists.stream().map(WmsBacklcList::getProductId).collect(Collectors.toSet());
         List<Long> requestProductIdList = productIdSet.stream().collect(Collectors.toList());
@@ -199,7 +237,14 @@ public class BaclcBussiness {
         BigDecimal totalBigBagQty = list.stream().map(BacklcListBussinessResponse.BacklcListBussinessRecord::getBigBagQty).reduce(BigDecimal.ZERO, BigDecimal::add);
         BigDecimal totalBWeight = list.stream().map(BacklcListBussinessResponse.BacklcListBussinessRecord::getBWeight).reduce(BigDecimal.ZERO, BigDecimal::add);
         BigDecimal totalVol = list.stream().map(BacklcListBussinessResponse.BacklcListBussinessRecord::getBVol).reduce(BigDecimal.ZERO, BigDecimal::add);
+
+        Long blId = wmsBacklcLists.get(0).getBlId();
+        WmsBacklc wmsBacklc = wmsBacklcService.selectByPrimaryKey(blId);
+
         BacklcListBussinessResponse response = new BacklcListBussinessResponse();
+        response.setCreateTime(wmsBacklc.getCreateTime());
+        response.setCreateUser(wmsBacklc.getCreateUser());
+        response.setBlCode(wmsBacklc.getBlCode());
         response.setTotalBqty(totalBqty);
         response.setToatalVol(totalVol);
         response.setTotalBigBagqty(totalBigBagQty);
@@ -216,9 +261,21 @@ public class BaclcBussiness {
      * @return
      */
     public BacklcOutStockContainerListBussinessResponse outStockContainerListBacklc(BacklcOutStockContainerListBussinessRequest request) {
-        String dohId = request.getDohId();
-
-        return new BacklcOutStockContainerListBussinessResponse();
+        Long dohId = request.getDohId();
+        WmsDoHeader wmsDoHeader = wmsDoHeaderService.selectByPrimaryKey(dohId);
+        if(Objects.isNull(wmsDoHeader)){
+            ErrorCode.BACK_LC_DO_HEADER_NOT_EXIST_4008.throwError(JSON.toJSONString(dohId));
+        }
+        ConditionsBuilder conditionsBuilder = ConditionsBuilder.create();
+        conditionsBuilder.eq("companyId",request.getCompanyId());
+        conditionsBuilder.eq("warehouseId",request.getWarehouseId());
+        conditionsBuilder.eq("dohId",dohId);
+        conditionsBuilder.eq("orderStatus","40");
+        Map<String, Object> paramMap = conditionsBuilder.build();
+        List<DoContainerDetailResponseVo> list = wmsDoContainerService.selectByCustomConditions(paramMap);
+        BacklcOutStockContainerListBussinessResponse response = new BacklcOutStockContainerListBussinessResponse();
+        response.setList(list);
+        return response;
     }
 
 

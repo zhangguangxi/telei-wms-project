@@ -66,6 +66,12 @@
             <if test="companyId != null and companyId != ''">
                 AND wlr.company_id=#{companyId}
             </if>
+            <if test="type != null and type == 1">
+                AND wlr.lc_code!=''
+            </if>
+            <if test="type != null and type == 2">
+                AND wlr.lc_code=''
+            </if>
         </where>
         ORDER BY wlr.lr_id DESC
     </select>
