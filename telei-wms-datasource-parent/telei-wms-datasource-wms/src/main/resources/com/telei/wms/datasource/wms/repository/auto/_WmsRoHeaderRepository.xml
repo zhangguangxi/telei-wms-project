@@ -10,6 +10,7 @@
             <result column="warehouse_id" jdbcType="BIGINT" property="warehouseId"/>
             <result column="warehouse_code" jdbcType="VARCHAR" property="warehouseCode"/>
             <result column="supplier_id" jdbcType="BIGINT" property="supplierId"/>
+            <result column="supp_cust_name" jdbcType="VARCHAR" property="suppCustName"/>
             <result column="customer_id" jdbcType="BIGINT" property="customerId"/>
             <result column="cust_order_no" jdbcType="VARCHAR" property="custOrderNo"/>
             <result column="order_type" jdbcType="VARCHAR" property="orderType"/>
@@ -44,12 +45,12 @@
     </resultMap>
 
     <sql id="Base_Column_List">
-        ro_id,ro_code,po_id,rp_id,company_id,warehouse_id,warehouse_code,supplier_id,customer_id,cust_order_no,order_type,est_arrive_time,delivery_time,total_weight,total_vol,total_qty,total_amount,currency_id,species_qty,rece_qty,rece_species_qty,putaway_qty,enforcement,recv_all_time,putaway_all_time,order_status,had_print_to,owner_user,memo,logistics_company,tracking_no,supplier_contact_id,supplier_contact_name,supplier_contact_mobile,supplier_contact_address,create_user,create_time,last_update_user,last_update_time
+        ro_id,ro_code,po_id,rp_id,company_id,warehouse_id,warehouse_code,supplier_id,supp_cust_name,customer_id,cust_order_no,order_type,est_arrive_time,delivery_time,total_weight,total_vol,total_qty,total_amount,currency_id,species_qty,rece_qty,rece_species_qty,putaway_qty,enforcement,recv_all_time,putaway_all_time,order_status,had_print_to,owner_user,memo,logistics_company,tracking_no,supplier_contact_id,supplier_contact_name,supplier_contact_mobile,supplier_contact_address,create_user,create_time,last_update_user,last_update_time
     </sql>
 
         <insert id="insert">
-            insert into wms_ro_header (ro_id,ro_code,po_id,rp_id,company_id,warehouse_id,warehouse_code,supplier_id,customer_id,cust_order_no,order_type,est_arrive_time,delivery_time,total_weight,total_vol,total_qty,total_amount,currency_id,species_qty,rece_qty,rece_species_qty,putaway_qty,enforcement,recv_all_time,putaway_all_time,order_status,had_print_to,owner_user,memo,logistics_company,tracking_no,supplier_contact_id,supplier_contact_name,supplier_contact_mobile,supplier_contact_address,create_user,create_time,last_update_user,last_update_time)
-            values (#{id,jdbcType=BIGINT},#{roCode,jdbcType=VARCHAR},#{poId,jdbcType=BIGINT},#{rpId,jdbcType=BIGINT},#{companyId,jdbcType=BIGINT},#{warehouseId,jdbcType=BIGINT},#{warehouseCode,jdbcType=VARCHAR},#{supplierId,jdbcType=BIGINT},#{customerId,jdbcType=BIGINT},#{custOrderNo,jdbcType=VARCHAR},#{orderType,jdbcType=VARCHAR},#{estArriveTime,jdbcType=TIMESTAMP},#{deliveryTime,jdbcType=TIMESTAMP},#{totalWeight,jdbcType=DECIMAL},#{totalVol,jdbcType=DECIMAL},#{totalQty,jdbcType=DECIMAL},#{totalAmount,jdbcType=DECIMAL},#{currencyId,jdbcType=INTEGER},#{speciesQty,jdbcType=INTEGER},#{receQty,jdbcType=DECIMAL},#{receSpeciesQty,jdbcType=INTEGER},#{putawayQty,jdbcType=DECIMAL},#{enforcement,jdbcType=INTEGER},#{recvAllTime,jdbcType=TIMESTAMP},#{putawayAllTime,jdbcType=TIMESTAMP},#{orderStatus,jdbcType=VARCHAR},#{hadPrintTo,jdbcType=VARCHAR},#{ownerUser,jdbcType=BIGINT},#{memo,jdbcType=VARCHAR},#{logisticsCompany,jdbcType=VARCHAR},#{trackingNo,jdbcType=VARCHAR},#{supplierContactId,jdbcType=BIGINT},#{supplierContactName,jdbcType=VARCHAR},#{supplierContactMobile,jdbcType=VARCHAR},#{supplierContactAddress,jdbcType=VARCHAR},#{createUser,jdbcType=VARCHAR},#{createTime,jdbcType=TIMESTAMP},#{lastUpdateUser,jdbcType=VARCHAR},#{lastUpdateTime,jdbcType=TIMESTAMP})
+            insert into wms_ro_header (ro_id,ro_code,po_id,rp_id,company_id,warehouse_id,warehouse_code,supplier_id,supp_cust_name,customer_id,cust_order_no,order_type,est_arrive_time,delivery_time,total_weight,total_vol,total_qty,total_amount,currency_id,species_qty,rece_qty,rece_species_qty,putaway_qty,enforcement,recv_all_time,putaway_all_time,order_status,had_print_to,owner_user,memo,logistics_company,tracking_no,supplier_contact_id,supplier_contact_name,supplier_contact_mobile,supplier_contact_address,create_user,create_time,last_update_user,last_update_time)
+            values (#{id,jdbcType=BIGINT},#{roCode,jdbcType=VARCHAR},#{poId,jdbcType=BIGINT},#{rpId,jdbcType=BIGINT},#{companyId,jdbcType=BIGINT},#{warehouseId,jdbcType=BIGINT},#{warehouseCode,jdbcType=VARCHAR},#{supplierId,jdbcType=BIGINT},#{suppCustName,jdbcType=VARCHAR},#{customerId,jdbcType=BIGINT},#{custOrderNo,jdbcType=VARCHAR},#{orderType,jdbcType=VARCHAR},#{estArriveTime,jdbcType=TIMESTAMP},#{deliveryTime,jdbcType=TIMESTAMP},#{totalWeight,jdbcType=DECIMAL},#{totalVol,jdbcType=DECIMAL},#{totalQty,jdbcType=DECIMAL},#{totalAmount,jdbcType=DECIMAL},#{currencyId,jdbcType=INTEGER},#{speciesQty,jdbcType=INTEGER},#{receQty,jdbcType=DECIMAL},#{receSpeciesQty,jdbcType=INTEGER},#{putawayQty,jdbcType=DECIMAL},#{enforcement,jdbcType=INTEGER},#{recvAllTime,jdbcType=TIMESTAMP},#{putawayAllTime,jdbcType=TIMESTAMP},#{orderStatus,jdbcType=VARCHAR},#{hadPrintTo,jdbcType=VARCHAR},#{ownerUser,jdbcType=BIGINT},#{memo,jdbcType=VARCHAR},#{logisticsCompany,jdbcType=VARCHAR},#{trackingNo,jdbcType=VARCHAR},#{supplierContactId,jdbcType=BIGINT},#{supplierContactName,jdbcType=VARCHAR},#{supplierContactMobile,jdbcType=VARCHAR},#{supplierContactAddress,jdbcType=VARCHAR},#{createUser,jdbcType=VARCHAR},#{createTime,jdbcType=TIMESTAMP},#{lastUpdateUser,jdbcType=VARCHAR},#{lastUpdateTime,jdbcType=TIMESTAMP})
         </insert>
 
         <insert id="insertSelective">
@@ -78,6 +79,9 @@
                     </if>
                     <if test="supplierId != null">
                         supplier_id,
+                    </if>
+                    <if test="suppCustName != null">
+                        supp_cust_name,
                     </if>
                     <if test="customerId != null">
                         customer_id,
@@ -198,6 +202,9 @@
                     <if test="supplierId != null">
                         #{supplierId,jdbcType=BIGINT},
                     </if>
+                    <if test="suppCustName != null">
+                        #{suppCustName,jdbcType=VARCHAR},
+                    </if>
                     <if test="customerId != null">
                         #{customerId,jdbcType=BIGINT},
                     </if>
@@ -295,7 +302,7 @@
         </insert>
 
         <insert id="insertBatch">
-            insert into wms_ro_header (ro_id,ro_code,po_id,rp_id,company_id,warehouse_id,warehouse_code,supplier_id,customer_id,cust_order_no,order_type,est_arrive_time,delivery_time,total_weight,total_vol,total_qty,total_amount,currency_id,species_qty,rece_qty,rece_species_qty,putaway_qty,enforcement,recv_all_time,putaway_all_time,order_status,had_print_to,owner_user,memo,logistics_company,tracking_no,supplier_contact_id,supplier_contact_name,supplier_contact_mobile,supplier_contact_address,create_user,create_time,last_update_user,last_update_time) values
+            insert into wms_ro_header (ro_id,ro_code,po_id,rp_id,company_id,warehouse_id,warehouse_code,supplier_id,supp_cust_name,customer_id,cust_order_no,order_type,est_arrive_time,delivery_time,total_weight,total_vol,total_qty,total_amount,currency_id,species_qty,rece_qty,rece_species_qty,putaway_qty,enforcement,recv_all_time,putaway_all_time,order_status,had_print_to,owner_user,memo,logistics_company,tracking_no,supplier_contact_id,supplier_contact_name,supplier_contact_mobile,supplier_contact_address,create_user,create_time,last_update_user,last_update_time) values
             <foreach collection="list" item="item" separator=",">
                 (
                     #{item.id,jdbcType=BIGINT},
@@ -306,6 +313,7 @@
                     #{item.warehouseId,jdbcType=BIGINT},
                     #{item.warehouseCode,jdbcType=VARCHAR},
                     #{item.supplierId,jdbcType=BIGINT},
+                    #{item.suppCustName,jdbcType=VARCHAR},
                     #{item.customerId,jdbcType=BIGINT},
                     #{item.custOrderNo,jdbcType=VARCHAR},
                     #{item.orderType,jdbcType=VARCHAR},
@@ -363,6 +371,7 @@
                 warehouse_id = #{warehouseId,jdbcType=BIGINT},
                 warehouse_code = #{warehouseCode,jdbcType=VARCHAR},
                 supplier_id = #{supplierId,jdbcType=BIGINT},
+                supp_cust_name = #{suppCustName,jdbcType=VARCHAR},
                 customer_id = #{customerId,jdbcType=BIGINT},
                 cust_order_no = #{custOrderNo,jdbcType=VARCHAR},
                 order_type = #{orderType,jdbcType=VARCHAR},
@@ -421,6 +430,9 @@
                 </if>
                 <if test="supplierId != null">
                     supplier_id = #{supplierId,jdbcType=BIGINT},
+                </if>
+                <if test="suppCustName != null">
+                    supp_cust_name = #{suppCustName,jdbcType=VARCHAR},
                 </if>
                 <if test="customerId != null">
                     customer_id = #{customerId,jdbcType=BIGINT},
@@ -543,6 +555,9 @@
                     </if>
                     <if test="item.supplierId != null">
                         supplier_id = #{item.supplierId,jdbcType=BIGINT},
+                    </if>
+                    <if test="item.suppCustName != null">
+                        supp_cust_name = #{item.suppCustName,jdbcType=VARCHAR},
                     </if>
                     <if test="item.customerId != null">
                         customer_id = #{item.customerId,jdbcType=BIGINT},
@@ -694,6 +709,9 @@
                 <if test="supplierId != null">
                     and supplier_id=#{supplierId,jdbcType=BIGINT}
                 </if>
+                <if test="suppCustName != null">
+                    and supp_cust_name=#{suppCustName,jdbcType=VARCHAR}
+                </if>
                 <if test="customerId != null">
                     and customer_id=#{customerId,jdbcType=BIGINT}
                 </if>
@@ -818,6 +836,9 @@
                 </if>
                 <if test="supplierId != null">
                     and supplier_id ${supplierId}
+                </if>
+                <if test="suppCustName != null">
+                    and supp_cust_name ${suppCustName}
                 </if>
                 <if test="customerId != null">
                     and customer_id ${customerId}

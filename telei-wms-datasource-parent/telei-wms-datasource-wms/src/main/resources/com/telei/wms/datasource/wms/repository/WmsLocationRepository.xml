@@ -174,7 +174,7 @@
             wl.lc_pickinglock,
             wl.memo,
             COUNT(wi.product_id) product_count,
-            SUM(wi.iv_qty) AS qty
+            IFNULL(SUM(wi.iv_qty), 0) AS qty
         from wms_location wl
         LEFT join wms_inventory wi ON wi.lc_code = wl.lc_code
         <if test="warehouseId != null">
@@ -220,7 +220,7 @@
             wl.lc_pickinglock,
             wl.memo,
             COUNT(wi.product_id) + COUNT(wlr.product_id) product_count,
-            SUM(wi.iv_qty) AS qty
+            IFNULL(SUM(wi.iv_qty), 0) AS qty
         from wms_location wl
         LEFT join wms_inventory wi ON wi.lc_code = wl.lc_code
         <if test="warehouseId != null">

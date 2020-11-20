@@ -30,7 +30,8 @@
         wrh.recv_user,
         wrh.recv_time,
         cw.warehouse_name,
-        cs.supplier_name
+        wrh.supp_cust_name supplier_name,
+        wrh.supp_cust_name
     </sql>
 
     <select id="findAll" resultMap="PageQueryResultMap">
@@ -38,7 +39,6 @@
         <include refid="Page_Query_Column_List"/>
         FROM wms_roo_header wrh
         INNER JOIN cdm.cdm_warehouse cw ON cw.warehouse_id = wrh.warehouse_id
-        INNER JOIN cdm.cdm_supplier cs ON cs.supplier_id = wrh.supplier_id
         <where>
             <if test="id != null">
                 and wrh.roo_id ${id}
@@ -121,10 +121,10 @@
             wrh.create_user,
             wrh.create_time,
             cw.warehouse_name,
-            cs.supplier_name
+            wrh.supp_cust_name supplier_name,
+            wrh.supp_cust_name
         FROM wms_roo_header wrh
         INNER JOIN cdm.cdm_warehouse cw ON cw.warehouse_id = wrh.warehouse_id
-        INNER JOIN cdm.cdm_supplier cs ON cs.supplier_id = wrh.supplier_id
         <where>
             <if test="id != null">
                 and wrh.roo_id = #{id}

@@ -10,5 +10,11 @@
         AND company_id=#{companyId}
     </select>
 
+    <delete id="deleteByDolIds">
+        delete  from wms_iv_out where line_id in
+        <foreach collection="list" open="(" separator="," close=")" item="item">
+            #{item}
+        </foreach>
+    </delete>
 </mapper>
 

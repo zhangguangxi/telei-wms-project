@@ -95,7 +95,6 @@ public class RooBussiness {
         // 收货单
         wmsRooHeader.setId(rooId);
         wmsRooHeader.setRooCode(businessNumberResponse.getBusinessNumber());
-        wmsRooHeader.setOrderType("20");
         wmsRooHeader.setRoStatus("20");
         wmsRooHeader.setTmpPutawayQty(BigDecimal.ZERO);
         wmsRooHeader.setPutawayQty(BigDecimal.ZERO);
@@ -201,6 +200,8 @@ public class RooBussiness {
         Object roHeadLockValue = tryLock(roHeadLockKey);
         // 组装入库任务数据
         WmsRoHeader wmsRoHeader = wmsRoHeaderService.selectByPrimaryKey(wmsRooHeader.getRoId());
+        wmsRooHeader.setOrderType(wmsRoHeader.getOrderType());
+        wmsRooHeader.setSuppCustName(wmsRoHeader.getSuppCustName());
         if (StringUtils.isNotNull(wmsRoHeader.getReceQty())) {
             wmsRoHeader.setReceQty(wmsRoHeader.getReceQty().add(receQty));
         } else {

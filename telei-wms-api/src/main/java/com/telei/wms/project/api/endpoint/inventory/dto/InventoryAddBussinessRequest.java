@@ -11,6 +11,8 @@ import java.util.List;
  */
 @Data
 public class InventoryAddBussinessRequest {
+    /**入库类型 01-补货入库 02-内部订单 08-销售退货*/
+    private String orderType;
     /**上架记录*/
     private List<InventoryAddRequestCondition> list;
 

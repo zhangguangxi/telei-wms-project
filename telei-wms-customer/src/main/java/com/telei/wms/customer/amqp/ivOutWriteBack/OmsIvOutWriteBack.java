@@ -12,7 +12,7 @@ import java.util.List;
 @Data
 public class OmsIvOutWriteBack {
     private List<OmsIvOutWriteBackCondition> list;
-
+    private String orderType;
     @Data
     public static  class OmsIvOutWriteBackCondition{
         /**公司id*/

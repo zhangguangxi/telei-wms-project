@@ -39,7 +39,7 @@ public class AdjustStrategyFactory {
      * @return
      */
     public  IAdjustStrategy getAdjustStrategy(String adjustType){
-        AdjustEnum adjustEnum = AdjustEnum.findAdjustEnumByadjustType(adjustType);
+        AdjustEnum adjustEnum = AdjustEnum.findAdjustEnumByAdjustType(adjustType);
         if(Objects.isNull(adjustEnum)){
             return null;
         }

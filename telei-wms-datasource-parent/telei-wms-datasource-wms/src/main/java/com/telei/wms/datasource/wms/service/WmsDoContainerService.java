@@ -7,6 +7,7 @@ import com.nuochen.framework.autocoding.domain.mybatis.BaseService;
 import com.telei.wms.datasource.wms.model.WmsDoContainer;
 import com.telei.wms.datasource.wms.repository.WmsDoContainerRepository;
 import com.telei.wms.datasource.wms.vo.DoContainerDetailResponseVo;
+import com.telei.wms.datasource.wms.vo.DoContainerGroupResponseVo;
 import com.telei.wms.datasource.wms.vo.DoContainerResponseVo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -48,5 +49,9 @@ public class WmsDoContainerService extends BaseService<WmsDoContainerRepository,
 
     public List<DoContainerDetailResponseVo> selectByCustomConditions(Map<String, Object> paramMap) {
         return wmsDoContainerRepository.selectByCustomConditions(paramMap);
+    }
+
+    public List<DoContainerGroupResponseVo> selectByDohId(Long dohId) {
+        return wmsDoContainerRepository.selectByDohId(dohId);
     }
 }

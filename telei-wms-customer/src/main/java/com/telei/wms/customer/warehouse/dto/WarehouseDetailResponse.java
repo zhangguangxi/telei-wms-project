@@ -21,6 +21,8 @@ public class WarehouseDetailResponse {
     private Long companyId;
     /** 仓库类型（01-主仓库，04-中转仓，06-中转仓） */
     private String categoryType;
+    /** 装柜要求 Y需要，N不需要  */
+    private String containerType;
     /** 默认收货仓库：0否，1是 */
     private String defaultReceive;
     /** 所在地区 */

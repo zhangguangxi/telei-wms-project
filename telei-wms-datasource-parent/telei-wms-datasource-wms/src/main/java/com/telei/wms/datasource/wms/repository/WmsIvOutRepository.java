@@ -6,6 +6,7 @@ import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
 
 import java.math.BigDecimal;
+import java.util.List;
 
 @Repository
 public interface WmsIvOutRepository extends BaseRepository<WmsIvOut,Long> {
@@ -18,4 +19,11 @@ public interface WmsIvOutRepository extends BaseRepository<WmsIvOut,Long> {
      * @return
      */
     BigDecimal selectQtySum(@Param("productId") Long productId, @Param("warehouseId") Long warehouseId, @Param("companyId") Long companyId);
+
+    /**
+     * 根据出库任务明细id删除出库记录
+     * @param deleteIvOutList
+     * @return
+     */
+    int deleteByDolIds(List<Long> deleteIvOutList);
 }

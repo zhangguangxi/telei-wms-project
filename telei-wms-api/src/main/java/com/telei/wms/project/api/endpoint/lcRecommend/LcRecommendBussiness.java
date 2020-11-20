@@ -171,6 +171,10 @@ public class LcRecommendBussiness {
             //推荐库位不存在
             ErrorCode.LC_RECOMMEND_NOT_EXIST_4001.throwError();
         }
+        if (!request.getLcCode().contains("S")) {
+            //推荐库位不存在
+            ErrorCode.LC_RECOMMEND_CODE_IS_SAMPLE_4003.throwError();
+        }
         WmsLcRecommend wmsLcRecommendEntity = new WmsLcRecommend();
         wmsLcRecommendEntity.setCompanyId(CustomRequestContext.getUserInfo().getCompanyId());
         wmsLcRecommendEntity.setLcCode(request.getLcCode());

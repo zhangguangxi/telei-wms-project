@@ -1,10 +1,9 @@
 package com.telei.wms.datasource.wms.model;
 
 import com.nuochen.framework.autocoding.domain.Entity;
-import lombok.Data;
-
 import java.math.BigDecimal;
 import java.util.Date;
+import lombok.Data;
 
 /**
  * wms_plo_header 拣货单头
@@ -29,6 +28,8 @@ public class WmsPloHeader implements Entity<Long> {
     private String custOrderNo;
     /** 供应商id */
     private Long supplierId;
+    /** 供应商/客户名称 */
+    private String suppCustName;
     /** 客户id */
     private Long customerId;
     /** 拣货单状态  01-制单，20-部分拣货，30-已拣货，98-关闭 */

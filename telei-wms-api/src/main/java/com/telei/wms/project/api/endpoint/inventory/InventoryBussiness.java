@@ -36,8 +36,7 @@ import com.telei.wms.project.api.amqp.producer.WmsOmsInventoryAddWriteBackProduc
 import com.telei.wms.project.api.amqp.producer.WmsOmsInventoryChangeWriteBackProducer;
 import com.telei.wms.project.api.amqp.producer.WmsOmsIvOutWriteBackProducer;
 import com.telei.wms.project.api.endpoint.inventory.dto.*;
-import com.telei.wms.project.api.endpoint.inventory.strategy.AdjustStrategyFactory;
-import com.telei.wms.project.api.endpoint.inventory.strategy.IAdjustStrategy;
+import com.telei.wms.project.api.endpoint.inventory.strategy.*;
 import com.telei.wms.project.api.endpoint.lcRecommend.LcRecommendBussiness;
 import com.telei.wms.project.api.endpoint.lcRecommend.dto.LcRecommendDeleteRequest;
 import com.telei.wms.project.api.endpoint.wmsIdInstantdirective.WmsIdInstantdirectiveBussiness;
@@ -182,6 +181,9 @@ public class InventoryBussiness {
 
     @Autowired
     private WmsDoContainerService wmsDoContainerService;
+
+    @Autowired
+    private DeductStrategyFactory deductStrategyFactory;
 
     /**
      * 入库(上架)
@@ -397,6 +399,7 @@ public class InventoryBussiness {
                 omsInventoryAddWriteBackConditionList.add(omsInventoryAddWriteBackCondition);
             });
             OmsInventoryAddWriteBack omsInventoryAddWriteBack = new OmsInventoryAddWriteBack();
+            omsInventoryAddWriteBack.setOrderType(request.getOrderType());
             omsInventoryAddWriteBack.setList(omsInventoryAddWriteBackConditionList);
 
             //2.8 库存记录-预处理
@@ -898,7 +901,10 @@ public class InventoryBussiness {
     @Transactional(rollbackFor = Exception.class)
     public InventoryDeductBussinessResponse deductInventory(InventoryDeductBussinessRequest request) {
         log.info("\n +++++++++++++++++++++ 出库扣减库存操作::入参 -> {} ++++++++++++++++++++ \n ", JSON.toJSONString(request));
+        Long companyId = request.getCompanyId();
+        Long warehouseId = request.getWarehouseId();
         Long dohId = request.getDohId();//出库任务id(订单id),库存锁key
+        String orderType = request.getOrderType();
         Object lockValue = LockMapUtil.tryLock(dohId);
         try {
             WmsDoHeader wmsDoHeader = wmsDoHeaderService.selectByPrimaryKey(dohId);
@@ -922,13 +928,9 @@ public class InventoryBussiness {
             if(Objects.isNull(ploHeader)){
                 ErrorCode.INVENTORY_DEDUCT_PLO_HEADER_IS_NULL_40048.throwError(JSON.toJSONString(dohId));
             }
-
             if(!ploHeader.getOrderStatus().equalsIgnoreCase(PICK_FINISHED)){
                 ErrorCode.INVENTORY_DEDUCT_PLO_NOT_FINISHED_40049.throwError(JSON.toJSONString(dohId));
             }
-
-            Long companyId = request.getCompanyId();
-            Long warehouseId = request.getWarehouseId();
 
             /**查询出库任务明细*/
             WmsDoLine wmsDoLine = new WmsDoLine();
@@ -938,8 +940,6 @@ public class InventoryBussiness {
                 ErrorCode.INVENTORY_DEDUCT_DO_LINE_NOT_EXIST_40029.throwError(JSON.toJSONString(dohId));
             }
             log.info("\n +++++++++++++++++++++ 出库扣减库存操作::根据出库任务单头ID -> {}，查询出库任务明细记录 ++++++++++++++++++++ \n ", JSON.toJSONString(dohId), JSON.toJSONString(wmsDoLines));
-
-
             /**根据订单id(出库任务id)查询wms_iv_out(待出库存-出库计划审核时生成)集合*/
             WmsIvOut wmsIvOut = new WmsIvOut();
             wmsIvOut.setOrderId(dohId);
@@ -956,37 +956,33 @@ public class InventoryBussiness {
             if (Objects.isNull(wmsPloLineList) || wmsPloLineList.isEmpty()) {
                 ErrorCode.INVENTORY_DEDUCT_PLO_LINE_NOT_EXIST_40031.throwError(JSON.toJSONString(wmsPloLineList));
             }
-
-            /**判断是否存在 拣货单数量  = 退库数量 + 装箱上数量*/
-
+            /**判断是否拣货单数量  = 退库数量 + 装箱上数量*/
             BigDecimal ploQty = wmsDoHeader.getPloQty();
-            BigDecimal shipQty = ploQty; //实际出库数量
-
+            BigDecimal shipQty = ploQty;
             WarehouseDetailRequest warehouseDetailRequest = new WarehouseDetailRequest();
-            warehouseDetailRequest.setCompanyId(CustomRequestContext.getUserInfo().getCompanyId());
-            ApiResponse productResponse = warehouseFeignClient.getCompanyWarehouse(warehouseDetailRequest);
-            WarehouseDetailResponse detailResponse = JSON.parseObject(JSON.toJSONString(productResponse.getData()), WarehouseDetailResponse.class);
+            warehouseDetailRequest.setCompanyId(companyId);
+            ApiResponse warehouseResponse = warehouseFeignClient.getCompanyWarehouse(warehouseDetailRequest);
+            WarehouseDetailResponse detailResponse = JSON.parseObject(JSON.toJSONString(warehouseResponse.getData()), WarehouseDetailResponse.class);
             if(Objects.isNull(detailResponse)){
-                // TODO: 2020/11/19  默认仓库不存在
+                ErrorCode.INVENTORY_DEDUCT_COMPANY_DEFAULT_WAREHOUSE_NOT_EXIST_40054.throwError(JSON.toJSONString(companyId));
             }
-            String categoryType = detailResponse.getCategoryType();
-            if(StringUtils.equalsIgnoreCase(categoryType,"Y")){
-                BigDecimal backlcQty = wmsDoHeader.getBacklcQty();
-                BigDecimal containerQty = wmsDoHeader.getContainerQty();
-                if(!(ploQty.compareTo(backlcQty.add(containerQty))==0)){
-                    // TODO: 2020/11/19 存在未装柜或未退库的商品
+            String containerType = detailResponse.getContainerType();
+            if(StringUtils.equalsIgnoreCase(containerType,"Y")){
+                BigDecimal backlcQty = wmsDoHeader.getBacklcQty();//退库数量
+                BigDecimal containerQty = wmsDoHeader.getContainerQty();//装柜数量
+                if(!(ploQty.compareTo(backlcQty.add(containerQty)) == 0)){
+                    ErrorCode.INVENTORY_DEDUCT_EXIST_PROCESS_PRODUCT_40055.throwError(JSON.toJSONString(companyId));
                 }
                 shipQty = containerQty;//装柜数量
             }
-
+            /**捡货单明细id->lcCode映射*/
             Set<WmsPloLine> wmsPloLineSet = wmsPloLineList.stream().collect(
                     Collectors.collectingAndThen(
                             Collectors.toCollection(() -> new TreeSet<>(Comparator.comparing(WmsPloLine::getDolId))), HashSet::new)
             );
-            /**捡货单明细id->lcCode映射*/
             Map<Long, String> dolId2LcCodeMap = wmsPloLineSet.stream().collect(Collectors.toMap(WmsPloLine::getDolId, WmsPloLine::getLcCode));
             List<String> requestLcCodeList = wmsPloLineList.stream().map(WmsPloLine::getLcCode).collect(toList());
-
+            /**样品库位校验*/
             Set<String>  nonSampleLocations = Sets.newHashSet();
             requestLcCodeList.forEach(item ->{
                     if(!item.toLowerCase().startsWith("s")){
@@ -996,7 +992,7 @@ public class InventoryBussiness {
             if(!nonSampleLocations.isEmpty()){
                 ErrorCode.INVENTORY_DEDUCT_NONE_SAMPLE_LC_CODE_40050.throwError(JSON.toJSONString(nonSampleLocations));
             }
-
+            /**产品校验*/
             List<Long> requestProductList = wmsPloLineList.stream().map(WmsPloLine::getProductId).collect(toList());
             ProductRequest productDetailRequest = new ProductRequest();
             productDetailRequest.setProductIds(requestProductList);
@@ -1008,10 +1004,9 @@ public class InventoryBussiness {
                 ErrorCode.INVENTORY_MULTI_SAMPLE_LC_CODE_CHECK_40047.throwError(JSON.toJSONString(requestProductList));
             }
             Map<Long, String> productMap = productList.stream().collect(Collectors.toMap(ProductDetailResponse::getProductId, ProductDetailResponse::getProductName));
-
-            //拣货单需要出库的映射
+            /**拣货单( productId_lcCode -> pickedQty)*/
             Map<String, BigDecimal>  groupByProductIdAndLcCodeMapForDeduct = wmsPloLineList.stream().collect(Collectors.groupingBy((item -> item.getProductId() + "#" + item.getLcCode()), CollectorsUtil.summingBigDecimal(WmsPloLine::getPickedQty)));
-
+            /**库存映射*/
             WmsInventory inventoryCondition = new WmsInventory();
             inventoryCondition.setCompanyId(companyId);
             inventoryCondition.setWarehouseId(warehouseId);
@@ -1019,9 +1014,9 @@ public class InventoryBussiness {
             if (Objects.isNull(inventoryList) || inventoryList.isEmpty()) {
                 ErrorCode.INVENTORY_DEDUCT_INVENTORY_NOT_EXIST_40032.throwError();
             }
-            //库存的映射
             Map<String, BigDecimal> groupByProductIdAndLcCode2QtyMap = inventoryList.stream().collect(Collectors.groupingBy((item -> item.getProductId() + "#" + item.getLcCode()), CollectorsUtil.summingBigDecimal(WmsInventory::getIvQty)));
 
+            /**组装*/
             Map<String, BigDecimal> productIdAndLcCode2RealQty = Maps.newHashMap();
             groupByProductIdAndLcCodeMapForDeduct.forEach((k ,v) ->{
                 String[] condtion = k.split("#");
@@ -1033,9 +1028,9 @@ public class InventoryBussiness {
 
                 //(产品,库位)-> 数量 比较
                 if(dbQty.compareTo(deductQty) < 0){
-                    String productName = productMap.get(condtion[0]);
+                    String productName = productMap.get(Long.valueOf(condtion[0]));
                     String lcCode = condtion[1];
-                    ErrorCode.INVENTORY_DEDUCT_INVENTORY_NOT_ENOUGH_40052.throwError(productName,lcCode);
+                    ErrorCode.INVENTORY_DEDUCT_INVENTORY_NOT_ENOUGH_40052.throwError(JSON.toJSONString(productName),JSON.toJSONString(lcCode));
                 }
                 productIdAndLcCode2RealQty.put(k,deductQty);
             });
@@ -1044,63 +1039,16 @@ public class InventoryBussiness {
             List<WmsInventoryDeductConditionVo> inventoryDeductConditionList = Lists.newArrayList();
             /**出库任务明细id->entity映射*/
             Map<Long, WmsDoLine> id2DoLineEntityMap = wmsDoLines.stream().collect(Collectors.toMap(WmsDoLine::getId, Function.identity()));
+            Map<Long, WmsPloLine> id2PloLineEntityMap = wmsPloLineList.stream().collect(Collectors.toMap(WmsPloLine::getDolId, Function.identity()));
+            /**待出库存集合(删除)*/
+            List<Long> deleteIvOutList = new ArrayList<>();
+            List<WmsDoLine> updateDoLineList = new ArrayList<>();
 
+            DeductEnum deductTypeEnum = DeductEnum.findDeductEnumByDeductType(containerType);
+            IDeductStrategy deductStrategy = deductStrategyFactory.getDeductStrategy(deductTypeEnum.getDeductType());
+            inventoryDeductConditionList = deductStrategy.process(requestProductList,requestLcCodeList,productIdAndLcCode2RealQty,wmsIvOutList, updateDoLineList,
+                    id2DoLineEntityMap, id2PloLineEntityMap,dolId2LcCodeMap,deleteIvOutList,dohId,warehouseId,companyId);
 
-            /**遍历待出库存集合，组装扣减库存记录集合*/
-            List<WmsIvOut> ivOutList = new ArrayList<>();
-            if(StringUtils.equalsIgnoreCase(categoryType,"Y")){
-                //根据dohId查询装柜列表
-                WmsDoContainer doContainerCondition = new WmsDoContainer();
-                doContainerCondition.setDohId(dohId);
-                List<WmsDoContainer> wmsDoContainers = wmsDoContainerService.selectByEntity(doContainerCondition);
-                if(Objects.isNull(wmsDoContainers) || wmsDoContainers.isEmpty()){
-                    // TODO: 2020/11/19
-                }
-                // TODO: 2020/11/19 反写wms_iv_out_confirm表
-                Map<Long, WmsIvOut> lineId2IvOutEntityMap = wmsIvOutList.stream().collect(Collectors.toMap(WmsIvOut::getLineId, Function.identity()));
-                wmsDoContainers.forEach(item ->{
-                    Long dolId = item.getDolId();//出库任务明细id
-                    String lcCode = dolId2LcCodeMap.get(dolId);
-                    WmsInventoryDeductConditionVo deductCondition = new WmsInventoryDeductConditionVo();
-                    WmsIvOut ivout = lineId2IvOutEntityMap.get(dolId);
-                    Long productId = item.getProductId();
-                    deductCondition.setProductId(productId);
-                    deductCondition.setCompanyId(companyId);
-                    deductCondition.setWarehouseId(warehouseId);
-                    deductCondition.setIvoId(ivout.getIvoId());//带出库存id
-                    deductCondition.setLineId(dolId);
-                    deductCondition.setQty(ivout.getQty());//计划扣减-数量
-//                  deductCondition.setRealQty();//实际扣减数量 todo 出柜数量  联表查询  出库计划id、库位、数量
-                    deductCondition.setLcCode(lcCode);//库位
-                    deductCondition.setSpId(id2DoLineEntityMap.get(dolId).getSpId());//出库计划id
-                    deductCondition.setSpdId(id2DoLineEntityMap.get(dolId).getSpdId());//出库计划明细id
-                    deductCondition.setSoId(id2DoLineEntityMap.get(dolId).getSoId());//销售单id
-                    deductCondition.setSodId(id2DoLineEntityMap.get(dolId).getSodId());//销售单详情id
-                });
-
-            }else{
-                wmsIvOutList.stream().filter(item -> requestProductList.contains(item.getProductId())).forEach(item -> {
-                    String lcCode = dolId2LcCodeMap.get(item.getLineId());
-                    if(requestLcCodeList.contains(lcCode)){
-                        ivOutList.add(item);
-                        WmsInventoryDeductConditionVo deductCondition = new WmsInventoryDeductConditionVo();
-                        Long productId = item.getProductId();
-                        deductCondition.setCompanyId(item.getCompanyId());//公司id
-                        deductCondition.setWarehouseId(item.getWarehouseId());//仓库id
-                        deductCondition.setProductId(productId);//产品id
-                        deductCondition.setIvoId(item.getIvoId());//待出库存id
-                        deductCondition.setLineId(item.getLineId());//出库单明细id
-                        deductCondition.setQty(item.getQty());//计划扣减-数量
-                        deductCondition.setRealQty(productIdAndLcCode2RealQty.get(productId+"#"+lcCode));//实际扣减数量
-                        deductCondition.setLcCode(lcCode);//库位
-                        deductCondition.setSpId(id2DoLineEntityMap.get(item.getLineId()).getSpId());//出库计划id
-                        deductCondition.setSpdId(id2DoLineEntityMap.get(item.getLineId()).getSpdId());//出库计划明细id
-                        deductCondition.setSoId(id2DoLineEntityMap.get(item.getLineId()).getSoId());//销售单id
-                        deductCondition.setSodId(id2DoLineEntityMap.get(item.getLineId()).getSodId());//销售单详情id
-                        inventoryDeductConditionList.add(deductCondition);
-                    }
-                });
-            }
             //扣减库存id与扣减次数最大值集合
             List<WmsDeductIvOutConfirmResponseVo> ivIdIndexList = wmsIvOutConfirmService.selectIvIdIndex();
             log.info("\n +++++++++++++++++++++ 出库扣减库存操作::查询锁定扣减记录-扣减次数最大值 -> {} ++++++++++++++++++++ \n ", JSON.toJSONString(ivIdIndexList));
@@ -1124,8 +1072,7 @@ public class InventoryBussiness {
             List<WmsIvTransaction> addIvTransactionList = Lists.newArrayList();
             //库存锁定扣减集合
             List<WmsIvOutConfirm> addIvOutConfirmList = Lists.newArrayList();
-            //待出库存集合
-            List<Long> deleteIvOutList = ivOutList.stream().map(WmsIvOut::getId).collect(toList());
+
 
             /**基本信息*/
             /**当前UTC时间*/
@@ -1147,14 +1094,6 @@ public class InventoryBussiness {
 
                 //商品库存按照批次id升序排列(db)
                 List<WmsInventory> sortedList = list.stream().sorted(Comparator.comparing(WmsInventory::getIabId)).collect(toList());
-                // TODO: 2020/11/19  根据当前doh_id  是否存在待装柜数量,存在给出相应提示，实际出库数量、出库时间、出库货品种类数量、出库数量、出库重量、出库体积
-                //实际出库数量，从货柜中取出,待装柜数量=拣货数量-装柜数量-退库数量 是否等于0 拣货数量=退库数量+装柜数量，满足这个条件才能出库
-
-
-                WmsDoContainer doContainerCondition = new WmsDoContainer();
-                doContainerCondition.setDohId(dohId);
-
-
                 BigDecimal requestIvQty = v;//请求扣减库存数
                 for (WmsInventory inventory : sortedList) {
                     BigDecimal dbIvQty = inventory.getIvQty();//库存记录中的库存商品库存数量
@@ -1185,13 +1124,19 @@ public class InventoryBussiness {
                 }
             });
 
-            /**回写出库任务*/
+            /**回写出库任务单头*/
             wmsDoHeader.setOrderStatus(ALL_OUT_INVENTORY_STATUS);//已出库
             wmsDoHeader.setShippingTime(nowWithUTC);//发货时间(出库时间)
+            wmsDoHeader.setShipQty(shipQty);//实际出库数量
+            BigDecimal shipVol= updateDoLineList.stream().map(WmsDoLine::getShipVol).reduce(BigDecimal.ZERO, BigDecimal::add);
+            wmsDoHeader.setShipVol(shipVol);//出库体积
+            BigDecimal shipWeight= updateDoLineList.stream().map(WmsDoLine::getShipWeight).reduce(BigDecimal.ZERO, BigDecimal::add);
+            wmsDoHeader.setShipWeight(shipWeight);
+            wmsDoHeader.setShipDetailedSpeciesQty(updateDoLineList.size());//出库货品种类数
 
             if (LockMapUtil.confirmLock(dohId, lockValue)) {
                 log.info("\n +++++++++++++++++++++ 出库扣减库存操作:: 删除待出库存记录 -> {} ++++++++++++++++++++ \n ", JSON.toJSONString(deleteIvOutList));
-                int countForIvOut = wmsIvOutService.deleteByPrimaryKeys(deleteIvOutList);
+                int countForIvOut = wmsIvOutService.deleteByDolIds(deleteIvOutList);
                 if (countForIvOut <= 0) {
                     ErrorCode.INVENTORY_DEDUCT_DELETE_IV_OUT_40035.throwError();
                 }
@@ -1225,15 +1170,23 @@ public class InventoryBussiness {
                 }
 
                 log.info("\n +++++++++++++++++++++ 出库扣减库存操作:: 更新出库单单头 -> {} ++++++++++++++++++++ \n ", JSON.toJSONString(wmsDoHeader));
-                int countForDoheader = wmsDoHeaderService.updateByPrimaryKey(wmsDoHeader);
+                int countForDoheader = wmsDoHeaderService.updateByPrimaryKeySelective(wmsDoHeader);
                 if (countForDoheader <= 0) {
                     ErrorCode.INVENTORY_DEDUCT_UPDATE_DO_HEADER_40040.throwError();
                 }
+
+                log.info("\n +++++++++++++++++++++ 出库扣减库存操作:: 更新出库明细 -> {} ++++++++++++++++++++ \n ", JSON.toJSONString(updateDoLineList));
+                int countForDoLine = wmsDoLineService.updateBatch(updateDoLineList);
+                if(countForDoheader <= 0){
+                    ErrorCode.INVENTORY_DEDUCT_UPDATE_DO_LINE_40053.throwError();
+                }
+
             }
             /**异步回写OMS(出库计划单头/明细 销售单单头/明细 库存变动的相关记录)  inventoryDeductConditionList*/
             List<OmsIvOutWriteBack.OmsIvOutWriteBackCondition> omsIvOutWriteBacks = DataConvertUtil.parseDataAsArray(inventoryDeductConditionList, OmsIvOutWriteBack.OmsIvOutWriteBackCondition.class);
             OmsIvOutWriteBack omsIvOutWriteBack = new OmsIvOutWriteBack();
             omsIvOutWriteBack.setList(omsIvOutWriteBacks);
+            omsIvOutWriteBack.setOrderType(orderType);
             WmsIdInstantdirective wmsIdInstantdirective = wmsIdInstantdirectiveBussiness.add("PUTON", "", omsIvOutWriteBack);
             wmsOmsIvOutWriteBackProducer.send(wmsIdInstantdirective);
             return new InventoryDeductBussinessResponse();

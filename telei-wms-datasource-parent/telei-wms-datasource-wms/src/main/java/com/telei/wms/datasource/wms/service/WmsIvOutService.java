@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
+import java.util.List;
 
 @Service
 public class WmsIvOutService extends BaseService<WmsIvOutRepository,WmsIvOut,Long> {
@@ -16,5 +17,9 @@ public class WmsIvOutService extends BaseService<WmsIvOutRepository,WmsIvOut,Lon
 
     public BigDecimal selectQtySum(Long productId, Long warehouseId, Long companyId) {
         return wmsIvOutRepository.selectQtySum(productId, warehouseId, companyId);
+    }
+
+    public int deleteByDolIds(List<Long> deleteIvOutList) {
+        return wmsIvOutRepository.deleteByDolIds(deleteIvOutList);
     }
 }

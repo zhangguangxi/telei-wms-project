@@ -110,6 +110,7 @@ public class PloBussiness {
         wmsPloHeader.setWarehouseCode(wmsDoHeader.getWarehouseCode());
         wmsPloHeader.setCustOrderNo(wmsDoHeader.getCustOrderNo());
         wmsPloHeader.setSupplierId(wmsDoHeader.getSupplierId());
+        wmsPloHeader.setSuppCustName(wmsDoHeader.getSuppCustName());
         wmsPloHeader.setCustomerId(wmsDoHeader.getCustomerId());
         wmsPloHeader.setOrderStatus(SAVE_STATUS);
         wmsPloHeader.setTotalQty(wmsDoHeader.getTotalQty());

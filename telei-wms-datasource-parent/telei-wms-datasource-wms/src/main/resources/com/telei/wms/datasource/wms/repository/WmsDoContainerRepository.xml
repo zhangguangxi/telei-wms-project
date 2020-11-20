@@ -56,23 +56,33 @@
         <result column="c_vol" jdbcType="DECIMAL" property="cVol"/>
     </resultMap>
 
+    <resultMap id="DoContainerGroupResponseVo" type="com.telei.wms.datasource.wms.vo.DoContainerGroupResponseVo">
+        <result column="dol_id" jdbcType="BIGINT" property="dolId"/>
+        <result column="product_id" jdbcType="VARCHAR" property="productId"/>
+        <result column="lc_code" jdbcType="TIMESTAMP" property="lcCode"/>
+        <result column="c_qty" jdbcType="DECIMAL" property="cQty"/>
+    </resultMap>
+
     <select id="findAll" resultMap="PageQueryResultMap">
         SELECT
-            sp_id,
-            so_id,
-            doh_id,
-            c_id,
-            SUM(c_qty) c_qty,
-            SUM(c_weight) c_weight,
-            SUM(c_vol) c_vol,
-            SUM(c_amount) c_amount
-        FROM wms_do_container
+            wdc.sp_id,
+            wdc.so_id,
+            wdc.doh_id,
+            wdc.c_id,
+            oc.load_time,
+            oc.load_user,
+            SUM(wdc.c_qty) c_qty,
+            SUM(wdc.c_weight) c_weight,
+            SUM(wdc.c_vol) c_vol,
+            SUM(wdc.c_amount) c_amount
+        FROM wms_do_container wdc
+        LEFT JOIN oms.oms_container oc ON wdc.c_id = oc.c_id
         <where>
             <if test="cId != null">
-                and c_id = #{cId}
+                and wdc.c_id = #{cId}
             </if>
         </where>
-        GROUP BY doh_id
+        GROUP BY wdc.doh_id
     </select>
 
     <select id="findAllByDohId" resultMap="PageQueryResultMap">
@@ -199,6 +209,25 @@
         AND wdh.order_status ${orderStatus}
         AND  wdc.doh_id ${dohId}
         </where>
+    </select>
+
+    <select id="selectByDohId" resultMap="DoContainerGroupResponseVo">
+        SELECT
+            wdc.dol_id,
+            wdc.product_id,
+            wpl.lc_code,
+            sum(wdc.c_qty) c_qty,
+            sum(wdc.c_vol) c_vol,
+            sum(wdc.c_weight) c_weight,
+            sum(wdc.product_id) product_id
+        FROM
+            wms_do_container wdc
+                LEFT JOIN wms_plo_line wpl ON wdc.dol_id = wpl.dol_id
+                LEFT JOIN wms_plo_header wph on wph.plo_id = wpl.plo_id
+        WHERE
+          wph.order_status = 30
+          and wdc.doh_id = #{dohId}
+        GROUP BY wdc.dol_id
     </select>
 </mapper>
 

@@ -12,25 +12,26 @@
             <result column="warehouse_id" jdbcType="BIGINT" property="warehouseId"/>
             <result column="warehouse_code" jdbcType="VARCHAR" property="warehouseCode"/>
             <result column="supplier_id" jdbcType="BIGINT" property="supplierId"/>
+            <result column="supp_cust_name" jdbcType="VARCHAR" property="suppCustName"/>
             <result column="customer_id" jdbcType="BIGINT" property="customerId"/>
             <result column="total_qty" jdbcType="DECIMAL" property="totalQty"/>
             <result column="tmp_putaway_qty" jdbcType="DECIMAL" property="tmpPutawayQty"/>
             <result column="putaway_qty" jdbcType="DECIMAL" property="putawayQty"/>
             <result column="ro_status" jdbcType="VARCHAR" property="roStatus"/>
             <result column="memo" jdbcType="VARCHAR" property="memo"/>
+            <result column="recv_time" jdbcType="TIMESTAMP" property="recvTime"/>
+            <result column="recv_user" jdbcType="VARCHAR" property="recvUser"/>
             <result column="create_user" jdbcType="VARCHAR" property="createUser"/>
             <result column="create_time" jdbcType="TIMESTAMP" property="createTime"/>
-            <result column="recv_user" jdbcType="VARCHAR" property="recvUser"/>
-            <result column="recv_time" jdbcType="TIMESTAMP" property="recvTime"/>
     </resultMap>
 
     <sql id="Base_Column_List">
-        roo_id,roo_code,order_type,ro_id,ro_code,cust_order_no,company_id,warehouse_id,warehouse_code,supplier_id,customer_id,total_qty,tmp_putaway_qty,putaway_qty,ro_status,memo,create_user,create_time,recv_user,recv_time
+        roo_id,roo_code,order_type,ro_id,ro_code,cust_order_no,company_id,warehouse_id,warehouse_code,supplier_id,supp_cust_name,customer_id,total_qty,tmp_putaway_qty,putaway_qty,ro_status,memo,recv_time,recv_user,create_user,create_time
     </sql>
 
         <insert id="insert">
-            insert into wms_roo_header (roo_id,roo_code,order_type,ro_id,ro_code,cust_order_no,company_id,warehouse_id,warehouse_code,supplier_id,customer_id,total_qty,tmp_putaway_qty,putaway_qty,ro_status,memo,create_user,create_time,recv_user,recv_time)
-            values (#{id,jdbcType=BIGINT},#{rooCode,jdbcType=VARCHAR},#{orderType,jdbcType=VARCHAR},#{roId,jdbcType=BIGINT},#{roCode,jdbcType=VARCHAR},#{custOrderNo,jdbcType=VARCHAR},#{companyId,jdbcType=BIGINT},#{warehouseId,jdbcType=BIGINT},#{warehouseCode,jdbcType=VARCHAR},#{supplierId,jdbcType=BIGINT},#{customerId,jdbcType=BIGINT},#{totalQty,jdbcType=DECIMAL},#{tmpPutawayQty,jdbcType=DECIMAL},#{putawayQty,jdbcType=DECIMAL},#{roStatus,jdbcType=VARCHAR},#{memo,jdbcType=VARCHAR},#{createUser,jdbcType=VARCHAR},#{createTime,jdbcType=TIMESTAMP},#{recvUser,jdbcType=VARCHAR},#{recvTime,jdbcType=TIMESTAMP})
+            insert into wms_roo_header (roo_id,roo_code,order_type,ro_id,ro_code,cust_order_no,company_id,warehouse_id,warehouse_code,supplier_id,supp_cust_name,customer_id,total_qty,tmp_putaway_qty,putaway_qty,ro_status,memo,recv_time,recv_user,create_user,create_time)
+            values (#{id,jdbcType=BIGINT},#{rooCode,jdbcType=VARCHAR},#{orderType,jdbcType=VARCHAR},#{roId,jdbcType=BIGINT},#{roCode,jdbcType=VARCHAR},#{custOrderNo,jdbcType=VARCHAR},#{companyId,jdbcType=BIGINT},#{warehouseId,jdbcType=BIGINT},#{warehouseCode,jdbcType=VARCHAR},#{supplierId,jdbcType=BIGINT},#{suppCustName,jdbcType=VARCHAR},#{customerId,jdbcType=BIGINT},#{totalQty,jdbcType=DECIMAL},#{tmpPutawayQty,jdbcType=DECIMAL},#{putawayQty,jdbcType=DECIMAL},#{roStatus,jdbcType=VARCHAR},#{memo,jdbcType=VARCHAR},#{recvTime,jdbcType=TIMESTAMP},#{recvUser,jdbcType=VARCHAR},#{createUser,jdbcType=VARCHAR},#{createTime,jdbcType=TIMESTAMP})
         </insert>
 
         <insert id="insertSelective">
@@ -66,6 +67,9 @@
                     <if test="supplierId != null">
                         supplier_id,
                     </if>
+                    <if test="suppCustName != null">
+                        supp_cust_name,
+                    </if>
                     <if test="customerId != null">
                         customer_id,
                     </if>
@@ -84,17 +88,17 @@
                     <if test="memo != null">
                         memo,
                     </if>
-                    <if test="createUser != null">
-                        create_user,
-                    </if>
-                    <if test="createTime != null">
-                        create_time,
+                    <if test="recvTime != null">
+                        recv_time,
                     </if>
                     <if test="recvUser != null">
                         recv_user,
                     </if>
-                    <if test="recvTime != null">
-                        recv_time
+                    <if test="createUser != null">
+                        create_user,
+                    </if>
+                    <if test="createTime != null">
+                        create_time
                     </if>
             </trim>
             <trim prefix="values (" suffix=")" suffixOverrides=",">
@@ -128,6 +132,9 @@
                     <if test="supplierId != null">
                         #{supplierId,jdbcType=BIGINT},
                     </if>
+                    <if test="suppCustName != null">
+                        #{suppCustName,jdbcType=VARCHAR},
+                    </if>
                     <if test="customerId != null">
                         #{customerId,jdbcType=BIGINT},
                     </if>
@@ -146,23 +153,23 @@
                     <if test="memo != null">
                         #{memo,jdbcType=VARCHAR},
                     </if>
-                    <if test="createUser != null">
-                        #{createUser,jdbcType=VARCHAR},
-                    </if>
-                    <if test="createTime != null">
-                        #{createTime,jdbcType=TIMESTAMP},
+                    <if test="recvTime != null">
+                        #{recvTime,jdbcType=TIMESTAMP},
                     </if>
                     <if test="recvUser != null">
                         #{recvUser,jdbcType=VARCHAR},
                     </if>
-                    <if test="recvTime != null">
-                        #{recvTime,jdbcType=TIMESTAMP}
+                    <if test="createUser != null">
+                        #{createUser,jdbcType=VARCHAR},
+                    </if>
+                    <if test="createTime != null">
+                        #{createTime,jdbcType=TIMESTAMP}
                     </if>
             </trim>
         </insert>
 
         <insert id="insertBatch">
-            insert into wms_roo_header (roo_id,roo_code,order_type,ro_id,ro_code,cust_order_no,company_id,warehouse_id,warehouse_code,supplier_id,customer_id,total_qty,tmp_putaway_qty,putaway_qty,ro_status,memo,create_user,create_time,recv_user,recv_time) values
+            insert into wms_roo_header (roo_id,roo_code,order_type,ro_id,ro_code,cust_order_no,company_id,warehouse_id,warehouse_code,supplier_id,supp_cust_name,customer_id,total_qty,tmp_putaway_qty,putaway_qty,ro_status,memo,recv_time,recv_user,create_user,create_time) values
             <foreach collection="list" item="item" separator=",">
                 (
                     #{item.id,jdbcType=BIGINT},
@@ -175,16 +182,17 @@
                     #{item.warehouseId,jdbcType=BIGINT},
                     #{item.warehouseCode,jdbcType=VARCHAR},
                     #{item.supplierId,jdbcType=BIGINT},
+                    #{item.suppCustName,jdbcType=VARCHAR},
                     #{item.customerId,jdbcType=BIGINT},
                     #{item.totalQty,jdbcType=DECIMAL},
                     #{item.tmpPutawayQty,jdbcType=DECIMAL},
                     #{item.putawayQty,jdbcType=DECIMAL},
                     #{item.roStatus,jdbcType=VARCHAR},
                     #{item.memo,jdbcType=VARCHAR},
-                    #{item.createUser,jdbcType=VARCHAR},
-                    #{item.createTime,jdbcType=TIMESTAMP},
+                    #{item.recvTime,jdbcType=TIMESTAMP},
                     #{item.recvUser,jdbcType=VARCHAR},
-                    #{item.recvTime,jdbcType=TIMESTAMP}
+                    #{item.createUser,jdbcType=VARCHAR},
+                    #{item.createTime,jdbcType=TIMESTAMP}
                 )
             </foreach>
         </insert>
@@ -213,16 +221,17 @@
                 warehouse_id = #{warehouseId,jdbcType=BIGINT},
                 warehouse_code = #{warehouseCode,jdbcType=VARCHAR},
                 supplier_id = #{supplierId,jdbcType=BIGINT},
+                supp_cust_name = #{suppCustName,jdbcType=VARCHAR},
                 customer_id = #{customerId,jdbcType=BIGINT},
                 total_qty = #{totalQty,jdbcType=DECIMAL},
                 tmp_putaway_qty = #{tmpPutawayQty,jdbcType=DECIMAL},
                 putaway_qty = #{putawayQty,jdbcType=DECIMAL},
                 ro_status = #{roStatus,jdbcType=VARCHAR},
                 memo = #{memo,jdbcType=VARCHAR},
-                create_user = #{createUser,jdbcType=VARCHAR},
-                create_time = #{createTime,jdbcType=TIMESTAMP},
+                recv_time = #{recvTime,jdbcType=TIMESTAMP},
                 recv_user = #{recvUser,jdbcType=VARCHAR},
-                recv_time = #{recvTime,jdbcType=TIMESTAMP}
+                create_user = #{createUser,jdbcType=VARCHAR},
+                create_time = #{createTime,jdbcType=TIMESTAMP}
         </set>
         where roo_id = #{id,jdbcType=BIGINT}
     </update>
@@ -257,6 +266,9 @@
                 <if test="supplierId != null">
                     supplier_id = #{supplierId,jdbcType=BIGINT},
                 </if>
+                <if test="suppCustName != null">
+                    supp_cust_name = #{suppCustName,jdbcType=VARCHAR},
+                </if>
                 <if test="customerId != null">
                     customer_id = #{customerId,jdbcType=BIGINT},
                 </if>
@@ -275,17 +287,17 @@
                 <if test="memo != null">
                     memo = #{memo,jdbcType=VARCHAR},
                 </if>
-                <if test="createUser != null">
-                    create_user = #{createUser,jdbcType=VARCHAR},
-                </if>
-                <if test="createTime != null">
-                    create_time = #{createTime,jdbcType=TIMESTAMP},
+                <if test="recvTime != null">
+                    recv_time = #{recvTime,jdbcType=TIMESTAMP},
                 </if>
                 <if test="recvUser != null">
                     recv_user = #{recvUser,jdbcType=VARCHAR},
                 </if>
-                <if test="recvTime != null">
-                    recv_time = #{recvTime,jdbcType=TIMESTAMP}
+                <if test="createUser != null">
+                    create_user = #{createUser,jdbcType=VARCHAR},
+                </if>
+                <if test="createTime != null">
+                    create_time = #{createTime,jdbcType=TIMESTAMP}
                 </if>
         </set>
         where roo_id = #{id,jdbcType=BIGINT}
@@ -322,6 +334,9 @@
                     <if test="item.supplierId != null">
                         supplier_id = #{item.supplierId,jdbcType=BIGINT},
                     </if>
+                    <if test="item.suppCustName != null">
+                        supp_cust_name = #{item.suppCustName,jdbcType=VARCHAR},
+                    </if>
                     <if test="item.customerId != null">
                         customer_id = #{item.customerId,jdbcType=BIGINT},
                     </if>
@@ -340,17 +355,17 @@
                     <if test="item.memo != null">
                         memo = #{item.memo,jdbcType=VARCHAR},
                     </if>
-                    <if test="item.createUser != null">
-                        create_user = #{item.createUser,jdbcType=VARCHAR},
-                    </if>
-                    <if test="item.createTime != null">
-                        create_time = #{item.createTime,jdbcType=TIMESTAMP},
+                    <if test="item.recvTime != null">
+                        recv_time = #{item.recvTime,jdbcType=TIMESTAMP},
                     </if>
                     <if test="item.recvUser != null">
                         recv_user = #{item.recvUser,jdbcType=VARCHAR},
                     </if>
-                    <if test="item.recvTime != null">
-                        recv_time = #{item.recvTime,jdbcType=TIMESTAMP},
+                    <if test="item.createUser != null">
+                        create_user = #{item.createUser,jdbcType=VARCHAR},
+                    </if>
+                    <if test="item.createTime != null">
+                        create_time = #{item.createTime,jdbcType=TIMESTAMP}
                     </if>
             </set>
             where roo_id = #{item.id,jdbcType=BIGINT}
@@ -415,6 +430,9 @@
                 <if test="supplierId != null">
                     and supplier_id=#{supplierId,jdbcType=BIGINT}
                 </if>
+                <if test="suppCustName != null">
+                    and supp_cust_name=#{suppCustName,jdbcType=VARCHAR}
+                </if>
                 <if test="customerId != null">
                     and customer_id=#{customerId,jdbcType=BIGINT}
                 </if>
@@ -433,17 +451,17 @@
                 <if test="memo != null">
                     and memo=#{memo,jdbcType=VARCHAR}
                 </if>
+                <if test="recvTime != null">
+                    and recv_time=#{recvTime,jdbcType=TIMESTAMP}
+                </if>
+                <if test="recvUser != null">
+                    and recv_user=#{recvUser,jdbcType=VARCHAR}
+                </if>
                 <if test="createUser != null">
                     and create_user=#{createUser,jdbcType=VARCHAR}
                 </if>
                 <if test="createTime != null">
                     and create_time=#{createTime,jdbcType=TIMESTAMP}
-                </if>
-                <if test="recvUser != null">
-                    and recv_user=#{recvUser,jdbcType=VARCHAR}
-                </if>
-                <if test="recvTime != null">
-                    and recv_time=#{recvTime,jdbcType=TIMESTAMP}
                 </if>
         </where>
     </select>
@@ -483,6 +501,9 @@
                 <if test="supplierId != null">
                     and supplier_id ${supplierId}
                 </if>
+                <if test="suppCustName != null">
+                    and supp_cust_name ${suppCustName}
+                </if>
                 <if test="customerId != null">
                     and customer_id ${customerId}
                 </if>
@@ -501,17 +522,17 @@
                 <if test="memo != null">
                     and memo ${memo}
                 </if>
+                <if test="recvTime != null">
+                    and recv_time ${recvTime}
+                </if>
+                <if test="recvUser != null">
+                    and recv_user ${recvUser}
+                </if>
                 <if test="createUser != null">
                     and create_user ${createUser}
                 </if>
                 <if test="createTime != null">
                     and create_time ${createTime}
-                </if>
-                <if test="recvUser != null">
-                    and recv_user ${recvUser}
-                </if>
-                <if test="recvTime != null">
-                    and recv_time ${recvTime}
                 </if>
         </where>
         <if test="orderBy != null">
