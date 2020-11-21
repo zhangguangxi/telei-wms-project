@@ -75,6 +75,7 @@ public class BaclcBussiness {
      */
     @Transactional(rollbackFor = Exception.class)
     public BacklcAddABussinessResponse addBacklc(BacklcAddABussinessRequest request) {
+        Long dohId = request.getDohId();
         List<BacklcAddRequest.BacklcAddRequestCondition> requestList = request.getList();
         if(Objects.isNull(requestList) || requestList.isEmpty()){
             ErrorCode.BACK_LC_RECORD_IS_NULL_4001.throwError();
@@ -86,20 +87,28 @@ public class BaclcBussiness {
         /**单头id*/
         long blId = ideGenerator.getUnique();
         /**判断是否已经创建退库单头*/
-        Long dohId = request.getDohId();
         WmsDoHeader doHeader = wmsDoHeaderService.selectByPrimaryKey(dohId);
         if(Objects.isNull(doHeader)){
             ErrorCode.BACK_LC_ADD_FAILED_4010.throwError(JSON.toJSONString(dohId));
-
         }
-
         if(!StringUtils.equals(doHeader.getHadCheck(),"1")){
             ErrorCode.BACK_LC_ADD_FAILED_4011.throwError(JSON.toJSONString(dohId));
         }
 
+        //退库数量 <= 已拣数量 - (已装柜数量 + 已退库数)
+        BigDecimal backlcQty = Objects.isNull(doHeader.getBacklcQty())?BigDecimal.ZERO:doHeader.getBacklcQty();
+        BigDecimal ploQty = Objects.isNull(doHeader.getPloQty())?BigDecimal.ZERO:doHeader.getPloQty();
+        BigDecimal containerQty = Objects.isNull(doHeader.getContainerQty())?BigDecimal.ZERO:doHeader.getContainerQty();
+
+        List<WmsBacklcList> wmsBacklcListList = DataConvertUtil.parseDataAsArray(requestList, WmsBacklcList.class);
+        BigDecimal processQty = wmsBacklcListList.stream().map(WmsBacklcList::getBQty).reduce(BigDecimal.ZERO, BigDecimal::add);
+        if(processQty.compareTo(ploQty.subtract(containerQty.add(backlcQty))) > 0){
+            ErrorCode.BACK_LC_ADD_FAILED_4014.throwError();
+        }
+
         WmsDoLine doLineCondition = new WmsDoLine();
         doLineCondition.setDohId(dohId);
-        List<WmsBacklcList> wmsBacklcListList = DataConvertUtil.parseDataAsArray(requestList, WmsBacklcList.class);
+
         wmsBacklcListList.forEach(item ->{
             item.setDohId(dohId);//出库任务单头id
             item.setBlId(blId);//退库单头id
@@ -132,7 +141,6 @@ public class BaclcBussiness {
         WmsBacklc backlcCondtion = new WmsBacklc();
         backlcCondtion.setDohId(dohId);
         List<WmsBacklc> wmsBacklcCollection = wmsBacklcService.selectByEntity(backlcCondtion);
-
         if(Objects.isNull(wmsBacklcCollection) || wmsBacklcCollection.isEmpty()){
             WmsBacklc wmsBacklc = DataConvertUtil.parseDataAsObject(requestList.get(0), WmsBacklc.class);
             wmsBacklc.setBlId(blId);
@@ -149,14 +157,13 @@ public class BaclcBussiness {
             wmsBacklc.setDohId(dohId);
 
             int countForBackLc = wmsBacklcService.insertSelective(wmsBacklc);
-            if(countForBackLc < 0){
+            if(countForBackLc <= 0){
                 ErrorCode.BACK_LC_ADD_FAILED_4004.throwError();
             }
-            return new BacklcAddABussinessResponse();
-        }
-         if(wmsBacklcCollection.size() > 1){
-             ErrorCode.BACK_LC_ADD_FAILED_4009.throwError();
-         }
+        }else{
+            if(wmsBacklcCollection.size() > 1){
+                ErrorCode.BACK_LC_ADD_FAILED_4009.throwError();
+            }
             WmsBacklcList wmsBacklcList = new WmsBacklcList();
             wmsBacklcList.setDohId(dohId);
             List<WmsBacklcList> wmsBacklcLists = wmsBacklcListService.selectByEntity(wmsBacklcList);
@@ -170,11 +177,12 @@ public class BaclcBussiness {
             wmsBacklc.setVol(wmsBacklc.getVol().add(totalBVol));
             wmsBacklc.setWeight(wmsBacklc.getWeight().add(totalBWeight));
             wmsBacklc.setDetailedSpeciesQty(dbProductIdSet.size());
-        int updateForBackLc = wmsBacklcService.updateByPrimaryKeySelective(wmsBacklc);
-
-        if(updateForBackLc <= 0){
-            ErrorCode.BACK_LC_UPDATE_FAILED_4005.throwError();
+            int updateForBackLc = wmsBacklcService.updateByPrimaryKeySelective(wmsBacklc);
+            if(updateForBackLc <= 0){
+                ErrorCode.BACK_LC_UPDATE_FAILED_4005.throwError();
+            }
         }
+
         /**退库数量回写到出库任务单头(wms_do_header)与出库任务明细(wms_do_line)*/
         Map<Long, BigDecimal> dolId2BqtyMap = wmsBacklcListList.stream().collect(Collectors.toMap(WmsBacklcList::getDolId, WmsBacklcList::getBQty));
         List<WmsDoLine> wmsDoLines = wmsDoLineService.selectByEntity(doLineCondition);

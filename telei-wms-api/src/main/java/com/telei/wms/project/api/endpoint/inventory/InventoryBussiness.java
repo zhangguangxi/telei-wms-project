@@ -24,6 +24,7 @@ import com.telei.wms.customer.product.ProductFeignClient;
 import com.telei.wms.customer.product.dto.ProductDetailResponse;
 import com.telei.wms.customer.product.dto.ProductListResponse;
 import com.telei.wms.customer.product.dto.ProductRequest;
+import com.telei.wms.customer.recovicePlan.dto.RecovicePlanAddByDoRequest;
 import com.telei.wms.customer.warehouse.WarehouseFeignClient;
 import com.telei.wms.customer.warehouse.dto.WarehouseDetailRequest;
 import com.telei.wms.customer.warehouse.dto.WarehouseDetailResponse;
@@ -35,6 +36,7 @@ import com.telei.wms.project.api.ErrorCode;
 import com.telei.wms.project.api.amqp.producer.WmsOmsInventoryAddWriteBackProducer;
 import com.telei.wms.project.api.amqp.producer.WmsOmsInventoryChangeWriteBackProducer;
 import com.telei.wms.project.api.amqp.producer.WmsOmsIvOutWriteBackProducer;
+import com.telei.wms.project.api.amqp.producer.WmsOmsRecovicePlanAddByDoProducer;
 import com.telei.wms.project.api.endpoint.inventory.dto.*;
 import com.telei.wms.project.api.endpoint.inventory.strategy.*;
 import com.telei.wms.project.api.endpoint.lcRecommend.LcRecommendBussiness;
@@ -184,6 +186,9 @@ public class InventoryBussiness {
 
     @Autowired
     private DeductStrategyFactory deductStrategyFactory;
+
+    @Autowired
+    private WmsOmsRecovicePlanAddByDoProducer wmsOmsRecovicePlanAddByDoProducer;
 
     /**
      * 入库(上架)
@@ -957,7 +962,7 @@ public class InventoryBussiness {
                 ErrorCode.INVENTORY_DEDUCT_PLO_LINE_NOT_EXIST_40031.throwError(JSON.toJSONString(wmsPloLineList));
             }
             /**判断是否拣货单数量  = 退库数量 + 装箱上数量*/
-            BigDecimal ploQty = wmsDoHeader.getPloQty();
+            BigDecimal ploQty = Objects.isNull(wmsDoHeader.getPloQty())?BigDecimal.ZERO:wmsDoHeader.getPloQty();
             BigDecimal shipQty = ploQty;
             WarehouseDetailRequest warehouseDetailRequest = new WarehouseDetailRequest();
             warehouseDetailRequest.setCompanyId(companyId);
@@ -968,8 +973,8 @@ public class InventoryBussiness {
             }
             String containerType = detailResponse.getContainerType();
             if(StringUtils.equalsIgnoreCase(containerType,"Y")){
-                BigDecimal backlcQty = wmsDoHeader.getBacklcQty();//退库数量
-                BigDecimal containerQty = wmsDoHeader.getContainerQty();//装柜数量
+                BigDecimal backlcQty = Objects.isNull(wmsDoHeader.getBacklcQty())?BigDecimal.ZERO:wmsDoHeader.getBacklcQty();//退库数量
+                BigDecimal containerQty = Objects.isNull(wmsDoHeader.getContainerQty())?BigDecimal.ZERO:wmsDoHeader.getContainerQty();//装柜数量
                 if(!(ploQty.compareTo(backlcQty.add(containerQty)) == 0)){
                     ErrorCode.INVENTORY_DEDUCT_EXIST_PROCESS_PRODUCT_40055.throwError(JSON.toJSONString(companyId));
                 }
@@ -1189,6 +1194,22 @@ public class InventoryBussiness {
             omsIvOutWriteBack.setOrderType(orderType);
             WmsIdInstantdirective wmsIdInstantdirective = wmsIdInstantdirectiveBussiness.add("PUTON", "", omsIvOutWriteBack);
             wmsOmsIvOutWriteBackProducer.send(wmsIdInstantdirective);
+
+            if ("03".equals(wmsDoHeader.getOrderType())) {
+                //内部供应商自动创建的单据类型
+                String poId = wmsDoHeaderService.findPoId(wmsDoHeader.getId());
+                if (StringUtils.isEmpty(poId)) {
+                    //未找到关联的单据id
+                    ErrorCode.DO_ERROR_4002.throwError();
+                }
+                RecovicePlanAddByDoRequest recovicePlanAddByDoRequest = new RecovicePlanAddByDoRequest();
+                recovicePlanAddByDoRequest.setPoId(Long.valueOf(poId));
+                log.debug("*************recovicePlanAddByDoRequest" + JSON.toJSONString(recovicePlanAddByDoRequest));
+                //添加数据交互指令
+                WmsIdInstantdirective instantdirective = wmsIdInstantdirectiveBussiness.add("PUTON", "", recovicePlanAddByDoRequest);
+                //发送消息到队列
+                wmsOmsRecovicePlanAddByDoProducer.send(instantdirective);
+            }
             return new InventoryDeductBussinessResponse();
         } finally {
             LockMapUtil.cancelLock(dohId, lockValue);

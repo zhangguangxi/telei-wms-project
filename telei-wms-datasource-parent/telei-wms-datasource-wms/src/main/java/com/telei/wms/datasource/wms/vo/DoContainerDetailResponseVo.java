@@ -12,6 +12,8 @@ import java.util.Date;
 public class DoContainerDetailResponseVo {
     /**出库单头ID*/
     private Long dohId;
+    /**柜id*/
+    private Long cId;
     /**状态(已出库)*/
     private String orderStatus;
     /**出库时间*/
@@ -28,4 +30,5 @@ public class DoContainerDetailResponseVo {
     private BigDecimal cWeight;
     /**总体积(装箱体积CBM)*/
     private BigDecimal cVol;
+
 }

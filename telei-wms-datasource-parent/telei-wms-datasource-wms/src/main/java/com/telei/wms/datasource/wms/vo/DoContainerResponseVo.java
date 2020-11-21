@@ -33,4 +33,10 @@ public class DoContainerResponseVo extends WmsDoContainer {
     /** 装箱数量 */
     private BigDecimal sumQty;
 
+    /** 出库计划编码 */
+    private Long spCode;
+
+    /** 销售订单编码 */
+    private Long soCode;
+
 }

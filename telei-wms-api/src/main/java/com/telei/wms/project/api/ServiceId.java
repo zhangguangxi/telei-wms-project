@@ -351,4 +351,12 @@ public class ServiceId {
 
     @RightResource(rightSystem = "wms", rightItem = "退库", rightFunction = "已出库-柜记录列表")
     public static final String WMS_OUT_STOCK_CONTAINER_LIST = "1031703";
+
+    /**
+     * 统计报表
+     * 18
+     */
+    @RightResource(rightSystem = "oms", rightItem = "统计报表", rightFunction = "查询收货统计报表")
+    public static final String WMS_REPORT_ROO_QUERY = "1031801";
+
 }

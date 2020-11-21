@@ -166,6 +166,7 @@ public enum ErrorCode {
     PLO_ADD_ERROR_4016,
     PLO_ADD_ERROR_4017,
     PLO_CANCEL_ERROR_4018,
+    PLO_ADD_ERROR_4019,
 
     LIFT_WORK_NOT_EXIST_4001,
     LIFT_WORK_ADD_ERROR_4002,
@@ -231,6 +232,7 @@ public enum ErrorCode {
     BACK_LC_ADD_FAILED_4011,
     BACK_LC_ADD_FAILED_4012,
     BACK_LC_ADD_FAILED_4013,
+    BACK_LC_ADD_FAILED_4014,
     ;
 
     private  String code;

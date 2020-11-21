@@ -10,6 +10,8 @@
         <result column="shipment_code" jdbcType="VARCHAR" property="shipmentCode"/>
         <result column="load_time" jdbcType="TIMESTAMP" property="loadTime"/>
         <result column="load_user" jdbcType="VARCHAR" property="loadUser"/>
+        <result column="sp_code" jdbcType="VARCHAR" property="spCode"/>
+        <result column="so_code" jdbcType="VARCHAR" property="soCode"/>
     </resultMap>
 
     <resultMap id="PageQueryMap" extends="BaseResultMap" type="com.telei.wms.datasource.wms.vo.DoContainerPageQueryRequestVo">
@@ -51,6 +53,7 @@
         <result column="load_time" jdbcType="TIMESTAMP" property="loadTime"/>
         <result column="load_user" jdbcType="VARCHAR" property="loadUser"/>
         <result column="shipment_code" jdbcType="VARCHAR" property="shipmentCode"/>
+        <result column="c_id" jdbcType="BIGINT" property="cId"/>
         <result column="c_qty" jdbcType="DECIMAL" property="cQty"/>
         <result column="c_weight" jdbcType="DECIMAL" property="cWeight"/>
         <result column="c_vol" jdbcType="DECIMAL" property="cVol"/>
@@ -67,6 +70,8 @@
         SELECT
             wdc.sp_id,
             wdc.so_id,
+            osp.sp_code,
+            oso.so_code,
             wdc.doh_id,
             wdc.c_id,
             oc.load_time,
@@ -77,6 +82,8 @@
             SUM(wdc.c_amount) c_amount
         FROM wms_do_container wdc
         LEFT JOIN oms.oms_container oc ON wdc.c_id = oc.c_id
+        left join oms.oms_ship_plan osp on osp.sp_id = wdc.sp_id
+        left join oms.oms_sale_order oso on oso.so_id = wdc.so_id
         <where>
             <if test="cId != null">
                 and wdc.c_id = #{cId}
@@ -196,6 +203,7 @@
         oc.load_time,
         oc.load_user,
         oc.shipment_code,
+        wdc.c_id,
         wdc.c_qty,
         wdc.c_weight,
         wdc.c_vol

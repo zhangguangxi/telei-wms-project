@@ -21,6 +21,8 @@ import com.telei.wms.datasource.wms.service.*;
 import com.telei.wms.datasource.wms.vo.RooHeaderResponseVo;
 import com.telei.wms.datasource.wms.vo.RooLineResponseVo;
 import com.telei.wms.project.api.ErrorCode;
+import com.telei.wms.project.api.endpoint.report.dto.ReportBusinessPageQueryRequest;
+import com.telei.wms.project.api.endpoint.report.dto.ReportBusinessPageQueryResponse;
 import com.telei.wms.project.api.endpoint.roo.dto.RooHeaderBusinessPageQueryRequest;
 import com.telei.wms.project.api.endpoint.roo.dto.RooHeaderBusinessPageQueryResponse;
 import com.telei.wms.project.api.endpoint.roo.dto.RooHeaderBusinessRequest;
@@ -411,6 +413,29 @@ public class RooBussiness {
         RooHeaderBusinessPageQueryResponse response = new RooHeaderBusinessPageQueryResponse();
         response.setPage(page);
         return response;
+    }
+
+    /**
+     * 查询收货统计报表
+     *
+     * @param request
+     * @return
+     */
+    public ReportBusinessPageQueryResponse rooReportQuery(ReportBusinessPageQueryRequest request) {
+        Pagination pagination = new Pagination(request.getPageNumber(), request.getPageSize());
+        ConditionsBuilder conditionsBuilder = ConditionsBuilder.create();
+        if (StringUtils.isNotBlank(request.getStartTime()) && StringUtils.isNotBlank(request.getEndTime())) {
+            conditionsBuilder.between("putawayTime", request.getStartTime(), request.getEndTime());
+        }
+        conditionsBuilder.eq("companyId", CustomRequestContext.getUserInfo().getCompanyId());
+        Map<String, Object> paramMap = conditionsBuilder.build();
+        if(StringUtils.isNotNull(request.getHour())){
+            paramMap.put("hour", request.getHour());
+        }
+        Pagination page = (Pagination) wmsRooHeaderService.rooReportQuery(pagination, paramMap);
+        ReportBusinessPageQueryResponse businessResponse = new ReportBusinessPageQueryResponse();
+        businessResponse.setPage(page);
+        return businessResponse;
     }
 
 }
