@@ -45,6 +45,7 @@
         do.warehouse_code,
         do.cust_order_no,
         do.supplier_id,
+        do.supp_cust_name,
         do.customer_id,
         do.customer_contact_name,
         do.customer_contact_mobile,

@@ -27,6 +27,8 @@ public class RoHeaderAddRequest {
     private String warehouseCode;
     /** 供应商id */
     private Long supplierId;
+    /** 供应商/客户名称 */
+    private String suppCustName;
     /** 客户id */
     private Long customerId;
     /** 商家订单号 */

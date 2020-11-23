@@ -4,6 +4,7 @@ import com.alibaba.fastjson.JSON;
 import com.telei.infrastructure.component.commons.dto.UserInfo;
 import com.telei.wms.customer.amqp.inventoryChangeWriteBack.OmsInventoryChangeWriteBack;
 import com.telei.wms.datasource.wms.model.*;
+import com.telei.wms.datasource.wms.service.WmsInventoryService;
 import com.telei.wms.datasource.wms.service.WmsLocationService;
 import com.telei.wms.project.api.ErrorCode;
 import com.telei.wms.project.api.utils.DataConvertUtil;
@@ -28,6 +29,9 @@ public class MoveAdjustStrategy  implements IAdjustStrategy {
     @Autowired
     private WmsLocationService wmsLocationService;
 
+    @Autowired
+    private WmsInventoryService wmsInventoryService;
+
 
     @Override
     public List<OmsInventoryChangeWriteBack.OmsInventoryChangeWriteBackCondition> process(WmsAdjtHeader wmsAdjtHeader, List<WmsAdjtLine> wmsAdjtLineList, List<WmsInventory> WmsInventoryDbList,
@@ -36,6 +40,8 @@ public class MoveAdjustStrategy  implements IAdjustStrategy {
                                                                                           List<WmsIvSplit> wmsIvSplitList,UserInfo userInfo, Date nowWithUtc) {
 
         WmsInventory wmsInventory = WmsInventoryDbList.get(0);
+        Long productId = wmsAdjtHeader.getProductId();
+
         BigDecimal ivQtyAdjt = wmsAdjtHeader.getIvQtyAdjt();/**库存调整数量*/
         String lcCodeAdjt = wmsAdjtHeader.getLcCodeAdjt();/**调整库位(目标库位)*/
 
@@ -50,14 +56,16 @@ public class MoveAdjustStrategy  implements IAdjustStrategy {
         wmsLocation = wmsLocationService.selectOneByEntity(wmsLocation);
 
         if(Objects.isNull(wmsLocation)){
-            ErrorCode.ADJT_ERROR_4017.throwError(wmsAdjtHeader.getLcCode(), JSON.toJSONString(wmsAdjtHeader.getProductId()),lcCodeAdjt,wmsAdjtHeader.getAdjhType());
+            ErrorCode.ADJT_ERROR_4017.throwError(wmsAdjtHeader.getLcCode(), JSON.toJSONString(productId),lcCodeAdjt,wmsAdjtHeader.getAdjhType());
         }
 
+        /**高架库位限制*/
+        adjustStrategyFactory.zLocationLimit(productId,lcCodeAdjt,1);
 
         List<WmsInventory> wmsInventories = DataConvertUtil.parseDataAsArray(WmsInventoryDbList, WmsInventory.class);
         BigDecimal totalIvQty = wmsInventories.stream().map(WmsInventory::getIvQty).reduce(BigDecimal.ZERO, BigDecimal::add);
         if(totalIvQty.compareTo(ivQtyAdjt) < 0 ){
-            ErrorCode.ADJT_ERROR_4014.throwError(wmsAdjtHeader.getLcCode(),wmsAdjtHeader.getProductId(),ivQtyAdjt,totalIvQty,wmsAdjtHeader.getAdjhType());
+            ErrorCode.ADJT_ERROR_4014.throwError(wmsAdjtHeader.getLcCode(), productId,ivQtyAdjt,totalIvQty,wmsAdjtHeader.getAdjhType());
         }
         for (WmsInventory inventory : wmsInventories) {
             BigDecimal ivQty = inventory.getIvQty();
@@ -91,4 +99,6 @@ public class MoveAdjustStrategy  implements IAdjustStrategy {
         }
         return null;
     }
+
+
 }

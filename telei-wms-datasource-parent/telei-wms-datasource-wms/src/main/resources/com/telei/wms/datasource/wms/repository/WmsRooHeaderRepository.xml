@@ -137,8 +137,9 @@
             DATE_FORMAT(date_add(p.putaway_time,interval -${hour} hour),'%Y-%m-%d') as date_time,
             ro.supp_cust_name,
             po.contract_no,
-            pl.paol_qty / iab.big_bag_rate as sum_count,
-            rol.unit_price * pl.paol_qty  as sum_amount,
+            IFNULL(sum(pl.paol_qty / iab.big_bag_rate), 0) as sum_big_count,
+            IFNULL(sum(pl.paol_qty), 0) as sum_count,
+            IFNULL(sum(rol.unit_price * pl.paol_qty), 0)  as sum_amount,
             iab.product_name,
             cu.currency_name,
             cu.currency_ename
@@ -157,7 +158,7 @@
                 and p.putaway_time ${putawayTime}
             </if>
         </where>
-        group by DATE_FORMAT(date_add(p.putaway_time,interval -${hour} hour),'%Y-%m-%d')
+        group by DATE_FORMAT(date_add(p.putaway_time,interval -${hour} hour),'%Y-%m-%d'),ro.supp_cust_name,iab.product_name
     </select>
 
 </mapper>

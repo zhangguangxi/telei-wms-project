@@ -53,6 +53,7 @@
         <result column="load_time" jdbcType="TIMESTAMP" property="loadTime"/>
         <result column="load_user" jdbcType="VARCHAR" property="loadUser"/>
         <result column="shipment_code" jdbcType="VARCHAR" property="shipmentCode"/>
+        <result column="shipping_time" jdbcType="TIMESTAMP" property="shippingTime"/>
         <result column="c_id" jdbcType="BIGINT" property="cId"/>
         <result column="c_qty" jdbcType="DECIMAL" property="cQty"/>
         <result column="c_weight" jdbcType="DECIMAL" property="cWeight"/>
@@ -200,6 +201,7 @@
         SELECT
         wdh.order_status,
         wdh.doh_id,
+        wdh.shipping_time,
         oc.load_time,
         oc.load_user,
         oc.shipment_code,

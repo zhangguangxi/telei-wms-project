@@ -24,6 +24,7 @@ public enum ErrorCode {
      */
     DO_NOT_EXIST_4001,
     DO_ERROR_4002,
+    DO_ERROR_4003,
 
     /**
      * 业务单据
@@ -135,6 +136,8 @@ public enum ErrorCode {
     ADJT_ERROR_4017,
     ADJT_ERROR_4018,
     ADJT_ERROR_4019,
+    ADJT_ERROR_4020,
+    ADJT_ERROR_4021,
 
 
     /**

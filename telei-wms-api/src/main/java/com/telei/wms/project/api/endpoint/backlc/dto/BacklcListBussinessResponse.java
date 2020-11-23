@@ -39,6 +39,8 @@ public class BacklcListBussinessResponse {
         private String productName;
         /**条码*/
         private String productBarcode;
+        /**图片*/
+        private String mediaId;
         /**品牌*/
         private String brand;
         /**重量*/

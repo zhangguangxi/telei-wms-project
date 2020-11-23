@@ -56,8 +56,7 @@ import java.util.stream.Stream;
 
 import static com.telei.wms.commons.utils.DateUtils.RANGE_TIME_END;
 import static com.telei.wms.commons.utils.DateUtils.RANGE_TIME_START;
-import static java.util.stream.Collectors.toList;
-import static java.util.stream.Collectors.toSet;
+import static java.util.stream.Collectors.*;
 
 /**
  * @author: leo
@@ -263,19 +262,24 @@ public class InventoryBussiness {
             Date nowWithUTC = DateUtils.nowWithUTC();
             //2.2 用户信息(请求上下文)
             UserInfo userInfo = CustomRequestContext.getUserInfo();
+            Long companyId = request.getList().get(0).getCompanyId();
+            Long warehouseId = request.getList().get(0).getWarehouseId();
 
             //3、预处理
             //3.0 库位-预处理
+
             List<WmsLocation> wmsLocationList = wmsLocationService.selectByLcCodes(requestLcCodeList);
             if(Objects.isNull(wmsLocationList) || wmsLocationList.isEmpty()){
                 ErrorCode.INVENTORY_ADD_ERROR_LC_CODE_NOT_EXIST_24.throwError(JSON.toJSONString(requestLcCodeList));
             }
             log.info("\n +++++++++++++++++++++ 上架操作::根据库位编码 -> {},查询库位集合 -> {} ++++++++++++++++++++ \n ", JSON.toJSONString(requestLcCodeList), JSON.toJSONString(wmsLocationList));
-            List<String> lcCodeList = wmsLocationList.stream().map(WmsLocation::getLcCode).collect(toList());
-            List<String> notExistLcCodeList = requestLcCodeList.stream().filter(item -> !lcCodeList.contains(item)).collect(toList());
+            Set<String> lcCodeList = wmsLocationList.stream().map(WmsLocation::getLcCode).collect(toSet());
+            Set<String> notExistLcCodeList = requestLcCodeList.stream().filter(item -> !lcCodeList.contains(item)).collect(toSet());
             if(Objects.nonNull(notExistLcCodeList) && !notExistLcCodeList.isEmpty()){
                 ErrorCode.INVENTORY_ADD_ERROR_LC_CODE_NOT_EXIST_24.throwError(JSON.toJSONString(notExistLcCodeList));
             }
+
+
 
             //3.1 产品(商品)-预处理
             ProductRequest productDetailRequest = new ProductRequest();
@@ -289,7 +293,20 @@ public class InventoryBussiness {
             }
             log.info("\n +++++++++++++++++++++ 上架操作::根据产品IDS -> {},查询产品集合 -> {} ++++++++++++++++++++ \n ", JSON.toJSONString(requestProductIdList), JSON.toJSONString(productList));
 
+            //3.2 样品库位-预处理
+            Set<Long> productIdSet = productList.stream().map(ProductDetailResponse::getId).collect(toSet());
+            Set<String> requestLcCodeSet = requestLcCodeList.stream().collect(toSet());
 
+            ConditionsBuilder inventoryConditionMap = ConditionsBuilder.create();
+            inventoryConditionMap.eq("companyId",companyId);
+            inventoryConditionMap.in("warehouseId",Arrays.asList(warehouseId));
+            inventoryConditionMap.in("productId",productIdSet);
+            inventoryConditionMap.in("lcCode",requestLcCodeSet);
+            Map<String, Object> inventoryParamMap = inventoryConditionMap.build();
+            List<WmsInventory> inventories = wmsInventoryService.selectByConditions(inventoryParamMap);
+            if(Objects.nonNull(inventories) || !inventories.isEmpty()){
+                    inventories.stream().collect(groupingBy((item ->item.getWarehouseId()+"#"+ item.getWarehouseId()+"#"+item.getProductId())));
+            }
 
             //2.2 库存批次-预处理
             List<WmsIvAttributebatch> ivAttributebatcheList = wmsIvAttributebatchService.selectByPrimaryKeys(requestIabIdList);
@@ -1202,9 +1219,22 @@ public class InventoryBussiness {
                     //未找到关联的单据id
                     ErrorCode.DO_ERROR_4002.throwError();
                 }
+                //获取明细信息
+                List<RecovicePlanAddByDoRequest.Detail> requestDetails = new ArrayList<>();
+                wmsDoLines.stream().forEach(item -> {
+                    RecovicePlanAddByDoRequest.Detail requestDetail = new RecovicePlanAddByDoRequest.Detail();
+                    requestDetail.setProductId(item.getProductId());
+                    requestDetail.setPlanQty(item.getQty());
+                    requestDetails.add(requestDetail);
+                });
+                if (requestDetails.isEmpty()) {
+                    //出库产品不能为空
+                    ErrorCode.DO_ERROR_4003.throwError();
+                }
                 RecovicePlanAddByDoRequest recovicePlanAddByDoRequest = new RecovicePlanAddByDoRequest();
                 recovicePlanAddByDoRequest.setPoId(Long.valueOf(poId));
-                log.debug("*************recovicePlanAddByDoRequest" + JSON.toJSONString(recovicePlanAddByDoRequest));
+                recovicePlanAddByDoRequest.setDetails(requestDetails);
+                log.debug("******recovicePlanAddByDoRequest******" + JSON.toJSONString(recovicePlanAddByDoRequest));
                 //添加数据交互指令
                 WmsIdInstantdirective instantdirective = wmsIdInstantdirectiveBussiness.add("PUTON", "", recovicePlanAddByDoRequest);
                 //发送消息到队列
@@ -1381,7 +1411,6 @@ public class InventoryBussiness {
                         lcCodeMap.put(productName,JSON.toJSONString(lcCodeSet));
                     }
                 }
-
             });
         }
         InventoryMultiSampleLocationCheckBussinessResponse response = new InventoryMultiSampleLocationCheckBussinessResponse();

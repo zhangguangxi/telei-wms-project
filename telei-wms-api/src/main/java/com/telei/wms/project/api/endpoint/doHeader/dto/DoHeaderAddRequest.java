@@ -29,6 +29,8 @@ public class DoHeaderAddRequest {
     private String custOrderNo;
     /** 供应商id */
     private Long supplierId;
+    /** 供应商/客户名称 */
+    private String suppCustName;
     /** 客户id */
     private Long customerId;
     /** 客户联系人名称 */

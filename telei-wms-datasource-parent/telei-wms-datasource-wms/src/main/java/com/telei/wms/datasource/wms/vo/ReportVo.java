@@ -21,9 +21,13 @@ public class ReportVo {
      */
     private String contractNo;
     /**
-     * 总件数
+     * 总数量
      */
     private Integer sumCount;
+    /**
+     * 总件数
+     */
+    private Integer sumBigCount;
     /**
      * 总金额
      */
