@@ -59,7 +59,7 @@ public class AdjustStrategyFactory {
      * @param nowWithUtc
      * @return
      */
-    public  WmsIvTransaction createTransactionRecored(List<WmsIvTransaction> wmsIvTransactionList,WmsInventory inventory,String lcCodeTo,
+    public  WmsIvTransaction  createTransactionRecored(List<WmsIvTransaction> wmsIvTransactionList,WmsInventory inventory,String lcCodeTo,
                                                       String ivChangeType ,BigDecimal curIvIdQtyAdjt, UserInfo userInfo, Date nowWithUtc) {
         WmsIvTransaction wmsIvTransaction = DataConvertUtil.parseDataAsObject(inventory,WmsIvTransaction.class);
         wmsIvTransaction.setId(idGenerator.getUnique());
@@ -91,7 +91,7 @@ public class AdjustStrategyFactory {
      * @return
      */
     public   WmsInventory createInventory(List<WmsInventory> wmsInventoryAddList, WmsInventory wmsInventory,String lcCodeAdjt, BigDecimal ivQtyAdjt, Date nowWithUtc) {
-        WmsInventory wmsInventoryAdd = DataConvertUtil.parseDataAsObject(wmsInventory, WmsInventory.class);
+            WmsInventory wmsInventoryAdd = DataConvertUtil.parseDataAsObject(wmsInventory, WmsInventory.class);
         wmsInventoryAdd.setIvId(idGenerator.getUnique());
         wmsInventoryAdd.setIvIdFrom(wmsInventory.getIvId());
         wmsInventoryAdd.setLcCode(lcCodeAdjt);//库位编码

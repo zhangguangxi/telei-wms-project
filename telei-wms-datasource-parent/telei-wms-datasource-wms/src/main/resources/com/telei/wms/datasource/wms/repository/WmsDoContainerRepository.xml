@@ -21,6 +21,7 @@
         <result column="so_id" jdbcType="BIGINT" property="soId"/>
         <result column="lc_code" jdbcType="VARCHAR" property="lcCode"/>
         <result column="media_id" jdbcType="VARCHAR" property="mediaId"/>
+        <result column="order_type" jdbcType="VARCHAR" property="orderType"/>
         <result column="product_id" jdbcType="BIGINT" property="productId"/>
         <result column="product_no" jdbcType="VARCHAR" property="productNo"/>
         <result column="product_name" jdbcType="VARCHAR" property="productName"/>
@@ -119,6 +120,8 @@
             wph.doh_id,
             wdh.sp_id,
             wdh.so_id,
+            wdh.order_type,
+            wdh.order_status,
             wpl.media_id,
             wpl.product_id,
             wpl.product_no,
@@ -169,8 +172,8 @@
             cp.product_name,
             cp.product_barcode,
             cp.brand,
-            cp.unit_gross_weight,
-            cp.unit_vol,
+            cp.big_bag_weight unit_gross_weight,
+            cp.big_bag_vol unit_vol,
             sum(wdc.big_bag_qty) big_bag_qty,
             sum(wdc.mid_bag_qty) mid_bag_qty,
             sum(wdc.small_bag_qty) small_bag_qty,
@@ -214,10 +217,10 @@
         LEFT JOIN oms.oms_container oc ON oc.c_id = wdc.c_id
         LEFT JOIN wms_do_header wdh ON wdc.doh_id = wdh.doh_id
         <where>
-        oc.company_id ${companyID}
-        AND oc.warehouse_id ${warehouseId}
-        AND wdh.order_status ${orderStatus}
-        AND  wdc.doh_id ${dohId}
+            oc.company_id ${companyID}
+            AND oc.warehouse_id ${warehouseId}
+            AND wdh.order_status ${orderStatus}
+            AND  wdc.doh_id ${dohId}
         </where>
     </select>
 

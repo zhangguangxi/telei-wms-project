@@ -63,9 +63,9 @@ public class MoveAdjustStrategy  implements IAdjustStrategy {
         adjustStrategyFactory.zLocationLimit(productId,lcCodeAdjt,1);
 
         List<WmsInventory> wmsInventories = DataConvertUtil.parseDataAsArray(WmsInventoryDbList, WmsInventory.class);
-        BigDecimal totalIvQty = wmsInventories.stream().map(WmsInventory::getIvQty).reduce(BigDecimal.ZERO, BigDecimal::add);
-        if(totalIvQty.compareTo(ivQtyAdjt) < 0 ){
-            ErrorCode.ADJT_ERROR_4014.throwError(wmsAdjtHeader.getLcCode(), productId,ivQtyAdjt,totalIvQty,wmsAdjtHeader.getAdjhType());
+        BigDecimal dbIvQty = wmsInventories.stream().map(WmsInventory::getIvQty).reduce(BigDecimal.ZERO, BigDecimal::add);
+        if(dbIvQty.compareTo(ivQtyAdjt) < 0 ){
+            ErrorCode.ADJT_ERROR_4014.throwError(wmsAdjtHeader.getLcCode(), productId,ivQtyAdjt,dbIvQty,wmsAdjtHeader.getAdjhType());
         }
         for (WmsInventory inventory : wmsInventories) {
             BigDecimal ivQty = inventory.getIvQty();

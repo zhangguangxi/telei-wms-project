@@ -238,10 +238,10 @@ public class BaclcBussiness {
             item.setProductNo(product.getProductNo());
             item.setMediaId(product.getImagePath());
             item.setBrand(product.getBrand());
-            item.setUnitGrossWeight(product.getUnitGrossWeight());
-            item.setUnitVol(product.getUnitVol());
-            item.setBoxQty(new BigDecimal(product.getBigBagQty()));
-
+            item.setBigBagWeight(product.getBigBagWeight());
+            item.setBigBagVol(product.getBigBagVol());
+            item.setBigBagRate(new BigDecimal(product.getBigBagQty()));
+            item.setMidBagQty(new BigDecimal(product.getMidBagQty()));
         });
         BigDecimal totalBqty = list.stream().map(BacklcListBussinessResponse.BacklcListBussinessRecord::getBQty).reduce(BigDecimal.ZERO, BigDecimal::add);
         BigDecimal totalBigBagQty = list.stream().map(BacklcListBussinessResponse.BacklcListBussinessRecord::getBigBagQty).reduce(BigDecimal.ZERO, BigDecimal::add);

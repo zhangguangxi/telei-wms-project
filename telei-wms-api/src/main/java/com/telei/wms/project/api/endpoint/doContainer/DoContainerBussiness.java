@@ -87,6 +87,7 @@ public class DoContainerBussiness {
                 wmsDoContainer.setCQty(commonRequest.getQty());
                 wmsDoContainers.add(wmsDoContainer);
 
+                omsContainerWriteBack.setOrderType(commonRequest.getOrderType());
                 omsContainerWriteBack.setCId(commonRequest.getCId());
                 omsContainerWriteBack.setDohId(commonRequest.getDohId());
                 omsContainerWriteBack.setSoId(commonRequest.getSoId());

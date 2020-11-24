@@ -86,6 +86,9 @@ public class InventoryBussiness {
     //拣货完成
     private static  final String PICK_FINISHED ="30";
 
+    //已取消
+    private static final String ALREADY_CANCELLED = "98";
+
     @Autowired
     private Id idGenerator;
 
@@ -284,7 +287,7 @@ public class InventoryBussiness {
             //3.1 产品(商品)-预处理
             ProductRequest productDetailRequest = new ProductRequest();
             productDetailRequest.setProductIds(requestProductIdList);
-            productDetailRequest.setCompanyId(userInfo.getCompanyId());
+            productDetailRequest.setCompanyId(companyId);
             ApiResponse productListResponse = productFeignClient.getProductList(productDetailRequest);
             ProductListResponse response = JSON.parseObject(JSON.toJSONString(productListResponse.getData()), ProductListResponse.class);
             List<ProductDetailResponse> productList = response.getProductList();
@@ -294,18 +297,29 @@ public class InventoryBussiness {
             log.info("\n +++++++++++++++++++++ 上架操作::根据产品IDS -> {},查询产品集合 -> {} ++++++++++++++++++++ \n ", JSON.toJSONString(requestProductIdList), JSON.toJSONString(productList));
 
             //3.2 样品库位-预处理
-            Set<Long> productIdSet = productList.stream().map(ProductDetailResponse::getId).collect(toSet());
+            Set<Long> productIdSet = productList.stream().map(ProductDetailResponse::getProductId).collect(toSet());
+            Map<Long, String> productId2ProductNameMap = productList.stream().collect(toMap(ProductDetailResponse::getProductId, ProductDetailResponse::getProductName));
             Set<String> requestLcCodeSet = requestLcCodeList.stream().collect(toSet());
 
             ConditionsBuilder inventoryConditionMap = ConditionsBuilder.create();
             inventoryConditionMap.eq("companyId",companyId);
             inventoryConditionMap.in("warehouseId",Arrays.asList(warehouseId));
             inventoryConditionMap.in("productId",productIdSet);
-            inventoryConditionMap.in("lcCode",requestLcCodeSet);
+
             Map<String, Object> inventoryParamMap = inventoryConditionMap.build();
             List<WmsInventory> inventories = wmsInventoryService.selectByConditions(inventoryParamMap);
             if(Objects.nonNull(inventories) || !inventories.isEmpty()){
-                    inventories.stream().collect(groupingBy((item ->item.getWarehouseId()+"#"+ item.getWarehouseId()+"#"+item.getProductId())));
+                Map<String, List<InventoryAddBussinessRequest.InventoryAddRequestCondition>> frontProductGroup = requestList.stream().collect(groupingBy((item -> item.getCompanyId() + "#" + item.getWarehouseId() + "#" + item.getProductId())));
+                Map<String, List<WmsInventory>> dbProductIdGroupMap = inventories.stream().collect(groupingBy((item -> item.getCompanyId() + "#" + item.getWarehouseId() + "#" + item.getProductId())));
+                frontProductGroup.forEach((k,v)->{
+                    if(dbProductIdGroupMap.containsKey(k)){
+                        Set<String> dbLcCodeSet = dbProductIdGroupMap.get(k).stream().filter(item ->item.getLcCode().toLowerCase().startsWith("s")).map(WmsInventory::getLcCode).collect(toSet());
+                        if(dbLcCodeSet.size() > 1){
+                            String productId = k.split("#")[2];
+                            ErrorCode.INVENTORY_ADD_ERROR_EXIST_MULTI_SAMPLE_LC_CODE_4057.throwError(JSON.toJSONString(productId2ProductNameMap.get(Long.valueOf(productId))),JSON.toJSONString(dbLcCodeSet));
+                        }
+                    }
+                });
             }
 
             //2.2 库存批次-预处理
@@ -596,9 +610,11 @@ public class InventoryBussiness {
      * @param adjhType
      */
     public void adjustInventory(Object request, String adjhType) {
-        log.info("\n +++++++++++++++++++++ 库存调整::入参 -> {},调整类型 -> {} ++++++++++++++++++++ \n ", JSON.toJSONString(request));
+        log.info("\n +++++++++++++++++++++ 库存调整::入参 -> {},调整类型 -> {} ++++++++++++++++++++ \n ", JSON.toJSONString(request),adjhType);
         /**基础信息*/
         Date nowWithUTC = DateUtils.nowWithUTC();//UTC时间
+        Long companyId = Long.valueOf(String.valueOf(((Map) JSON.toJSON(request)).get("companyId")));
+        Long warehouseId = Long.valueOf(String.valueOf(((Map) JSON.toJSON(request)).get("warehouseId")));
         UserInfo userInfo = CustomRequestContext.getUserInfo();
         long adjtId = idGenerator.getUnique();//库存调整单单头id
         String bussinessNumber = getBussinessNumber("TZ");//获取业务单号
@@ -620,7 +636,7 @@ public class InventoryBussiness {
         wmsAdjtHeader.setProductName(productDetail.getProductName());//产品名称
         wmsAdjtHeader.setProductBarcode(productDetail.getProductBarcode());//条码
         wmsAdjtHeader.setProductNameLocal(productDetail.getProductNameLocal());//产品本地名称
-        wmsAdjtHeader.setProductUpcCode(productDetail.getProductUpcCode());//UPC码
+        wmsAdjtHeader.setProductUpcCode(productDetail.getProductUpcCode());//UPC码z
         wmsAdjtHeader.setAdjhCode(bussinessNumber);//业务单据编码
         wmsAdjtHeader.setId(adjtId);
         wmsAdjtHeader.setBizDate(nowWithUTC);//业务日期
@@ -633,8 +649,7 @@ public class InventoryBussiness {
 
         /**库存记录*/
         WmsInventory wmsInventory = new WmsInventory();
-        Long companyId = Long.valueOf(String.valueOf(((Map) JSON.toJSON(request)).get("companyId")));
-        Long warehouseId = Long.valueOf(String.valueOf(((Map) JSON.toJSON(request)).get("warehouseId")));
+
         String lcCode = wmsAdjtHeader.getLcCode();
         wmsInventory.setCompanyId(companyId);
         wmsInventory.setWarehouseId(warehouseId);
@@ -945,7 +960,7 @@ public class InventoryBussiness {
             /**判断对应的拣货状态是否 "拣货完成"*/
             ConditionsBuilder ploHeaderCondition = ConditionsBuilder.create();
             ploHeaderCondition.eq("dohId",dohId);
-            ploHeaderCondition.ne("orderStatus",98);
+            ploHeaderCondition.ne("orderStatus",ALREADY_CANCELLED);
             WmsPloHeader ploHeader = wmsPloHeaderService.selectOneByConditions(ploHeaderCondition.build());
             if(Objects.isNull(ploHeader)){
                 ErrorCode.INVENTORY_DEDUCT_PLO_HEADER_IS_NULL_40048.throwError(JSON.toJSONString(dohId));
@@ -1048,7 +1063,7 @@ public class InventoryBussiness {
                 BigDecimal dbQty = groupByProductIdAndLcCode2QtyMap.get(k);
                 BigDecimal deductQty = v;
 
-                //(产品,库位)-> 数量 比较
+                //(产品,库位)->  比较数量
                 if(dbQty.compareTo(deductQty) < 0){
                     String productName = productMap.get(Long.valueOf(condtion[0]));
                     String lcCode = condtion[1];
@@ -1199,7 +1214,7 @@ public class InventoryBussiness {
 
                 log.info("\n +++++++++++++++++++++ 出库扣减库存操作:: 更新出库明细 -> {} ++++++++++++++++++++ \n ", JSON.toJSONString(updateDoLineList));
                 int countForDoLine = wmsDoLineService.updateBatch(updateDoLineList);
-                if(countForDoheader <= 0){
+                if(countForDoLine <= 0){
                     ErrorCode.INVENTORY_DEDUCT_UPDATE_DO_LINE_40053.throwError();
                 }
 

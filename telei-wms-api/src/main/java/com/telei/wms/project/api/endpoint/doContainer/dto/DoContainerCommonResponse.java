@@ -62,5 +62,9 @@ public class DoContainerCommonResponse {
     private BigDecimal sumSmallBagQty;
     /** 装箱数量 */
     private BigDecimal sumQty;
+    /** 出库计划编码 */
+    private String spCode;
+    /** 销售订单编码 */
+    private String soCode;
 
 }

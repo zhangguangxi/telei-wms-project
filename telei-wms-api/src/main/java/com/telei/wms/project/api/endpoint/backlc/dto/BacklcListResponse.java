@@ -51,10 +51,10 @@ public class BacklcListResponse {
         private String productBarcode;
         @ApiModelProperty(value = "品牌",example = "耐克",position = 8)
         private String brand;
-        @ApiModelProperty(value = "重量",example = "1.2",position = 9)
-        private BigDecimal unitGrossWeight;
-        @ApiModelProperty(value = "体积",example = "22",position = 10)
-        private BigDecimal unitVol;
+        @ApiModelProperty(value = "重量(大包)",example = "1.2",position = 9)
+        private BigDecimal bigBagWeight;
+        @ApiModelProperty(value = "体积(大包)",example = "22",position = 10)
+        private BigDecimal bigBagVol;
         @ApiModelProperty(value = "箱规",example = "耐克",position = 11)
         private BigDecimal boxQty;
         @ApiModelProperty(value = "大包数量(件数)",example = "22",position = 12)
@@ -71,5 +71,9 @@ public class BacklcListResponse {
         private BigDecimal bVol;
         @ApiModelProperty(value = "样品库位",example = "s1234",position = 18)
         private String lcCode;
+        @ApiModelProperty(value = "大包转换率",position = 19)
+        private BigDecimal bigBagRate;
+        @ApiModelProperty(value = "中包转换率",position = 20)
+        private BigDecimal midBagRate;
     }
 }

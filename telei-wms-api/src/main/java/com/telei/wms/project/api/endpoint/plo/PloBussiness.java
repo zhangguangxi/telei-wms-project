@@ -520,11 +520,16 @@ public class PloBussiness {
         updateWmsDoHeader.setLastupdateTime(DateUtils.nowWithUTC());
         wmsDoHeaderService.updateByPrimaryKeySelective(updateWmsDoHeader);
         //获取出库任务明细id，删除待出库存
-        WmsDoLine wmsDoLineEntity = new WmsDoLine();
-        wmsDoLineEntity.setDohId(wmsPloHeader.getDohId());
-        List<WmsDoLine> wmsDoLines = wmsDoLineService.selectByEntity(wmsDoLineEntity);
-        List<Long> dolIds = wmsDoLines.stream().map(WmsDoLine::getId).collect(Collectors.toList());
-        wmsIvOutService.deleteByPrimaryKeys(dolIds);
+//        WmsDoLine wmsDoLineEntity = new WmsDoLine();
+//        wmsDoLineEntity.setDohId(wmsPloHeader.getDohId());
+//        List<WmsDoLine> wmsDoLines = wmsDoLineService.selectByEntity(wmsDoLineEntity);
+//        List<Long> dolIds = wmsDoLines.stream().map(WmsDoLine::getId).collect(Collectors.toList());
+        //获取待出库id
+        WmsIvOut wmsIvOutEntity = new WmsIvOut();
+        wmsIvOutEntity.setOrderId(wmsPloHeader.getDohId());
+        List<WmsIvOut> wmsIvOuts = wmsIvOutService.selectByEntity(wmsIvOutEntity);
+        List<Long> ivoIds = wmsIvOuts.stream().map(WmsIvOut::getId).collect(Collectors.toList());
+        wmsIvOutService.deleteByPrimaryKeys(ivoIds);
         PloCudBaseResponse response = new PloCudBaseResponse();
         response.setIsSuccess(updateResult > 0);
         return response;
