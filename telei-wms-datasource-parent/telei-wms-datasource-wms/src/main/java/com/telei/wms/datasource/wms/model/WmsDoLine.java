@@ -68,6 +68,12 @@ public class WmsDoLine implements Entity<Long> {
     private BigDecimal shipWeight;
     /** 出库体积(CBM) */
     private BigDecimal shipVol;
+    /** 出库大包数 */
+    private BigDecimal shipBigBagQty;
+    /** 出库中包数 */
+    private BigDecimal shipMidBagQty;
+    /** 出库小包数 */
+    private BigDecimal shiipSmallBagQty;
     /** 拣货数量 */
     private BigDecimal ploQty;
     /** 装柜数量 */

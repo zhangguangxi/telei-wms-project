@@ -32,7 +32,7 @@ public class LoadContainerStrategy implements IDeductStrategy {
     @Override
     public List<WmsInventoryDeductConditionVo> process(List<Long> requestProductList, List<String> requestLcCodeList, Map<String, BigDecimal> productIdAndLcCode2RealQty, List<WmsIvOut> wmsIvOutList, List<WmsDoLine> updateDoLineList,
                                                        Map<Long, WmsDoLine> id2DoLineEntityMap, Map<Long, WmsPloLine> id2PloLineEntityMap,
-                                                       Map<Long, String> dolId2LcCodeMap, List<Long> deleteIvOutList,
+                                                       Map<Long, String> dolId2LcCodeMap,
                                                        Long dohId, Long warehouseId, Long companyId) {
         List<DoContainerGroupResponseVo> wmsDoContainers = wmsDoContainerService.selectByDohId(dohId);
         if (Objects.isNull(wmsDoContainers) || wmsDoContainers.isEmpty()) {
@@ -42,11 +42,14 @@ public class LoadContainerStrategy implements IDeductStrategy {
         Map<Long, WmsIvOut> lineId2IvOutEntityMap = wmsIvOutList.stream().collect(Collectors.toMap(WmsIvOut::getLineId, Function.identity()));
         wmsDoContainers.forEach(item -> {
             Long dolId = item.getDolId();//出库任务明细id
-            deleteIvOutList.add(dolId);
             WmsDoLine doLine = id2DoLineEntityMap.get(dolId);
-            doLine.setShipQty(item.getCQty());
-            doLine.setShipVol(item.getCVol());
-            doLine.setShipWeight(item.getCWeight());
+            doLine.setShipQty(item.getCQty());//实际出库数量-装柜数量
+            doLine.setShipVol(item.getCVol());//实际出库体积-装柜体积
+            doLine.setShipWeight(item.getCWeight());//实际出库重量-装柜重量
+
+            doLine.setShipBigBagQty(item.getBigBagQty()); //实际出库-大包数
+            doLine.setShipMidBagQty(item.getMidBagQty());//实际出库-中包数
+            doLine.setShiipSmallBagQty(item.getSmallBagQty());//实际出库-小包数
 
             updateDoLineList.add(doLine);
             BigDecimal realQty = item.getCQty();

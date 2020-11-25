@@ -15,4 +15,7 @@ public class DoContainerGroupResponseVo {
     private BigDecimal cQty;
     private BigDecimal cVol;
     private BigDecimal cWeight;
+    private BigDecimal bigBagQty;
+    private BigDecimal midBagQty;
+    private BigDecimal smallBagQty;
 }

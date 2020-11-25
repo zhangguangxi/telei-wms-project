@@ -22,7 +22,7 @@ public class UnloadContainerStrategy implements IDeductStrategy {
     @Override
     public List<WmsInventoryDeductConditionVo> process(List<Long> requestProductList, List<String> requestLcCodeList, Map<String, BigDecimal> productIdAndLcCode2RealQty, List<WmsIvOut> wmsIvOutList, List<WmsDoLine> updateDoLineList,
                                                        Map<Long, WmsDoLine> id2DoLineEntityMap, Map<Long, WmsPloLine> id2PloLineEntityMap,
-                                                       Map<Long, String> dolId2LcCodeMap, List<Long> deleteIvOutList,
+                                                       Map<Long, String> dolId2LcCodeMap,
                                                        Long dohId, Long warehouseId, Long companyId) {
 
         List<WmsInventoryDeductConditionVo> inventoryDeductConditionList = new ArrayList<>();
@@ -30,14 +30,17 @@ public class UnloadContainerStrategy implements IDeductStrategy {
             Long dolId = item.getLineId();//出库任务明细id
             String lcCode = dolId2LcCodeMap.get(dolId);
             if (requestLcCodeList.contains(lcCode)) {
-                deleteIvOutList.add(dolId);
                 WmsDoLine doLine = id2DoLineEntityMap.get(dolId);
                 WmsPloLine ploLine = id2PloLineEntityMap.get(dolId);
                 doLine.setShipQty(ploLine.getPickedQty());//实际出库数量-拣货数量
                 doLine.setShipVol(ploLine.getPickedVol());//实际出库体积-拣货体积
                 doLine.setShipWeight(ploLine.getWeight());//实际出库重量-拣货重量
-                updateDoLineList.add(doLine);
 
+                doLine.setShiipSmallBagQty(ploLine.getSmallBagQty());//实际出库-小包数
+                doLine.setShipMidBagQty(ploLine.getMidBagQty());//实际出库-中包数
+                doLine.setShipBigBagQty(ploLine.getBigBagQty());//实际出库-大包数量
+
+                updateDoLineList.add(doLine);
                 WmsInventoryDeductConditionVo deductCondition = new WmsInventoryDeductConditionVo();
                 Long productId = item.getProductId();
                 deductCondition.setCompanyId(item.getCompanyId());//公司id

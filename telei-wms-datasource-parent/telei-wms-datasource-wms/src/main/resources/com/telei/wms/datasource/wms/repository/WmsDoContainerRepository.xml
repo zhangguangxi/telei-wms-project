@@ -66,6 +66,9 @@
         <result column="product_id" jdbcType="VARCHAR" property="productId"/>
         <result column="lc_code" jdbcType="TIMESTAMP" property="lcCode"/>
         <result column="c_qty" jdbcType="DECIMAL" property="cQty"/>
+        <result column="big_bag_qty" jdbcType="DECIMAL" property="bigBagQty"/>
+        <result column="mid_bag_qty" jdbcType="DECIMAL" property="midBagQty"/>
+        <result column="small_bag_qty" jdbcType="DECIMAL" property="smallBagQty"/>
     </resultMap>
 
     <select id="findAll" resultMap="PageQueryResultMap">
@@ -228,6 +231,9 @@
         SELECT
             wdc.dol_id,
             wdc.product_id,
+            wdc.big_bag_qty,
+            wdc.mid_bag_qty,
+            wdc.small_bag_qty,
             wpl.lc_code,
             sum(wdc.c_qty) c_qty,
             sum(wdc.c_vol) c_vol,

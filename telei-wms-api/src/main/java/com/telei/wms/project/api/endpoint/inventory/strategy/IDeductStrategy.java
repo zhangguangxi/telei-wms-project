@@ -16,7 +16,7 @@ import java.util.Map;
 public interface IDeductStrategy {
     default List<WmsInventoryDeductConditionVo> process(List<Long> requestProductList, List<String> requestLcCodeList, Map<String, BigDecimal> productIdAndLcCode2RealQty, List<WmsIvOut> wmsIvOutList, List<WmsDoLine> updateDoLineList,
                                                         Map<Long, WmsDoLine> id2DoLineEntityMap, Map<Long, WmsPloLine> id2PloLineEntityMap,
-                                                        Map<Long, String> dolId2LcCodeMap, List<Long> deleteIvOutList,
+                                                        Map<Long, String> dolId2LcCodeMap,
                                                         Long dohId, Long warehouseId, Long companyId
     ) {
 

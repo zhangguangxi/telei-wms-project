@@ -1078,13 +1078,13 @@ public class InventoryBussiness {
             Map<Long, WmsDoLine> id2DoLineEntityMap = wmsDoLines.stream().collect(Collectors.toMap(WmsDoLine::getId, Function.identity()));
             Map<Long, WmsPloLine> id2PloLineEntityMap = wmsPloLineList.stream().collect(Collectors.toMap(WmsPloLine::getDolId, Function.identity()));
             /**待出库存集合(删除)*/
-            List<Long> deleteIvOutList = new ArrayList<>();
+            List<Long> deleteIvOutList = wmsIvOutList.stream().map(WmsIvOut::getId).collect(Collectors.toList());
             List<WmsDoLine> updateDoLineList = new ArrayList<>();
 
             DeductEnum deductTypeEnum = DeductEnum.findDeductEnumByDeductType(containerType);
             IDeductStrategy deductStrategy = deductStrategyFactory.getDeductStrategy(deductTypeEnum.getDeductType());
             inventoryDeductConditionList = deductStrategy.process(requestProductList,requestLcCodeList,productIdAndLcCode2RealQty,wmsIvOutList, updateDoLineList,
-                    id2DoLineEntityMap, id2PloLineEntityMap,dolId2LcCodeMap,deleteIvOutList,dohId,warehouseId,companyId);
+                    id2DoLineEntityMap, id2PloLineEntityMap,dolId2LcCodeMap,dohId,warehouseId,companyId);
 
             //扣减库存id与扣减次数最大值集合
             List<WmsDeductIvOutConfirmResponseVo> ivIdIndexList = wmsIvOutConfirmService.selectIvIdIndex();
@@ -1173,7 +1173,7 @@ public class InventoryBussiness {
 
             if (LockMapUtil.confirmLock(dohId, lockValue)) {
                 log.info("\n +++++++++++++++++++++ 出库扣减库存操作:: 删除待出库存记录 -> {} ++++++++++++++++++++ \n ", JSON.toJSONString(deleteIvOutList));
-                int countForIvOut = wmsIvOutService.deleteByDolIds(deleteIvOutList);
+                int countForIvOut = wmsIvOutService.deleteByPrimaryKeys(deleteIvOutList);
                 if (countForIvOut <= 0) {
                     ErrorCode.INVENTORY_DEDUCT_DELETE_IV_OUT_40035.throwError();
                 }
