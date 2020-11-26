@@ -8,6 +8,7 @@ import com.telei.infrastructure.component.commons.CustomRequestContext;
 import com.telei.infrastructure.component.commons.utils.DateUtils;
 import com.telei.infrastructure.component.commons.utils.LockMapUtil;
 import com.telei.infrastructure.component.idgenerator.contract.Id;
+import com.telei.wms.commons.utils.ExcelUtil;
 import com.telei.wms.commons.utils.StringUtils;
 import com.telei.wms.customer.businessNumber.BusinessNumberFeignClient;
 import com.telei.wms.customer.businessNumber.dto.BusinessNumberRequest;
@@ -18,11 +19,14 @@ import com.telei.wms.customer.product.dto.ProductDetailResponse;
 import com.telei.wms.customer.product.dto.ProductListResponse;
 import com.telei.wms.datasource.wms.model.*;
 import com.telei.wms.datasource.wms.service.*;
+import com.telei.wms.datasource.wms.vo.ReportVo;
 import com.telei.wms.datasource.wms.vo.RooHeaderResponseVo;
 import com.telei.wms.datasource.wms.vo.RooLineResponseVo;
 import com.telei.wms.project.api.ErrorCode;
 import com.telei.wms.project.api.endpoint.report.dto.ReportBusinessPageQueryRequest;
 import com.telei.wms.project.api.endpoint.report.dto.ReportBusinessPageQueryResponse;
+import com.telei.wms.project.api.endpoint.report.dto.ReportExcel;
+import com.telei.wms.project.api.endpoint.report.dto.ReportExcelResponse;
 import com.telei.wms.project.api.endpoint.roo.dto.RooHeaderBusinessPageQueryRequest;
 import com.telei.wms.project.api.endpoint.roo.dto.RooHeaderBusinessPageQueryResponse;
 import com.telei.wms.project.api.endpoint.roo.dto.RooHeaderBusinessRequest;
@@ -32,6 +36,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.servlet.http.HttpServletRequest;
 import java.math.BigDecimal;
 import java.util.*;
 import java.util.function.Function;
@@ -436,6 +441,39 @@ public class RooBussiness {
         ReportBusinessPageQueryResponse businessResponse = new ReportBusinessPageQueryResponse();
         businessResponse.setPage(page);
         return businessResponse;
+    }
+
+    /**
+     * 查询收货统计报表
+     *
+     * @param request
+     * @return
+     */
+    public ReportExcelResponse rooReportExport(ReportBusinessPageQueryRequest businessPageQueryRequest, HttpServletRequest request) {
+        Pagination pagination = new Pagination(businessPageQueryRequest.getPageNumber(), businessPageQueryRequest.getPageSize());
+        ConditionsBuilder conditionsBuilder = ConditionsBuilder.create();
+        if (StringUtils.isNotBlank(businessPageQueryRequest.getStartTime()) && StringUtils.isNotBlank(businessPageQueryRequest.getEndTime())) {
+            conditionsBuilder.between("putawayTime", businessPageQueryRequest.getStartTime(), businessPageQueryRequest.getEndTime());
+        }
+        conditionsBuilder.eq("companyId", CustomRequestContext.getUserInfo().getCompanyId());
+        Map<String, Object> paramMap = conditionsBuilder.build();
+        if(StringUtils.isNotNull(businessPageQueryRequest.getHour())){
+            paramMap.put("hour", businessPageQueryRequest.getHour());
+        }
+
+        List<ReportVo> reportList = wmsRooHeaderService.rooReportExport(paramMap);
+        List<ReportExcel> list = new ArrayList<>();
+        if (reportList.size() > 0) {
+            for (ReportVo report : reportList) {
+                ReportExcel saleOrderReportExcel = DataConvertUtil.parseDataAsObject(report, ReportExcel.class);
+                list.add(saleOrderReportExcel);
+            }
+        }
+        ExcelUtil<ReportExcel> util = new ExcelUtil<>(ReportExcel.class);
+        util.exportExcel(list, "收货统计表", request);
+        ReportExcelResponse excelResponse = new ReportExcelResponse();
+        excelResponse.setIsSuccess(true);
+        return excelResponse;
     }
 
 }

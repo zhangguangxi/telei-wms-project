@@ -2,10 +2,7 @@ package com.telei.wms.project.api.endpoint.report;
 
 import com.nuochen.framework.app.gateway.GatewayConstants;
 import com.telei.wms.project.api.ServiceId;
-import com.telei.wms.project.api.endpoint.report.dto.ReportBusinessPageQueryRequest;
-import com.telei.wms.project.api.endpoint.report.dto.ReportBusinessPageQueryResponse;
-import com.telei.wms.project.api.endpoint.report.dto.ReportPageQueryRequest;
-import com.telei.wms.project.api.endpoint.report.dto.ReportPageQueryResponse;
+import com.telei.wms.project.api.endpoint.report.dto.*;
 import com.telei.wms.project.api.endpoint.roo.RooBussiness;
 import com.telei.wms.project.api.utils.DataConvertUtil;
 import io.swagger.annotations.Api;
@@ -16,6 +13,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 
 /**
@@ -36,6 +34,13 @@ public class ReportEndpoint {
         ReportBusinessPageQueryRequest businessRequest = DataConvertUtil.parseDataAsObject(request, ReportBusinessPageQueryRequest.class);
         ReportBusinessPageQueryResponse businessResponse = rooBussiness.rooReportQuery(businessRequest);
         return DataConvertUtil.parseDataAsObject(businessResponse, ReportPageQueryResponse.class);
+    }
+
+    @ApiOperation("查询收货统计报表")
+    @PostMapping(ServiceId.WMS_REPORT_ROO_EXPORT)
+    public ReportExcelResponse rooReportExport(@RequestBody @Valid ReportPageQueryRequest pageQueryRequest, HttpServletRequest request) {
+        ReportBusinessPageQueryRequest businessRequest = DataConvertUtil.parseDataAsObject(pageQueryRequest, ReportBusinessPageQueryRequest.class);
+        return rooBussiness.rooReportExport(businessRequest, request);
     }
 
 }

@@ -67,6 +67,12 @@ public class DoLineDetailResponse {
     private BigDecimal shipWeight;
     /** 出库体积(CBM) */
     private BigDecimal shipVol;
+    /** 出库大包数 */
+    private BigDecimal shipBigBagQty;
+    /** 出库中包数 */
+    private BigDecimal shipMidBagQty;
+    /** 出库小包数 */
+    private BigDecimal shipSmallBagQty;
     /** 备注 */
     private String memo;
     /** 参考成本 */

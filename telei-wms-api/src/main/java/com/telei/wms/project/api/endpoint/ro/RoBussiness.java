@@ -162,7 +162,7 @@ public class RoBussiness {
             //需要同步到计划
             OmsRecovicePlan omsRecovicePlan = DataConvertUtil.parseDataAsObject(request, OmsRecovicePlan.class);
             omsRecovicePlan.setId(wmsRoHeaderInfo.getRpId());
-            omsRecovicePlan.setMemo(null);
+//            omsRecovicePlan.setMemo(null);
             //添加数据交互指令
             WmsIdInstantdirective wmsIdInstantdirective = wmsIdInstantdirectiveBussiness.add("PUTON", "", omsRecovicePlan);
             //发送消息到队列

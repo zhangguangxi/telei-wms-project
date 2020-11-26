@@ -359,4 +359,7 @@ public class ServiceId {
     @RightResource(rightSystem = "oms", rightItem = "统计报表", rightFunction = "查询收货统计报表")
     public static final String WMS_REPORT_ROO_QUERY = "1031801";
 
+    @RightResource(rightSystem = "oms", rightItem = "统计报表", rightFunction = "导出收货统计报表")
+    public static final String WMS_REPORT_ROO_EXPORT = "1031802";
+
 }

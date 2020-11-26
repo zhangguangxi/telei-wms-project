@@ -73,7 +73,7 @@ public class WmsDoLine implements Entity<Long> {
     /** 出库中包数 */
     private BigDecimal shipMidBagQty;
     /** 出库小包数 */
-    private BigDecimal shiipSmallBagQty;
+    private BigDecimal shipSmallBagQty;
     /** 拣货数量 */
     private BigDecimal ploQty;
     /** 装柜数量 */

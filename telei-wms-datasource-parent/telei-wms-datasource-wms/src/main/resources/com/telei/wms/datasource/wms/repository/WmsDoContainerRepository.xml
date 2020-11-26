@@ -75,8 +75,8 @@
         SELECT
             wdc.sp_id,
             wdc.so_id,
-            osp.sp_code,
-            oso.so_code,
+            ocl.sp_code,
+            ocl.so_code,
             wdc.doh_id,
             wdc.c_id,
             oc.load_time,
@@ -87,8 +87,7 @@
             SUM(wdc.c_amount) c_amount
         FROM wms_do_container wdc
         LEFT JOIN oms.oms_container oc ON wdc.c_id = oc.c_id
-        left join oms.oms_ship_plan osp on osp.sp_id = wdc.sp_id
-        left join oms.oms_sale_order oso on oso.so_id = wdc.so_id
+        left join oms.oms_container_list ocl on ocl.sp_id = wdc.sp_id AND ocl.so_id = wdc.so_id
         <where>
             <if test="cId != null">
                 and wdc.c_id = #{cId}
@@ -149,14 +148,18 @@
         INNER JOIN wms_plo_line wpl ON wpl.plo_id = wph.plo_id AND wph.order_status = '30'
         LEFT JOIN wms_do_header wdh ON wdh.doh_id = wph.doh_id
         LEFT JOIN cdm.cdm_product cp ON wpl.product_id = cp.product_id AND wph.company_id = cp.company_id
-        LEFT JOIN wms_do_container wdo ON wdo.product_id = wpl.product_id
-        <if test="dohId != null">
-            and wdo.doh_id ${dohId}
-        </if>
-        LEFT JOIN wms_backlc_list wbl ON wbl.product_id = wpl.product_id
-        <if test="dohId != null">
-            and wbl.doh_id ${dohId}
-        </if>
+        LEFT JOIN (
+            SELECT wd.doh_id,wd.product_id, SUM(wd.c_qty) c_qty
+            FROM wms_do_container wd
+            WHERE wd.doh_id ${dohId}
+            GROUP BY wd.product_id
+        ) wdo ON wdo.product_id = wpl.product_id and wdo.doh_id ${dohId}
+        LEFT JOIN (
+            SELECT wb.doh_id,wb.product_id, SUM(wb.b_qty) b_qty
+            FROM wms_backlc_list wb
+            WHERE wb.doh_id ${dohId}
+            GROUP BY wb.product_id
+        ) wbl ON wbl.product_id = wpl.product_id and wbl.doh_id ${dohId}
         <where>
             <if test="dohId != null">
                 and wph.doh_id ${dohId}

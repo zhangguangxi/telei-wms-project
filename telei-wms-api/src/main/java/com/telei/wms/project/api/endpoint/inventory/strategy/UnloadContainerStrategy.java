@@ -36,7 +36,7 @@ public class UnloadContainerStrategy implements IDeductStrategy {
                 doLine.setShipVol(ploLine.getPickedVol());//实际出库体积-拣货体积
                 doLine.setShipWeight(ploLine.getWeight());//实际出库重量-拣货重量
 
-                doLine.setShiipSmallBagQty(ploLine.getSmallBagQty());//实际出库-小包数
+                doLine.setShipSmallBagQty(ploLine.getSmallBagQty());//实际出库-小包数
                 doLine.setShipMidBagQty(ploLine.getMidBagQty());//实际出库-中包数
                 doLine.setShipBigBagQty(ploLine.getBigBagQty());//实际出库-大包数量
 

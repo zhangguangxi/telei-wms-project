@@ -11,6 +11,7 @@ import com.telei.wms.datasource.wms.vo.RooHeaderResponseVo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Map;
 
 @Service
@@ -37,6 +38,10 @@ public class WmsRooHeaderService extends BaseService<WmsRooHeaderRepository,WmsR
         page.setTotalRecords(pageInfo.getTotal());
         page.setContent(pageInfo.getList());
         return page;
+    }
+
+    public List<ReportVo> rooReportExport(Map<String, Object> paramMap) {
+        return wmsRooHeaderRepository.rooReportQuery(paramMap);
     }
 
 }

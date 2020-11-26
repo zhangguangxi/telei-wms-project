@@ -49,7 +49,7 @@ public class LoadContainerStrategy implements IDeductStrategy {
 
             doLine.setShipBigBagQty(item.getBigBagQty()); //实际出库-大包数
             doLine.setShipMidBagQty(item.getMidBagQty());//实际出库-中包数
-            doLine.setShiipSmallBagQty(item.getSmallBagQty());//实际出库-小包数
+            doLine.setShipSmallBagQty(item.getSmallBagQty());//实际出库-小包数
 
             updateDoLineList.add(doLine);
             BigDecimal realQty = item.getCQty();
