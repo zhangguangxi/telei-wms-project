@@ -142,11 +142,12 @@
             SUM(wpl.picked_qty) picked_qty,
             SUM(wbl.b_qty) b_qty,
             SUM(wdo.c_qty) c_qty,
-            cp.cost_reference,
-            cp.selling_price_reference unit_price
+            wdl.cost_reference,
+            wdl.unit_price
         FROM wms_plo_header wph
         INNER JOIN wms_plo_line wpl ON wpl.plo_id = wph.plo_id AND wph.order_status = '30'
         LEFT JOIN wms_do_header wdh ON wdh.doh_id = wph.doh_id
+        LEFT JOIN wms_do_line wdl ON wdl.doh_id = wdh.doh_id and wpl.product_id = wdl.product_id
         LEFT JOIN cdm.cdm_product cp ON wpl.product_id = cp.product_id AND wph.company_id = cp.company_id
         LEFT JOIN (
             SELECT wd.doh_id,wd.product_id, SUM(wd.c_qty) c_qty

@@ -10,6 +10,8 @@
         cp.product_no,
         cp.product_name,
         cp.product_barcode,
+        cp.mid_bag_qty,
+        cp.big_bag_qty,
         wa.iv_qty,
         wa.lc_code,
         wa.iv_qty_adjt,

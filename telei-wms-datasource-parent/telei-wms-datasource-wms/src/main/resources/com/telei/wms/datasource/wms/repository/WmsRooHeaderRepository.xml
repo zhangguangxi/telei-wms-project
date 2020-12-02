@@ -159,6 +159,7 @@
             </if>
         </where>
         group by DATE_FORMAT(date_add(p.putaway_time,interval -${hour} hour),'%Y-%m-%d'),ro.supp_cust_name,iab.product_name
+        ORDER BY date_time DESC
     </select>
 
 </mapper>

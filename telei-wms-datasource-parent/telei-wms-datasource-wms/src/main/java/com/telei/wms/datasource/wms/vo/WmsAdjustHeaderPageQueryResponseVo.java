@@ -40,4 +40,8 @@ public class WmsAdjustHeaderPageQueryResponseVo {
      * 调减：调减、盘亏、销毁、报损
      * */
     private String adjhDetailType;
+    /** 中包转换数 */
+    private Integer midBagQty;
+    /** 大包转换数 */
+    private Integer bigBagQty;
 }

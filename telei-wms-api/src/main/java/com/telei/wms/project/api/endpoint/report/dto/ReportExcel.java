@@ -28,16 +28,16 @@ public class ReportExcel {
     @Excel(name = "合同号")
     private String contractNo;
 
-    @Excel(name = "总数量")
+    @Excel(name = "品名")
+    private String productName;
+
+    @Excel(name = "总数量", numberFormat = "#,##0")
     private Integer sumCount;
 
-    @Excel(name = "总件数")
+    @Excel(name = "件数", numberFormat = "#,##0")
     private Integer sumBigCount;
 
-    @Excel(name = "总金额")
+    @Excel(name = "金额", numberFormat = "¥#,##0.00")
     private BigDecimal sumAmount;
-
-    @Excel(name = "商品名称")
-    private String productName;
 
 }
