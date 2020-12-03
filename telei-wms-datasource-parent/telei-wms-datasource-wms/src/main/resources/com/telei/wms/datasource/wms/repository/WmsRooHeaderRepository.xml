@@ -134,7 +134,7 @@
 
     <select id="rooReportQuery" resultType="com.telei.wms.datasource.wms.vo.ReportVo">
         select
-            DATE_FORMAT(date_add(p.putaway_time,interval -${hour} hour),'%Y-%m-%d') as date_time,
+            DATE_FORMAT(date_add(p.putaway_time,interval +${hour} hour),'%Y-%m-%d') as date_time,
             ro.supp_cust_name,
             po.contract_no,
             IFNULL(sum(pl.paol_qty / iab.big_bag_rate), 0) as sum_big_count,
@@ -158,7 +158,7 @@
                 and p.putaway_time ${putawayTime}
             </if>
         </where>
-        group by DATE_FORMAT(date_add(p.putaway_time,interval -${hour} hour),'%Y-%m-%d'),ro.supp_cust_name,iab.product_name
+        group by DATE_FORMAT(date_add(p.putaway_time,interval +${hour} hour),'%Y-%m-%d'),ro.supp_cust_name,iab.product_name
         ORDER BY date_time DESC
     </select>
 

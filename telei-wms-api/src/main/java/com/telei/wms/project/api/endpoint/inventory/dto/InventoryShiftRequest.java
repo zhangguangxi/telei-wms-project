@@ -23,7 +23,6 @@ public class InventoryShiftRequest {
     private String warehouseCode;
 
     @ApiModelProperty(value = "原因", example = "xxx", position = 4)
-    @Check
     private String reason;
 
     @ApiModelProperty(value = "商品id", example = "1234123", position = 5)

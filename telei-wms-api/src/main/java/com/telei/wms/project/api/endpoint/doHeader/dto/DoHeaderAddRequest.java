@@ -19,6 +19,8 @@ public class DoHeaderAddRequest {
     private Long spId;
     /** 销售订单id */
     private Long soId;
+    /** 采购订单id，内部单据 */
+    private Long poId;
     /** 公司id */
     private Long companyId;
     /** 仓库id */
@@ -27,6 +29,8 @@ public class DoHeaderAddRequest {
     private String warehouseCode;
     /** 商家订单号 */
     private String custOrderNo;
+    /** 订单号 */
+    private String orderNo;
     /** 供应商id */
     private Long supplierId;
     /** 供应商/客户名称 */
@@ -55,9 +59,15 @@ public class DoHeaderAddRequest {
     private BigDecimal shipWeight;
     /** 出库体积(CBM) */
     private BigDecimal shipVol;
+    /** 拣货数量 */
+    private BigDecimal ploQty;
+    /** 装柜数量 */
+    private BigDecimal containerQty;
+    /** 退库数量 */
+    private BigDecimal backlcQty;
     /** 出库货品种类数量 */
     private Integer shipDetailedSpeciesQty;
-    /** 单据类型（01-线下订单 02-内部订单） */
+    /** 单据类型（01-线下订单 02-内部订单  08-采购退件） */
     private String orderType;
     /** 进出口类型 01-进口,02-出口, 03-本地销售 */
     private String ieType;
