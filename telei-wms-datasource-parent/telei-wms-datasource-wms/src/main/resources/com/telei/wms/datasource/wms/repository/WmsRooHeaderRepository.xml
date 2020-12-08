@@ -139,7 +139,7 @@
             po.contract_no,
             IFNULL(sum(pl.paol_qty / iab.big_bag_rate), 0) as sum_big_count,
             IFNULL(sum(pl.paol_qty), 0) as sum_count,
-            IFNULL(sum(rol.unit_price * pl.paol_qty), 0)  as sum_amount,
+            ROUND(IFNULL(sum(rol.unit_price * pl.paol_qty), 0), 2) as sum_amount,
             iab.product_name,
             cu.currency_name,
             cu.currency_ename

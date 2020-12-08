@@ -19,7 +19,7 @@ public class InventoryBussinessTest {
 
     @Test
     public void testAddInventory(){
-        String json = "{\"list\":[{\"companyId\":1030901707577493504,\"iabId\":1045077563002587136,\"ivDocumentId\":1045077719336880128,\"ivDocumentlineId\":1045077719341074432,\"ivQty\":200,\"lcCode\":\"S01-01-11\",\"paoId\":1045077719336880128,\"paolId\":1045077719341074432,\"productId\":4718757008713451522,\"putawayUser\":\"张光喜\",\"roId\":1045077408450873344,\"rooId\":1045077562767706112,\"roolId\":1045077563002587137,\"warehouseCode\":\"ywck\",\"warehouseId\":1030907360064833536}],\"orderType\":\"01\"}";
+        String json = "{\"list\":[{\"companyId\":1030901707577493504,\"iabId\":1050430475597776896,\"ivDocumentId\":1050431156677249024,\"ivDocumentlineId\":1050431156681443328,\"ivQty\":400,\"lcCode\":\"S01-02-22\",\"paoId\":1050431156677249024,\"paolId\":1050431156681443328,\"productId\":4721028922144196610,\"putawayUser\":\"张光喜\",\"roId\":4721271325430122497,\"rooId\":1050430475367090176,\"roolId\":1050430475597776897,\"warehouseCode\":\"ywck\",\"warehouseId\":1030907360064833536}],\"orderType\":\"01\"}";
         InventoryAddBussinessRequest request = JSON.parseObject(json, InventoryAddBussinessRequest.class);
         inventoryBussiness.addInventory(request);
     }

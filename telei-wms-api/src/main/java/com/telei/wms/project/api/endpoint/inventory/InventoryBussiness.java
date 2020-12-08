@@ -283,7 +283,6 @@ public class InventoryBussiness {
             }
 
 
-
             //3.1 产品(商品)-预处理
             ProductRequest productDetailRequest = new ProductRequest();
             productDetailRequest.setProductIds(requestProductIdList);
@@ -308,7 +307,7 @@ public class InventoryBussiness {
 
             Map<String, Object> inventoryParamMap = inventoryConditionMap.build();
             List<WmsInventory> inventories = wmsInventoryService.selectByConditions(inventoryParamMap);
-            if(Objects.nonNull(inventories) || !inventories.isEmpty()){
+            if(Objects.nonNull(inventories) && !inventories.isEmpty()){
                 Map<String, List<InventoryAddBussinessRequest.InventoryAddRequestCondition>> frontProductGroup = requestList.stream().collect(groupingBy((item -> item.getCompanyId() + "#" + item.getWarehouseId() + "#" + item.getProductId())));
                 Map<String, List<WmsInventory>> dbProductIdGroupMap = inventories.stream().collect(groupingBy((item -> item.getCompanyId() + "#" + item.getWarehouseId() + "#" + item.getProductId())));
                 frontProductGroup.forEach((k,v)->{
@@ -320,6 +319,19 @@ public class InventoryBussiness {
                         }
                     }
                 });
+                Map<Long, String> requestProductId2LcCode = requestList.stream().collect(toMap(InventoryAddBussinessRequest.InventoryAddRequestCondition::getProductId, InventoryAddBussinessRequest.InventoryAddRequestCondition::getLcCode));
+                List<WmsInventory> sampleWmsInventoryList = inventories.stream().filter(item -> item.getLcCode().toLowerCase().startsWith("s")).collect(toList());
+                if(Objects.nonNull(sampleWmsInventoryList) && !sampleWmsInventoryList.isEmpty()){
+                    Map<Long, String> dbProductId2LcCodeMap = sampleWmsInventoryList.stream().collect(toMap(WmsInventory::getProductId, WmsInventory::getLcCode,(v1,v2)-> v2));
+                    requestProductId2LcCode.forEach((k,v)->{
+                        if(dbProductId2LcCodeMap.containsKey(k)){
+                            if(!dbProductId2LcCodeMap.get(k).equalsIgnoreCase(v)){
+                                ErrorCode.INVENTORY_ADD_ERROR_EXIST_MULTI_SAMPLE_LC_CODE_4058.throwError(JSON.toJSONString(productId2ProductNameMap.get(Long.valueOf(k))),JSON.toJSONString(dbProductId2LcCodeMap.get(k)));
+                            }
+                        }
+                    });
+                }
+
             }
 
             //2.2 库存批次-预处理
@@ -845,6 +857,9 @@ public class InventoryBussiness {
         iabToInventoryMap.forEach((k, v) -> {
             InventoryDetailResponse.InventoryDetailCondition detailVo = new InventoryDetailResponse.InventoryDetailCondition();
             detailVo.setIabId(k);
+            // 根据库存批次查询批次创建时间
+            WmsIvAttributebatch attributebatch = wmsIvAttributebatchService.selectByPrimaryKey(k);
+            detailVo.setCreateTime(attributebatch.getCreateTime());
             BigDecimal iabQty = v.stream().map(WmsInventory::getIvQty).reduce(BigDecimal.ZERO, BigDecimal::add);
             WmsInventory dbInventory = v.get(0);
             Integer bigBagRate = dbInventory.getBigBagRate();
@@ -1229,11 +1244,11 @@ public class InventoryBussiness {
 
             if ("03".equals(wmsDoHeader.getOrderType())) {
                 //内部供应商自动创建的单据类型
-                String poId = wmsDoHeaderService.findPoId(wmsDoHeader.getId());
-                if (StringUtils.isEmpty(poId)) {
-                    //未找到关联的单据id
-                    ErrorCode.DO_ERROR_4002.throwError();
-                }
+//                String poId = wmsDoHeaderService.findPoId(wmsDoHeader.getId());
+//                if (StringUtils.isEmpty(poId)) {
+//                    //未找到关联的单据id
+//                    ErrorCode.DO_ERROR_4002.throwError();
+//                }
                 //获取明细信息
                 List<RecovicePlanAddByDoRequest.Detail> requestDetails = new ArrayList<>();
                 wmsDoLines.stream().forEach(item -> {
@@ -1247,7 +1262,7 @@ public class InventoryBussiness {
                     ErrorCode.DO_ERROR_4003.throwError();
                 }
                 RecovicePlanAddByDoRequest recovicePlanAddByDoRequest = new RecovicePlanAddByDoRequest();
-                recovicePlanAddByDoRequest.setPoId(Long.valueOf(poId));
+                recovicePlanAddByDoRequest.setPoId(wmsDoHeader.getPoId());
                 recovicePlanAddByDoRequest.setDetails(requestDetails);
                 log.debug("******recovicePlanAddByDoRequest******" + JSON.toJSONString(recovicePlanAddByDoRequest));
                 //添加数据交互指令
@@ -1432,4 +1447,5 @@ public class InventoryBussiness {
         response.setLcCodeMap(lcCodeMap);
         return response;
     }
+
 }

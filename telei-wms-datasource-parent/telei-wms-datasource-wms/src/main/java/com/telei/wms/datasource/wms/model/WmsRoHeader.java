@@ -1,9 +1,10 @@
 package com.telei.wms.datasource.wms.model;
 
 import com.nuochen.framework.autocoding.domain.Entity;
+import lombok.Data;
+
 import java.math.BigDecimal;
 import java.util.Date;
-import lombok.Data;
 
 /**
  * wms_ro_header 入库任务
@@ -32,6 +33,8 @@ public class WmsRoHeader implements Entity<Long> {
     private Long customerId;
     /** 商家订单号 */
     private String custOrderNo;
+    /** 订单号 */
+    private String orderNo;
     /** 单据类型（01-线下订单 02-内部订单  08-采购退件） */
     private String orderType;
     /** 预计入库时间 */

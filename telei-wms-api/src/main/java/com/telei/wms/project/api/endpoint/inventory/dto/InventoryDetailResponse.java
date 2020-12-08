@@ -3,6 +3,7 @@ package com.telei.wms.project.api.endpoint.inventory.dto;
 import lombok.Data;
 
 import java.math.BigDecimal;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -25,6 +26,8 @@ public class InventoryDetailResponse {
         private BigDecimal midBagQty;
         /**小包数量*/
         private BigDecimal tinyBagQty;
+        /**批次创建时间*/
+        private Date createTime;
     }
 }
 

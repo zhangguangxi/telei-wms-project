@@ -9,10 +9,10 @@ import com.telei.wms.datasource.wms.model.WmsInventory;
 import com.telei.wms.datasource.wms.model.WmsLcRecommend;
 import com.telei.wms.datasource.wms.model.WmsLcRecommendBak;
 import com.telei.wms.datasource.wms.model.WmsLocation;
-import com.telei.wms.datasource.wms.repository.WmsLocationRepository;
 import com.telei.wms.datasource.wms.service.WmsInventoryService;
 import com.telei.wms.datasource.wms.service.WmsLcRecommendBakService;
 import com.telei.wms.datasource.wms.service.WmsLcRecommendService;
+import com.telei.wms.datasource.wms.service.WmsLocationService;
 import com.telei.wms.datasource.wms.vo.InventoryLocationResponseVo;
 import com.telei.wms.datasource.wms.vo.LcRecommendPageQueryRequestVo;
 import com.telei.wms.project.api.ErrorCode;
@@ -48,7 +48,7 @@ public class LcRecommendBussiness {
     private WmsInventoryService wmsInventoryService;
 
     @Autowired
-    private WmsLocationRepository wmsLocationRepository;
+    private WmsLocationService wmsLocationService;
 
     /**
      * 添加分配库存
@@ -182,8 +182,8 @@ public class LcRecommendBussiness {
         }
         WmsLocation wmsLocationEntity = new WmsLocation();
         wmsLocationEntity.setLcCode(request.getLcCode());
-        List<WmsLocation> wmsLocations = wmsLocationRepository.selectByEntity(wmsLocationEntity);
-        if (Objects.isNull(wmsLocations) || wmsLocations.isEmpty()) {
+        WmsLocation wmsLocation = wmsLocationService.selectOneByEntity(wmsLocationEntity);
+        if (Objects.isNull(wmsLocation)) {
             //库位不存在
             ErrorCode.LC_RECOMMEND_NOT_EXIST_4004.throwError();
         }
