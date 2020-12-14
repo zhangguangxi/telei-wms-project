@@ -89,7 +89,7 @@
             </if>
 
         </where>
-         GROUP BY cp.product_no,wl.lc_code
+         GROUP BY cp.product_no, wl.lc_code, wi.warehouse_code, wi.product_id, wl.lc_type
         <if test="orderBy != null">
             order by ${orderBy}
         </if>
@@ -166,7 +166,7 @@
                 </if>
 
             </where>
-            GROUP BY iab.product_id,iv.lc_code
+            GROUP BY iab.product_id,iv.lc_code, ps.ps_id, iv.product_id, iab.product_no, iab.product_name, iab.product_barcode, iab.product_upc_code, iab.big_bag_rate, iab.mid_bag_rate, iab.mid_bag_rate, iab.big_bag_rate, iab.big_bag_vol, iab.big_bag_weight, iv.lc_code, lc.lc_vol
             <if test="orderBy != null">
                 order by ${orderBy}
             </if>

@@ -137,8 +137,7 @@
         select
             distinct wl.lc_aisle,
             wl.warehouse_id,
-            wl.warehouse_code,
-            wl.location_id
+            wl.warehouse_code
         from wms_location wl
         <where>
             <if test="warehouseId != null">

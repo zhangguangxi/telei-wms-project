@@ -166,7 +166,7 @@
                 and wph.doh_id ${dohId}
             </if>
         </where>
-        GROUP BY wph.doh_id,wpl.product_id
+        GROUP BY wph.doh_id,wpl.product_id, wpl.dol_id, wpl.media_id, wpl.product_no, wpl.product_name, wpl.product_barcode, wpl.brand, wpl.unit_gross_weight, wpl.unit_vol, cp.big_bag_weight, cp.big_bag_vol, cp.mid_bag_weight, cp.mid_bag_vol, wpl.big_bag_rate, wpl.mid_bag_rate, wpl.lc_code, wdl.cost_reference, wdl.unit_price
         <if test="orderBy != null">
             order by ${orderBy}
         </if>
@@ -250,7 +250,7 @@
         WHERE
           wph.order_status = 30
           and wdc.doh_id = #{dohId}
-        GROUP BY wdc.dol_id
+        GROUP BY wdc.dol_id,wdc.product_id, wdc.big_bag_qty, wdc.mid_bag_qty, wdc.small_bag_qty, wpl.lc_code
     </select>
 </mapper>
 

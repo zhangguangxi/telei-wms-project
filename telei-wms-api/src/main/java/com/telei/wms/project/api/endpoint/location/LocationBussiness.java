@@ -363,7 +363,13 @@ public class LocationBussiness {
         return response;
     }
 
-    public List<WmsLocationVo> doWmsLocation(List<WmsLocationVo> locationList, String lcAisle){
+    /**
+     * 根据通道示意图组装数据
+     * @param locationList
+     * @param lcAisle
+     * @return
+     */
+    public List<WmsLocationVo> doWmsLocation(List<WmsLocationVo> locationList, String lcAisle) {
         // 根据货架对数据进行分组
         Map<String, List<WmsLocationVo>> loListMap = new HashMap<>();
         if (StringUtils.isNotNull(locationList) && !locationList.isEmpty()) {
@@ -416,50 +422,12 @@ public class LocationBussiness {
                             List<WmsLocationVo> wmsLocationVos = lcymap.get("" + k);
                             if (StringUtils.isNotNull(wmsLocationVos) && !wmsLocationVos.isEmpty()) {
                                 if (wmsLocationVos.size() == 3) {
-                                    doLocationAisleVoList(lcxlist.get(j), "" + k, wmsLocationVos.get(0).getLcZ(), wmsLocationVos.get(0).getProductCount(), wmsLocationVos.get(0).getQty(), wmsLocationVos.get(0).getLcType(), wmsLocationVos.get(0).getLcCode(), wmsLocationVos.get(1).getLcZ(), wmsLocationVos.get(1).getProductCount(), wmsLocationVos.get(1).getQty(), wmsLocationVos.get(1).getLcType(), wmsLocationVos.get(1).getLcCode(), wmsLocationVos.get(2).getLcZ(), wmsLocationVos.get(2).getProductCount(), wmsLocationVos.get(2).getQty(), wmsLocationVos.get(2).getLcType(), wmsLocationVos.get(2).getLcCode(), locationAisleVoList);
+                                    doLocationAisleVoList(lcxlist.get(j), "" + k, wmsLocationVos.get(0).getLcZ(), wmsLocationVos.get(0).getProductCount(), wmsLocationVos.get(0).getQty(), wmsLocationVos.get(0).getLcType(), wmsLocationVos.get(0).getLcCode(), "Y", wmsLocationVos.get(1).getLcZ(), wmsLocationVos.get(1).getProductCount(), wmsLocationVos.get(1).getQty(), wmsLocationVos.get(1).getLcType(), wmsLocationVos.get(1).getLcCode(), "Y", wmsLocationVos.get(2).getLcZ(), wmsLocationVos.get(2).getProductCount(), wmsLocationVos.get(2).getQty(), wmsLocationVos.get(2).getLcType(), wmsLocationVos.get(2).getLcCode(), "Y", locationAisleVoList);
                                 } else {
                                     String lcX1 = lcxlist.get(j);
                                     String lcY1 = "" + k;
                                     String lcZ1 = "1", lcZ2 = "2", lcZ3 = "3", lcType = "";
-                                    String lcCode1 = lcType + lcAisle + "-" + lcX1 + "-" +lcY1 + lcZ1;
-                                    String lcCode2 = lcType + lcAisle + "-" + lcX1 + "-" +lcY1 + lcZ2;
-                                    String lcCode3 = lcType + lcAisle + "-" + lcX1 + "-" +lcY1 + lcZ3;
-                                    Integer productCount1 = 0, qty1 = 0, productCount2 = 0, qty2 = 0, productCount3 = 0, qty3 = 0;
-                                    for (WmsLocationVo locationVo : wmsLocationVos) {
-                                        if ("1".equals(locationVo.getLcZ())) {
-                                            lcType = locationVo.getLcType();
-                                            productCount1 = locationVo.getProductCount();
-                                            qty1 = locationVo.getQty();
-                                        } else if ("2".equals(locationVo.getLcZ())) {
-                                            lcType = locationVo.getLcType();
-                                            productCount2 = locationVo.getProductCount();
-                                            qty2 = locationVo.getQty();
-                                        } else if ("3".equals(locationVo.getLcZ())) {
-                                            lcType = locationVo.getLcType();
-                                            productCount3 = locationVo.getProductCount();
-                                            qty3 = locationVo.getQty();
-                                        }
-                                    }
-                                    doLocationAisleVoList(lcX1, lcY1, lcZ1, productCount1, qty1, lcType, lcCode1, lcZ2, productCount2, qty2, lcType, lcCode2, lcZ3, productCount3, qty3, lcType, lcCode3, locationAisleVoList);
-                                }
-                            } else {
-                                String lcType = "Z";
-                                if (k < 3) {
-                                    lcType = "S";
-                                }
-                                doLocationAisleVoList(lcxlist.get(j), "" + k, "1", 0, 0, lcType, lcType + lcAisle + "-" + lcxlist.get(j) + "-" + k + "1", "2", 0, 0, lcType, lcType + lcAisle + "-" + lcxlist.get(j) + "-" + k + "2", "3", 0, 0, lcType, lcType + lcAisle + "-" + lcxlist.get(j) + "-" + k + "3", locationAisleVoList);
-                            }
-                        }
-                    } else {
-                        for (int k = 1; k <= 5; k++) {
-                            List<WmsLocationVo> wmsLocationVos = lcymap.get("" + k);
-                            if (StringUtils.isNotNull(wmsLocationVos) && !wmsLocationVos.isEmpty()) {
-                                if (wmsLocationVos.size() == 3) {
-                                    doLocationAisleVoList(lcxlist.get(j), "" + k, wmsLocationVos.get(0).getLcZ(), wmsLocationVos.get(0).getProductCount(), wmsLocationVos.get(0).getQty(), wmsLocationVos.get(0).getLcType(), wmsLocationVos.get(0).getLcCode(), wmsLocationVos.get(1).getLcZ(), wmsLocationVos.get(1).getProductCount(), wmsLocationVos.get(1).getQty(), wmsLocationVos.get(1).getLcType(), wmsLocationVos.get(1).getLcCode(), wmsLocationVos.get(2).getLcZ(), wmsLocationVos.get(2).getProductCount(), wmsLocationVos.get(2).getQty(), wmsLocationVos.get(2).getLcType(), wmsLocationVos.get(2).getLcCode(), locationAisleVoList);
-                                } else {
-                                    String lcX1 = lcxlist.get(j);
-                                    String lcY1 = "" + k;
-                                    String lcZ1 = "1", lcZ2 = "2", lcZ3 = "3", lcType = "";
+                                    String lcExist1 = "N", lcExist2 = "N", lcExist3 = "N";
                                     String lcCode1 = lcType + lcAisle + "-" + lcX1 + "-" + lcY1 + lcZ1;
                                     String lcCode2 = lcType + lcAisle + "-" + lcX1 + "-" + lcY1 + lcZ2;
                                     String lcCode3 = lcType + lcAisle + "-" + lcX1 + "-" + lcY1 + lcZ3;
@@ -469,24 +437,70 @@ public class LocationBussiness {
                                             lcType = locationVo.getLcType();
                                             productCount1 = locationVo.getProductCount();
                                             qty1 = locationVo.getQty();
+                                            lcExist1 = "Y";
                                         } else if ("2".equals(locationVo.getLcZ())) {
                                             lcType = locationVo.getLcType();
                                             productCount2 = locationVo.getProductCount();
                                             qty2 = locationVo.getQty();
+                                            lcExist2 = "Y";
                                         } else if ("3".equals(locationVo.getLcZ())) {
                                             lcType = locationVo.getLcType();
                                             productCount3 = locationVo.getProductCount();
                                             qty3 = locationVo.getQty();
+                                            lcExist3 = "Y";
                                         }
                                     }
-                                    doLocationAisleVoList(lcX1, lcY1, lcZ1, productCount1, qty1, lcType, lcCode1, lcZ2, productCount2, qty2, lcType, lcCode2, lcZ3, productCount3, qty3, lcType, lcCode3, locationAisleVoList);
+                                    doLocationAisleVoList(lcX1, lcY1, lcZ1, productCount1, qty1, lcType, lcCode1, lcExist1, lcZ2, productCount2, qty2, lcType, lcCode2, lcExist2, lcZ3, productCount3, qty3, lcType, lcCode3, lcExist3, locationAisleVoList);
                                 }
                             } else {
                                 String lcType = "Z";
                                 if (k < 3) {
                                     lcType = "S";
                                 }
-                                doLocationAisleVoList(lcxlist.get(j), "" + k, "1", 0, 0, lcType, lcType + lcAisle + "-" + lcxlist.get(j) + "-" + k + "1", "2", 0, 0, lcType, lcType + lcAisle + "-" + lcxlist.get(j) + "-" + k + "2", "3", 0, 0, lcType, lcType + lcAisle + "-" + lcxlist.get(j) + "-" + k + "3", locationAisleVoList);
+                                doLocationAisleVoList(lcxlist.get(j), "" + k, "1", 0, 0, lcType, lcType + lcAisle + "-" + lcxlist.get(j) + "-" + k + "1", "N", "2", 0, 0, lcType, lcType + lcAisle + "-" + lcxlist.get(j) + "-" + k + "2", "N", "3", 0, 0, lcType, lcType + lcAisle + "-" + lcxlist.get(j) + "-" + k + "3", "N", locationAisleVoList);
+                            }
+                        }
+                    } else {
+                        for (int k = 1; k <= 5; k++) {
+                            List<WmsLocationVo> wmsLocationVos = lcymap.get("" + k);
+                            if (StringUtils.isNotNull(wmsLocationVos) && !wmsLocationVos.isEmpty()) {
+                                if (wmsLocationVos.size() == 3) {
+                                    doLocationAisleVoList(lcxlist.get(j), "" + k, wmsLocationVos.get(0).getLcZ(), wmsLocationVos.get(0).getProductCount(), wmsLocationVos.get(0).getQty(), wmsLocationVos.get(0).getLcType(), wmsLocationVos.get(0).getLcCode(), "Y", wmsLocationVos.get(1).getLcZ(), wmsLocationVos.get(1).getProductCount(), wmsLocationVos.get(1).getQty(), wmsLocationVos.get(1).getLcType(), wmsLocationVos.get(1).getLcCode(), "Y", wmsLocationVos.get(2).getLcZ(), wmsLocationVos.get(2).getProductCount(), wmsLocationVos.get(2).getQty(), wmsLocationVos.get(2).getLcType(), wmsLocationVos.get(2).getLcCode(), "Y", locationAisleVoList);
+                                } else {
+                                    String lcX1 = lcxlist.get(j);
+                                    String lcY1 = "" + k;
+                                    String lcZ1 = "1", lcZ2 = "2", lcZ3 = "3", lcType = "";
+                                    String lcExist1 = "N", lcExist2 = "N", lcExist3 = "N";
+                                    String lcCode1 = lcType + lcAisle + "-" + lcX1 + "-" + lcY1 + lcZ1;
+                                    String lcCode2 = lcType + lcAisle + "-" + lcX1 + "-" + lcY1 + lcZ2;
+                                    String lcCode3 = lcType + lcAisle + "-" + lcX1 + "-" + lcY1 + lcZ3;
+                                    Integer productCount1 = 0, qty1 = 0, productCount2 = 0, qty2 = 0, productCount3 = 0, qty3 = 0;
+                                    for (WmsLocationVo locationVo : wmsLocationVos) {
+                                        if ("1".equals(locationVo.getLcZ())) {
+                                            lcType = locationVo.getLcType();
+                                            productCount1 = locationVo.getProductCount();
+                                            qty1 = locationVo.getQty();
+                                            lcExist1 = "Y";
+                                        } else if ("2".equals(locationVo.getLcZ())) {
+                                            lcType = locationVo.getLcType();
+                                            productCount2 = locationVo.getProductCount();
+                                            qty2 = locationVo.getQty();
+                                            lcExist2 = "Y";
+                                        } else if ("3".equals(locationVo.getLcZ())) {
+                                            lcType = locationVo.getLcType();
+                                            productCount3 = locationVo.getProductCount();
+                                            qty3 = locationVo.getQty();
+                                            lcExist3 = "Y";
+                                        }
+                                    }
+                                    doLocationAisleVoList(lcX1, lcY1, lcZ1, productCount1, qty1, lcType, lcCode1, lcExist1, lcZ2, productCount2, qty2, lcType, lcCode2, lcExist2, lcZ3, productCount3, qty3, lcType, lcCode3, lcExist3, locationAisleVoList);
+                                }
+                            } else {
+                                String lcType = "Z";
+                                if (k < 3) {
+                                    lcType = "S";
+                                }
+                                doLocationAisleVoList(lcxlist.get(j), "" + k, "1", 0, 0, lcType, lcType + lcAisle + "-" + lcxlist.get(j) + "-" + k + "1", "N", "2", 0, 0, lcType, lcType + lcAisle + "-" + lcxlist.get(j) + "-" + k + "2", "N", "3", 0, 0, lcType, lcType + lcAisle + "-" + lcxlist.get(j) + "-" + k + "3", "N", locationAisleVoList);
                             }
                         }
                     }
@@ -508,6 +522,10 @@ public class LocationBussiness {
         return wmsLocationVoList;
     }
 
+    /**
+     * 处理通道上下层数据
+     * 【上下层数据完全相反】
+     */
     public List<WmsLocationAisleVo> dealLocationList(String lcAisle, String lcX, Integer index) {
         List<WmsLocationAisleVo> locationAisleVoList = new ArrayList<>();
         if (index % 2 == 0) {
@@ -516,7 +534,7 @@ public class LocationBussiness {
                 if (i < 3) {
                     lcType = "S";
                 }
-                doLocationAisleVoList(lcX, "" + i, "1", 0, 0, lcType, lcType + lcAisle + "-" + lcX + "-" + i + "1", "2", 0, 0, lcType, lcType + lcAisle + "-" + lcX + "-" + i + "2", "3", 0, 0, lcType, lcType + lcAisle + "-" + lcX + "-" + i + "3", locationAisleVoList);
+                doLocationAisleVoList(lcX, "" + i, "1", 0, 0, lcType, lcType + lcAisle + "-" + lcX + "-" + i + "1", "N", "2", 0, 0, lcType, lcType + lcAisle + "-" + lcX + "-" + i + "2", "N", "3", 0, 0, lcType, lcType + lcAisle + "-" + lcX + "-" + i + "3", "N", locationAisleVoList);
             }
         } else {
             for (int i = 1; i <= 5; i++) {
@@ -524,13 +542,16 @@ public class LocationBussiness {
                 if (i < 3) {
                     lcType = "S";
                 }
-                doLocationAisleVoList(lcX, "" + i, "1", 0, 0, lcType, lcType + lcAisle + "-" + lcX + "-" + i + "1", "2", 0, 0, lcType, lcType + lcAisle + "-" + lcX + "-" + i + "2", "3", 0, 0, lcType, lcType + lcAisle + "-" + lcX + "-" + i + "3", locationAisleVoList);
+                doLocationAisleVoList(lcX, "" + i, "1", 0, 0, lcType, lcType + lcAisle + "-" + lcX + "-" + i + "1", "N", "2", 0, 0, lcType, lcType + lcAisle + "-" + lcX + "-" + i + "2", "N", "3", 0, 0, lcType, lcType + lcAisle + "-" + lcX + "-" + i + "3", "N", locationAisleVoList);
             }
         }
         return locationAisleVoList;
     }
 
-    public void doLocationAisleVoList(String lcX, String lcY, String lcZ1, Integer productCount1, Integer qty1, String lcType1, String lcCode1, String lcZ2, Integer productCount2, Integer qty2, String lcType2, String lcCode2, String lcZ3, Integer productCount3, Integer qty3, String lcType3, String lcCode3, List<WmsLocationAisleVo> locationAisleVoList) {
+    /**
+     * 组装WmsLocationAisleVo对象
+     */
+    public void doLocationAisleVoList(String lcX, String lcY, String lcZ1, Integer productCount1, Integer qty1, String lcType1, String lcCode1, String lcExist1, String lcZ2, Integer productCount2, Integer qty2, String lcType2, String lcCode2, String lcExist2, String lcZ3, Integer productCount3, Integer qty3, String lcType3, String lcCode3, String lcExist3, List<WmsLocationAisleVo> locationAisleVoList) {
         WmsLocationAisleVo locationAisleVo = new WmsLocationAisleVo();
         locationAisleVo.setLcX1(lcX);
         locationAisleVo.setLcY1(lcY);
@@ -539,6 +560,7 @@ public class LocationBussiness {
         locationAisleVo.setQty1(qty1);
         locationAisleVo.setLcType1(lcType1);
         locationAisleVo.setLcCode1(lcCode1);
+        locationAisleVo.setLcExist1(lcExist1);
 
         locationAisleVo.setLcX2(lcX);
         locationAisleVo.setLcY2(lcY);
@@ -547,6 +569,7 @@ public class LocationBussiness {
         locationAisleVo.setQty2(qty2);
         locationAisleVo.setLcType2(lcType2);
         locationAisleVo.setLcCode2(lcCode2);
+        locationAisleVo.setLcExist2(lcExist2);
 
         locationAisleVo.setLcX3(lcX);
         locationAisleVo.setLcY3(lcY);
@@ -555,6 +578,7 @@ public class LocationBussiness {
         locationAisleVo.setQty3(qty3);
         locationAisleVo.setLcType3(lcType3);
         locationAisleVo.setLcCode3(lcCode3);
+        locationAisleVo.setLcExist3(lcExist3);
         locationAisleVoList.add(locationAisleVo);
     }
 
