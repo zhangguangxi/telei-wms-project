@@ -214,6 +214,7 @@ public class DoHeaderBussiness {
      * @param request
      * @return
      */
+    @Transactional(rollbackFor = Exception.class)
     public DoCudBaseResponse doVerification(DoHeaderUpdateRequest request) {
         WmsDoHeader wmsDoHeaderIsExist = wmsDoHeaderService.selectByPrimaryKey(request.getId());
         if (Objects.isNull(wmsDoHeaderIsExist)) {
