@@ -426,12 +426,15 @@ public class LocationBussiness {
                                 } else {
                                     String lcX1 = lcxlist.get(j);
                                     String lcY1 = "" + k;
-                                    String lcZ1 = "1", lcZ2 = "2", lcZ3 = "3", lcType = "";
+                                    String lcZ1 = "1", lcZ2 = "2", lcZ3 = "3", lcType = "Z";
                                     String lcExist1 = "N", lcExist2 = "N", lcExist3 = "N";
                                     String lcCode1 = lcType + lcAisle + "-" + lcX1 + "-" + lcY1 + lcZ1;
                                     String lcCode2 = lcType + lcAisle + "-" + lcX1 + "-" + lcY1 + lcZ2;
                                     String lcCode3 = lcType + lcAisle + "-" + lcX1 + "-" + lcY1 + lcZ3;
                                     Integer productCount1 = 0, qty1 = 0, productCount2 = 0, qty2 = 0, productCount3 = 0, qty3 = 0;
+                                    if (k < 3) {
+                                        lcType = "S";
+                                    }
                                     for (WmsLocationVo locationVo : wmsLocationVos) {
                                         if ("1".equals(locationVo.getLcZ())) {
                                             lcType = locationVo.getLcType();
@@ -469,7 +472,10 @@ public class LocationBussiness {
                                 } else {
                                     String lcX1 = lcxlist.get(j);
                                     String lcY1 = "" + k;
-                                    String lcZ1 = "1", lcZ2 = "2", lcZ3 = "3", lcType = "";
+                                    String lcZ1 = "1", lcZ2 = "2", lcZ3 = "3", lcType = "Z";
+                                    if (k < 3) {
+                                        lcType = "S";
+                                    }
                                     String lcExist1 = "N", lcExist2 = "N", lcExist3 = "N";
                                     String lcCode1 = lcType + lcAisle + "-" + lcX1 + "-" + lcY1 + lcZ1;
                                     String lcCode2 = lcType + lcAisle + "-" + lcX1 + "-" + lcY1 + lcZ2;

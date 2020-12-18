@@ -2,6 +2,7 @@ package com.telei.wms.project.api.endpoint.inventory;
 
 import com.alibaba.fastjson.JSON;
 import com.telei.wms.project.api.TeleiWmsApiApplication;
+import com.telei.wms.project.api.endpoint.backlc.BaclcBussiness;
 import com.telei.wms.project.api.endpoint.inventory.dto.InventoryAddBussinessRequest;
 import com.telei.wms.project.api.endpoint.inventory.dto.InventoryShiftBussinessRequest;
 import org.junit.jupiter.api.Test;
@@ -17,6 +18,9 @@ public class InventoryBussinessTest {
     @Autowired
     private InventoryBussiness inventoryBussiness;
 
+    @Autowired
+    private BaclcBussiness baclcBussiness;
+
     @Test
     public void testAddInventory(){
         String json = "{\"list\":[{\"companyId\":1030901707577493504,\"iabId\":1050430475597776896,\"ivDocumentId\":1050431156677249024,\"ivDocumentlineId\":1050431156681443328,\"ivQty\":400,\"lcCode\":\"S01-02-22\",\"paoId\":1050431156677249024,\"paolId\":1050431156681443328,\"productId\":4721028922144196610,\"putawayUser\":\"张光喜\",\"roId\":4721271325430122497,\"rooId\":1050430475367090176,\"roolId\":1050430475597776897,\"warehouseCode\":\"ywck\",\"warehouseId\":1030907360064833536}],\"orderType\":\"01\"}";
@@ -30,6 +34,4 @@ public class InventoryBussinessTest {
         InventoryShiftBussinessRequest request = JSON.parseObject(json, InventoryShiftBussinessRequest.class);
         inventoryBussiness.shiftInventory(request);
     }
-
-
 }

@@ -75,6 +75,7 @@ public class BaclcBussiness {
      */
     @Transactional(rollbackFor = Exception.class)
     public BacklcAddABussinessResponse addBacklc(BacklcAddABussinessRequest request) {
+        log.info("\n +++++++++++++++++++++ 退库操作::入参 -> {} ++++++++++++++++++++ \n ", JSON.toJSONString(request));
         Long dohId = request.getDohId();
         List<BacklcAddRequest.BacklcAddRequestCondition> requestList = request.getList();
         if(Objects.isNull(requestList) || requestList.isEmpty()){
@@ -99,11 +100,10 @@ public class BaclcBussiness {
         BigDecimal backlcQty = Objects.isNull(doHeader.getBacklcQty())?BigDecimal.ZERO:doHeader.getBacklcQty();
         BigDecimal ploQty = Objects.isNull(doHeader.getPloQty())?BigDecimal.ZERO:doHeader.getPloQty();
         BigDecimal containerQty = Objects.isNull(doHeader.getContainerQty())?BigDecimal.ZERO:doHeader.getContainerQty();
-
         List<WmsBacklcList> wmsBacklcListList = DataConvertUtil.parseDataAsArray(requestList, WmsBacklcList.class);
         BigDecimal processQty = wmsBacklcListList.stream().map(WmsBacklcList::getBQty).reduce(BigDecimal.ZERO, BigDecimal::add);
         if(processQty.compareTo(ploQty.subtract(containerQty.add(backlcQty))) > 0){
-            ErrorCode.BACK_LC_ADD_FAILED_4014.throwError();
+            ErrorCode.BACK_LC_ADD_FAILED_4014.throwError(JSON.toJSONString(ploQty),JSON.toJSONString(containerQty),JSON.toJSONString(backlcQty),JSON.toJSONString(processQty));
         }
 
         WmsDoLine doLineCondition = new WmsDoLine();

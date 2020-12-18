@@ -134,15 +134,16 @@
             ROUND(SUM(iv.iv_qty)/iab.big_bag_rate) big_count,
             ROUND(MOD(SUM(iv.iv_qty),iab.big_bag_rate) / iab.mid_bag_rate) middle_count,
             MOD(SUM(iv.iv_qty),iab.mid_bag_rate) small_count,
-            IFNULL(ps.ceiling_multiple,2) ceiling_multiple,
-            IFNULL(ps.limit_multiple,0.2) limit_multiple,
-            ROUND(IFNULL(ps.ceiling_multiple,2)* ROUND(lc.lc_vol*0.85/iab.big_bag_vol)) inventory_ceiling_big_count,
-            ROUND(IFNULL(ps.limit_multiple,0.2)* ROUND(lc.lc_vol*0.85/iab.big_bag_vol)) inventory_limit_big_count,
-            CASE WHEN ROUND(SUM(iv.iv_qty)/iab.big_bag_rate) > ROUND(IFNULL(ps.ceiling_multiple,2)* ROUND(lc.lc_vol*0.85/iab.big_bag_vol)) THEN 'RISE' WHEN ROUND(SUM(iv.iv_qty)/iab.big_bag_rate) &lt; ROUND(IFNULL(ps.limit_multiple,0.2)* ROUND(lc.lc_vol*0.85/iab.big_bag_vol)) THEN 'DROP' ELSE '-' END lc_type
+            IFNULL(ps.ceiling_multiple,IFNULL(cw.ceiling_multiple,2)) ceiling_multiple,
+            IFNULL(ps.limit_multiple,IFNULL(cw.limit_multiple,0.2)) limit_multiple,
+            ROUND(IFNULL(ps.ceiling_multiple,IFNULL(cw.ceiling_multiple,2))* ROUND(lc.lc_vol*0.85/iab.big_bag_vol)) inventory_ceiling_big_count,
+            ROUND(IFNULL(ps.limit_multiple,IFNULL(cw.limit_multiple,0.2))* ROUND(lc.lc_vol*0.85/iab.big_bag_vol)) inventory_limit_big_count,
+            CASE WHEN ROUND(SUM(iv.iv_qty)/iab.big_bag_rate) > ROUND(IFNULL(ps.ceiling_multiple,IFNULL(cw.ceiling_multiple,2))* ROUND(lc.lc_vol*0.85/iab.big_bag_vol)) THEN 'RISE' WHEN ROUND(SUM(iv.iv_qty)/iab.big_bag_rate) &lt; ROUND(IFNULL(ps.limit_multiple,IFNULL(cw.limit_multiple,0.2))* ROUND(lc.lc_vol*0.85/iab.big_bag_vol)) THEN 'DROP' ELSE '-' END lc_type
             FROM wms_inventory iv
             LEFT JOIN wms_iv_attributebatch iab ON iv.iab_id = iab.iab_id
             LEFT JOIN wms_location lc ON iv.lc_code = lc.lc_code
             LEFT JOIN wms_product_sample ps ON iv.warehouse_id=ps.warehouse_id AND iv.product_id=ps.product_id
+            LEFT JOIN cdm.cdm_warehouse cw ON iv.warehouse_id = cw.warehouse_id
             <where>
                 iv.lc_type = 'S'
                 AND iv.lc_code NOT IN ( SELECT distinct wlw.sample_lc_code FROM wms_lift_work wlw )

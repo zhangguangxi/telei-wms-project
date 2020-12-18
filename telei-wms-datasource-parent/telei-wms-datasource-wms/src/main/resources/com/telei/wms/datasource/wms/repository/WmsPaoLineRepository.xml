@@ -47,6 +47,8 @@
         cp.spec_type,
         cp.mid_bag_qty,
         cp.big_bag_qty,
+        cp.big_bag_weight,
+        cp.big_bag_vol,
         cp.image_path
     </sql>
 

@@ -231,7 +231,25 @@ public class DoContainerBussiness {
         List<WmsDoContainer> doContainerList = wmsDoContainerService.selectByEntity(wmsDoContainer);
         int count = 0;
         if (StringUtils.isNotNull(doContainerList) && !doContainerList.isEmpty()) {
+            // 出库任务装柜id列表
             List<Long> docIds = doContainerList.stream().map(WmsDoContainer::getId).collect(Collectors.toList());
+            // 出库任务明细id列表
+            List<Long> dolIds = doContainerList.stream().map(WmsDoContainer::getDolId).collect(Collectors.toList());
+            // 出库任务装箱信息明细
+            Map<Long, BigDecimal> dolMap = doContainerList.stream().collect(Collectors.toMap(WmsDoContainer::getDolId, WmsDoContainer::getCQty));
+            List<WmsDoLine> doLineList = wmsDoLineService.selectByPrimaryKeys(dolIds);
+            BigDecimal sumContainerQty = BigDecimal.ZERO;
+            for (WmsDoLine wmsDoLine : doLineList) {
+                BigDecimal containerQty = dolMap.get(wmsDoLine.getId());
+                sumContainerQty = sumContainerQty.add(containerQty);
+                wmsDoLine.setContainerQty(wmsDoLine.getContainerQty().subtract(containerQty));
+            }
+            // 批量扣减出库任务明细数据
+            wmsDoLineService.updateBatch(doLineList);
+            // 扣减出库任务单头数据
+            WmsDoHeader wmsDoHeader = wmsDoHeaderService.selectByPrimaryKey(request.getDohId());
+            wmsDoHeader.setContainerQty(wmsDoHeader.getContainerQty().subtract(sumContainerQty));
+            wmsDoHeaderService.updateByPrimaryKeySelective(wmsDoHeader);
             if (docIds.size() > 0) {
                 count = wmsDoContainerService.deleteByPrimaryKeys(docIds);
             }
