@@ -25,6 +25,7 @@ public class RoLineExcel {
     @Excel(name = "品牌")
     private String brand;
     /** 计划入库数量 */
-    @Excel(name = "总数")
+    @Excel(name = "总数", numberFormat = "#,##0.00")
     private BigDecimal planQty;
+
 }

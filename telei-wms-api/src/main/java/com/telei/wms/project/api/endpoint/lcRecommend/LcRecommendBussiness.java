@@ -8,9 +8,11 @@ import com.telei.infrastructure.component.idgenerator.contract.Id;
 import com.telei.wms.datasource.wms.model.WmsInventory;
 import com.telei.wms.datasource.wms.model.WmsLcRecommend;
 import com.telei.wms.datasource.wms.model.WmsLcRecommendBak;
+import com.telei.wms.datasource.wms.model.WmsLocation;
 import com.telei.wms.datasource.wms.service.WmsInventoryService;
 import com.telei.wms.datasource.wms.service.WmsLcRecommendBakService;
 import com.telei.wms.datasource.wms.service.WmsLcRecommendService;
+import com.telei.wms.datasource.wms.service.WmsLocationService;
 import com.telei.wms.datasource.wms.vo.InventoryLocationResponseVo;
 import com.telei.wms.datasource.wms.vo.LcRecommendPageQueryRequestVo;
 import com.telei.wms.project.api.ErrorCode;
@@ -44,6 +46,9 @@ public class LcRecommendBussiness {
 
     @Autowired
     private WmsInventoryService wmsInventoryService;
+
+    @Autowired
+    private WmsLocationService wmsLocationService;
 
     /**
      * 添加分配库存
@@ -166,10 +171,21 @@ public class LcRecommendBussiness {
      */
     @Transactional(rollbackFor = Exception.class)
     public LcRecommendCudBaseResponse updateLcRecommend(LcRecommendUpdateRequest request) {
+        if (! request.getLcCode().contains("S")) {
+            //推荐库位不是样品库位
+            ErrorCode.LC_RECOMMEND_CODE_IS_SAMPLE_4003.throwError();
+        }
         WmsLcRecommend wmsLcRecommend = wmsLcRecommendService.selectByPrimaryKey(request.getId());
         if (Objects.isNull(wmsLcRecommend)) {
             //推荐库位不存在
             ErrorCode.LC_RECOMMEND_NOT_EXIST_4001.throwError();
+        }
+        WmsLocation wmsLocationEntity = new WmsLocation();
+        wmsLocationEntity.setLcCode(request.getLcCode());
+        WmsLocation wmsLocation = wmsLocationService.selectOneByEntity(wmsLocationEntity);
+        if (Objects.isNull(wmsLocation)) {
+            //库位不存在
+            ErrorCode.LC_RECOMMEND_NOT_EXIST_4004.throwError();
         }
         WmsLcRecommend wmsLcRecommendEntity = new WmsLcRecommend();
         wmsLcRecommendEntity.setCompanyId(CustomRequestContext.getUserInfo().getCompanyId());

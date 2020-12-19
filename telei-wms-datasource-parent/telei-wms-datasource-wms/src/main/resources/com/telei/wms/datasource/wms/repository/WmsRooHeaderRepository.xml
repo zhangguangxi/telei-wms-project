@@ -30,7 +30,8 @@
         wrh.recv_user,
         wrh.recv_time,
         cw.warehouse_name,
-        cs.supplier_name
+        wrh.supp_cust_name supplier_name,
+        wrh.supp_cust_name
     </sql>
 
     <select id="findAll" resultMap="PageQueryResultMap">
@@ -38,7 +39,6 @@
         <include refid="Page_Query_Column_List"/>
         FROM wms_roo_header wrh
         INNER JOIN cdm.cdm_warehouse cw ON cw.warehouse_id = wrh.warehouse_id
-        INNER JOIN cdm.cdm_supplier cs ON cs.supplier_id = wrh.supplier_id
         <where>
             <if test="id != null">
                 and wrh.roo_id ${id}
@@ -121,15 +121,45 @@
             wrh.create_user,
             wrh.create_time,
             cw.warehouse_name,
-            cs.supplier_name
+            wrh.supp_cust_name supplier_name,
+            wrh.supp_cust_name
         FROM wms_roo_header wrh
         INNER JOIN cdm.cdm_warehouse cw ON cw.warehouse_id = wrh.warehouse_id
-        INNER JOIN cdm.cdm_supplier cs ON cs.supplier_id = wrh.supplier_id
         <where>
             <if test="id != null">
                 and wrh.roo_id = #{id}
             </if>
         </where>
+    </select>
+
+    <select id="rooReportQuery" resultType="com.telei.wms.datasource.wms.vo.ReportVo">
+        select
+            DATE_FORMAT(date_add(p.putaway_time,interval +${hour} hour),'%Y-%m-%d') as date_time,
+            ro.supp_cust_name,
+            po.contract_no,
+            IFNULL(sum(pl.paol_qty / iab.big_bag_rate), 0) as sum_big_count,
+            IFNULL(sum(pl.paol_qty), 0) as sum_count,
+            ROUND(IFNULL(sum(rol.unit_price * pl.paol_qty), 0), 2) as sum_amount,
+            iab.product_name,
+            cu.currency_name,
+            cu.currency_ename
+        from wms.wms_pao_header p
+        left join wms.wms_pao_line pl on pl.pao_id = p.pao_id
+        left join wms.wms_iv_attributebatch iab on pl.iab_id = iab.iab_id
+        left join wms.wms_ro_line rol on rol.rol_id = pl.rol_id
+        left join wms.wms_ro_header ro on ro.ro_id = p.ro_id
+        left join oms.oms_purchase_order po on po.po_id = ro.po_id
+        left join cdm.cdm_currency cu on cu.currency_id = rol.unit_price_currency_id
+        <where>
+            <if test="companyId != null">
+                and p.company_id ${companyId}
+            </if>
+            <if test="putawayTime != null">
+                and p.putaway_time ${putawayTime}
+            </if>
+        </where>
+        group by DATE_FORMAT(date_add(p.putaway_time,interval +${hour} hour),'%Y-%m-%d'),ro.supp_cust_name,iab.product_name
+        ORDER BY date_time DESC
     </select>
 
 </mapper>

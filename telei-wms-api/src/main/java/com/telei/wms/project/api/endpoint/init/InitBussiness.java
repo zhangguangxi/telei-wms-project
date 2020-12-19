@@ -471,6 +471,7 @@ public class InitBussiness {
      * @param request
      * @return
      */
+    @Transactional(rollbackFor = Exception.class)
     public InitHeaderDeleteResponse deleteInitHeader(InitHeaderDeleteRequest request) {
         WmsInitHeader wmsInitHeader = DataConvertUtil.parseDataAsObject(request, WmsInitHeader.class);
         WmsInitHeader initHeader = wmsInitHeaderService.selectByPrimaryKey(wmsInitHeader.getId());

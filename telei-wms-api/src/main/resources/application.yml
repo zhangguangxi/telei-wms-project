@@ -216,6 +216,11 @@ id-instantdirective:
     WmsRoLineService: wms_ro_line
     WmsRooHeaderService: wms_roo_header
     WmsRooLineService: wms_roo_line
+    WmsBacklcService: wms_backlc
+    WmsBacklcListService: wms_backlc_list
+    WmsLcRecommendService: wms_lc_recommend
+    WmsLcRecommendBakService: wms_lc_recommend_bak
+    WmsDoContainerService: wms_do_container
 
 #当前节点系统之间数据交互配置
 wms-id-instantdirective:

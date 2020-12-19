@@ -19,6 +19,7 @@ public class WmsLocationService extends BaseService<WmsLocationRepository, WmsLo
     @Autowired
     private WmsLocationRepository wmsLocationRepository;
 
+
     public String getLcCodeByLocation(Long warehouseId, Integer lcCode) {
         return wmsLocationRepository.getLcCodeByLocation(warehouseId, lcCode);
     }

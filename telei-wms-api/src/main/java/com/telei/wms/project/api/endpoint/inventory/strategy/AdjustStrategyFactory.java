@@ -6,6 +6,7 @@ import com.telei.infrastructure.component.commons.dto.UserInfo;
 import com.telei.infrastructure.component.idgenerator.contract.Id;
 import com.telei.wms.customer.amqp.inventoryChangeWriteBack.OmsInventoryChangeWriteBack;
 import com.telei.wms.datasource.wms.model.*;
+import com.telei.wms.datasource.wms.service.WmsInventoryService;
 import com.telei.wms.datasource.wms.service.WmsLocationService;
 import com.telei.wms.project.api.ErrorCode;
 import com.telei.wms.project.api.utils.DataConvertUtil;
@@ -14,10 +15,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.math.BigDecimal;
-import java.util.Arrays;
-import java.util.Date;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * @author: leo
@@ -32,6 +31,9 @@ public class AdjustStrategyFactory {
     @Autowired
     private WmsLocationService wmsLocationService;
 
+    @Autowired
+    private WmsInventoryService wmsInventoryService;
+
     /**
      * 通过库存调整类型获取其策略的实现
      *
@@ -39,7 +41,7 @@ public class AdjustStrategyFactory {
      * @return
      */
     public  IAdjustStrategy getAdjustStrategy(String adjustType){
-        AdjustEnum adjustEnum = AdjustEnum.findAdjustEnumByadjustType(adjustType);
+        AdjustEnum adjustEnum = AdjustEnum.findAdjustEnumByAdjustType(adjustType);
         if(Objects.isNull(adjustEnum)){
             return null;
         }
@@ -57,7 +59,7 @@ public class AdjustStrategyFactory {
      * @param nowWithUtc
      * @return
      */
-    public  WmsIvTransaction createTransactionRecored(List<WmsIvTransaction> wmsIvTransactionList,WmsInventory inventory,String lcCodeTo,
+    public  WmsIvTransaction  createTransactionRecored(List<WmsIvTransaction> wmsIvTransactionList,WmsInventory inventory,String lcCodeTo,
                                                       String ivChangeType ,BigDecimal curIvIdQtyAdjt, UserInfo userInfo, Date nowWithUtc) {
         WmsIvTransaction wmsIvTransaction = DataConvertUtil.parseDataAsObject(inventory,WmsIvTransaction.class);
         wmsIvTransaction.setId(idGenerator.getUnique());
@@ -89,7 +91,7 @@ public class AdjustStrategyFactory {
      * @return
      */
     public   WmsInventory createInventory(List<WmsInventory> wmsInventoryAddList, WmsInventory wmsInventory,String lcCodeAdjt, BigDecimal ivQtyAdjt, Date nowWithUtc) {
-        WmsInventory wmsInventoryAdd = DataConvertUtil.parseDataAsObject(wmsInventory, WmsInventory.class);
+            WmsInventory wmsInventoryAdd = DataConvertUtil.parseDataAsObject(wmsInventory, WmsInventory.class);
         wmsInventoryAdd.setIvId(idGenerator.getUnique());
         wmsInventoryAdd.setIvIdFrom(wmsInventory.getIvId());
         wmsInventoryAdd.setLcCode(lcCodeAdjt);//库位编码
@@ -188,5 +190,28 @@ public class AdjustStrategyFactory {
         wmsIvSplit.setIvQtyAfter(ivQtyAfter);/**拆后库存数量*/
         log.info("\n +++++++++++++++++++++ 库存调整::创建库存拆分记录 -> {} ++++++++++++++++++++ \n ",JSON.toJSONString(wmsIvSplit));
         wmsIvSplitList.add(wmsIvSplit);
+    }
+
+    /**
+     * 高架库位限制
+     *
+     * @param productId    产品id
+     * @param lcCodeAdjt   库位调整
+     */
+    public void zLocationLimit(Long productId, String lcCodeAdjt,Integer type) {
+        if(lcCodeAdjt.toLowerCase().startsWith("z")){
+            WmsInventory inventoryCondition = new WmsInventory();
+            inventoryCondition.setLcCode(lcCodeAdjt);
+            List<WmsInventory> inventories = wmsInventoryService.selectByEntity(inventoryCondition);
+            if(Objects.nonNull(inventories) || !inventories.isEmpty()){
+                Set<Long> productIdSet = inventories.stream().map(WmsInventory::getProductId).collect(Collectors.toSet());
+                if(productIdSet.size() > 1){
+                    ErrorCode.ADJT_ERROR_4020.throwError(type==1?"移库":"升任务");
+                }
+                if(productIdSet.size() == 1 && !productIdSet.contains(productId)){
+                    ErrorCode.ADJT_ERROR_4021.throwError(type==1?"移库":"升任务");
+                }
+            }
+        }
     }
 }

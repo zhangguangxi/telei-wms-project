@@ -100,12 +100,14 @@ public class LiftTaskBussiness {
                 if ("RISE".equals(responseVo.getLcType())) {
                     prepLcCode = wmsLocationService.getLcCodeByLocation(responseVo.getWarehouseId(), lcCodeNumber);
                     if (StringUtils.isBlank(prepLcCode)) {
-                        ErrorCode.LIFT_WORK_PREP_LC_CODE_IS_NULL_4005.throwError("升货");
+                        continue;
+//                        ErrorCode.LIFT_WORK_PREP_LC_CODE_IS_NULL_4005.throwError("升货");
                     }
                 } else if ("DROP".equals(responseVo.getLcType())) {
                     WmsInventoryVo inventoryVo = wmsInventoryService.getLcCodeByInventory(responseVo.getProductId(), responseVo.getWarehouseId(), CustomRequestContext.getUserInfo().getCompanyId(), lcCodeNumber);
                     if (inventoryVo == null) {
-                        ErrorCode.LIFT_WORK_PREP_LC_CODE_IS_NULL_4005.throwError("降货");
+                        continue;
+//                        ErrorCode.LIFT_WORK_PREP_LC_CODE_IS_NULL_4005.throwError("降货");
                     } else {
                         prepLcCode = inventoryVo.getLcCode();
                     }
@@ -116,8 +118,12 @@ public class LiftTaskBussiness {
                 wmsLiftWork.setCreateUser(CustomRequestContext.getUserInfo().getEmployeeName());
                 wmsLiftWorkList.add(wmsLiftWork);
             }
-            int count = wmsLiftWorkService.insertBatch(wmsLiftWorkList);
-            if (count <= 0) {
+            if (wmsLiftWorkList.size() > 0) {
+                int count = wmsLiftWorkService.insertBatch(wmsLiftWorkList);
+                if (count <= 0) {
+                    ErrorCode.LIFT_WORK_ADD_ERROR_4002.throwError();
+                }
+            } else {
                 ErrorCode.LIFT_WORK_ADD_ERROR_4002.throwError();
             }
         }

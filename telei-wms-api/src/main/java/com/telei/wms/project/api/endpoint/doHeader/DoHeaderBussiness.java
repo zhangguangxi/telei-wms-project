@@ -1,13 +1,11 @@
 package com.telei.wms.project.api.endpoint.doHeader;
 
-import com.alibaba.fastjson.JSON;
 import com.nuochen.framework.autocoding.domain.Pagination;
 import com.nuochen.framework.autocoding.domain.condition.ConditionsBuilder;
 import com.telei.infrastructure.component.commons.CustomRequestContext;
 import com.telei.wms.commons.utils.DateUtils;
 import com.telei.wms.commons.utils.StringUtils;
 import com.telei.wms.customer.amqp.shipPlan.OmsShipPlan;
-import com.telei.wms.customer.recovicePlan.dto.RecovicePlanAddByDoRequest;
 import com.telei.wms.datasource.wms.model.WmsDoHeader;
 import com.telei.wms.datasource.wms.model.WmsDoLine;
 import com.telei.wms.datasource.wms.model.WmsIdInstantdirective;
@@ -216,6 +214,7 @@ public class DoHeaderBussiness {
      * @param request
      * @return
      */
+    @Transactional(rollbackFor = Exception.class)
     public DoCudBaseResponse doVerification(DoHeaderUpdateRequest request) {
         WmsDoHeader wmsDoHeaderIsExist = wmsDoHeaderService.selectByPrimaryKey(request.getId());
         if (Objects.isNull(wmsDoHeaderIsExist)) {
@@ -230,44 +229,43 @@ public class DoHeaderBussiness {
         return response;
     }
 
-    /**
-     * 出库
-     *
-     * @param request
-     * @return
-     */
-    @Transactional(rollbackFor = Exception.class)
-    public DoCudBaseResponse doShip(DoHeaderUpdateRequest request) {
-        log.debug("*************doShip" + JSON.toJSONString(request));
-        WmsDoHeader wmsDoHeaderInfo = wmsDoHeaderService.selectByPrimaryKey(request.getId());
-        if (Objects.isNull(wmsDoHeaderInfo)) {
-            ErrorCode.DO_NOT_EXIST_4001.throwError();
-        }
-        if ("03".equals(wmsDoHeaderInfo.getOrderType())) {
-            //内部供应商自动创建的单据类型
-            String poId = wmsDoHeaderService.findPoId(wmsDoHeaderInfo.getId());
-            if (StringUtils.isEmpty(poId)) {
-                //未找到关联的单据id
-                ErrorCode.DO_ERROR_4002.throwError();
-            }
-            RecovicePlanAddByDoRequest recovicePlanAddByDoRequest = new RecovicePlanAddByDoRequest();
-            recovicePlanAddByDoRequest.setPoId(Long.valueOf(poId));
-            log.debug("*************recovicePlanAddByDoRequest" + JSON.toJSONString(recovicePlanAddByDoRequest));
-            //添加数据交互指令
-            WmsIdInstantdirective wmsIdInstantdirective = wmsIdInstantdirectiveBussiness.add("PUTON", "", recovicePlanAddByDoRequest);
-            //发送消息到队列
-            wmsOmsRecovicePlanAddByDoProducer.send(wmsIdInstantdirective);
-        }
-        WmsDoHeader wmsDoHeader = DataConvertUtil.parseDataAsObject(request, WmsDoHeader.class);
-        wmsDoHeader.setOrderStatus("40");
-        wmsDoHeader.setLastupdateTime(DateUtils.nowWithUTC());
-        int updateResult = wmsDoHeaderService.updateByPrimaryKeySelective(wmsDoHeader);
-        /**
-         * 扣减库存，回写上游单据【前端调用另一个接口统一处理】
-         */
-        DoCudBaseResponse response = new DoCudBaseResponse();
-        response.setIsSuccess(updateResult > 0);
-        return response;
-    }
+//    /**
+//     * 出库
+//     *
+//     * @param request
+//     * @return
+//     */
+//    @Transactional(rollbackFor = Exception.class)
+//    public DoCudBaseResponse doShip(DoHeaderUpdateRequest request) {
+//        log.debug("*************doShip" + JSON.toJSONString(request));
+//        WmsDoHeader wmsDoHeaderInfo = wmsDoHeaderService.selectByPrimaryKey(request.getId());
+//        if (Objects.isNull(wmsDoHeaderInfo)) {
+//            ErrorCode.DO_NOT_EXIST_4001.throwError();
+//        }
+//        if ("03".equals(wmsDoHeaderInfo.getOrderType())) {
+//            //内部供应商自动创建的单据类型
+//            String poId = wmsDoHeaderService.findPoId(wmsDoHeaderInfo.getId());
+//            if (StringUtils.isEmpty(poId)) {
+//                //未找到关联的单据id
+//                ErrorCode.DO_ERROR_4002.throwError();
+//            }
+//            RecovicePlanAddByDoRequest recovicePlanAddByDoRequest = new RecovicePlanAddByDoRequest();
+//            recovicePlanAddByDoRequest.setPoId(Long.valueOf(poId));
+//            log.debug("*************recovicePlanAddByDoRequest" + JSON.toJSONString(recovicePlanAddByDoRequest));
+//            //添加数据交互指令
+//            WmsIdInstantdirective wmsIdInstantdirective = wmsIdInstantdirectiveBussiness.add("PUTON", "", recovicePlanAddByDoRequest);
+//            //发送消息到队列
+//            wmsOmsRecovicePlanAddByDoProducer.send(wmsIdInstantdirective);
+//        }
+//        WmsDoHeader wmsDoHeader = DataConvertUtil.parseDataAsObject(request, WmsDoHeader.class);
+//        wmsDoHeader.setLastupdateTime(DateUtils.nowWithUTC());
+//        int updateResult = wmsDoHeaderService.updateByPrimaryKeySelective(wmsDoHeader);
+//        /**
+//         * 扣减库存，回写上游单据【前端调用另一个接口统一处理】
+//         */
+//        DoCudBaseResponse response = new DoCudBaseResponse();
+//        response.setIsSuccess(updateResult > 0);
+//        return response;
+//    }
 
 }

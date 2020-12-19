@@ -40,11 +40,14 @@
         do.doh_code,
         do.sp_id,
         do.so_id,
+        do.po_id,
         do.company_id,
         do.warehouse_id,
         do.warehouse_code,
         do.cust_order_no,
+        do.order_no,
         do.supplier_id,
+        do.supp_cust_name,
         do.customer_id,
         do.customer_contact_name,
         do.customer_contact_mobile,
@@ -240,7 +243,7 @@
             <if test="internalSupplier != null">
                 and s.internal_supplier ${internalSupplier}
             </if>
-            GROUP BY ps.company_id, ps.product_id
+            GROUP BY ps.company_id, ps.product_id, s.supplier_id
         ) su ON su.company_id = p.company_id AND su.product_id = p.product_id
         JOIN cdm.cdm_product_category pc ON pc.category_id = p.product_category_id
         <where>
@@ -275,7 +278,7 @@
         <if test="orderBy != null">
             order by ${orderBy}
         </if>
-        GROUP BY p.company_id, p.product_id
+        GROUP BY p.company_id, p.product_id, su.supplier_id
     </select>
 
     <select id="findPoId" resultType="java.lang.String">

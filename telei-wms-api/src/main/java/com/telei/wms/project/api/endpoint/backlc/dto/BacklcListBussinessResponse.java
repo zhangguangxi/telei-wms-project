@@ -39,18 +39,24 @@ public class BacklcListBussinessResponse {
         private String productName;
         /**条码*/
         private String productBarcode;
+        /**图片*/
+        private String mediaId;
         /**品牌*/
         private String brand;
-        /**重量*/
-        private BigDecimal unitGrossWeight;
-        /**体积*/
-        private BigDecimal unitVol;
+        /**重量(大包)*/
+        private BigDecimal bigBagWeight;
+        /**体积(大包)*/
+        private BigDecimal bigBagVol;
         /**箱规*/
         private BigDecimal boxQty;
         /**大包数量(件数)*/
         private BigDecimal bigBagQty;
         /**中包数量*/
         private BigDecimal midBagQty;
+        /**大包转换率*/
+        private BigDecimal bigBagRate;
+        /**中包转换率*/
+        private BigDecimal midBagRate;
         /**小包数量*/
         private BigDecimal smallBagQty;
         /**总数量-退库数(小包数)*/

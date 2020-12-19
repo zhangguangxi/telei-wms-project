@@ -24,6 +24,11 @@ public @interface Excel {
     String dateFormat() default "";
 
     /**
+     * 千分位格式, 如: #,##0.00
+     */
+    String numberFormat() default "";
+
+    /**
      * 读取内容转表达式 (如: 0=男,1=女,2=未知)
      */
     String readConverterExp() default "";

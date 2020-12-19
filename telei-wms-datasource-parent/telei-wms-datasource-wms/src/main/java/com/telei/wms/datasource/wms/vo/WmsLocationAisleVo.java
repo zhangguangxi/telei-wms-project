@@ -19,6 +19,7 @@ public class WmsLocationAisleVo {
     /**库存类型 S：样品库位 Z：高库位*/
     private String lcType1;
     private String lcCode1;
+    private String lcExist1;
 
     private String lcX2;
     private String lcY2;
@@ -30,6 +31,7 @@ public class WmsLocationAisleVo {
     /**库存类型 S：样品库位 Z：高库位*/
     private String lcType2;
     private String lcCode2;
+    private String lcExist2;
 
     private String lcX3;
     private String lcY3;
@@ -41,4 +43,5 @@ public class WmsLocationAisleVo {
     /**库存类型 S：样品库位 Z：高库位*/
     private String lcType3;
     private String lcCode3;
+    private String lcExist3;
 }

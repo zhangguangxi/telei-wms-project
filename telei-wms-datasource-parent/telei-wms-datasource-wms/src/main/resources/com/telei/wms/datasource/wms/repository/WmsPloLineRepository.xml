@@ -93,6 +93,7 @@
             <foreach collection="productIds" item="item" open="(" separator="," close=")">
                 #{item}
             </foreach>
+            AND lc_type='S'
             GROUP BY
                 product_id
             ORDER BY

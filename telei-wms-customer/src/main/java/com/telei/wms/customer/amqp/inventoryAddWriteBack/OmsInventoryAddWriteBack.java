@@ -11,6 +11,9 @@ import java.util.List;
  */
 @Data
 public class OmsInventoryAddWriteBack {
+    /**入库类型 01-补货入库 02-内部订单 08-销售退货*/
+    private String orderType;
+
     private List<OmsInventoryAddWriteBackCondition> list;
 
     @Data

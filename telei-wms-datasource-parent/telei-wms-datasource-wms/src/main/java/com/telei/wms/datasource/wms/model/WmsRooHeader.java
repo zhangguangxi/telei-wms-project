@@ -1,10 +1,9 @@
 package com.telei.wms.datasource.wms.model;
 
 import com.nuochen.framework.autocoding.domain.Entity;
-import lombok.Data;
-
 import java.math.BigDecimal;
 import java.util.Date;
+import lombok.Data;
 
 /**
  * wms_roo_header 收货单
@@ -31,6 +30,8 @@ public class WmsRooHeader implements Entity<Long> {
     private String warehouseCode;
     /** 供应商id */
     private Long supplierId;
+    /** 供应商/客户名称 */
+    private String suppCustName;
     /** 客户id */
     private Long customerId;
     /** 总数量 */
@@ -39,16 +40,16 @@ public class WmsRooHeader implements Entity<Long> {
     private BigDecimal tmpPutawayQty;
     /** 上架数量 */
     private BigDecimal putawayQty;
-    /** 收货状态 01-制单，10-部分收货，20-收货成功，30-待上架 40-已上架 98-关闭 */
+    /** 收货状态 20-已收货，40-已上架，99-关闭 */
     private String roStatus;
     /** 备注 */
     private String memo;
+    /** 收货时间 */
+    private Date recvTime;
+    /** 收货用户 */
+    private String recvUser;
     /** 创建用户 */
     private String createUser;
     /** 创建时间 */
     private Date createTime;
-    /** 收货用户 */
-    private String recvUser;
-    /** 收货时间 */
-    private Date recvTime;
 }

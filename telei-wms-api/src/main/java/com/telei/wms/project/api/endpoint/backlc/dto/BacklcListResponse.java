@@ -45,29 +45,35 @@ public class BacklcListResponse {
         private String productNo;
         @ApiModelProperty(value = "产品名称",example = "耐克11",position = 5)
         private String productName;
-        @ApiModelProperty(value = "条码",example = "1124144",position = 6)
+        @ApiModelProperty(value = "图片地址",example = "1124144",position = 6)
+        private String mediaId;
+        @ApiModelProperty(value = "条码",example = "1124144",position = 7)
         private String productBarcode;
-        @ApiModelProperty(value = "品牌",example = "耐克",position = 7)
+        @ApiModelProperty(value = "品牌",example = "耐克",position = 8)
         private String brand;
-        @ApiModelProperty(value = "重量",example = "1.2",position = 8)
-        private BigDecimal unitGrossWeight;
-        @ApiModelProperty(value = "体积",example = "22",position = 9)
-        private BigDecimal unitVol;
-        @ApiModelProperty(value = "箱规",example = "耐克",position = 10)
+        @ApiModelProperty(value = "重量(大包)",example = "1.2",position = 9)
+        private BigDecimal bigBagWeight;
+        @ApiModelProperty(value = "体积(大包)",example = "22",position = 10)
+        private BigDecimal bigBagVol;
+        @ApiModelProperty(value = "箱规",example = "耐克",position = 11)
         private BigDecimal boxQty;
-        @ApiModelProperty(value = "大包数量(件数)",example = "22",position = 11)
+        @ApiModelProperty(value = "大包数量(件数)",example = "22",position = 12)
         private BigDecimal bigBagQty;
-        @ApiModelProperty(value = "中包数量",example = "33",position = 12)
+        @ApiModelProperty(value = "中包数量",example = "33",position = 13)
         private BigDecimal midBagQty;
-        @ApiModelProperty(value = "小包数量",example = "34",position = 13)
+        @ApiModelProperty(value = "小包数量",example = "34",position = 14)
         private BigDecimal smallBagQty;
-        @ApiModelProperty(value = "总数量-退库数(小包数)",example = "44",position = 14)
+        @ApiModelProperty(value = "总数量-退库数(小包数)",example = "44",position = 15)
         private BigDecimal bQty;
-        @ApiModelProperty(value = "退库重量(KG)",example = "1342",position = 15)
+        @ApiModelProperty(value = "退库重量(KG)",example = "1342",position = 16)
         private BigDecimal bWeight;
-        @ApiModelProperty(value = "退库体积(CBM)",example = "134.3",position = 16)
+        @ApiModelProperty(value = "退库体积(CBM)",example = "134.3",position = 17)
         private BigDecimal bVol;
-        @ApiModelProperty(value = "样品库位",example = "s1234",position = 17)
+        @ApiModelProperty(value = "样品库位",example = "s1234",position = 18)
         private String lcCode;
+        @ApiModelProperty(value = "大包转换率",position = 19)
+        private BigDecimal bigBagRate;
+        @ApiModelProperty(value = "中包转换率",position = 20)
+        private BigDecimal midBagRate;
     }
 }

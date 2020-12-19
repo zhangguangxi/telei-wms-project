@@ -28,6 +28,8 @@ public class DoContainerCommonRequest {
     /** 产品id */
     @Check
     private Long productId;
+    /** 订单类型 */
+    private String orderType;
     /** 大包数量 */
     private BigDecimal bigBagQty;
     /** 大包转换数 */

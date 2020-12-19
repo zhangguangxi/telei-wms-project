@@ -11,6 +11,7 @@
             <result column="warehouse_code" jdbcType="VARCHAR" property="warehouseCode"/>
             <result column="cust_order_no" jdbcType="VARCHAR" property="custOrderNo"/>
             <result column="supplier_id" jdbcType="BIGINT" property="supplierId"/>
+            <result column="supp_cust_name" jdbcType="VARCHAR" property="suppCustName"/>
             <result column="customer_id" jdbcType="BIGINT" property="customerId"/>
             <result column="order_status" jdbcType="VARCHAR" property="orderStatus"/>
             <result column="is_freezing" jdbcType="INTEGER" property="isFreezing"/>
@@ -31,12 +32,12 @@
     </resultMap>
 
     <sql id="Base_Column_List">
-        plo_id,plo_code,doh_id,doh_code,company_id,warehouse_id,warehouse_code,cust_order_no,supplier_id,customer_id,order_status,is_freezing,total_qty,total_weight,total_vol,detailed_species_qty,picked_qty,picking_weight,picking_vol,mobile_picking,memo,plo_time,create_user,create_time,last_update_user,last_update_time
+        plo_id,plo_code,doh_id,doh_code,company_id,warehouse_id,warehouse_code,cust_order_no,supplier_id,supp_cust_name,customer_id,order_status,is_freezing,total_qty,total_weight,total_vol,detailed_species_qty,picked_qty,picking_weight,picking_vol,mobile_picking,memo,plo_time,create_user,create_time,last_update_user,last_update_time
     </sql>
 
         <insert id="insert">
-            insert into wms_plo_header (plo_id,plo_code,doh_id,doh_code,company_id,warehouse_id,warehouse_code,cust_order_no,supplier_id,customer_id,order_status,is_freezing,total_qty,total_weight,total_vol,detailed_species_qty,picked_qty,picking_weight,picking_vol,mobile_picking,memo,plo_time,create_user,create_time,last_update_user,last_update_time)
-            values (#{id,jdbcType=BIGINT},#{ploCode,jdbcType=VARCHAR},#{dohId,jdbcType=BIGINT},#{dohCode,jdbcType=VARCHAR},#{companyId,jdbcType=BIGINT},#{warehouseId,jdbcType=BIGINT},#{warehouseCode,jdbcType=VARCHAR},#{custOrderNo,jdbcType=VARCHAR},#{supplierId,jdbcType=BIGINT},#{customerId,jdbcType=BIGINT},#{orderStatus,jdbcType=VARCHAR},#{isFreezing,jdbcType=INTEGER},#{totalQty,jdbcType=DECIMAL},#{totalWeight,jdbcType=DECIMAL},#{totalVol,jdbcType=DECIMAL},#{detailedSpeciesQty,jdbcType=INTEGER},#{pickedQty,jdbcType=DECIMAL},#{pickingWeight,jdbcType=DECIMAL},#{pickingVol,jdbcType=DECIMAL},#{mobilePicking,jdbcType=VARCHAR},#{memo,jdbcType=VARCHAR},#{ploTime,jdbcType=TIMESTAMP},#{createUser,jdbcType=VARCHAR},#{createTime,jdbcType=TIMESTAMP},#{lastUpdateUser,jdbcType=VARCHAR},#{lastUpdateTime,jdbcType=TIMESTAMP})
+            insert into wms_plo_header (plo_id,plo_code,doh_id,doh_code,company_id,warehouse_id,warehouse_code,cust_order_no,supplier_id,supp_cust_name,customer_id,order_status,is_freezing,total_qty,total_weight,total_vol,detailed_species_qty,picked_qty,picking_weight,picking_vol,mobile_picking,memo,plo_time,create_user,create_time,last_update_user,last_update_time)
+            values (#{id,jdbcType=BIGINT},#{ploCode,jdbcType=VARCHAR},#{dohId,jdbcType=BIGINT},#{dohCode,jdbcType=VARCHAR},#{companyId,jdbcType=BIGINT},#{warehouseId,jdbcType=BIGINT},#{warehouseCode,jdbcType=VARCHAR},#{custOrderNo,jdbcType=VARCHAR},#{supplierId,jdbcType=BIGINT},#{suppCustName,jdbcType=VARCHAR},#{customerId,jdbcType=BIGINT},#{orderStatus,jdbcType=VARCHAR},#{isFreezing,jdbcType=INTEGER},#{totalQty,jdbcType=DECIMAL},#{totalWeight,jdbcType=DECIMAL},#{totalVol,jdbcType=DECIMAL},#{detailedSpeciesQty,jdbcType=INTEGER},#{pickedQty,jdbcType=DECIMAL},#{pickingWeight,jdbcType=DECIMAL},#{pickingVol,jdbcType=DECIMAL},#{mobilePicking,jdbcType=VARCHAR},#{memo,jdbcType=VARCHAR},#{ploTime,jdbcType=TIMESTAMP},#{createUser,jdbcType=VARCHAR},#{createTime,jdbcType=TIMESTAMP},#{lastUpdateUser,jdbcType=VARCHAR},#{lastUpdateTime,jdbcType=TIMESTAMP})
         </insert>
 
         <insert id="insertSelective">
@@ -68,6 +69,9 @@
                     </if>
                     <if test="supplierId != null">
                         supplier_id,
+                    </if>
+                    <if test="suppCustName != null">
+                        supp_cust_name,
                     </if>
                     <if test="customerId != null">
                         customer_id,
@@ -149,6 +153,9 @@
                     <if test="supplierId != null">
                         #{supplierId,jdbcType=BIGINT},
                     </if>
+                    <if test="suppCustName != null">
+                        #{suppCustName,jdbcType=VARCHAR},
+                    </if>
                     <if test="customerId != null">
                         #{customerId,jdbcType=BIGINT},
                     </if>
@@ -204,7 +211,7 @@
         </insert>
 
         <insert id="insertBatch">
-            insert into wms_plo_header (plo_id,plo_code,doh_id,doh_code,company_id,warehouse_id,warehouse_code,cust_order_no,supplier_id,customer_id,order_status,is_freezing,total_qty,total_weight,total_vol,detailed_species_qty,picked_qty,picking_weight,picking_vol,mobile_picking,memo,plo_time,create_user,create_time,last_update_user,last_update_time) values
+            insert into wms_plo_header (plo_id,plo_code,doh_id,doh_code,company_id,warehouse_id,warehouse_code,cust_order_no,supplier_id,supp_cust_name,customer_id,order_status,is_freezing,total_qty,total_weight,total_vol,detailed_species_qty,picked_qty,picking_weight,picking_vol,mobile_picking,memo,plo_time,create_user,create_time,last_update_user,last_update_time) values
             <foreach collection="list" item="item" separator=",">
                 (
                     #{item.id,jdbcType=BIGINT},
@@ -216,6 +223,7 @@
                     #{item.warehouseCode,jdbcType=VARCHAR},
                     #{item.custOrderNo,jdbcType=VARCHAR},
                     #{item.supplierId,jdbcType=BIGINT},
+                    #{item.suppCustName,jdbcType=VARCHAR},
                     #{item.customerId,jdbcType=BIGINT},
                     #{item.orderStatus,jdbcType=VARCHAR},
                     #{item.isFreezing,jdbcType=INTEGER},
@@ -260,6 +268,7 @@
                 warehouse_code = #{warehouseCode,jdbcType=VARCHAR},
                 cust_order_no = #{custOrderNo,jdbcType=VARCHAR},
                 supplier_id = #{supplierId,jdbcType=BIGINT},
+                supp_cust_name = #{suppCustName,jdbcType=VARCHAR},
                 customer_id = #{customerId,jdbcType=BIGINT},
                 order_status = #{orderStatus,jdbcType=VARCHAR},
                 is_freezing = #{isFreezing,jdbcType=INTEGER},
@@ -307,6 +316,9 @@
                 </if>
                 <if test="supplierId != null">
                     supplier_id = #{supplierId,jdbcType=BIGINT},
+                </if>
+                <if test="suppCustName != null">
+                    supp_cust_name = #{suppCustName,jdbcType=VARCHAR},
                 </if>
                 <if test="customerId != null">
                     customer_id = #{customerId,jdbcType=BIGINT},
@@ -390,6 +402,9 @@
                     </if>
                     <if test="item.supplierId != null">
                         supplier_id = #{item.supplierId,jdbcType=BIGINT},
+                    </if>
+                    <if test="item.suppCustName != null">
+                        supp_cust_name = #{item.suppCustName,jdbcType=VARCHAR},
                     </if>
                     <if test="item.customerId != null">
                         customer_id = #{item.customerId,jdbcType=BIGINT},
@@ -502,6 +517,9 @@
                 <if test="supplierId != null">
                     and supplier_id=#{supplierId,jdbcType=BIGINT}
                 </if>
+                <if test="suppCustName != null">
+                    and supp_cust_name=#{suppCustName,jdbcType=VARCHAR}
+                </if>
                 <if test="customerId != null">
                     and customer_id=#{customerId,jdbcType=BIGINT}
                 </if>
@@ -587,6 +605,9 @@
                 </if>
                 <if test="supplierId != null">
                     and supplier_id ${supplierId}
+                </if>
+                <if test="suppCustName != null">
+                    and supp_cust_name ${suppCustName}
                 </if>
                 <if test="customerId != null">
                     and customer_id ${customerId}

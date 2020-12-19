@@ -23,12 +23,16 @@ import com.telei.wms.project.api.utils.DataConvertUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
+
+import static java.util.stream.Collectors.toList;
 
 /**
  * @Description: 出库任务
@@ -63,6 +67,7 @@ public class DoContainerBussiness {
      * @param request
      * @return
      */
+    @Transactional(rollbackFor = Exception.class)
     public DoContainerCudBaseResponse addDoContainer(DoContainerAddRequest request) {
         DoContainerCudBaseResponse response = new DoContainerCudBaseResponse();
         // 校验装柜数量是否超额
@@ -74,6 +79,9 @@ public class DoContainerBussiness {
         BigDecimal cWeight = BigDecimal.ZERO;
         BigDecimal sumQty = BigDecimal.ZERO;
         List<WmsDoLine> wmsDoLines = new ArrayList<>();
+        // 获取唯一锁标识
+        Object lockKey = request.getDohId();
+        Object lockValue = LockMapUtil.tryLock(lockKey);
         for (DoContainerCommonRequest commonRequest : containerAddList) {
             // 待装柜数量
             BigDecimal dQty = commonRequest.getPickedQty().subtract(commonRequest.getBQty()).subtract(commonRequest.getCQty());
@@ -87,6 +95,7 @@ public class DoContainerBussiness {
                 wmsDoContainer.setCQty(commonRequest.getQty());
                 wmsDoContainers.add(wmsDoContainer);
 
+                omsContainerWriteBack.setOrderType(commonRequest.getOrderType());
                 omsContainerWriteBack.setCId(commonRequest.getCId());
                 omsContainerWriteBack.setDohId(commonRequest.getDohId());
                 omsContainerWriteBack.setSoId(commonRequest.getSoId());
@@ -108,33 +117,28 @@ public class DoContainerBussiness {
         }
         int count = 0;
         if (wmsDoContainers.size() > 0) {
-            count = wmsDoContainerService.insertBatch(wmsDoContainers);
-            if (count > 0) {
-                // 获取唯一锁标识
-                Object lockKey = omsContainerWriteBack.getDohId();
-                Object lockValue = LockMapUtil.tryLock(lockKey);
-                if (LockMapUtil.confirmLock(lockKey, lockValue)) {
-                    WmsDoHeader wmsDoHeader = wmsDoHeaderService.selectByPrimaryKey(omsContainerWriteBack.getDohId());
-                    if (StringUtils.isNotNull(wmsDoHeader.getContainerQty())) {
-                        wmsDoHeader.setContainerQty(wmsDoHeader.getContainerQty().add(sumQty));
-                    } else {
-                        wmsDoHeader.setContainerQty(sumQty);
-                    }
-                    wmsDoHeaderService.updateByPrimaryKeySelective(wmsDoHeader);
-                    if (wmsDoLines.size() > 0) {
-                        wmsDoLineService.updateBatch(wmsDoLines);
-                    }
-                    omsContainerWriteBack.setCAmount(cAmount);
-                    omsContainerWriteBack.setCVol(cVol);
-                    omsContainerWriteBack.setCWeight(cWeight);
-                    omsContainerWriteBack.setDohCode(wmsDoHeader.getDohCode());
-
-                    WmsIdInstantdirective wmsIdInstantdirective = wmsIdInstantdirectiveBussiness.add("PUTON", "", omsContainerWriteBack);
-                    // MQ发送指令
-                    wmsOmsContainerWriteBackProducer.send(wmsIdInstantdirective);
+            if (LockMapUtil.confirmLock(lockKey, lockValue)) {
+                count = wmsDoContainerService.insertBatch(wmsDoContainers);
+                WmsDoHeader wmsDoHeader = wmsDoHeaderService.selectByPrimaryKey(omsContainerWriteBack.getDohId());
+                if (StringUtils.isNotNull(wmsDoHeader.getContainerQty())) {
+                    wmsDoHeader.setContainerQty(wmsDoHeader.getContainerQty().add(sumQty));
+                } else {
+                    wmsDoHeader.setContainerQty(sumQty);
                 }
-                LockMapUtil.cancelLock(lockKey, lockValue);
+                wmsDoHeaderService.updateByPrimaryKeySelective(wmsDoHeader);
+                if (wmsDoLines.size() > 0) {
+                    wmsDoLineService.updateBatch(wmsDoLines);
+                }
+                omsContainerWriteBack.setCAmount(cAmount);
+                omsContainerWriteBack.setCVol(cVol);
+                omsContainerWriteBack.setCWeight(cWeight);
+                omsContainerWriteBack.setDohCode(wmsDoHeader.getDohCode());
+
+                WmsIdInstantdirective wmsIdInstantdirective = wmsIdInstantdirectiveBussiness.add("PUTON", "", omsContainerWriteBack);
+                // MQ发送指令
+                wmsOmsContainerWriteBackProducer.send(wmsIdInstantdirective);
             }
+            LockMapUtil.cancelLock(lockKey, lockValue);
         }
         response.setIsSuccess(count > 0);
         return response;
@@ -222,18 +226,42 @@ public class DoContainerBussiness {
      * @param request
      * @return
      */
+    @Transactional(rollbackFor = Exception.class)
     public DoContainerCudBaseResponse revokeDoContainer(DoContainerRevokeRequest request) {
         DoContainerCudBaseResponse response = new DoContainerCudBaseResponse();
         WmsDoContainer wmsDoContainer = new WmsDoContainer();
         wmsDoContainer.setCId(request.getCId());
         wmsDoContainer.setDohId(request.getDohId());
+        List<Long> lockKey = Stream.of(request.getCId(), request.getDohId()).collect(toList());
+        Object lockValue = LockMapUtil.tryLock(lockKey);
         List<WmsDoContainer> doContainerList = wmsDoContainerService.selectByEntity(wmsDoContainer);
         int count = 0;
         if (StringUtils.isNotNull(doContainerList) && !doContainerList.isEmpty()) {
-            List<Long> docIds = doContainerList.stream().map(WmsDoContainer::getId).collect(Collectors.toList());
-            if (docIds.size() > 0) {
-                count = wmsDoContainerService.deleteByPrimaryKeys(docIds);
+            // 出库任务装柜id列表
+            List<Long> docIds = doContainerList.stream().map(WmsDoContainer::getId).collect(toList());
+            // 出库任务明细id列表
+            List<Long> dolIds = doContainerList.stream().map(WmsDoContainer::getDolId).collect(toList());
+            // 出库任务装箱信息明细
+            Map<Long, BigDecimal> dolMap = doContainerList.stream().collect(Collectors.toMap(WmsDoContainer::getDolId, WmsDoContainer::getCQty));
+            List<WmsDoLine> doLineList = wmsDoLineService.selectByPrimaryKeys(dolIds);
+            BigDecimal sumContainerQty = BigDecimal.ZERO;
+            for (WmsDoLine wmsDoLine : doLineList) {
+                BigDecimal containerQty = dolMap.get(wmsDoLine.getId());
+                sumContainerQty = sumContainerQty.add(containerQty);
+                wmsDoLine.setContainerQty(wmsDoLine.getContainerQty().subtract(containerQty));
             }
+            if (LockMapUtil.confirmLock(lockKey, lockValue)) {
+                // 批量扣减出库任务明细数据
+                wmsDoLineService.updateBatch(doLineList);
+                // 扣减出库任务单头数据
+                WmsDoHeader wmsDoHeader = wmsDoHeaderService.selectByPrimaryKey(request.getDohId());
+                wmsDoHeader.setContainerQty(wmsDoHeader.getContainerQty().subtract(sumContainerQty));
+                wmsDoHeaderService.updateByPrimaryKeySelective(wmsDoHeader);
+                if (docIds.size() > 0) {
+                    count = wmsDoContainerService.deleteByPrimaryKeys(docIds);
+                }
+            }
+            LockMapUtil.cancelLock(lockKey, lockValue);
         }
         response.setIsSuccess(count > 0);
         return response;

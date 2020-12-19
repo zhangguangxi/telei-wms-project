@@ -93,7 +93,7 @@ public class PaoBussiness {
         wmsPaoHeader.setWarehouseCode(wmsRooHeaderInfo.getWarehouseCode());
         wmsPaoHeader.setRecvTime(wmsRooHeaderInfo.getRecvTime());
         wmsPaoHeader.setRecvUser(wmsRooHeaderInfo.getRecvUser());
-        wmsPaoHeader.setOrderType("20");
+        wmsPaoHeader.setOrderType(wmsRooHeaderInfo.getOrderType());
         wmsPaoHeader.setPaoStatus(SAVE_STATUS);
         wmsPaoHeader.setCompanyId(CustomRequestContext.getUserInfo().getCompanyId());
         wmsPaoHeader.setCreateUser(CustomRequestContext.getUserInfo().getEmployeeName());

@@ -20,6 +20,10 @@ public class DoContainerPageQueryRequestVo {
     private Long soId;
     /** 图 */
     private String mediaId;
+    /** 订单类型 */
+    private String orderType;
+    /** 订单状态 */
+    private String orderStatus;
     /** 产品id */
     private Long productId;
     /** sku编码 */

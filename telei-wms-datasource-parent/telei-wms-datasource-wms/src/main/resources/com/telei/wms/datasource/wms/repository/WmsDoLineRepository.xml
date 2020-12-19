@@ -38,6 +38,9 @@
         wdl.ship_qty,
         wdl.ship_weight,
         wdl.ship_vol,
+        wdl.ship_big_bag_qty,
+        wdl.ship_mid_bag_qty,
+        wdl.ship_small_bag_qty,
         wdl.plo_qty,
         wdl.container_qty,
         wdl.backlc_qty,
@@ -56,7 +59,7 @@
         FROM wms_do_line wdl
         LEFT JOIN cdm.cdm_product cp ON cp.product_id = wdl.product_id AND cp.company_id=#{companyId,jdbcType=BIGINT}
         WHERE wdl.doh_id = #{dohId,jdbcType=BIGINT}
-        ORDER BY wdl.dol_id DESC
+        ORDER BY wdl.dol_id
     </select>
 
 </mapper>

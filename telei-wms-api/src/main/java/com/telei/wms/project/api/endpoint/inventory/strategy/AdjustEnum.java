@@ -18,7 +18,7 @@ public enum AdjustEnum {
     ;
     /**调整类型*/
     @Getter
-    private String AdjustType;
+    private String adjustType;
     /**调整描述*/
     @Getter
     private String description;
@@ -27,7 +27,7 @@ public enum AdjustEnum {
     private String beanName;
 
     AdjustEnum(String adjustType, String description, String beanName) {
-        AdjustType = adjustType;
+        this.adjustType = adjustType;
         this.description = description;
         this.beanName = beanName;
     }
@@ -37,7 +37,7 @@ public enum AdjustEnum {
      * @param adjustType
      * @return
      */
-    public static AdjustEnum findAdjustEnumByadjustType(String adjustType){
+    public static AdjustEnum findAdjustEnumByAdjustType(String adjustType){
         for (AdjustEnum adjustEnum : values()) {
             if(Objects.equals(adjustEnum.getAdjustType(),adjustType)){
                 return adjustEnum;

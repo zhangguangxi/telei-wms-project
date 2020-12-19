@@ -19,6 +19,8 @@ public class WmsDoHeader implements Entity<Long> {
     private Long spId;
     /** 销售订单id */
     private Long soId;
+    /** 采购订单id，内部单据 */
+    private Long poId;
     /** 公司id */
     private Long companyId;
     /** 仓库id */
@@ -27,8 +29,12 @@ public class WmsDoHeader implements Entity<Long> {
     private String warehouseCode;
     /** 商家订单号 */
     private String custOrderNo;
+    /** 订单号 */
+    private String orderNo;
     /** 供应商id */
     private Long supplierId;
+    /** 供应商/客户名称 */
+    private String suppCustName;
     /** 客户id */
     private Long customerId;
     /** 客户联系人名称 */

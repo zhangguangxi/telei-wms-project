@@ -515,11 +515,46 @@ public class ExcelUtil<T> {
                 // 用于读取对象中的属性
                 Object value = getTargetValue(vo, field, attr);
                 String dateFormat = attr.dateFormat();
+                String numberFormat = attr.numberFormat();
                 String readConverterExp = attr.readConverterExp();
                 if (StringUtils.isNotEmpty(dateFormat) && StringUtils.isNotNull(value)) {
                     cell.setCellValue(DateUtils.parseDateToStr(dateFormat, (Date) value));
                 } else if (StringUtils.isNotEmpty(readConverterExp) && StringUtils.isNotNull(value)) {
                     cell.setCellValue(convertByExp(String.valueOf(value), readConverterExp));
+                } else if (StringUtils.isNotEmpty(numberFormat) && StringUtils.isNotNull(value)) {
+                    Double formatValue = Double.parseDouble(String.valueOf(value));
+                    cell.setCellValue(formatValue);
+                    CellStyle style = wb.createCellStyle();
+                    style.setAlignment(HorizontalAlignment.CENTER);
+                    style.setVerticalAlignment(VerticalAlignment.CENTER);
+                    style.setBorderRight(BorderStyle.THIN);
+                    style.setRightBorderColor(IndexedColors.GREY_50_PERCENT.getIndex());
+                    style.setBorderLeft(BorderStyle.THIN);
+                    style.setLeftBorderColor(IndexedColors.GREY_50_PERCENT.getIndex());
+                    style.setBorderTop(BorderStyle.THIN);
+                    style.setTopBorderColor(IndexedColors.GREY_50_PERCENT.getIndex());
+                    style.setBorderBottom(BorderStyle.THIN);
+                    style.setBottomBorderColor(IndexedColors.GREY_50_PERCENT.getIndex());
+                    Font dataFont = wb.createFont();
+                    dataFont.setFontName("Arial");
+                    dataFont.setFontHeightInPoints((short) 10);
+                    style.setFont(dataFont);
+                    DataFormat dataFormat = wb.createDataFormat();
+                    // 判断是否符合取整条件
+                    if (formatValue.intValue() - formatValue == 0) {
+                        if (numberFormat.contains("¥")) {
+                            style.setDataFormat(dataFormat.getFormat("¥#,##0"));
+                        } else {
+                            style.setDataFormat(dataFormat.getFormat("#,##0"));
+                        }
+                    } else {
+                        if (numberFormat.contains("¥")) {
+                            style.setDataFormat(dataFormat.getFormat("¥#,##0.00"));
+                        } else {
+                            style.setDataFormat(dataFormat.getFormat("#,##0.00"));
+                        }
+                    }
+                    cell.setCellStyle(style);
                 } else {
                     // 设置列类型
                     setCellVo(value, attr, cell);

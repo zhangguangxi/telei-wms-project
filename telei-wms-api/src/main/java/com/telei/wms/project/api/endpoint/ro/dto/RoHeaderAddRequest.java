@@ -27,11 +27,15 @@ public class RoHeaderAddRequest {
     private String warehouseCode;
     /** 供应商id */
     private Long supplierId;
+    /** 供应商/客户名称 */
+    private String suppCustName;
     /** 客户id */
     private Long customerId;
     /** 商家订单号 */
     private String custOrderNo;
-    /** 入库类型 01-补货入库,10-退货入库,20-送货退回,30-换货入库,40-直接入库,50-转仓入库,60-其他入库 */
+    /** 订单号 */
+    private String orderNo;
+    /** 单据类型（01-线下订单 02-内部订单  08-采购退件） */
     private String orderType;
     /** 预计入库时间 */
     private Date estArriveTime;
@@ -46,7 +50,7 @@ public class RoHeaderAddRequest {
     /** 总金额 */
     private BigDecimal totalAmount;
     /** 币种 */
-    private Long currencyId;
+    private Integer currencyId;
     /** 货品种类数量 */
     private Integer speciesQty;
     /** 收货数量 */

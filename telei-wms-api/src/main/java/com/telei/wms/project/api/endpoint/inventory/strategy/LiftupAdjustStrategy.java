@@ -27,6 +27,7 @@ public class LiftupAdjustStrategy implements IAdjustStrategy {
                                                                                           List<Long> deleteIvidList, List<WmsIvTransaction> wmsIvTransactionList,
                                                                                           List<WmsIvSplit> wmsIvSplitList, UserInfo userInfo, Date nowWithUtc) {
         WmsInventory wmsInventory = WmsInventoryDbList.get(0);
+        Long productId = wmsAdjtHeader.getProductId();
         BigDecimal ivQtyAdjt = wmsAdjtHeader.getIvQtyAdjt();/**升任务 库存调整数量*/
         String lcCodeAdjt = wmsAdjtHeader.getLcCodeAdjt();/**升任务 调整库位(目标库位)*/
 
@@ -34,9 +35,10 @@ public class LiftupAdjustStrategy implements IAdjustStrategy {
         wmsAdjtHeader.setBigBagRate(wmsInventory.getBigBagRate());/**大包转换率*/
         wmsAdjtHeader.setMidBagRate(wmsInventory.getMidBagRate());/**中包转换率*/
 
-
         List<WmsInventory> wmsInventories = DataConvertUtil.parseDataAsArray(WmsInventoryDbList, WmsInventory.class);
         BigDecimal totalIvQty = wmsInventories.stream().map(WmsInventory::getIvQty).reduce(BigDecimal.ZERO, BigDecimal::add);
+
+        adjustStrategyFactory.zLocationLimit(productId,lcCodeAdjt,2);
 
         if (totalIvQty.compareTo(ivQtyAdjt) < 0) {
             ErrorCode.ADJT_ERROR_4015.throwError(wmsAdjtHeader.getLcCode(), ivQtyAdjt, totalIvQty);

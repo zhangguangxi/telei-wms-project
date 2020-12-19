@@ -28,6 +28,8 @@ import java.math.BigDecimal;
 import java.util.*;
 import java.util.stream.Collectors;
 
+import static com.telei.infrastructure.component.commons.utils.LockMapUtil.*;
+
 /**
  * @Description: 拣货单
  * @Auther: Dean
@@ -110,6 +112,7 @@ public class PloBussiness {
         wmsPloHeader.setWarehouseCode(wmsDoHeader.getWarehouseCode());
         wmsPloHeader.setCustOrderNo(wmsDoHeader.getCustOrderNo());
         wmsPloHeader.setSupplierId(wmsDoHeader.getSupplierId());
+        wmsPloHeader.setSuppCustName(wmsDoHeader.getSuppCustName());
         wmsPloHeader.setCustomerId(wmsDoHeader.getCustomerId());
         wmsPloHeader.setOrderStatus(SAVE_STATUS);
         wmsPloHeader.setTotalQty(wmsDoHeader.getTotalQty());
@@ -126,59 +129,75 @@ public class PloBussiness {
         WmsDoLine wmsDoLineEntity = new WmsDoLine();
         wmsDoLineEntity.setDohId(wmsDoHeader.getId());
         List<WmsDoLine> wmsDoLines = wmsDoLineService.selectByEntity(wmsDoLineEntity);
-        List<WmsPloLine> wmsPloLines = DataConvertUtil.parseDataAsArray(wmsDoLines, WmsPloLine.class);
-        List<WmsIvOut> wmsIvOuts = new ArrayList<>();
-        List<Long> exceptionProductIds = new ArrayList<>();
-        for (WmsPloLine wmsPloLine : wmsPloLines) {
-            BigDecimal ivOutQty = wmsIvOutService.selectQtySum(wmsPloLine.getProductId(), wmsPloHeader.getWarehouseId(), wmsPloHeader.getCompanyId());
-            BigDecimal ivQty = wmsInventoryService.selectQtySum(wmsPloLine.getProductId(), wmsPloHeader.getWarehouseId(), wmsPloHeader.getCompanyId());
-            if (wmsPloLine.getQty().add(ivOutQty).compareTo(ivQty) == 1) {
-                //拣货数量加待出库数量大于库存数量
+        //获取锁标识
+        List<Long> lockKey = wmsDoLines.stream().map(WmsDoLine::getProductId).collect(Collectors.toList());
+        lockKey.add(wmsDoHeader.getId());
+        Object lockValue = tryLock(lockKey);
+        try {
+            List<WmsPloLine> wmsPloLines = DataConvertUtil.parseDataAsArray(wmsDoLines, WmsPloLine.class);
+            List<WmsIvOut> wmsIvOuts = new ArrayList<>();
+            List<Long> exceptionProductIds = new ArrayList<>();
+            for (WmsPloLine wmsPloLine : wmsPloLines) {
+                BigDecimal ivOutQty = wmsIvOutService.selectQtySum(wmsPloLine.getProductId(), wmsPloHeader.getWarehouseId(), wmsPloHeader.getCompanyId());
+                BigDecimal ivQty = wmsInventoryService.selectQtySum(wmsPloLine.getProductId(), wmsPloHeader.getWarehouseId(), wmsPloHeader.getCompanyId());
+                if (wmsPloLine.getQty().add(ivOutQty).compareTo(ivQty) == 1) {
+                    //拣货数量加待出库数量大于库存数量
 //                ErrorCode.PLO_ADD_ERROR_4010.throwError();
-                exceptionProductIds.add(wmsPloLine.getProductId());
+                    exceptionProductIds.add(wmsPloLine.getProductId());
+                }
+                wmsPloLine.setDolId(wmsPloLine.getId());
+                wmsPloLine.setId(idGenerator.getUnique());
+                wmsPloLine.setPloId(wmsPloHeader.getId());
+                wmsPloLine.setPloCode(wmsPloHeader.getPloCode());
+                wmsPloLine.setPickedQty(BigDecimal.ZERO);
+                wmsPloLine.setPickedWeight(BigDecimal.ZERO);
+                wmsPloLine.setPickedVol(BigDecimal.ZERO);
+                //新增待出库存
+                WmsIvOut wmsIvOut = new WmsIvOut();
+                wmsIvOut.setId(idGenerator.getUnique());
+                wmsIvOut.setCompanyId(wmsPloHeader.getCompanyId());
+                wmsIvOut.setWarehouseId(wmsPloHeader.getWarehouseId());
+                wmsIvOut.setWarehouseCode(wmsPloHeader.getWarehouseCode());
+                wmsIvOut.setOrderId(wmsPloHeader.getDohId());
+                wmsIvOut.setOrderCode(wmsPloHeader.getDohCode());
+                wmsIvOut.setLineId(wmsPloLine.getDolId());
+                wmsIvOut.setProductId(wmsPloLine.getProductId());
+                wmsIvOut.setQty(wmsPloLine.getQty());
+                wmsIvOuts.add(wmsIvOut);
             }
-            wmsPloLine.setDolId(wmsPloLine.getId());
-            wmsPloLine.setId(idGenerator.getUnique());
-            wmsPloLine.setPloId(wmsPloHeader.getId());
-            wmsPloLine.setPloCode(wmsPloHeader.getPloCode());
-            wmsPloLine.setPickedQty(BigDecimal.ZERO);
-            wmsPloLine.setPickedWeight(BigDecimal.ZERO);
-            wmsPloLine.setPickedVol(BigDecimal.ZERO);
-            WmsIvOut wmsIvOut = new WmsIvOut();
-            wmsIvOut.setId(idGenerator.getUnique());
-            wmsIvOut.setCompanyId(wmsPloHeader.getCompanyId());
-            wmsIvOut.setWarehouseId(wmsPloHeader.getWarehouseId());
-            wmsIvOut.setWarehouseCode(wmsPloHeader.getWarehouseCode());
-            wmsIvOut.setOrderId(wmsPloHeader.getDohId());
-            wmsIvOut.setOrderCode(wmsPloHeader.getDohCode());
-            wmsIvOut.setLineId(wmsPloLine.getDolId());
-            wmsIvOut.setProductId(wmsPloLine.getProductId());
-            wmsIvOut.setQty(wmsPloLine.getQty());
-            wmsIvOuts.add(wmsIvOut);
+            if (! exceptionProductIds.isEmpty()) {
+                //拣货有库存不够的商品
+                ErrorCode.PLO_ADD_ERROR_4010.throwError(JSON.toJSONString(exceptionProductIds));
+            }
+            //确认锁
+            if (confirmLock(lockKey, lockValue)) {
+                if (! wmsIvOuts.isEmpty()) {
+                    //新增待出库存
+                    ivOutBussiness.addIvOut(wmsIvOuts);
+                }
+                //新增拣货单
+                wmsPloHeaderService.insertSelective(wmsPloHeader);
+                if (! wmsPloLines.isEmpty()) {
+                    //获取库位
+                    getLocation(wmsPloHeader.getWarehouseId(), wmsPloLines);
+                    //新增拣货单详情
+                    wmsPloLineService.insertBatch(wmsPloLines);
+                }
+                //更新出库任务
+                WmsDoHeader updateWmsDoHeader = new WmsDoHeader();
+                updateWmsDoHeader.setId(wmsPloHeader.getDohId());
+                updateWmsDoHeader.setOrderStatus("20");
+                updateWmsDoHeader.setHasPlo("1");
+                updateWmsDoHeader.setLastupdateTime(DateUtils.nowWithUTC());
+                wmsDoHeaderService.updateByPrimaryKeySelective(updateWmsDoHeader);
+            } else {
+                //创建拣货单失败
+                ErrorCode.PLO_ADD_ERROR_4019.throwError();
+            }
+        } finally {
+            //释放锁
+            cancelLock(lockKey, lockValue);
         }
-        if (! exceptionProductIds.isEmpty()) {
-            //拣货有库存不够的商品
-            ErrorCode.PLO_ADD_ERROR_4010.throwError(JSON.toJSONString(exceptionProductIds));
-        }
-        if (! wmsIvOuts.isEmpty()) {
-            //新增待出库存
-            ivOutBussiness.addIvOut(wmsIvOuts);
-        }
-        //新增拣货单
-        wmsPloHeaderService.insertSelective(wmsPloHeader);
-        if (! wmsPloLines.isEmpty()) {
-            //获取库位
-            getLocation(wmsPloHeader.getWarehouseId(), wmsPloLines);
-            //新增拣货单详情
-            wmsPloLineService.insertBatch(wmsPloLines);
-        }
-        //更新出库任务
-        WmsDoHeader updateWmsDoHeader = new WmsDoHeader();
-        updateWmsDoHeader.setId(wmsPloHeader.getDohId());
-        updateWmsDoHeader.setOrderStatus("20");
-        updateWmsDoHeader.setHasPlo("1");
-        updateWmsDoHeader.setLastupdateTime(DateUtils.nowWithUTC());
-        wmsDoHeaderService.updateByPrimaryKeySelective(updateWmsDoHeader);
         PloAddResponse response = new PloAddResponse();
         response.setId(wmsPloHeader.getId());
         return response;
@@ -500,6 +519,17 @@ public class PloBussiness {
         updateWmsDoHeader.setHasPlo("0");
         updateWmsDoHeader.setLastupdateTime(DateUtils.nowWithUTC());
         wmsDoHeaderService.updateByPrimaryKeySelective(updateWmsDoHeader);
+        //获取出库任务明细id，删除待出库存
+//        WmsDoLine wmsDoLineEntity = new WmsDoLine();
+//        wmsDoLineEntity.setDohId(wmsPloHeader.getDohId());
+//        List<WmsDoLine> wmsDoLines = wmsDoLineService.selectByEntity(wmsDoLineEntity);
+//        List<Long> dolIds = wmsDoLines.stream().map(WmsDoLine::getId).collect(Collectors.toList());
+        //获取待出库id
+        WmsIvOut wmsIvOutEntity = new WmsIvOut();
+        wmsIvOutEntity.setOrderId(wmsPloHeader.getDohId());
+        List<WmsIvOut> wmsIvOuts = wmsIvOutService.selectByEntity(wmsIvOutEntity);
+        List<Long> ivoIds = wmsIvOuts.stream().map(WmsIvOut::getId).collect(Collectors.toList());
+        wmsIvOutService.deleteByPrimaryKeys(ivoIds);
         PloCudBaseResponse response = new PloCudBaseResponse();
         response.setIsSuccess(updateResult > 0);
         return response;

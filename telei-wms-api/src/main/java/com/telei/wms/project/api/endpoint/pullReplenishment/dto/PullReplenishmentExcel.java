@@ -30,37 +30,37 @@ public class PullReplenishmentExcel {
     @Excel(name = "品牌")
     private String brand;
 
-    @Excel(name = "大包体积")
+    @Excel(name = "大包体积", numberFormat = "#,##0.00")
     private BigDecimal bigBagVol;
 
-    @Excel(name = "大包重量")
+    @Excel(name = "大包重量", numberFormat = "#,##0.00")
     private BigDecimal bigBagWeight;
 
-    @Excel(name = "大包转换率")
+    @Excel(name = "大包转换率", numberFormat = "#,##0.00")
     private BigDecimal bigBagQty;
 
-    @Excel(name = "中包转换率")
+    @Excel(name = "中包转换率", numberFormat = "#,##0.00")
     private BigDecimal midBagQty;
 
-    @Excel(name = "参考成本")
+    @Excel(name = "参考成本", numberFormat = "#,##0.00")
     private BigDecimal costReference;
 
-    @Excel(name = "出库数量")
+    @Excel(name = "出库数量", numberFormat = "#,##0.00")
     private BigDecimal shipQty;
 
-    @Excel(name = "出库体积")
+    @Excel(name = "出库体积", numberFormat = "#,##0.00")
     private BigDecimal shipVol;
 
-    @Excel(name = "出库重量")
+    @Excel(name = "出库重量", numberFormat = "#,##0.00")
     private BigDecimal shipWeight;
 
-    @Excel(name = "出库大包")
+    @Excel(name = "出库大包", numberFormat = "#,##0.00")
     private BigDecimal shipBigQty;
 
-    @Excel(name = "总体积")
+    @Excel(name = "总体积", numberFormat = "#,##0.00")
     private BigDecimal sumVol;
 
-    @Excel(name = "总重量")
+    @Excel(name = "总重量", numberFormat = "#,##0.00")
     private BigDecimal sumWeight;
 
     @Excel(name = "供应商")

@@ -13,6 +13,11 @@ import java.util.List;
  */
 @Data
 public class InventoryAddRequest {
+    @ApiModelProperty(value = "入库类型 01-补货入库 02-内部订单 08-销售退货",example = "01",position = 1)
+    @Check
+    private String orderType;
+
+    @ApiModelProperty(value = "上架单明细列表",position = 2)
     private List<InventoryAddRequestCondition> list;
     @Data
     public static  class InventoryAddRequestCondition {

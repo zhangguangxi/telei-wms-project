@@ -73,6 +73,10 @@ public class PaoLineDetailResponse {
     private BigDecimal midBagQty;
     /** 大包数量 */
     private BigDecimal bigBagQty;
+    /** 大包体积 */
+    private BigDecimal bigBagVol;
+    /** 大包重量 */
+    private BigDecimal bigBagWeight;
     /** 图片 */
     private String imagePath;
 }

@@ -71,6 +71,7 @@ public class RoBussiness {
 
     /**
      * 新增
+     *
      * @param request
      * @return
      */
@@ -81,7 +82,7 @@ public class RoBussiness {
         WmsRoHeader wmsRoHeaderEntity = new WmsRoHeader();
         wmsRoHeaderEntity.setRpId(request.getRpId());
         WmsRoHeader wmsRoHeaderIsExist = wmsRoHeaderService.selectOneByEntity(wmsRoHeaderEntity);
-        if (! Objects.isNull(wmsRoHeaderIsExist)) {
+        if (!Objects.isNull(wmsRoHeaderIsExist)) {
             log.warn("采购单不能重复生成入库任务，RoHeaderAddRequest：" + JSON.toJSONString(request));
             return response;
         }
@@ -105,6 +106,7 @@ public class RoBussiness {
 
     /**
      * 订单详细
+     *
      * @param request
      * @return
      */
@@ -123,6 +125,7 @@ public class RoBussiness {
 
     /**
      * 分页查询主单
+     *
      * @param request
      * @return
      */
@@ -138,6 +141,7 @@ public class RoBussiness {
 
     /**
      * 更新主单信息
+     *
      * @param request
      * @return
      */
@@ -162,7 +166,7 @@ public class RoBussiness {
             //需要同步到计划
             OmsRecovicePlan omsRecovicePlan = DataConvertUtil.parseDataAsObject(request, OmsRecovicePlan.class);
             omsRecovicePlan.setId(wmsRoHeaderInfo.getRpId());
-            omsRecovicePlan.setMemo(null);
+//            omsRecovicePlan.setMemo(null);
             //添加数据交互指令
             WmsIdInstantdirective wmsIdInstantdirective = wmsIdInstantdirectiveBussiness.add("PUTON", "", omsRecovicePlan);
             //发送消息到队列
@@ -173,6 +177,7 @@ public class RoBussiness {
 
     /**
      * 取消入库任务
+     *
      * @param request
      * @return
      */
@@ -221,6 +226,7 @@ public class RoBussiness {
 
     /**
      * 获取强制收货状态
+     *
      * @param request
      * @return
      */
@@ -237,6 +243,7 @@ public class RoBussiness {
 
     /**
      * 更新强制收货
+     *
      * @param request
      * @return
      */
@@ -255,13 +262,22 @@ public class RoBussiness {
             if (CLOSE_STATUS.equals(wmsRoHeader.getOrderStatus())) {
                 return response;
             }
-            if (! PART_INVENTORY_STATUS.equals(wmsRoHeader.getOrderStatus())) {
+            if (!PART_INVENTORY_STATUS.equals(wmsRoHeader.getOrderStatus())) {
                 //强制收货状态不正确
                 ErrorCode.RO_ENFORCEMENT_ERROR_4002.throwError();
             }
             if (wmsRoHeader.getReceQty().compareTo(wmsRoHeader.getPutawayQty()) != 0) {
                 //收货数和上架数不相等不能强制收货
                 ErrorCode.RO_ENFORCEMENT_ERROR_4003.throwError();
+            }
+            // 采购退件回写实际出库数量=0 rma_status 设为 20
+            if ("08".equals(wmsRoHeader.getOrderType())) {
+                OmsRecovicePlan omsRecovicePlan = new OmsRecovicePlan();
+                omsRecovicePlan.setId(request.getRpId());
+                //添加数据交互指令
+                WmsIdInstantdirective wmsIdInstantdirective = wmsIdInstantdirectiveBussiness.add("PUTON", "", omsRecovicePlan);
+                //发送消息到队列
+                wmsOmsRecovicePlanCancelCallbackProducer.send(wmsIdInstantdirective);
             }
             WmsRoHeader updateWmsRoHeader = new WmsRoHeader();
             updateWmsRoHeader.setId(wmsRoHeader.getId());

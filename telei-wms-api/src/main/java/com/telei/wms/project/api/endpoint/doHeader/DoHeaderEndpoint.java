@@ -43,10 +43,10 @@ public class DoHeaderEndpoint {
         return doBussiness.doVerification(request);
     }
 
-    @ApiOperation("出库")
-    @PostMapping(ServiceId.WMS_DO_SHIP)
-    public DoCudBaseResponse doShip(@RequestBody @Valid DoHeaderUpdateRequest request) {
-        return doBussiness.doShip(request);
-    }
+//    @ApiOperation("出库")
+//    @PostMapping(ServiceId.WMS_DO_SHIP)
+//    public DoCudBaseResponse doShip(@RequestBody @Valid DoHeaderUpdateRequest request) {
+//        return doBussiness.doShip(request);
+//    }
 
 }

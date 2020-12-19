@@ -17,7 +17,9 @@ public class OmsContainerWriteBack {
     private BigDecimal cVol;
     /** 装箱金额 */
     private BigDecimal cAmount;
-
+    /** 订单类型 */
+    private String orderType;
+    /** 柜id */
     private Long cId;
     /** 出库任务id */
     private Long dohId;

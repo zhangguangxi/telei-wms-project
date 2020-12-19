@@ -10,6 +10,8 @@
         <result column="shipment_code" jdbcType="VARCHAR" property="shipmentCode"/>
         <result column="load_time" jdbcType="TIMESTAMP" property="loadTime"/>
         <result column="load_user" jdbcType="VARCHAR" property="loadUser"/>
+        <result column="sp_code" jdbcType="VARCHAR" property="spCode"/>
+        <result column="so_code" jdbcType="VARCHAR" property="soCode"/>
     </resultMap>
 
     <resultMap id="PageQueryMap" extends="BaseResultMap" type="com.telei.wms.datasource.wms.vo.DoContainerPageQueryRequestVo">
@@ -19,6 +21,7 @@
         <result column="so_id" jdbcType="BIGINT" property="soId"/>
         <result column="lc_code" jdbcType="VARCHAR" property="lcCode"/>
         <result column="media_id" jdbcType="VARCHAR" property="mediaId"/>
+        <result column="order_type" jdbcType="VARCHAR" property="orderType"/>
         <result column="product_id" jdbcType="BIGINT" property="productId"/>
         <result column="product_no" jdbcType="VARCHAR" property="productNo"/>
         <result column="product_name" jdbcType="VARCHAR" property="productName"/>
@@ -51,28 +54,46 @@
         <result column="load_time" jdbcType="TIMESTAMP" property="loadTime"/>
         <result column="load_user" jdbcType="VARCHAR" property="loadUser"/>
         <result column="shipment_code" jdbcType="VARCHAR" property="shipmentCode"/>
+        <result column="shipping_time" jdbcType="TIMESTAMP" property="shippingTime"/>
+        <result column="c_id" jdbcType="BIGINT" property="cId"/>
         <result column="c_qty" jdbcType="DECIMAL" property="cQty"/>
         <result column="c_weight" jdbcType="DECIMAL" property="cWeight"/>
         <result column="c_vol" jdbcType="DECIMAL" property="cVol"/>
     </resultMap>
 
+    <resultMap id="DoContainerGroupResponseVo" type="com.telei.wms.datasource.wms.vo.DoContainerGroupResponseVo">
+        <result column="dol_id" jdbcType="BIGINT" property="dolId"/>
+        <result column="product_id" jdbcType="VARCHAR" property="productId"/>
+        <result column="lc_code" jdbcType="TIMESTAMP" property="lcCode"/>
+        <result column="c_qty" jdbcType="DECIMAL" property="cQty"/>
+        <result column="big_bag_qty" jdbcType="DECIMAL" property="bigBagQty"/>
+        <result column="mid_bag_qty" jdbcType="DECIMAL" property="midBagQty"/>
+        <result column="small_bag_qty" jdbcType="DECIMAL" property="smallBagQty"/>
+    </resultMap>
+
     <select id="findAll" resultMap="PageQueryResultMap">
         SELECT
-            sp_id,
-            so_id,
-            doh_id,
-            c_id,
-            SUM(c_qty) c_qty,
-            SUM(c_weight) c_weight,
-            SUM(c_vol) c_vol,
-            SUM(c_amount) c_amount
-        FROM wms_do_container
+            wdc.sp_id,
+            wdc.so_id,
+            ocl.sp_code,
+            ocl.so_code,
+            wdc.doh_id,
+            wdc.c_id,
+            oc.load_time,
+            oc.load_user,
+            SUM(wdc.c_qty) c_qty,
+            SUM(wdc.c_weight) c_weight,
+            SUM(wdc.c_vol) c_vol,
+            SUM(wdc.c_amount) c_amount
+        FROM wms_do_container wdc
+        LEFT JOIN oms.oms_container oc ON wdc.c_id = oc.c_id
+        left join oms.oms_container_list ocl on ocl.sp_id = wdc.sp_id AND ocl.so_id = wdc.so_id
         <where>
             <if test="cId != null">
-                and c_id = #{cId}
+                and wdc.c_id = #{cId}
             </if>
         </where>
-        GROUP BY doh_id
+        GROUP BY wdc.doh_id
     </select>
 
     <select id="findAllByDohId" resultMap="PageQueryResultMap">
@@ -101,6 +122,8 @@
             wph.doh_id,
             wdh.sp_id,
             wdh.so_id,
+            wdh.order_type,
+            wdh.order_status,
             wpl.media_id,
             wpl.product_id,
             wpl.product_no,
@@ -119,26 +142,31 @@
             SUM(wpl.picked_qty) picked_qty,
             SUM(wbl.b_qty) b_qty,
             SUM(wdo.c_qty) c_qty,
-            cp.cost_reference,
-            cp.selling_price_reference unit_price
+            wdl.cost_reference,
+            wdl.unit_price
         FROM wms_plo_header wph
         INNER JOIN wms_plo_line wpl ON wpl.plo_id = wph.plo_id AND wph.order_status = '30'
         LEFT JOIN wms_do_header wdh ON wdh.doh_id = wph.doh_id
+        LEFT JOIN wms_do_line wdl ON wdl.doh_id = wdh.doh_id and wpl.product_id = wdl.product_id
         LEFT JOIN cdm.cdm_product cp ON wpl.product_id = cp.product_id AND wph.company_id = cp.company_id
-        LEFT JOIN wms_do_container wdo ON wdo.product_id = wpl.product_id
-        <if test="dohId != null">
-            and wdo.doh_id ${dohId}
-        </if>
-        LEFT JOIN wms_backlc_list wbl ON wbl.product_id = wpl.product_id
-        <if test="dohId != null">
-            and wbl.doh_id ${dohId}
-        </if>
+        LEFT JOIN (
+            SELECT wd.doh_id,wd.product_id, SUM(wd.c_qty) c_qty
+            FROM wms_do_container wd
+            WHERE wd.doh_id ${dohId}
+            GROUP BY wd.product_id
+        ) wdo ON wdo.product_id = wpl.product_id and wdo.doh_id ${dohId}
+        LEFT JOIN (
+            SELECT wb.doh_id,wb.product_id, SUM(wb.b_qty) b_qty
+            FROM wms_backlc_list wb
+            WHERE wb.doh_id ${dohId}
+            GROUP BY wb.product_id
+        ) wbl ON wbl.product_id = wpl.product_id and wbl.doh_id ${dohId}
         <where>
             <if test="dohId != null">
                 and wph.doh_id ${dohId}
             </if>
         </where>
-        GROUP BY wph.doh_id,wpl.product_id
+        GROUP BY wph.doh_id,wpl.product_id, wpl.dol_id, wpl.media_id, wpl.product_no, wpl.product_name, wpl.product_barcode, wpl.brand, wpl.unit_gross_weight, wpl.unit_vol, cp.big_bag_weight, cp.big_bag_vol, cp.mid_bag_weight, cp.mid_bag_vol, wpl.big_bag_rate, wpl.mid_bag_rate, wpl.lc_code, wdl.cost_reference, wdl.unit_price
         <if test="orderBy != null">
             order by ${orderBy}
         </if>
@@ -151,8 +179,8 @@
             cp.product_name,
             cp.product_barcode,
             cp.brand,
-            cp.unit_gross_weight,
-            cp.unit_vol,
+            cp.big_bag_weight unit_gross_weight,
+            cp.big_bag_vol unit_vol,
             sum(wdc.big_bag_qty) big_bag_qty,
             sum(wdc.mid_bag_qty) mid_bag_qty,
             sum(wdc.small_bag_qty) small_bag_qty,
@@ -183,9 +211,11 @@
         SELECT
         wdh.order_status,
         wdh.doh_id,
+        wdh.shipping_time,
         oc.load_time,
         oc.load_user,
         oc.shipment_code,
+        wdc.c_id,
         wdc.c_qty,
         wdc.c_weight,
         wdc.c_vol
@@ -194,11 +224,33 @@
         LEFT JOIN oms.oms_container oc ON oc.c_id = wdc.c_id
         LEFT JOIN wms_do_header wdh ON wdc.doh_id = wdh.doh_id
         <where>
-        oc.company_id ${companyID}
-        AND oc.warehouse_id ${warehouseId}
-        AND wdh.order_status ${orderStatus}
-        AND  wdc.doh_id ${dohId}
+            oc.company_id ${companyID}
+            AND oc.warehouse_id ${warehouseId}
+            AND wdh.order_status ${orderStatus}
+            AND  wdc.doh_id ${dohId}
         </where>
+    </select>
+
+    <select id="selectByDohId" resultMap="DoContainerGroupResponseVo">
+        SELECT
+            wdc.dol_id,
+            wdc.product_id,
+            wdc.big_bag_qty,
+            wdc.mid_bag_qty,
+            wdc.small_bag_qty,
+            wpl.lc_code,
+            sum(wdc.c_qty) c_qty,
+            sum(wdc.c_vol) c_vol,
+            sum(wdc.c_weight) c_weight,
+            sum(wdc.product_id) product_id
+        FROM
+            wms_do_container wdc
+                LEFT JOIN wms_plo_line wpl ON wdc.dol_id = wpl.dol_id
+                LEFT JOIN wms_plo_header wph on wph.plo_id = wpl.plo_id
+        WHERE
+          wph.order_status = 30
+          and wdc.doh_id = #{dohId}
+        GROUP BY wdc.dol_id,wdc.product_id, wdc.big_bag_qty, wdc.mid_bag_qty, wdc.small_bag_qty, wpl.lc_code
     </select>
 </mapper>
 
