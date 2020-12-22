@@ -258,7 +258,7 @@ public class InventoryBussiness {
         List<Long> lockKey = Stream.of(requestPaoIdList, requestIabIdList, requestRoIdList, requestRoIdList).flatMap(Collection::stream).collect(toList());
         Object lockValue = LockMapUtil.tryLock(lockKey);
         log.info("\n +++++++++++++++++++++ 上架操作::尝试获取锁，lockKey ->{},lockValue -> {} ++++++++++++++++++++ \n ", JSON.toJSONString(lockKey), String.valueOf(lockValue));
-
+        InventoryAddBussinessResponse response = new InventoryAddBussinessResponse();
         try {
             //2公用信息提取
             //2.1 UTC时间
@@ -288,8 +288,8 @@ public class InventoryBussiness {
             productDetailRequest.setProductIds(requestProductIdList);
             productDetailRequest.setCompanyId(companyId);
             ApiResponse productListResponse = productFeignClient.getProductList(productDetailRequest);
-            ProductListResponse response = JSON.parseObject(JSON.toJSONString(productListResponse.getData()), ProductListResponse.class);
-            List<ProductDetailResponse> productList = response.getProductList();
+            ProductListResponse productResponse = JSON.parseObject(JSON.toJSONString(productListResponse.getData()), ProductListResponse.class);
+            List<ProductDetailResponse> productList = productResponse.getProductList();
             if (Objects.isNull(productList) || productList.isEmpty()) {
                 ErrorCode.INVENTORY_ADD_ERROR_PRODUCT_NOT_EXIST_4003.throwError(JSON.toJSONString(requestProductIdList));
             }
@@ -491,11 +491,13 @@ public class InventoryBussiness {
                 lcRecommendDeleteRequest.setOrderCode(wmsPaoHeader.getPaoCode());
                 lcRecommendDeleteRequest.setProductIds(productIds);
                 lcRecommendBussiness.deleteLcRecommend(lcRecommendDeleteRequest);
+            }else{
+                response.setIsSuccess(false);
             }
         } finally {
             LockMapUtil.cancelLock(lockKey, lockValue);
         }
-        return new InventoryAddBussinessResponse();
+        return response;
     }
 
     /**
@@ -586,8 +588,9 @@ public class InventoryBussiness {
      */
     @Transactional(rollbackFor = Exception.class)
     public InventoryIncreaseBussinessResponse increaseInventory(InventoryIncreaseBussinessRequest request) {
-        adjustInventory(request, "INCREASE");
-        return new InventoryIncreaseBussinessResponse();
+        InventoryIncreaseBussinessResponse response = new InventoryIncreaseBussinessResponse();
+        response.setIsSuccess(adjustInventory(request, "INCREASE"));
+        return response;
     }
 
 
@@ -598,8 +601,9 @@ public class InventoryBussiness {
      */
     @Transactional(rollbackFor = Exception.class)
     public InventoryReduceBussinessResponse reduceInventory(InventoryReduceBussinessRequest request) {
-        adjustInventory(request, "REDUCE");
-        return new InventoryReduceBussinessResponse();
+        InventoryReduceBussinessResponse response = new InventoryReduceBussinessResponse();
+        response.setIsSuccess(adjustInventory(request, "REDUCE"));
+        return response;
     }
 
 
@@ -611,8 +615,9 @@ public class InventoryBussiness {
      */
     @Transactional(rollbackFor = Exception.class)
     public InventoryShiftBussinessResponse shiftInventory(InventoryShiftBussinessRequest request) {
-        adjustInventory(request, "MOVE");
-        return new InventoryShiftBussinessResponse();
+        InventoryShiftBussinessResponse response = new InventoryShiftBussinessResponse();
+        response.setIsSuccess(adjustInventory(request, "MOVE"));;
+        return response;
     }
 
     /**
@@ -621,7 +626,7 @@ public class InventoryBussiness {
      * @param request
      * @param adjhType
      */
-    public void adjustInventory(Object request, String adjhType) {
+    public boolean adjustInventory(Object request, String adjhType) {
         log.info("\n +++++++++++++++++++++ 库存调整::入参 -> {},调整类型 -> {} ++++++++++++++++++++ \n ", JSON.toJSONString(request),adjhType);
         /**基础信息*/
         Date nowWithUTC = DateUtils.nowWithUTC();//UTC时间
@@ -694,7 +699,9 @@ public class InventoryBussiness {
             if (LockMapUtil.confirmLock(lockKey, lockValue)) {
                 log.info("\n +++++++++++++++++++++ 库存调整::获取锁的当前线程 -> {},lockKey -> {},lockValue -> {} ++++++++++++++++++++ \n ", Thread.currentThread().getName(), lockKey, lockValue);
                 dataProcess(adjhType, wmsAdjtHeader, productId, lcCode, adjtLineList, inventoryAddList, inventoryUpdateList, ivTransactionList, ivSplitsList, deleteIvidList, omsInventoryChangeWriteBackConditions);
+                return true;
             }
+            return false;
         } finally {
             log.info("\n +++++++++++++++++++++ 库存调整::释放锁,当前线程 -> {},lockKey -> {},lockValue -> {} ++++++++++++++++++++ \n ", Thread.currentThread().getName(), lockKey, lockValue);
             LockMapUtil.cancelLock(lockKey, lockValue);
@@ -928,8 +935,9 @@ public class InventoryBussiness {
      */
     @Transactional
     public InventoryLiftUpBussinessResponse liftUpInventory(InventoryLiftUpBussinessRequest request) {
-        adjustInventory(request, "LIFTUP");
-        return new InventoryLiftUpBussinessResponse();
+        InventoryLiftUpBussinessResponse response = new InventoryLiftUpBussinessResponse();
+        response.setIsSuccess(adjustInventory(request, "LIFTUP"));
+        return response;
     }
 
     /**
@@ -940,8 +948,9 @@ public class InventoryBussiness {
      */
     @Transactional
     public InventoryLiftDownBussinessResponse liftDownInventory(InventoryLiftDownBussinessRequest request) {
-        adjustInventory(request, "LIFTDOWN");
-        return new InventoryLiftDownBussinessResponse();
+        InventoryLiftDownBussinessResponse response = new InventoryLiftDownBussinessResponse();
+        response.setIsSuccess(adjustInventory(request, "LIFTDOWN"));
+        return response;
     }
 
     /**
@@ -1186,6 +1195,7 @@ public class InventoryBussiness {
             wmsDoHeader.setShipWeight(shipWeight);
             wmsDoHeader.setShipDetailedSpeciesQty(updateDoLineList.size());//出库货品种类数
 
+            InventoryDeductBussinessResponse response = new InventoryDeductBussinessResponse();
             if (LockMapUtil.confirmLock(dohId, lockValue)) {
                 log.info("\n +++++++++++++++++++++ 出库扣减库存操作:: 删除待出库存记录 -> {} ++++++++++++++++++++ \n ", JSON.toJSONString(deleteIvOutList));
                 int countForIvOut = wmsIvOutService.deleteByPrimaryKeys(deleteIvOutList);
@@ -1232,45 +1242,46 @@ public class InventoryBussiness {
                 if(countForDoLine <= 0){
                     ErrorCode.INVENTORY_DEDUCT_UPDATE_DO_LINE_40053.throwError();
                 }
+                /**异步回写OMS(出库计划单头/明细 销售单单头/明细 库存变动的相关记录)  inventoryDeductConditionList*/
+                List<OmsIvOutWriteBack.OmsIvOutWriteBackCondition> omsIvOutWriteBacks = DataConvertUtil.parseDataAsArray(inventoryDeductConditionList, OmsIvOutWriteBack.OmsIvOutWriteBackCondition.class);
+                OmsIvOutWriteBack omsIvOutWriteBack = new OmsIvOutWriteBack();
+                omsIvOutWriteBack.setList(omsIvOutWriteBacks);
+                omsIvOutWriteBack.setOrderType(orderType);
+                WmsIdInstantdirective wmsIdInstantdirective = wmsIdInstantdirectiveBussiness.add("PUTON", "", omsIvOutWriteBack);
+                wmsOmsIvOutWriteBackProducer.send(wmsIdInstantdirective);
 
-            }
-            /**异步回写OMS(出库计划单头/明细 销售单单头/明细 库存变动的相关记录)  inventoryDeductConditionList*/
-            List<OmsIvOutWriteBack.OmsIvOutWriteBackCondition> omsIvOutWriteBacks = DataConvertUtil.parseDataAsArray(inventoryDeductConditionList, OmsIvOutWriteBack.OmsIvOutWriteBackCondition.class);
-            OmsIvOutWriteBack omsIvOutWriteBack = new OmsIvOutWriteBack();
-            omsIvOutWriteBack.setList(omsIvOutWriteBacks);
-            omsIvOutWriteBack.setOrderType(orderType);
-            WmsIdInstantdirective wmsIdInstantdirective = wmsIdInstantdirectiveBussiness.add("PUTON", "", omsIvOutWriteBack);
-            wmsOmsIvOutWriteBackProducer.send(wmsIdInstantdirective);
-
-            if ("03".equals(wmsDoHeader.getOrderType())) {
-                //内部供应商自动创建的单据类型
+                if ("03".equals(wmsDoHeader.getOrderType())) {
+                    //内部供应商自动创建的单据类型
 //                String poId = wmsDoHeaderService.findPoId(wmsDoHeader.getId());
 //                if (StringUtils.isEmpty(poId)) {
 //                    //未找到关联的单据id
 //                    ErrorCode.DO_ERROR_4002.throwError();
 //                }
-                //获取明细信息
-                List<RecovicePlanAddByDoRequest.Detail> requestDetails = new ArrayList<>();
-                wmsDoLines.stream().forEach(item -> {
-                    RecovicePlanAddByDoRequest.Detail requestDetail = new RecovicePlanAddByDoRequest.Detail();
-                    requestDetail.setProductId(item.getProductId());
-                    requestDetail.setPlanQty(item.getQty());
-                    requestDetails.add(requestDetail);
-                });
-                if (requestDetails.isEmpty()) {
-                    //出库产品不能为空
-                    ErrorCode.DO_ERROR_4003.throwError();
+                    //获取明细信息
+                    List<RecovicePlanAddByDoRequest.Detail> requestDetails = new ArrayList<>();
+                    wmsDoLines.stream().forEach(item -> {
+                        RecovicePlanAddByDoRequest.Detail requestDetail = new RecovicePlanAddByDoRequest.Detail();
+                        requestDetail.setProductId(item.getProductId());
+                        requestDetail.setPlanQty(item.getQty());
+                        requestDetails.add(requestDetail);
+                    });
+                    if (requestDetails.isEmpty()) {
+                        //出库产品不能为空
+                        ErrorCode.DO_ERROR_4003.throwError();
+                    }
+                    RecovicePlanAddByDoRequest recovicePlanAddByDoRequest = new RecovicePlanAddByDoRequest();
+                    recovicePlanAddByDoRequest.setPoId(wmsDoHeader.getPoId());
+                    recovicePlanAddByDoRequest.setDetails(requestDetails);
+                    log.debug("******recovicePlanAddByDoRequest******" + JSON.toJSONString(recovicePlanAddByDoRequest));
+                    //添加数据交互指令
+                    WmsIdInstantdirective instantdirective = wmsIdInstantdirectiveBussiness.add("PUTON", "", recovicePlanAddByDoRequest);
+                    //发送消息到队列
+                    wmsOmsRecovicePlanAddByDoProducer.send(instantdirective);
                 }
-                RecovicePlanAddByDoRequest recovicePlanAddByDoRequest = new RecovicePlanAddByDoRequest();
-                recovicePlanAddByDoRequest.setPoId(wmsDoHeader.getPoId());
-                recovicePlanAddByDoRequest.setDetails(requestDetails);
-                log.debug("******recovicePlanAddByDoRequest******" + JSON.toJSONString(recovicePlanAddByDoRequest));
-                //添加数据交互指令
-                WmsIdInstantdirective instantdirective = wmsIdInstantdirectiveBussiness.add("PUTON", "", recovicePlanAddByDoRequest);
-                //发送消息到队列
-                wmsOmsRecovicePlanAddByDoProducer.send(instantdirective);
+            }else{
+                response.setIsSuccess(false);
             }
-            return new InventoryDeductBussinessResponse();
+            return response;
         } finally {
             LockMapUtil.cancelLock(dohId, lockValue);
         }
