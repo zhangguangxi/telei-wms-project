@@ -4,6 +4,7 @@ import com.alibaba.fastjson.JSON;
 import com.telei.wms.project.api.TeleiWmsApiApplication;
 import com.telei.wms.project.api.endpoint.backlc.BaclcBussiness;
 import com.telei.wms.project.api.endpoint.inventory.dto.InventoryAddBussinessRequest;
+import com.telei.wms.project.api.endpoint.inventory.dto.InventoryDetailBussinessRequest;
 import com.telei.wms.project.api.endpoint.inventory.dto.InventoryShiftBussinessRequest;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,4 +35,13 @@ public class InventoryBussinessTest {
         InventoryShiftBussinessRequest request = JSON.parseObject(json, InventoryShiftBussinessRequest.class);
         inventoryBussiness.shiftInventory(request);
     }
+
+
+    @Test
+    public void testDetailInventory(){
+        String json = "{\"companyId\":\"1051506761678194688\",\"warehouseId\":\"1051515954409768960\",\"lcCode\":\"S99-01-11\",\"productId\":\"1053625330742331393\"}";
+        InventoryDetailBussinessRequest request = JSON.parseObject(json, InventoryDetailBussinessRequest.class);
+        inventoryBussiness.detailInventory(request);
+    }
+
 }

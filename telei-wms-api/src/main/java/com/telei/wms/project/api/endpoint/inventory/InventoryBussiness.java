@@ -861,6 +861,9 @@ public class InventoryBussiness {
         }
         List<InventoryDetailResponse.InventoryDetailCondition> list = Lists.newArrayList();
         Map<Long, List<WmsInventory>> iabToInventoryMap = wmsInventories.stream().collect(Collectors.groupingBy(WmsInventory::getIabId));
+        if(Objects.isNull(iabToInventoryMap) || iabToInventoryMap.isEmpty()){
+            ErrorCode.INVENTORY_DETAIL_ERROR_40259.throwError(JSON.toJSONString(iabToInventoryMap));
+        }
         iabToInventoryMap.forEach((k, v) -> {
             InventoryDetailResponse.InventoryDetailCondition detailVo = new InventoryDetailResponse.InventoryDetailCondition();
             detailVo.setIabId(k);
