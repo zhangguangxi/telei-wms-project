@@ -102,8 +102,12 @@ public class DoContainerBussiness {
                 omsContainerWriteBack.setSpId(commonRequest.getSpId());
 
                 cAmount = cAmount.add(commonRequest.getCAmount());
-                cVol = cVol.add(commonRequest.getCVol());
-                cWeight = cWeight.add(commonRequest.getCWeight());
+                if (StringUtils.isNotNull(commonRequest.getCVol())) {
+                    cVol = cVol.add(commonRequest.getCVol());
+                }
+                if (StringUtils.isNotNull(commonRequest.getCWeight())) {
+                    cWeight = cWeight.add(commonRequest.getCWeight());
+                }
                 sumQty = sumQty.add(commonRequest.getQty());
 
                 WmsDoLine wmsDoLine = wmsDoLineService.selectByPrimaryKey(commonRequest.getDolId());

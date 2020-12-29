@@ -854,6 +854,7 @@ public class InventoryBussiness {
      * @return
      */
     public InventoryDetailBussinessResponse detailInventory(InventoryDetailBussinessRequest request) {
+        log.info("\n +++++++++++++++++++++ 库存分布-查看库存详情::入参 -> {} ++++++++++++++++++++ \n ", JSON.toJSONString(request));
         WmsInventory wmsInventory = DataConvertUtil.parseDataAsObject(request, WmsInventory.class);
         List<WmsInventory> wmsInventories = wmsInventoryService.selectByCustomEntity(wmsInventory);
         if (Objects.isNull(wmsInventories) || wmsInventories.isEmpty()) {
@@ -862,13 +863,16 @@ public class InventoryBussiness {
         List<InventoryDetailResponse.InventoryDetailCondition> list = Lists.newArrayList();
         Map<Long, List<WmsInventory>> iabToInventoryMap = wmsInventories.stream().collect(Collectors.groupingBy(WmsInventory::getIabId));
         if(Objects.isNull(iabToInventoryMap) || iabToInventoryMap.isEmpty()){
-            ErrorCode.INVENTORY_DETAIL_ERROR_40259.throwError(JSON.toJSONString(iabToInventoryMap));
+            ErrorCode.INVENTORY_DETAIL_ERROR_40259.throwError(JSON.toJSONString(wmsInventories.stream().map(WmsInventory::getId).collect(Collectors.toList())));
         }
         iabToInventoryMap.forEach((k, v) -> {
             InventoryDetailResponse.InventoryDetailCondition detailVo = new InventoryDetailResponse.InventoryDetailCondition();
             detailVo.setIabId(k);
             // 根据库存批次查询批次创建时间
             WmsIvAttributebatch attributebatch = wmsIvAttributebatchService.selectByPrimaryKey(k);
+            if(Objects.isNull(attributebatch)){
+                ErrorCode.INVENTORY_DETAIL_ERROR_40260.throwError(JSON.toJSONString(k));
+            }
             detailVo.setCreateTime(attributebatch.getCreateTime());
             BigDecimal iabQty = v.stream().map(WmsInventory::getIvQty).reduce(BigDecimal.ZERO, BigDecimal::add);
             WmsInventory dbInventory = v.get(0);

@@ -213,6 +213,7 @@ public class InitBussiness {
             ErrorCode.INIT_ADD_ERROR_4002.throwError();
         }
         InitHeaderCudBaseResponse response = new InitHeaderCudBaseResponse();
+        response.setId(ivihId);
         response.setIsSuccess(Boolean.TRUE);
         return response;
     }

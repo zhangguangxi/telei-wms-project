@@ -92,11 +92,13 @@ public class LcRecommendBussiness {
             List<Long> removeProductIds = new ArrayList<>();
             productIds.stream().forEach(productId -> {
                 List<String> historyLcCodes = historyLocationMap.get(productId);
-                for (String lcCode : historyLcCodes) {
-                    if (Objects.isNull(existLocationMap.get(lcCode))) {
-                        removeProductIds.add(productId);
-                        existLocationMap.put(lcCode, productId);
-                        break;
+                if (Objects.nonNull(historyLcCodes)) {
+                    for (String lcCode : historyLcCodes) {
+                        if (Objects.isNull(existLocationMap.get(lcCode))) {
+                            removeProductIds.add(productId);
+                            existLocationMap.put(lcCode, productId);
+                            break;
+                        }
                     }
                 }
             });

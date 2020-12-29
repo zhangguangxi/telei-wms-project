@@ -246,6 +246,9 @@ public class PaoBussiness {
                         continue;
                     }
                     List<String> lcCodes = historyLocationMap.get(wmsPaoLine.getProductId());
+                    if (Objects.isNull(lcCodes) || lcCodes.isEmpty()) {
+                        continue;
+                    }
                     for (String lcCode : lcCodes) {
                         if (Objects.isNull(existLocationMap.get(lcCode))) {
                             wmsPaoLine.setPrepLcCode(lcCode);

@@ -12,4 +12,5 @@ public class InitHeaderCudBaseResponse {
     /**是否成功*/
     @ApiModelProperty(value = "是", example = "true/false", position = 1)
     private Boolean isSuccess = true;
+    private Long id;
 }
