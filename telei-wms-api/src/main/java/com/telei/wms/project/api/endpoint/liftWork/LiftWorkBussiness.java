@@ -355,7 +355,7 @@ public class LiftWorkBussiness {
         String lcCode = wmsInventoryList.get(0).getLcCode();
         String prepLcCode = "";
         BigDecimal qty = BigDecimal.ZERO;
-        int lcCodeNumber = Integer.parseInt(lcCode.replace("-", "").replace("S", ""));
+        int lcCodeNumber = Integer.parseInt(lcCode.replace("-", "").replace("S", "").replace("Z", ""));
         if ("RISE".equals(request.getLiftType())) {
             prepLcCode = wmsLocationService.getLcCodeByLocation(request.getWarehouseId(), lcCodeNumber);
             if (StringUtils.isBlank(prepLcCode)) {

@@ -865,14 +865,17 @@ public class InventoryBussiness {
         if(Objects.isNull(iabToInventoryMap) || iabToInventoryMap.isEmpty()){
             ErrorCode.INVENTORY_DETAIL_ERROR_40259.throwError(JSON.toJSONString(wmsInventories.stream().map(WmsInventory::getId).collect(Collectors.toList())));
         }
+        Set<Long> iabIdSet = iabToInventoryMap.keySet();
+        List<WmsIvAttributebatch> ivAttributeBatchList = wmsIvAttributebatchService.selectByPrimaryKeys(iabIdSet);
+        if(Objects.isNull(ivAttributeBatchList) || ivAttributeBatchList.isEmpty()){
+            ErrorCode.INVENTORY_DETAIL_ERROR_40260.throwError(JSON.toJSONString(iabIdSet));
+        }
+        Map<Long, WmsIvAttributebatch> id2EntityMap = ivAttributeBatchList.stream().collect(toMap(WmsIvAttributebatch::getId, Function.identity()));
         iabToInventoryMap.forEach((k, v) -> {
             InventoryDetailResponse.InventoryDetailCondition detailVo = new InventoryDetailResponse.InventoryDetailCondition();
             detailVo.setIabId(k);
             // 根据库存批次查询批次创建时间
-            WmsIvAttributebatch attributebatch = wmsIvAttributebatchService.selectByPrimaryKey(k);
-            if(Objects.isNull(attributebatch)){
-                ErrorCode.INVENTORY_DETAIL_ERROR_40260.throwError(JSON.toJSONString(k));
-            }
+            WmsIvAttributebatch attributebatch = id2EntityMap.get(k);
             detailVo.setCreateTime(attributebatch.getCreateTime());
             BigDecimal iabQty = v.stream().map(WmsInventory::getIvQty).reduce(BigDecimal.ZERO, BigDecimal::add);
             WmsInventory dbInventory = v.get(0);
@@ -887,6 +890,7 @@ public class InventoryBussiness {
             detailVo.setQty(iabQty);
             list.add(detailVo);
         });
+        list.sort((o1,o2)-> o2.getCreateTime().compareTo(o1.getCreateTime()));
         InventoryDetailBussinessResponse response = new InventoryDetailBussinessResponse();
         response.setList(list);
         return response;

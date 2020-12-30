@@ -75,4 +75,10 @@ public class PloEndpoint {
     public PloCudBaseResponse cancelPloDetail(@RequestBody @Valid PloDetailCancelRequest request) {
         return ploBussiness.cancelPloDetail(request);
     }
+
+    @ApiOperation("取消拣货完成")
+    @PostMapping(ServiceId.WMS_PLO_CANCEL_FINISH)
+    public PloCudBaseResponse cancelPloFinish(@RequestBody @Valid PloHeaderCancelRequest request) {
+        return ploBussiness.cancelPloFinish(request);
+    }
 }

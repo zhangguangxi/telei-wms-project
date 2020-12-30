@@ -182,6 +182,9 @@ public class ServiceId {
     @RightResource(rightSystem = "wms", rightItem = "拣货单", rightFunction = "取消拣货记录")
     public static final String WMS_PLO_CANCEL_DETAIL = "1030808";
 
+    @RightResource(rightSystem = "wms", rightItem = "拣货单", rightFunction = "取消拣货完成")
+    public static final String WMS_PLO_CANCEL_FINISH = "1030809";
+
     /**
      * 出库任务
      * 09

@@ -77,6 +77,12 @@ public class PloBussiness {
     @Autowired
     private IvOutBussiness ivOutBussiness;
 
+    @Autowired
+    private WmsBacklcService wmsBacklcService;
+
+    @Autowired
+    private WmsBacklcListService wmsBacklcListService;
+
     /**
      * 新增
      * @param request
@@ -165,19 +171,19 @@ public class PloBussiness {
                 wmsIvOut.setQty(wmsPloLine.getQty());
                 wmsIvOuts.add(wmsIvOut);
             }
-            if (! exceptionProductIds.isEmpty()) {
+            if (!exceptionProductIds.isEmpty()) {
                 //拣货有库存不够的商品
                 ErrorCode.PLO_ADD_ERROR_4010.throwError(JSON.toJSONString(exceptionProductIds));
             }
             //确认锁
             if (confirmLock(lockKey, lockValue)) {
-                if (! wmsIvOuts.isEmpty()) {
+                if (!wmsIvOuts.isEmpty()) {
                     //新增待出库存
                     ivOutBussiness.addIvOut(wmsIvOuts);
                 }
                 //新增拣货单
                 wmsPloHeaderService.insertSelective(wmsPloHeader);
-                if (! wmsPloLines.isEmpty()) {
+                if (!wmsPloLines.isEmpty()) {
                     //获取库位
                     getLocation(wmsPloHeader.getWarehouseId(), wmsPloLines);
                     //新增拣货单详情
@@ -277,7 +283,7 @@ public class PloBussiness {
             if (Objects.isNull(ploId)) {
                 ploId = ploDetailAddRequest.getPloId();
             }
-            if (! ploId.equals(ploDetailAddRequest.getPloId())) {
+            if (!ploId.equals(ploDetailAddRequest.getPloId())) {
                 //出现不同的拣货单
                 ErrorCode.PLO_ADD_ERROR_4016.throwError();
             }
@@ -289,7 +295,7 @@ public class PloBussiness {
             //主单不存在
             ErrorCode.PLO_NOT_EXIST_4001.throwError();
         }
-        if (! SAVE_STATUS.equals(wmsPloHeader.getOrderStatus()) && ! PART_PICKING_STATUS.equals(wmsPloHeader.getOrderStatus())) {
+        if (!SAVE_STATUS.equals(wmsPloHeader.getOrderStatus()) && !PART_PICKING_STATUS.equals(wmsPloHeader.getOrderStatus())) {
             //只有保存状态和部分拣货状态才能新增拣货详情
             ErrorCode.PLO_ADD_ERROR_4011.throwError();
         }
@@ -400,7 +406,7 @@ public class PloBussiness {
             if (Objects.isNull(ploId)) {
                 ploId = wmsPloDetail.getPloId();
             }
-            if (! ploId.equals(wmsPloDetail.getPloId())) {
+            if (!ploId.equals(wmsPloDetail.getPloId())) {
                 //出现不同的拣货单
                 ErrorCode.PLO_CANCEL_ERROR_4013.throwError();
             }
@@ -499,7 +505,7 @@ public class PloBussiness {
         WmsPloDetail wmsPloDetailEntity = new WmsPloDetail();
         wmsPloDetailEntity.setPloId(wmsPloHeader.getId());
         WmsPloDetail wmsPloDetail = wmsPloDetailService.selectOneByEntity(wmsPloDetailEntity);
-        if (! Objects.isNull(wmsPloDetail)) {
+        if (!Objects.isNull(wmsPloDetail)) {
             //有拣货记录不能取消拣货单
             ErrorCode.PLO_CANCEL_ERROR_4015.throwError();
         }
@@ -519,11 +525,6 @@ public class PloBussiness {
         updateWmsDoHeader.setHasPlo("0");
         updateWmsDoHeader.setLastupdateTime(DateUtils.nowWithUTC());
         wmsDoHeaderService.updateByPrimaryKeySelective(updateWmsDoHeader);
-        //获取出库任务明细id，删除待出库存
-//        WmsDoLine wmsDoLineEntity = new WmsDoLine();
-//        wmsDoLineEntity.setDohId(wmsPloHeader.getDohId());
-//        List<WmsDoLine> wmsDoLines = wmsDoLineService.selectByEntity(wmsDoLineEntity);
-//        List<Long> dolIds = wmsDoLines.stream().map(WmsDoLine::getId).collect(Collectors.toList());
         //获取待出库id
         WmsIvOut wmsIvOutEntity = new WmsIvOut();
         wmsIvOutEntity.setOrderId(wmsPloHeader.getDohId());
@@ -551,7 +552,7 @@ public class PloBussiness {
             //不能重复提交拣货完毕
             ErrorCode.PLO_FINISH_ERROR_4006.throwError();
         }
-        if (! PART_PICKING_STATUS.equals(wmsPloHeader.getOrderStatus())) {
+        if (!PART_PICKING_STATUS.equals(wmsPloHeader.getOrderStatus())) {
             //只有部分拣货才能操作拣货完毕
             ErrorCode.PLO_FINISH_ERROR_4007.throwError();
         }
@@ -586,6 +587,73 @@ public class PloBussiness {
             updateWmsDoLines.add(updateWmsDoLine);
         }
         wmsDoLineService.updateBatch(updateWmsDoLines);
+        PloCudBaseResponse response = new PloCudBaseResponse();
+        return response;
+    }
+
+    /**
+     * 取消拣货完成
+     * @param request
+     * @return
+     */
+    @Transactional(rollbackFor = Exception.class)
+    public PloCudBaseResponse cancelPloFinish(PloHeaderCancelRequest request) {
+        WmsPloHeader wmsPloHeader = wmsPloHeaderService.selectByPrimaryKey(request.getId());
+        if (Objects.isNull(wmsPloHeader)) {
+            //主单不存在
+            ErrorCode.PLO_NOT_EXIST_4001.throwError();
+        }
+        if (!PICKING_FINISH_STATUS.equals(wmsPloHeader.getOrderStatus())) {
+            //只有拣货完成状态才能取消拣货完成
+            ErrorCode.PLO_CANCEL_ERROR_4020.throwError();
+        }
+        WmsDoHeader wmsDoHeader = wmsDoHeaderService.selectByPrimaryKey(wmsPloHeader.getDohId());
+        if (Objects.isNull(wmsDoHeader)) {
+            //入库任务不存在
+            ErrorCode.PLO_CANCEL_ERROR_4021.throwError();
+        }
+        if (wmsDoHeader.getContainerQty().intValue() != 0) {
+            //装柜数量不等于0不能撤销
+            ErrorCode.PLO_CANCEL_ERROR_4022.throwError();
+        }
+        //更新拣货单状态
+        WmsPloHeader updateWmsPloHeader = new WmsPloHeader();
+        updateWmsPloHeader.setId(wmsPloHeader.getId());
+        updateWmsPloHeader.setOrderStatus(PART_PICKING_STATUS);
+        updateWmsPloHeader.setLastUpdateUser(CustomRequestContext.getUserInfo().getEmployeeName());
+        updateWmsPloHeader.setLastUpdateTime(DateUtils.nowWithUTC());
+        wmsPloHeaderService.updateByPrimaryKeySelective(updateWmsPloHeader);
+        //更新出库任务拣货信息
+        WmsDoHeader updateWmsDoHeader = new WmsDoHeader();
+        updateWmsDoHeader.setId(wmsPloHeader.getDohId());
+        updateWmsDoHeader.setPloQty(BigDecimal.ZERO);
+        updateWmsDoHeader.setOrderStatus("25");
+        updateWmsDoHeader.setLastupdateTime(DateUtils.nowWithUTC());
+        wmsDoHeaderService.updateByPrimaryKeySelective(updateWmsDoHeader);
+        //更新任务明细拣货数量
+        WmsPloLine wmsPloLineEntity = new WmsPloLine();
+        wmsPloLineEntity.setPloId(wmsPloHeader.getId());
+        List<WmsPloLine> wmsPloLines = wmsPloLineService.selectByEntity(wmsPloLineEntity);
+        List<WmsDoLine> updateWmsDoLines = new ArrayList<>();
+        for (WmsPloLine wmsPloLine : wmsPloLines) {
+            WmsDoLine updateWmsDoLine = new WmsDoLine();
+            updateWmsDoLine.setId(wmsPloLine.getDolId());
+            updateWmsDoLine.setPloQty(BigDecimal.ZERO);
+            updateWmsDoLines.add(updateWmsDoLine);
+        }
+        wmsDoLineService.updateBatch(updateWmsDoLines);
+        //删除退库
+        WmsBacklc wmsBacklcEntity = new WmsBacklc();
+        wmsBacklcEntity.setDohId(wmsDoHeader.getId());
+        WmsBacklc wmsBacklc = wmsBacklcService.selectOneByEntity(wmsBacklcEntity);
+        if (Objects.nonNull(wmsBacklc)) {
+            wmsBacklcService.deleteByPrimaryKey(wmsBacklc.getId());
+            WmsBacklcList wmsBacklcListEntity = new WmsBacklcList();
+            wmsBacklcListEntity.setBlId(wmsBacklc.getId());
+            List<WmsBacklcList> wmsBacklcLists = wmsBacklcListService.selectByEntity(wmsBacklcListEntity);
+            List<Long> ids = wmsBacklcLists.stream().map(WmsBacklcList::getId).collect(Collectors.toList());
+            wmsBacklcListService.deleteByPrimaryKeys(ids);
+        }
         PloCudBaseResponse response = new PloCudBaseResponse();
         return response;
     }

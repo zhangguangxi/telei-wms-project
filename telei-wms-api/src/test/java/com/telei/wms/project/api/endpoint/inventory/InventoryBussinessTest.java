@@ -29,6 +29,9 @@ public class InventoryBussinessTest {
         inventoryBussiness.addInventory(request);
     }
 
+
+
+
     @Test
     public void testMoveInventory(){
         String json = "{\"companyId\":\"1030901707577493504\",\"ivQty\":2000,\"ivQtyAdjt\":2000,\"lcCode\":\"S01-01-21\",\"lcCodeAdjt\":\"S01-01-22\",\"productId\":4718049436532475906,\"reason\":\"样品库位移库\",\"warehouseCode\":\"ywck\",\"warehouseId\":1030907360064833536}";
@@ -39,9 +42,8 @@ public class InventoryBussinessTest {
 
     @Test
     public void testDetailInventory(){
-        String json = "{\"companyId\":\"1051506761678194688\",\"warehouseId\":\"1051515954409768960\",\"lcCode\":\"S99-01-11\",\"productId\":\"1053625330742331393\"}";
+        String json = "{\"companyId\":1051506761678194688,\"lcCode\":\"S99-01-11\",\"productId\":1053625327256864769,\"warehouseId\":1051515954409768960}";
         InventoryDetailBussinessRequest request = JSON.parseObject(json, InventoryDetailBussinessRequest.class);
-        inventoryBussiness.detailInventory(request);
+        System.out.println(JSON.toJSONString(inventoryBussiness.detailInventory(request)));
     }
-
 }
