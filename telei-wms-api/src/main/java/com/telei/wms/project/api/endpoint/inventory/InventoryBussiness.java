@@ -1054,7 +1054,12 @@ public class InventoryBussiness {
             );
             Map<Long, String> dolId2LcCodeMap = wmsPloLineSet.stream().collect(Collectors.toMap(WmsPloLine::getDolId, WmsPloLine::getLcCode));
             List<String> requestLcCodeList = wmsPloLineList.stream().map(WmsPloLine::getLcCode).collect(toList());
+<<<<<<< HEAD
+
+
+=======
             /**样品库位校验*/
+>>>>>>> b622c83ea9dbb07a7e5bb373060326a457b79553
             Set<String>  nonSampleLocations = Sets.newHashSet();
             requestLcCodeList.forEach(item ->{
                     if(!item.toLowerCase().startsWith("s")){
