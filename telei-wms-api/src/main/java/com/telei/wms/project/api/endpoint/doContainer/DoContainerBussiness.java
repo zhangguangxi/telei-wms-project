@@ -14,6 +14,7 @@ import com.telei.wms.datasource.wms.model.WmsIdInstantdirective;
 import com.telei.wms.datasource.wms.service.WmsDoContainerService;
 import com.telei.wms.datasource.wms.service.WmsDoHeaderService;
 import com.telei.wms.datasource.wms.service.WmsDoLineService;
+import com.telei.wms.datasource.wms.vo.DoContainerPageQueryRequestVo;
 import com.telei.wms.datasource.wms.vo.DoContainerResponseVo;
 import com.telei.wms.project.api.ErrorCode;
 import com.telei.wms.project.api.amqp.producer.WmsOmsContainerWriteBackProducer;
@@ -29,6 +30,8 @@ import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -74,49 +77,68 @@ public class DoContainerBussiness {
         List<DoContainerCommonRequest> containerAddList = request.getContainerAddList();
         List<WmsDoContainer> wmsDoContainers = new ArrayList<>();
         OmsContainerWriteBack omsContainerWriteBack = new OmsContainerWriteBack();
+        // 装箱金额
         BigDecimal cAmount = BigDecimal.ZERO;
+        // 装箱体积(CBM)
         BigDecimal cVol = BigDecimal.ZERO;
+        // 装箱重量(KG)
         BigDecimal cWeight = BigDecimal.ZERO;
         BigDecimal sumQty = BigDecimal.ZERO;
         List<WmsDoLine> wmsDoLines = new ArrayList<>();
         // 获取唯一锁标识
         Object lockKey = request.getDohId();
         Object lockValue = LockMapUtil.tryLock(lockKey);
+        // 根据出库任务id查询装柜列表【每个产品的待装柜数量】
+        ConditionsBuilder conditionsBuilder = ConditionsBuilder.create();
+        if (StringUtils.isNotNull(request.getDohId())) {
+            conditionsBuilder.eq("dohId", request.getDohId());
+        }
+        Map<String, Object> paramMap = conditionsBuilder.build();
+        List<DoContainerPageQueryRequestVo> doContainerList = wmsDoContainerService.findDoContainerList(paramMap);
+        if(StringUtils.isNull(doContainerList) || doContainerList.size() <= 0){
+            // 暂无待装柜记录
+            ErrorCode.DO_CONTAINER_LIST_NOT_EXIST_4003.throwError();
+        }
+        Map<Long, DoContainerPageQueryRequestVo> containerMap = doContainerList.stream().collect(Collectors.toMap(DoContainerPageQueryRequestVo::getProductId, Function.identity()));
         for (DoContainerCommonRequest commonRequest : containerAddList) {
-            // 待装柜数量
-            BigDecimal dQty = commonRequest.getPickedQty().subtract(commonRequest.getBQty()).subtract(commonRequest.getCQty());
-            if (StringUtils.isNotNull(commonRequest.getQty()) && commonRequest.getQty().compareTo(BigDecimal.ZERO) > 0) {
-                if (commonRequest.getQty().compareTo(dQty) > 0) {
-                    // 装柜数量不能超过待装柜数量
-                    ErrorCode.DO_CONTAINER_QTY_IS_MAX_4002.throwError();
-                }
-                WmsDoContainer wmsDoContainer = DataConvertUtil.parseDataAsObject(commonRequest, WmsDoContainer.class);
-                wmsDoContainer.setId(idGenerator.getUnique());
-                wmsDoContainer.setCQty(commonRequest.getQty());
-                wmsDoContainers.add(wmsDoContainer);
+            DoContainerPageQueryRequestVo queryRequestVo = containerMap.get(commonRequest.getProductId());
+            if(Objects.nonNull(queryRequestVo)){
+                // 待装柜数量
+                BigDecimal dQty = queryRequestVo.getPickedQty().subtract(queryRequestVo.getBQty()).subtract(queryRequestVo.getCQty());
+                if (StringUtils.isNotNull(commonRequest.getQty()) && commonRequest.getQty().compareTo(BigDecimal.ZERO) > 0) {
+                    if (commonRequest.getQty().compareTo(dQty) > 0) {
+                        ErrorCode.DO_CONTAINER_QTY_IS_MAX_4002.throwError(queryRequestVo.getProductName());
+                    }
+                    WmsDoContainer wmsDoContainer = DataConvertUtil.parseDataAsObject(commonRequest, WmsDoContainer.class);
+                    wmsDoContainer.setId(idGenerator.getUnique());
+                    wmsDoContainer.setCQty(commonRequest.getQty());
+                    wmsDoContainers.add(wmsDoContainer);
 
-                omsContainerWriteBack.setOrderType(commonRequest.getOrderType());
-                omsContainerWriteBack.setCId(commonRequest.getCId());
-                omsContainerWriteBack.setDohId(commonRequest.getDohId());
-                omsContainerWriteBack.setSoId(commonRequest.getSoId());
-                omsContainerWriteBack.setSpId(commonRequest.getSpId());
+                    omsContainerWriteBack.setOrderType(commonRequest.getOrderType());
+                    omsContainerWriteBack.setCId(commonRequest.getCId());
+                    omsContainerWriteBack.setDohId(commonRequest.getDohId());
+                    omsContainerWriteBack.setSoId(commonRequest.getSoId());
+                    omsContainerWriteBack.setSpId(commonRequest.getSpId());
 
-                cAmount = cAmount.add(commonRequest.getCAmount());
-                if (StringUtils.isNotNull(commonRequest.getCVol())) {
-                    cVol = cVol.add(commonRequest.getCVol());
-                }
-                if (StringUtils.isNotNull(commonRequest.getCWeight())) {
-                    cWeight = cWeight.add(commonRequest.getCWeight());
-                }
-                sumQty = sumQty.add(commonRequest.getQty());
+                    cAmount = cAmount.add(commonRequest.getCAmount());
+                    if (StringUtils.isNotNull(commonRequest.getCVol())) {
+                        cVol = cVol.add(commonRequest.getCVol());
+                    }
+                    if (StringUtils.isNotNull(commonRequest.getCWeight())) {
+                        cWeight = cWeight.add(commonRequest.getCWeight());
+                    }
+                    sumQty = sumQty.add(commonRequest.getQty());
 
-                WmsDoLine wmsDoLine = wmsDoLineService.selectByPrimaryKey(commonRequest.getDolId());
-                if (StringUtils.isNotNull(wmsDoLine.getContainerQty())) {
-                    wmsDoLine.setContainerQty(wmsDoLine.getContainerQty().add(commonRequest.getQty()));
-                } else {
-                    wmsDoLine.setContainerQty(commonRequest.getQty());
+                    WmsDoLine wmsDoLine = wmsDoLineService.selectByPrimaryKey(commonRequest.getDolId());
+                    if (StringUtils.isNotNull(wmsDoLine.getContainerQty())) {
+                        wmsDoLine.setContainerQty(wmsDoLine.getContainerQty().add(commonRequest.getQty()));
+                    } else {
+                        wmsDoLine.setContainerQty(commonRequest.getQty());
+                    }
+                    wmsDoLines.add(wmsDoLine);
                 }
-                wmsDoLines.add(wmsDoLine);
+            }else{
+                ErrorCode.DO_CONTAINER_QTY_IS_MAX_4002.throwError(commonRequest.getProductId());
             }
         }
         int count = 0;

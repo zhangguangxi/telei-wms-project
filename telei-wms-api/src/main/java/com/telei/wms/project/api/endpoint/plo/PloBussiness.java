@@ -628,6 +628,7 @@ public class PloBussiness {
         updateWmsDoHeader.setId(wmsPloHeader.getDohId());
         updateWmsDoHeader.setPloQty(BigDecimal.ZERO);
         updateWmsDoHeader.setOrderStatus("25");
+        updateWmsDoHeader.setHadCheck("0");
         updateWmsDoHeader.setLastupdateTime(DateUtils.nowWithUTC());
         wmsDoHeaderService.updateByPrimaryKeySelective(updateWmsDoHeader);
         //更新任务明细拣货数量

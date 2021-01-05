@@ -8,6 +8,7 @@ import com.telei.wms.datasource.wms.model.WmsDoContainer;
 import com.telei.wms.datasource.wms.repository.WmsDoContainerRepository;
 import com.telei.wms.datasource.wms.vo.DoContainerDetailResponseVo;
 import com.telei.wms.datasource.wms.vo.DoContainerGroupResponseVo;
+import com.telei.wms.datasource.wms.vo.DoContainerPageQueryRequestVo;
 import com.telei.wms.datasource.wms.vo.DoContainerResponseVo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -36,6 +37,10 @@ public class WmsDoContainerService extends BaseService<WmsDoContainerRepository,
         page.setTotalRecords(pageInfo.getTotal());
         page.setContent(pageInfo.getList());
         return page;
+    }
+
+    public List<DoContainerPageQueryRequestVo> findDoContainerList(Map<String, Object> paramMap) {
+        return wmsDoContainerRepository.findAllDoContainer(paramMap);
     }
 
     public Pageable queryContainerDetailList(Pageable page, Map<String, Object> paramMap) {

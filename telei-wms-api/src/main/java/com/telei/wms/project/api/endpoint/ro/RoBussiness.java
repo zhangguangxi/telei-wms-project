@@ -270,15 +270,6 @@ public class RoBussiness {
                 //收货数和上架数不相等不能强制收货
                 ErrorCode.RO_ENFORCEMENT_ERROR_4003.throwError();
             }
-            // 采购退件回写实际出库数量=0 rma_status 设为 20
-            if ("08".equals(wmsRoHeader.getOrderType())) {
-                OmsRecovicePlan omsRecovicePlan = new OmsRecovicePlan();
-                omsRecovicePlan.setId(request.getRpId());
-                //添加数据交互指令
-                WmsIdInstantdirective wmsIdInstantdirective = wmsIdInstantdirectiveBussiness.add("PUTON", "", omsRecovicePlan);
-                //发送消息到队列
-                wmsOmsRecovicePlanCancelCallbackProducer.send(wmsIdInstantdirective);
-            }
             WmsRoHeader updateWmsRoHeader = new WmsRoHeader();
             updateWmsRoHeader.setId(wmsRoHeader.getId());
             updateWmsRoHeader.setOrderStatus(CLOSE_STATUS);

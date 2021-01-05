@@ -223,6 +223,7 @@ public enum ErrorCode {
      */
     DO_CONTAINER_QTY_IS_NULL_4001,
     DO_CONTAINER_QTY_IS_MAX_4002,
+    DO_CONTAINER_LIST_NOT_EXIST_4003,
 
 
     /**
