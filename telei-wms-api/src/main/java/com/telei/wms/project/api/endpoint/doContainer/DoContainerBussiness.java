@@ -95,16 +95,30 @@ public class DoContainerBussiness {
         }
         Map<String, Object> paramMap = conditionsBuilder.build();
         List<DoContainerPageQueryRequestVo> doContainerList = wmsDoContainerService.findDoContainerList(paramMap);
-        if(StringUtils.isNull(doContainerList) || doContainerList.size() <= 0){
+        if (StringUtils.isNull(doContainerList) || doContainerList.size() <= 0) {
             // 暂无待装柜记录
             ErrorCode.DO_CONTAINER_LIST_NOT_EXIST_4003.throwError();
         }
         Map<Long, DoContainerPageQueryRequestVo> containerMap = doContainerList.stream().collect(Collectors.toMap(DoContainerPageQueryRequestVo::getProductId, Function.identity()));
         for (DoContainerCommonRequest commonRequest : containerAddList) {
             DoContainerPageQueryRequestVo queryRequestVo = containerMap.get(commonRequest.getProductId());
-            if(Objects.nonNull(queryRequestVo)){
+            if (Objects.nonNull(queryRequestVo)) {
+                BigDecimal pickedQty = BigDecimal.ZERO;
+                BigDecimal bQty = BigDecimal.ZERO;
+                BigDecimal cQty = BigDecimal.ZERO;
+                if (Objects.nonNull(queryRequestVo.getPickedQty())) {
+                    pickedQty = queryRequestVo.getPickedQty();
+                } else {
+                    ErrorCode.DO_CONTAINER_QTY_IS_MAX_4002.throwError(queryRequestVo.getProductName());
+                }
+                if (Objects.nonNull(queryRequestVo.getBQty())) {
+                    bQty = queryRequestVo.getBQty();
+                }
+                if (Objects.nonNull(queryRequestVo.getCQty())) {
+                    cQty = queryRequestVo.getCQty();
+                }
                 // 待装柜数量
-                BigDecimal dQty = queryRequestVo.getPickedQty().subtract(queryRequestVo.getBQty()).subtract(queryRequestVo.getCQty());
+                BigDecimal dQty = pickedQty.subtract(bQty).subtract(cQty);
                 if (StringUtils.isNotNull(commonRequest.getQty()) && commonRequest.getQty().compareTo(BigDecimal.ZERO) > 0) {
                     if (commonRequest.getQty().compareTo(dQty) > 0) {
                         ErrorCode.DO_CONTAINER_QTY_IS_MAX_4002.throwError(queryRequestVo.getProductName());
@@ -137,7 +151,7 @@ public class DoContainerBussiness {
                     }
                     wmsDoLines.add(wmsDoLine);
                 }
-            }else{
+            } else {
                 ErrorCode.DO_CONTAINER_QTY_IS_MAX_4002.throwError(commonRequest.getProductId());
             }
         }
