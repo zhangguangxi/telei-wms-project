@@ -168,7 +168,7 @@ public class RoBussiness {
             omsRecovicePlan.setId(wmsRoHeaderInfo.getRpId());
 //            omsRecovicePlan.setMemo(null);
             //添加数据交互指令
-            WmsIdInstantdirective wmsIdInstantdirective = wmsIdInstantdirectiveBussiness.add("PUTON", "", omsRecovicePlan);
+            WmsIdInstantdirective wmsIdInstantdirective = wmsIdInstantdirectiveBussiness.add(wmsOmsRecovicePlanUpdateProducer.getQueueName(), "", omsRecovicePlan);
             //发送消息到队列
             wmsOmsRecovicePlanUpdateProducer.send(wmsIdInstantdirective);
         }
@@ -217,7 +217,7 @@ public class RoBussiness {
             cancelLock(lockKey, lockValue);
         }
         //添加数据交互指令
-        WmsIdInstantdirective wmsIdInstantdirective = wmsIdInstantdirectiveBussiness.add("PUTON", "", omsRecovicePlan);
+        WmsIdInstantdirective wmsIdInstantdirective = wmsIdInstantdirectiveBussiness.add(wmsOmsRecovicePlanCancelCallbackProducer.getQueueName(), "", omsRecovicePlan);
         //发送消息到队列
         wmsOmsRecovicePlanCancelCallbackProducer.send(wmsIdInstantdirective);
         RoCudBaseResponse response = new RoCudBaseResponse();

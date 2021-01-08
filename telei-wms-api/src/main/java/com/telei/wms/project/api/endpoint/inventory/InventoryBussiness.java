@@ -574,7 +574,7 @@ public class InventoryBussiness {
 
         //4、异步(MQ)回写oms单据(更新入库计划单头/入库计划明细 更新采购单单头/采购单明细)
         //4.1 指令入库
-        WmsIdInstantdirective wmsIdInstantdirective = wmsIdInstantdirectiveBussiness.add("PUTON", "", omsInventoryAddWriteBack);
+        WmsIdInstantdirective wmsIdInstantdirective = wmsIdInstantdirectiveBussiness.add(wmsOmsInventoryAddWriteBackProducer.getQueueName(), "", omsInventoryAddWriteBack);
         //4.2 MQ发送指令
         log.info("\n +++++++++++++++++++++ 上架操作::异步回写OMS单据 -> {} ++++++++++++++++++++ \n ", JSON.toJSONString(omsInventoryAddWriteBack));
         wmsOmsInventoryAddWriteBackProducer.send(wmsIdInstantdirective);
@@ -782,7 +782,7 @@ public class InventoryBussiness {
         if (Objects.nonNull(omsInventoryChangeWriteBackConditions) && !omsInventoryChangeWriteBackConditions.isEmpty()) {
             OmsInventoryChangeWriteBack omsInventoryChangeWriteBack = new OmsInventoryChangeWriteBack();
             omsInventoryChangeWriteBack.setList(omsInventoryChangeWriteBackConditions);
-            WmsIdInstantdirective wmsIdInstantdirective = wmsIdInstantdirectiveBussiness.add("PUTON", "", omsInventoryChangeWriteBack);
+            WmsIdInstantdirective wmsIdInstantdirective = wmsIdInstantdirectiveBussiness.add(wmsOmsInventoryChangeWriteBackProducer.getQueueName(), "", omsInventoryChangeWriteBack);
             // MQ发送指令
             log.info("\n +++++++++++++++++++++ 库存调整::  异步(MQ)回写oms单据(更新入库计划单头/入库计划明细 更新采购单单头/采购单明细)-> {} ++++++++++++++++++++ \n ", JSON.toJSONString(wmsIdInstantdirective));
             wmsOmsInventoryChangeWriteBackProducer.send(wmsIdInstantdirective);
@@ -1258,7 +1258,7 @@ public class InventoryBussiness {
                 OmsIvOutWriteBack omsIvOutWriteBack = new OmsIvOutWriteBack();
                 omsIvOutWriteBack.setList(omsIvOutWriteBacks);
                 omsIvOutWriteBack.setOrderType(orderType);
-                WmsIdInstantdirective wmsIdInstantdirective = wmsIdInstantdirectiveBussiness.add("PUTON", "", omsIvOutWriteBack);
+                WmsIdInstantdirective wmsIdInstantdirective = wmsIdInstantdirectiveBussiness.add(wmsOmsIvOutWriteBackProducer.getQueueName(), "", omsIvOutWriteBack);
                 wmsOmsIvOutWriteBackProducer.send(wmsIdInstantdirective);
 
                 if ("03".equals(wmsDoHeader.getOrderType())) {
@@ -1285,7 +1285,7 @@ public class InventoryBussiness {
                     recovicePlanAddByDoRequest.setDetails(requestDetails);
                     log.debug("******recovicePlanAddByDoRequest******" + JSON.toJSONString(recovicePlanAddByDoRequest));
                     //添加数据交互指令
-                    WmsIdInstantdirective instantdirective = wmsIdInstantdirectiveBussiness.add("PUTON", "", recovicePlanAddByDoRequest);
+                    WmsIdInstantdirective instantdirective = wmsIdInstantdirectiveBussiness.add(wmsOmsRecovicePlanAddByDoProducer.getQueueName(), "", recovicePlanAddByDoRequest);
                     //发送消息到队列
                     wmsOmsRecovicePlanAddByDoProducer.send(instantdirective);
                 }

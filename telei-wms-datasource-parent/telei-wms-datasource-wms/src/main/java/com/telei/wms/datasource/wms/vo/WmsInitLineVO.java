@@ -109,5 +109,7 @@ public class WmsInitLineVO {
     private String bigBagBarcode;
     /** 供应商名称 */
     private String supplierName;
+    /** 供应商id */
+    private Long supplierId;
 
 }

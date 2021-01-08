@@ -201,7 +201,7 @@ public class DoHeaderBussiness {
         //释放锁
         cancelLock(lockKey, lockValue);
         //添加数据交互指令
-        WmsIdInstantdirective wmsIdInstantdirective = wmsIdInstantdirectiveBussiness.add("PUTON", "", omsShipPlan);
+        WmsIdInstantdirective wmsIdInstantdirective = wmsIdInstantdirectiveBussiness.add(wmsOmsShipPlanCancelCallbackProducer.getQueueName(), "", omsShipPlan);
         //发送消息到队列
         wmsOmsShipPlanCancelCallbackProducer.send(wmsIdInstantdirective);
         DoCudBaseResponse response = new DoCudBaseResponse();
@@ -253,7 +253,7 @@ public class DoHeaderBussiness {
 //            recovicePlanAddByDoRequest.setPoId(Long.valueOf(poId));
 //            log.debug("*************recovicePlanAddByDoRequest" + JSON.toJSONString(recovicePlanAddByDoRequest));
 //            //添加数据交互指令
-//            WmsIdInstantdirective wmsIdInstantdirective = wmsIdInstantdirectiveBussiness.add("PUTON", "", recovicePlanAddByDoRequest);
+//            WmsIdInstantdirective wmsIdInstantdirective = wmsIdInstantdirectiveBussiness.add(wmsOmsRecovicePlanAddByDoProducer.getQueueName(), "", recovicePlanAddByDoRequest);
 //            //发送消息到队列
 //            wmsOmsRecovicePlanAddByDoProducer.send(wmsIdInstantdirective);
 //        }

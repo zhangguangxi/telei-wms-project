@@ -157,7 +157,7 @@ public class InitBussiness {
                     ApiResponse productResponse = productFeignClient.getProductListByBarCode(productDetailRequest);
                     ProductListResponse response = JSON.parseObject(JSON.toJSONString(productResponse.getData()), ProductListResponse.class);
                     if (StringUtils.isNotNull(response)) {
-                        productMap = response.getProductList().stream().collect(Collectors.toMap(ProductDetailResponse::getProductBarcode, Function.identity()));
+                        productMap = response.getProductList().stream().collect(Collectors.toMap(ProductDetailResponse::getProductNo, Function.identity()));
                     }
                 } catch (Exception e) {
                     ErrorCode.BUSINESS_NUMBER_ERROR_4001.throwError();
@@ -410,7 +410,7 @@ public class InitBussiness {
             OmsInventoryInitWriteBack omsInventoryInitWriteBack = new OmsInventoryInitWriteBack();
             omsInventoryInitWriteBack.setOmsInventoryList(omsInventoryList);
             omsInventoryInitWriteBack.setFromCode(wmsInitHeader.getIvihCode());
-            WmsIdInstantdirective wmsIdInstantdirective = wmsIdInstantdirectiveBussiness.add("PUTON", "", omsInventoryInitWriteBack);
+            WmsIdInstantdirective wmsIdInstantdirective = wmsIdInstantdirectiveBussiness.add(wmsOmsInventoryInitWriteBackProducer.getQueueName(), "", omsInventoryInitWriteBack);
             // MQ发送指令
             wmsOmsInventoryInitWriteBackProducer.send(wmsIdInstantdirective);
 
@@ -570,7 +570,7 @@ public class InitBussiness {
                 ApiResponse productResponse = productFeignClient.getProductListByBarCode(productDetailRequest);
                 ProductListResponse response = JSON.parseObject(JSON.toJSONString(productResponse.getData()), ProductListResponse.class);
                 if (StringUtils.isNotNull(response)) {
-                    productMap = response.getProductList().stream().collect(Collectors.toMap(ProductDetailResponse::getProductBarcode, Function.identity()));
+                    productMap = response.getProductList().stream().collect(Collectors.toMap(ProductDetailResponse::getProductNo, Function.identity()));
                 }
             } catch (Exception e) {
                 ErrorCode.BUSINESS_NUMBER_ERROR_4001.throwError();
@@ -597,6 +597,7 @@ public class InitBussiness {
         ConditionsBuilder conditionsBuilder = ConditionsBuilder.create();
         if (lcCodeList.size() > 0) {
             conditionsBuilder.in("lcCode", lcCodeList);
+            conditionsBuilder.eq("lcType", "Z");
         }
         conditionsBuilder.eq("companyId", CustomRequestContext.getUserInfo().getCompanyId());
         Map<String, Object> paramMap = conditionsBuilder.build();

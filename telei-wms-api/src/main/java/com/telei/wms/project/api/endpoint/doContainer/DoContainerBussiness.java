@@ -150,6 +150,8 @@ public class DoContainerBussiness {
                         wmsDoLine.setContainerQty(commonRequest.getQty());
                     }
                     wmsDoLines.add(wmsDoLine);
+                } else {
+                    ErrorCode.DO_CONTAINER_QTY_IS_NULL_4004.throwError(queryRequestVo.getProductName());
                 }
             } else {
                 ErrorCode.DO_CONTAINER_QTY_IS_MAX_4002.throwError(commonRequest.getProductId());
@@ -174,7 +176,7 @@ public class DoContainerBussiness {
                 omsContainerWriteBack.setCWeight(cWeight);
                 omsContainerWriteBack.setDohCode(wmsDoHeader.getDohCode());
 
-                WmsIdInstantdirective wmsIdInstantdirective = wmsIdInstantdirectiveBussiness.add("PUTON", "", omsContainerWriteBack);
+                WmsIdInstantdirective wmsIdInstantdirective = wmsIdInstantdirectiveBussiness.add(wmsOmsContainerWriteBackProducer.getQueueName(), "", omsContainerWriteBack);
                 // MQ发送指令
                 wmsOmsContainerWriteBackProducer.send(wmsIdInstantdirective);
             }
@@ -269,6 +271,14 @@ public class DoContainerBussiness {
     @Transactional(rollbackFor = Exception.class)
     public DoContainerCudBaseResponse revokeDoContainer(DoContainerRevokeRequest request) {
         DoContainerCudBaseResponse response = new DoContainerCudBaseResponse();
+        WmsDoHeader doHeader = wmsDoHeaderService.selectByPrimaryKey(request.getDohId());
+        if (Objects.nonNull(doHeader)) {
+            if ("40".equals(doHeader.getOrderStatus())) {
+                ErrorCode.DO_HEADER_CONTAINER_ERROR_4004.throwError();
+            }
+        } else {
+            ErrorCode.DO_NOT_EXIST_4001.throwError();
+        }
         WmsDoContainer wmsDoContainer = new WmsDoContainer();
         wmsDoContainer.setCId(request.getCId());
         wmsDoContainer.setDohId(request.getDohId());

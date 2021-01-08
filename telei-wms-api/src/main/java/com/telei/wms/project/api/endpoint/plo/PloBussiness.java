@@ -287,6 +287,10 @@ public class PloBussiness {
                 //出现不同的拣货单
                 ErrorCode.PLO_ADD_ERROR_4016.throwError();
             }
+            if (Objects.isNull(ploDetailAddRequest.getPickQty()) || ploDetailAddRequest.getPickQty().intValue() < 1) {
+                //拣货数量不能为空
+                ErrorCode.PLO_ADD_ERROR_4023.throwError();
+            }
             plolIds.add(ploDetailAddRequest.getPlolId());
             ploDetailAddRequestMap.put(ploDetailAddRequest.getPlolId(), ploDetailAddRequest);
         }
@@ -612,7 +616,7 @@ public class PloBussiness {
             //入库任务不存在
             ErrorCode.PLO_CANCEL_ERROR_4021.throwError();
         }
-        if (wmsDoHeader.getContainerQty().intValue() != 0) {
+        if (Objects.nonNull(wmsDoHeader.getContainerQty()) && wmsDoHeader.getContainerQty().intValue() != 0) {
             //装柜数量不等于0不能撤销
             ErrorCode.PLO_CANCEL_ERROR_4022.throwError();
         }
